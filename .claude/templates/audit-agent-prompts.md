@@ -95,7 +95,7 @@ SCOPE (if provided): $ARGUMENTS
 
 ### 3.8 Dependency Analysis
 - package.json + workspace package.json:
-  - Critical CVEs (cross-check GHSA / npm audit)
+  - Critical CVEs (cross-check GHSA / `bun audit` when available)
   - Outdated majors (e.g., react@17 when 19 current)
   - Unused deps
   - Restrictive licenses (GPL/AGPL) in commercial project

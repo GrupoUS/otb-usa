@@ -34,7 +34,7 @@ Skill("debugger")          // WHEN debugging UI issues — root cause analysis, 
 Skill("frontend-design")  // WHEN converting design spec to React code — creative execution, anti-slop rules
 ```
 
-If the project ships its own design-tokens skill (e.g., `gpus-theme`, `<project>-tokens`), invoke it as well. Read `.claude/config.json` and `.claude/CLAUDE.md` for project-specific skill names.
+If the project ships its own design-tokens skill (e.g., `otb-theme`, `<project>-tokens`), invoke it as well. Read `.claude/config.json` and `.claude/CLAUDE.md` for project-specific skill names.
 
 Project-specific design-tokens skill triggers when:
 - A hardcoded hex, blue/teal primary, backdrop-blur, bento grid, or hero split layout appears

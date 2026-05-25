@@ -34,7 +34,7 @@ const breadcrumbJsonLd = {
 			name: "Início",
 			item: new URL(
 				"/",
-				Astro.site ?? "https://harmonic-pascal.grupous.com.br",
+				Astro.site ?? "https://otb.drasacha.com.br",
 			).toString(),
 		},
 		{
@@ -43,7 +43,7 @@ const breadcrumbJsonLd = {
 			name: "OTB Estados Unidos",
 			item: new URL(
 				"/otb",
-				Astro.site ?? "https://harmonic-pascal.grupous.com.br",
+				Astro.site ?? "https://otb.drasacha.com.br",
 			).toString(),
 		},
 	],
@@ -87,5 +87,5 @@ const breadcrumbJsonLd = {
 
 	<Footer legal={data.legal} />
 
-	<WhatsAppFloatingButton slot="floating" />
+	<WhatsAppFloatingButton slot="floating" message={data.hero.cta.whatsappMessage} />
 </Layout>

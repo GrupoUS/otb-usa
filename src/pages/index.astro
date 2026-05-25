@@ -1,14 +1,28 @@
 ---
-import "../styles/global.css";
+import { getEntry } from "astro:content";
+import Footer from "../components/landing/Footer.astro";
+import Hero from "../components/landing/Hero.astro";
+import Investimento from "../components/landing/Investimento.astro";
+import TargetAudience from "../components/landing/TargetAudience.astro";
+import WhatsAppFloatingButton from "../components/landing/WhatsAppFloatingButton.astro";
+import WhyOTB from "../components/landing/WhyOTB.astro";
+import Layout from "../layouts/Layout.astro";
+
+const otb = await getEntry("products", "otb");
+if (!otb) {
+	throw new Error(
+		"Content collection 'products' missing entry 'otb'. Verify src/content/products/otb.json.",
+	);
+}
+
+const { data } = otb;
 ---
 
-<!doctype html>
-<html lang="pt-BR">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>GP-US Harmonic Pascal</title>
-	</head>
-	<body></body>
-</html>
+<Layout title={data.seo.title} description={data.seo.description} ogImage={data.seo.ogImage}>
+	<Hero hero={data.hero} />
+	<WhyOTB why={data.why} />
+	<TargetAudience audience={data.audience} />
+	<Investimento investimento={data.investimento} />
+	<Footer legal={data.legal} />
+	<WhatsAppFloatingButton slot="floating" message={data.hero.cta.whatsappMessage} />
+</Layout>

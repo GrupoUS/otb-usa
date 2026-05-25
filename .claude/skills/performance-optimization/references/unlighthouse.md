@@ -6,7 +6,7 @@ For full-site crawling and multi-page audits. Requires Node 20+ and Chrome.
 
 ```bash
 # One-off run (no install)
-npx unlighthouse --site ${project.stagingUrl}
+bunx unlighthouse --site ${project.stagingUrl}
 
 # Or install globally
 bun add -g @unlighthouse/cli unlighthouse
@@ -16,18 +16,18 @@ bun add -g @unlighthouse/cli unlighthouse
 
 ```bash
 # Quick site scan (mobile, throttled)
-npx unlighthouse --site ${project.stagingUrl} --throttle --samples 1
+bunx unlighthouse --site ${project.stagingUrl} --throttle --samples 1
 
 # Specific routes only
-npx unlighthouse --site ${project.stagingUrl} \
-  --urls /,/dashboard,/<your-routes> \
+bunx unlighthouse --site ${project.stagingUrl} \
+  --urls /,/otb \
   --throttle --samples 1
 
 # Desktop mode
-npx unlighthouse --site ${project.stagingUrl} --desktop
+bunx unlighthouse --site ${project.stagingUrl} --desktop
 
 # No cache (fresh scan)
-npx unlighthouse --site ${project.stagingUrl} --no-cache
+bunx unlighthouse --site ${project.stagingUrl} --no-cache
 ```
 
 ## Configuration File

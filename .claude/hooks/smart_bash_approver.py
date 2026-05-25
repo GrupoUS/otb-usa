@@ -9,7 +9,6 @@ import re
 import sys
 import typing
 
-
 LEADING_CD_PATTERN = re.compile(r"^cd\s+[^&;]+\s+&&\s+")
 
 
@@ -23,16 +22,9 @@ def normalize_command(raw_command: str) -> str:
         command = normalized
 
 
-# ── Safe deletion patterns (auto-allow node_modules cleanup — check FIRST) ──
-SAFE_DELETE_PATTERNS = [
-    re.compile(r"node_modules"),
-    re.compile(r"/node_modules"),
-    re.compile(r"\.cache"),
-    re.compile(r"/\.turbo"),
-]
-
 # ── Dangerous patterns (always block) ──
 DANGEROUS_PATTERNS = [
+    # Destructive shell operations
     re.compile(r"^rm -rf /"),
     re.compile(r"^rm -rf ~"),
     re.compile(r"^rm -rf \$HOME"),
@@ -40,23 +32,31 @@ DANGEROUS_PATTERNS = [
     re.compile(r"^chmod -R 777 /"),
     re.compile(r"^dd if=.*of=/dev/"),
     re.compile(r"^> /dev/sd"),
-    re.compile(r"^DROP DATABASE"),
-    re.compile(r"^DROP TABLE"),
-    re.compile(r"^TRUNCATE"),
-    re.compile(r"^git push --force.*(main|master)"),
-    re.compile(r"^git reset --hard HEAD~"),
     re.compile(r"^sudo rm"),
     re.compile(r"^truncate -s 0"),
     re.compile(r"^> /etc/"),
     re.compile(r"^mkfs"),
     re.compile(r"^dd if=/dev/zero"),
-    re.compile(r"^git push -f.*(main|master)"),
     re.compile(r"rm --no-preserve-root"),
     re.compile(r"chmod -R 000"),
+    # Database destructive commands
+    re.compile(r"^DROP DATABASE", re.IGNORECASE),
+    re.compile(r"^DROP TABLE", re.IGNORECASE),
+    re.compile(r"^TRUNCATE", re.IGNORECASE),
+    # Branch protection: main/master are read-only mirrors
+    re.compile(r"^git\s+(checkout|switch)\s+(-[^\s]+\s+)*\b(main|master)\b"),
+    re.compile(r"^git\s+push\b.*\b(main|master)\b"),
+    re.compile(r"^git\s+push\b.*(--force|-f)\b"),
+    re.compile(r"^gh\s+pr\s+(merge|approve)\b"),
+    # OTB is Bun-only
+    re.compile(r"^(npm|npx|pnpm|yarn)\b"),
+    re.compile(r"^corepack\b"),
 ]
 
 # ── Cleanup patterns (require user approval) ──
 CLEANUP_PATTERNS = [
+    re.compile(r"(^|\s)rm\s+-rf\s+"),
+    re.compile(r"(^|\s)rm\s+-r\s+"),
     re.compile(r"\.turbo/.*\.log"),
     re.compile(r"\.old_modules"),
     re.compile(r"\.sisyphus/.*\.log"),
@@ -69,26 +69,25 @@ CLEANUP_PATTERNS = [
 
 # ── Safe patterns (auto-approve) ──
 SAFE_PATTERNS = [
-    # Git read commands
-    re.compile(r"^git( --no-pager)? status"),
-    re.compile(r"^git( --no-pager)? diff"),
-    re.compile(r"^git( --no-pager)? log"),
-    re.compile(r"^git( --no-pager)? branch"),
-    re.compile(r"^git( --no-pager)? fetch"),
-    re.compile(r"^git( --no-pager)? show"),
-    re.compile(r"^git( --no-pager)? stash"),
-    re.compile(r"^git( --no-pager)? remote"),
-    re.compile(r"^git( --no-pager)? reflog"),
-    re.compile(r"^git( --no-pager)? rev-parse"),
-    re.compile(r"^git( --no-pager)? blame"),
-    re.compile(r"^git( --no-pager)? grep"),
-    re.compile(r"^gh pr (view|list)"),
-    re.compile(r"^gh run (view|list)"),
-    re.compile(r"^gh issue (view|list)"),
-    re.compile(r"^gh repo view"),
-    re.compile(r"^gh pr status"),
+    # Git read commands only
+    re.compile(r"^git( --no-pager)? status(\s|$)"),
+    re.compile(r"^git( --no-pager)? diff(\s|$)"),
+    re.compile(r"^git( --no-pager)? log(\s|$)"),
+    re.compile(r"^git( --no-pager)? branch(\s+(-a|-r|-v|-vv|--show-current))*\s*$"),
+    re.compile(r"^git( --no-pager)? fetch(\s|$)"),
+    re.compile(r"^git( --no-pager)? show(\s|$)"),
+    re.compile(r"^git( --no-pager)? stash (list|show)(\s|$)"),
+    re.compile(r"^git( --no-pager)? remote(\s|$)"),
+    re.compile(r"^git( --no-pager)? reflog(\s|$)"),
+    re.compile(r"^git( --no-pager)? rev-parse(\s|$)"),
+    re.compile(r"^git( --no-pager)? blame(\s|$)"),
+    re.compile(r"^git( --no-pager)? grep(\s|$)"),
+    re.compile(r"^gh pr (view|list|status)(\s|$)"),
+    re.compile(r"^gh run (view|list)(\s|$)"),
+    re.compile(r"^gh issue (view|list)(\s|$)"),
+    re.compile(r"^gh repo view(\s|$)"),
     # Filesystem read
-    re.compile(r"^ls"),
+    re.compile(r"^ls(\s|$)"),
     re.compile(r"^cat "),
     re.compile(r"^head "),
     re.compile(r"^tail "),
@@ -96,9 +95,9 @@ SAFE_PATTERNS = [
     re.compile(r"^rg "),
     re.compile(r"^find "),
     re.compile(r"^which "),
-    re.compile(r"^pwd"),
+    re.compile(r"^pwd$"),
     re.compile(r"^echo "),
-    re.compile(r"^tree "),
+    re.compile(r"^tree(\s|$)"),
     re.compile(r"^stat "),
     re.compile(r"^wc -"),
     re.compile(r"^cut "),
@@ -107,37 +106,31 @@ SAFE_PATTERNS = [
     re.compile(r"^column -t"),
     re.compile(r"^less "),
     re.compile(r"^more "),
-    # Package manager development commands (Bun / npm / pnpm / yarn)
-    re.compile(r"^(bun|npm|pnpm|yarn) (run )?(test|check|lint|build|dev|start|type-check|format)"),
-    re.compile(r"^(bun|npm|pnpm|yarn) install"),
-    re.compile(r"^bun test"),
-    re.compile(r"^bun run"),
+    # Bun-only package manager development commands
+    re.compile(
+        r"^bun (run )?(test|check|lint|build|type-check|format|predeploy)(\s|$)"
+    ),
+    re.compile(r"^bun install(\s|$)"),
+    re.compile(r"^bun test(\s|$)"),
     re.compile(r"^bun -"),
     re.compile(r"^bun x "),
     re.compile(r"^bunx "),
-    re.compile(r"^npx "),
-    re.compile(r"^pnpm dlx "),
-    re.compile(r"^yarn dlx "),
-    re.compile(r"^tsgo"),
+    re.compile(r"^tsgo(\s|$)"),
     re.compile(r"^tsc(\s|$)"),
     re.compile(r'^python(3)?( -X [^ ]+)? "?\.claude/'),
     re.compile(r'^python(3)?( -X [^ ]+)? "?scripts/'),
     re.compile(r'^py -3 "?\.claude/'),
     re.compile(r'^py -3 "?scripts/'),
-    # Database / cloud CLIs (read-only introspection)
-    re.compile(r"^(neonctl|supabase|fly|vercel|railway|wrangler) "),
+    # Optional local CLIs (read-only introspection)
     re.compile(r"^(psql|mysql|sqlite3) "),
-    # Version checks
-    re.compile(r"^(python3?|bun|node|deno|npm|pnpm|yarn|docker|git|tsgo|tsc) --version"),
-    # File operations (safe)
+    # Version checks (Bun-only for package managers)
+    re.compile(r"^(python3?|bun|node|deno|docker|git|tsgo|tsc) --version"),
+    # Local reversible filesystem helpers
     re.compile(r"^mkdir -p"),
     re.compile(r"^touch "),
     re.compile(r"^cp (-r )?"),
-    re.compile(r"^mv "),
     re.compile(r"^chmod \+x"),
     re.compile(r"^chmod (755|644)"),
-    re.compile(r"^chown "),
-    re.compile(r"^rsync"),
     # Process / system read
     re.compile(r"^ps (aux|-ef)"),
     re.compile(r"^(top|htop|free|df|du|uptime|whoami|id) "),
@@ -148,33 +141,28 @@ SAFE_PATTERNS = [
     re.compile(r"^ping -"),
     re.compile(r"^(ssh -V|nc -zv|telnet)"),
     # Build / lint tools
-    re.compile(r"^biome"),
+    re.compile(r"^biome(\s|$)"),
     re.compile(r"^tsgo --"),
     re.compile(r"^vite --version"),
     # Test / coverage
     re.compile(r"^(bun test --coverage|vitest --coverage|playwright test)"),
 ]
 
-# ── Semi-safe patterns (allow unless force-push/hard-reset) ──
-SEMI_SAFE_PATTERNS = [
-    re.compile(r"^git add"),
-    re.compile(r"^git commit"),
-    re.compile(r"^git checkout"),
-    re.compile(r"^git switch"),
-    re.compile(r"^git restore"),
-    re.compile(r"^git clean"),
-    re.compile(r"^git rebase"),
-    re.compile(r"^git merge"),
-    re.compile(r"^git pull"),
-    re.compile(r"^git push"),
-    re.compile(r"^gh pr (create|merge|approve)"),
-    re.compile(r"^gh issue create"),
+# Commands that are often legitimate but must remain user-mediated.
+ASK_PATTERNS = [
+    re.compile(
+        r"^git\s+(add|commit|checkout|switch|restore|clean|rebase|merge|pull|push|reset)\b"
+    ),
+    re.compile(r"^gh\s+pr\s+create\b"),
+    re.compile(r"^gh\s+issue\s+create\b"),
+    re.compile(r"^mv\s+"),
+    re.compile(r"^rsync\b"),
+    re.compile(r"^chown\b"),
+    re.compile(r"^bun\s+run\s+(dev|start|preview)\b"),
 ]
 
-FORCE_PUSH_PATTERN = re.compile(
-    r"(push --force|reset --hard|--hard:(main|master)|-f (main|master))"
-)
 DANGEROUS_BUN_PATTERN = re.compile(r"(rm -rf|cache clean|publish.*--force)")
+COMMAND_SEPARATOR_PATTERN = re.compile(r"\s*(?:&&|\|\||;)\s*")
 
 
 def read_input() -> dict[str, object]:
@@ -226,6 +214,37 @@ def _ask(reason: str | None = None) -> None:
     print(json.dumps(payload))
 
 
+def _matches(patterns: list[re.Pattern[str]], command: str) -> bool:
+    return any(pattern.search(command) for pattern in patterns)
+
+
+def _classify(command: str) -> tuple[str, str | None]:
+    """Return (allow|ask|deny, optional reason) for one shell segment."""
+    if _matches(DANGEROUS_PATTERNS, command):
+        return (
+            "deny",
+            "BLOCKED: Dangerous, non-Bun, or branch-protected command detected",
+        )
+
+    if _matches(CLEANUP_PATTERNS, command):
+        return "ask", "Cleanup operation - requires user approval"
+
+    if _matches(SAFE_PATTERNS, command):
+        if re.match(r"^(bun|bunx) ", command) and DANGEROUS_BUN_PATTERN.search(command):
+            return "deny", "BLOCKED: Dangerous Bun command"
+        return "allow", None
+
+    if _matches(ASK_PATTERNS, command):
+        return "ask", "State-changing or external command - requires user approval"
+
+    if re.match(r"^(bun|bunx) ", command):
+        if DANGEROUS_BUN_PATTERN.search(command):
+            return "deny", "BLOCKED: Dangerous Bun command"
+        return "allow", None
+
+    return "ask", None
+
+
 def main() -> None:
     data: dict[str, object] = read_input()
     command: str = normalize_command(
@@ -241,50 +260,31 @@ def main() -> None:
         _ask()
         return
 
-    # 1. Safe deletions (check first — override later dangerous check)
-    for pattern in SAFE_DELETE_PATTERNS:
-        if pattern.search(str(command)):
-            _allow()
-            return
+    segments = [
+        segment.strip()
+        for segment in COMMAND_SEPARATOR_PATTERN.split(command)
+        if segment.strip()
+    ]
 
-    # 2. Dangerous — always block
-    for pattern in DANGEROUS_PATTERNS:
-        if pattern.search(str(command)):
-            _deny("BLOCKED: Dangerous command pattern detected")
+    final_decision = "allow"
+    ask_reason: str | None = None
+    for segment in segments or [command]:
+        decision, reason = _classify(segment)
+        if decision == "deny":
+            _deny(reason or "BLOCKED: Dangerous command")
             return
+        if decision == "ask":
+            final_decision = "ask"
+            ask_reason = ask_reason or reason
 
-    # 3. Cleanup — ask
-    for pattern in CLEANUP_PATTERNS:
-        if pattern.search(str(command)):
-            _ask("Cleanup operation - requires user approval")
-            return
-
-    # 4. Safe — auto-approve
-    for pattern in SAFE_PATTERNS:
-        if pattern.search(str(command)):
-            _allow()
-            return
-
-    # 5. Semi-safe — allow unless force operations
-    for pattern in SEMI_SAFE_PATTERNS:
-        if pattern.search(str(command)):
-            if FORCE_PUSH_PATTERN.search(command):
-                _deny("BLOCKED: Force push or hard reset detected")
-                return
-            _allow()
-            return
-
-    # 6. Default: allow package-manager commands (block dangerous subcommands)
-    if re.match(r"^(bun|bunx|npm|npx|pnpm|yarn) ", command):
-        if DANGEROUS_BUN_PATTERN.search(command):
-            _deny("BLOCKED: Dangerous package manager command")
-            return
+    if final_decision == "allow":
         _allow()
         return
 
-    # 7. Unknown: require user approval. Never fall through to allow — unknown
-    # commands may be new destructive tools, typos, or untrusted invocations.
-    _ask()
+    # Unknown or state-changing commands require user approval. Never fall
+    # through to allow — unknown commands may be destructive tools, typos, or
+    # untrusted invocations.
+    _ask(ask_reason)
 
 
 if __name__ == "__main__":

@@ -1,197 +1,112 @@
 ---
 name: astro
-description: Use when implementing features, fixing bugs, or making architectural decisions in Astro projects. Triggers on Astro components, Content Collections, islands architecture, client directives, View Transitions, astro.config.mjs, getCollection, getEntry, Astro.props, slots, scoped styles, @theme directive, Tailwind v4 integration, static site generation, build errors, hydration issues, and performance optimization for Astro sites.
+description: Use when implementing, debugging, or reviewing Astro components, pages, Content Collections, islands architecture, client directives, astro.config.mjs, Tailwind v4 integration, static generation, hydration, build errors, and performance optimization.
 ---
 
 # Astro Framework Reference
 
-Comprehensive Astro knowledge base for building fast, content-driven static sites with islands architecture.
+Astro renders static HTML by default and hydrates interactive islands only when explicitly requested through `client:*` directives.
 
-## Overview
+## Repository override — OTB USA
 
-Astro renders pages to static HTML by default with zero client-side JavaScript. Interactive components ("islands") opt-in via `client:*` directives. Server-first rendering ensures fast performance and excellent SEO.
+When working in this repo:
 
-## Repository override — Grupo US institutional site (`gpus`)
+- Static MPA only.
+- No `ClientRouter`.
+- No `prerender = false`.
+- No SSR adapter.
+- Product copy SSOT: `src/content/products/otb.json`.
+- Project overlay: `references/otb-usa-overlay.md`.
 
-When this repo is the **Grupo US** static site (see root `AGENTS.md` and `.claude/CLAUDE.md`):
+If generic Astro docs conflict with `AGENTS.md` or `.claude/CLAUDE.md`, the repo rules win.
 
-- **Routing:** Multi-page app — normal `<a>` links and full page reload. **Do not** add `<ClientRouter />`, client-side app routers, or SPA-style navigation unless the user **explicitly** overrides `AGENTS.md`.
-- **Islands:** Prefer `.astro` and zero JS; add React (or other) islands only with clear justification and minimal `client:*` usage. `client:load` is forbidden outside `WhatsAppFloatingButton`.
-- **Conflict rule:** If generic Astro documentation (including sections below on View Transitions / `ClientRouter`) conflicts with `AGENTS.md`, **the repo wins**.
+## When to use
 
-> **Full project rules:** `references/gpus-overlay.md` — render-mode invariants, redirect tri-sync (`externalSiteUrl` ↔ `redirects` ↔ sitemap `filter()`), Layout.astro contracts (skip link, `<noscript>` reveal, IntersectionObserver, Google Fonts preconnect), Content Collections SSOT, smoke commands.
+- New or changed `.astro` pages/components/layouts.
+- `src/content.config.ts` or Content Collections.
+- React islands and hydration directives.
+- `astro.config.mjs` changes.
+- Tailwind v4 `@theme` integration.
+- Build, type or hydration errors.
+- SEO/canonical/JSON-LD changes in Astro files.
 
-## When to Use
+## Quick reference
 
-- Implementing new Astro components, pages, or layouts
-- Working with Content Collections (define, query, render)
-- Adding or modifying React/Vue/Svelte islands
-- Configuring `astro.config.mjs`, TypeScript, or Vite plugins
-- Debugging build errors, hydration mismatches, or Content Collection issues
-- Optimizing performance (LCP, CLS, bundle size, image optimization)
-- Setting up View Transitions with `<ClientRouter />`
-- Integrating Tailwind CSS v4 via `@tailwindcss/vite`
-
-When NOT to use:
-- Pure React/Vue component logic (use framework-specific docs)
-- General CSS questions unrelated to Astro scoping or Tailwind v4
-
-## Quick Reference
-
-### Component Anatomy
+### Component anatomy
 
 ```astro
 ---
-// Frontmatter: runs on server only, never sent to browser
-import MyComponent from '../components/MyComponent.astro';
-interface Props { title: string; }
+import Component from "../components/Component.astro";
+interface Props { title: string }
 const { title } = Astro.props;
-const data = await fetch('API_URL').then(r => r.json());
 ---
-<!-- Template: HTML + JSX-like expressions -->
-<h1>{title}</h1>
-<MyComponent />
-<slot />  <!-- child content placeholder -->
+
+<section>
+  <h1>{title}</h1>
+  <Component />
+</section>
 ```
 
-### Client Directives (Islands)
+### Client directives
 
-| Directive | When JS Loads | Use Case |
-|-----------|--------------|----------|
-| `client:load` | Immediately on page load | Critical interactive UI (countdown, auth) |
-| `client:idle` | When browser becomes idle | Non-critical above-fold widgets |
-| `client:visible` | When entering viewport | Below-fold interactive content |
-| `client:hover` | On mouse hover | Tooltips, previews |
-| `client:only="react"` | Client only, skip SSR | Components that can't SSR |
-| `server:defer` | Server island, deferred render | Personalized/dynamic server content |
+| Directive | OTB usage |
+|---|---|
+| none | default for static `.astro` |
+| `client:load` | only critical persistent UI |
+| `client:idle` | non-critical above-fold island |
+| `client:visible` | below-fold interactive island |
+| `client:only="react"` | last resort when SSR is impossible |
 
 ### Content Collections
 
 ```astro
 ---
-import { getCollection, getEntry } from 'astro:content';
-
-// Get all entries
-const allFaqs = await getCollection('faqs');
-
-// Filter entries
-const published = await getCollection('blog', ({ data }) => !data.draft);
-
-// Get single entry
-const speaker = await getEntry('speakers', 'john-doe');
+import { getEntry } from "astro:content";
+const otb = await getEntry("products", "otb");
+if (!otb) throw new Error("Missing products/otb.json");
+const { data } = otb;
 ---
 ```
 
-**Data flow to React islands:**
-```astro
----
-const testimonials = await getCollection('testimonials');
-const testimonialData = testimonials.map(t => t.data);
----
-<TestimonialsCarousel client:visible data={testimonialData} />
-```
+Map data before passing to framework islands; do not pass collection entries directly.
 
-**Na Mesa Certa:** Collections use `src/content.config.ts` (glob + Zod). For marketing copy sync (speakers → JSON-LD, FAQ JSON, section mapping), see `references/content-collections.md` → *Landing copy ↔ code*.
+### Project structure
 
-### Project Structure
-
-```
+```text
 src/
-  pages/         → File-based routing (index.astro → /)
-  components/    → .astro (static) + .tsx/.vue (islands)
-  layouts/       → Page shells with <slot />
-  content/       → Content Collections (JSON/MD/MDX)
-  styles/        → Global CSS, Tailwind @theme tokens
-public/          → Static assets (copied as-is to dist/)
-astro.config.mjs → Framework configuration
+  pages/
+  components/
+  layouts/
+  content/
+  content.config.ts
+  styles/global.css
+astro.config.mjs
 ```
 
-### Configuration (astro.config.mjs)
-
-```js
-import { defineConfig } from "astro/config";
-import react from "@astrojs/react";
-import tailwindcss from "@tailwindcss/vite";
-
-export default defineConfig({
-  site: "https://example.com",
-  integrations: [react()],
-  vite: { plugins: [tailwindcss()] },
-});
-```
-
-### View Transitions (Astro 5+/6)
-
-```astro
----
-import { ClientRouter } from 'astro:transitions';
----
-<head>
-  <ClientRouter />  <!-- Replaces deprecated ViewTransitions -->
-</head>
-```
-
-**Grupo US institutional repo:** Do **not** add `ClientRouter` or SPA-style transitions unless the user explicitly overrides the no-SPA rule in `AGENTS.md`. The pattern above is for **other** Astro projects only.
-
-### Styling
-
-- **Scoped by default**: `<style>` in `.astro` files is auto-scoped
-- **Global styles**: Use `is:global` or `<style is:global>`
-- **class:list**: `class:list={['base', { active: isActive }]}`
-- **define:vars**: Pass server vars to CSS: `<style define:vars={{ color }}>`
-- **Tailwind v4**: Via Vite plugin, tokens in `@theme {}` in CSS
-
-### Common Patterns
-
-```astro
-<!-- Conditional rendering -->
-{showBanner && <Banner />}
-
-<!-- List rendering -->
-{items.map(item => <Card title={item.title} />)}
-
-<!-- Dynamic HTML (escaped by default, use set:html for raw) -->
-<div set:html={rawHtmlString} />
-
-<!-- Named slots -->
-<Layout>
-  <h1 slot="header">Title</h1>
-  <p>Default slot content</p>
-  <footer slot="footer">Copyright</footer>
-</Layout>
-```
-
-## Detailed References
+## Detailed references
 
 | Reference | Content |
-|-----------|---------|
-| `references/core-concepts.md` | Components, pages, layouts, slots, props, expressions |
-| `references/content-collections.md` | Defining, querying, schemas, JSON data, Astro 5/6 changes, SSOT pattern |
-| `references/islands-architecture.md` | Client directives, React islands, hydration, server islands, FAQ accordion (grid `0fr`/`1fr`) |
-| `references/styling-tailwind.md` | Scoped CSS, global styles, Tailwind v4, @theme, class:list |
-| `references/configuration.md` | astro.config.mjs, TypeScript, integrations, Vite plugins |
-| `references/performance.md` | LCP, CLS, INP, images, fonts, bundle optimization |
-| `references/view-transitions.md` | ClientRouter, transition directives, persist, animations |
-| `references/troubleshooting.md` | Common errors, build failures, hydration, Content Collections |
-| `references/gpus-overlay.md` | **GPUS site only** — render-mode invariants, hydration project rules, redirect tri-sync, Layout.astro contracts, smoke commands |
+|---|---|
+| `references/core-concepts.md` | Components, pages, layouts, slots, props |
+| `references/content-collections.md` | Schemas, querying, JSON data, SSOT |
+| `references/islands-architecture.md` | Hydration, React islands, FAQ accordion |
+| `references/styling-tailwind.md` | Scoped CSS, Tailwind v4, `@theme` |
+| `references/configuration.md` | `astro.config.mjs`, integrations, static hosting |
+| `references/performance.md` | LCP, CLS, INP, images, fonts, bundle |
+| `references/view-transitions.md` | Generic Astro transitions; disabled here unless explicitly requested |
+| `references/troubleshooting.md` | Build/hydration/content errors |
+| `references/otb-usa-overlay.md` | OTB-specific render, content, layout and smoke rules |
 
-## Common Mistakes
+## Common mistakes
 
 | Mistake | Fix |
-|---------|-----|
-| Adding `client:*` to `.astro` components | Only framework components (React/Vue/Svelte) accept client directives |
-| Passing Astro collection entries to React | Map to `.data` first: `collection.map(e => e.data)` |
-| Using `ViewTransitions` in Astro 6 | Use `ClientRouter` from `astro:transitions` |
-| Hardcoding hex in Tailwind v4 | Define tokens in `@theme {}` in global.css |
-| Using `tailwind.config.js` with v4 | Tailwind v4 uses CSS-first config via `@theme {}` |
-| Using npm/yarn instead of bun | Project uses bun exclusively |
-| Assuming no content config in Astro 6 | **This repo** uses `src/content.config.ts`; other projects may infer schemas only — always check the filesystem |
-| Using wrong path `src/content/config.ts` when the project has root `content.config.ts` | Align with Astro version + repo: Na Mesa Certa → `src/content.config.ts` |
-| Forgetting `width`/`height` on images | Always set dimensions to prevent CLS |
-| Framer Motion animating accordion **panel height** | Use CSS grid `grid-template-rows: 0fr` ↔ `1fr`; Motion only for chevron (`rotate`/`opacity`). See `references/islands-architecture.md` → *Known case: FAQ accordion* |
-| `client:load` on pure-visual hero islands (steals LCP from text-first hero) | Use `client:idle` so SSR text paints first; `client:load` only for persistent floating UI (e.g., chat widget) |
-| Setting `prerender = false` in static-only project | Static projects: never override; cardinal in repo overlay |
-| Adding `<ClientRouter />` to MPA repo | Static MPA: no SPA router; full reload on navigation. See `references/gpus-overlay.md` |
-| Hardcoding landing copy in `.astro` / `.tsx` instead of Content Collection | Move strings to `src/content/<collection>/<slug>.json` and Zod-validate via `src/content.config.ts` |
-| Below-fold hero image with `loading="eager"` + `fetchpriority="high"` | Confirm position vs fold; below-fold → `lazy` + `low`. Wrong priority steals LCP from text hero |
-| Adding redirect to `astro.config.mjs::redirects` without sitemap `filter()` exclusion | Tri-sync: JSON `externalSiteUrl` + `redirects` + `filter()` move together. See `references/gpus-overlay.md` |
+|---|---|
+| Hardcoding OTB copy in components | Move to `src/content/products/otb.json` |
+| Adding `client:*` to `.astro` components | Client directives apply to framework islands only |
+| Passing full collection entries to React | Pass plain `.data` |
+| Using `ClientRouter` | OTB is static MPA |
+| Setting `prerender = false` | Keep static generation |
+| Adding an SSR adapter | Not needed and forbidden |
+| Using npm/yarn/pnpm | Use Bun only |
+| Hardcoding hex in components | Add/use tokens in `src/styles/global.css` |
+| Animating layout properties | Use transform/opacity only |

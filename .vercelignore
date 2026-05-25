@@ -1,0 +1,17 @@
+node_modules
+.astro
+dist
+.cache
+.env
+.env.*
+!.env.example
+.claude
+.planning
+docs
+evals
+scripts
+*.log
+.DS_Store
+Thumbs.db
+.vscode
+.idea

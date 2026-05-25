@@ -11,7 +11,7 @@ skills:
 
 # Orchestrator — Planning & Execution Lead
 
-You are the lead coordinator for namesa-team. Your role is to **plan AND orchestrate** specialized agents using the D.R.P.I.V methodology for parallel execution and swarm coordination.
+You are the lead coordinator for otb-usa-team. Your role is to **plan AND orchestrate** specialized agents using the D.R.P.I.V methodology for parallel execution and swarm coordination.
 
 ## Methodology preloaded
 
@@ -282,10 +282,10 @@ Run: bun run build
 
 | Task Type                                        | Agent                   | Skills                                       |
 | ------------------------------------------------ | ----------------------- | -------------------------------------------- |
-| Astro components, layouts, pages                 | `frontend-specialist`   | frontend-design, gpus-theme, ui-ux-pro-max   |
-| React Islands (CountdownTimer, FAQ, Testimonials) | `frontend-specialist`  | frontend-design, gpus-theme, ui-ux-pro-max   |
+| Astro components, layouts, pages                 | `frontend-specialist`   | frontend-design, otb-theme, ui-ux-pro-max   |
+| React Islands (CountdownTimer, FAQ, Testimonials) | `frontend-specialist`  | frontend-design, otb-theme, ui-ux-pro-max   |
 | Content Collections (JSON data)                  | `frontend-specialist`   | frontend-design                              |
-| Tailwind CSS, design tokens, GPUS theme          | `frontend-specialist`   | gpus-theme, ui-ux-pro-max                    |
+| Tailwind CSS, design tokens, OTB theme          | `frontend-specialist`   | otb-theme, ui-ux-pro-max                    |
 | Performance, accessibility, SEO                  | `performance-optimizer` | performance-optimization                     |
 | Architecture consultation                        | `oracle`                | read-only analysis                           |
 | Codebase research, file discovery                | `explorer`              | planning                                     |
@@ -315,12 +315,12 @@ This tells `/implement` which specialist to spawn.
 | Astro pages, layouts, components | `frontend-specialist`  | .astro files, routing, slots             |
 | React Islands (interactive UI)  | `frontend-specialist`   | CountdownTimer, FAQAccordion, Testimonials |
 | Content Collections             | `frontend-specialist`   | JSON data, collection schemas            |
-| Tailwind CSS, design system     | `frontend-specialist`   | Styling, tokens, GPUS theme              |
+| Tailwind CSS, design system     | `frontend-specialist`   | Styling, tokens, OTB theme              |
 | Framer Motion animations        | `frontend-specialist`   | Transitions, scroll animations           |
 | Bug investigation               | `debugger`              | Root cause analysis                      |
 | Security concerns               | `performance-optimizer` | Headers, CSP, best practices             |
 | Performance, SEO, a11y          | `performance-optimizer` | Lighthouse, Core Web Vitals, WCAG        |
-| Deploy or infra                 | `debugger`              | Railway, CI/CD                           |
+| Deploy or infra                 | `debugger`              | static hosting, CI/CD                           |
 
 ---
 
@@ -555,7 +555,7 @@ Invoke these skills directly when the task matches:
 | `evolution-core`      | Session context load/capture and memory continuity          |
 | `skill-creator`       | Creating or refactoring project skills                      |
 | `ui-ux-pro-max`       | Advanced UI/UX design patterns, layout, and interactions    |
-| `gpus-theme`          | GPUS Navy/Gold theme tokens, glass-card, premium aesthetics |
+| `otb-theme`          | OTB Navy/Gold theme tokens, glass-card, premium aesthetics |
 
 ---
 

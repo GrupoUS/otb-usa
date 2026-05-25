@@ -1,13 +1,13 @@
 {
+  "$schema": "./config.schema.json",
   "project": {
-    "name": "gp-us-harmonic-pascal",
-    "displayName": "GP-US Harmonic Pascal",
+    "name": "otb-usa",
+    "displayName": "OTB USA — Grupo US",
     "stack": "astro-static-tailwindv4",
     "stagingUrl": "http://localhost:4321",
-    "productionUrl": "https://harmonic-pascal.grupous.com.br",
+    "productionUrl": "https://otb.drasacha.com.br",
     "locale": "pt-BR"
   },
-  "overlay": ".claude/overlay/gp-us-harmonic-pascal",
   "paths": {
     "backendRoot": "",
     "frontendRoot": "src",
@@ -22,7 +22,7 @@
     "typeChecker": "astro-check",
     "linter": "biome",
     "testRunner": "",
-    "deployer": "railway",
+    "deployer": "static-hosting",
     "frontendFramework": "astro+react-islands",
     "database": "",
     "orm": ""
@@ -41,14 +41,16 @@
   },
   "protectedFiles": {
     "exact": [
+      "astro.config.mjs",
+      "src/lib/whatsapp.ts",
+      "src/content.config.ts",
+      "package.json",
       "tsconfig.json",
       "biome.json",
       "lefthook.yml"
     ],
     "segments": [],
-    "contains": [
-      "bun.lockb"
-    ]
+    "contains": ["bun.lock"]
   },
   "rulesDir": ".claude/rules",
   "templatesDir": ".claude/templates",

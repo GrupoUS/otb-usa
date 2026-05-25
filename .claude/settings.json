@@ -7,12 +7,6 @@
     "allow": [
       "Bash(bun *)",
       "Bash(bunx *)",
-      "Bash(npm *)",
-      "Bash(npx *)",
-      "Bash(pnpm *)",
-      "Bash(yarn *)",
-      "Bash(git *)",
-      "Bash(gh *)",
       "Bash(docker *)",
       "Bash(python *)",
       "Bash(python3 *)",
@@ -109,7 +103,7 @@
     ],
     "PermissionRequest": [
       {
-        "matcher": "Read|Grep|Glob|Bash|Edit|Write|mcp__plugin_serena_serena__.*|mcp__tavily__.*|mcp__sequential-thinking__.*|mcp__stitch__.*|mcp__playwright__.*|mcp__claude_ai_Context7__.*",
+        "matcher": "Read|Grep|Glob|Edit|Write|mcp__plugin_serena_serena__.*|mcp__tavily__.*|mcp__sequential-thinking__.*|mcp__stitch__.*|mcp__playwright__.*|mcp__claude_ai_Context7__.*",
         "hooks": [
           {
             "type": "command",

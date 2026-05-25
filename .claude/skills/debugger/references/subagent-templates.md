@@ -129,34 +129,33 @@ RETURN:
 
 ---
 
-## Sub-agent D: DB State Inspector
+## Sub-agent D: Content State Inspector
 
-**For `backend-debug` and `auth-db-debug`.** Replaces Sub-agent A (Evidence Collector) for backend/auth packs.
+**For OTB Astro/content debugging.** Replaces database inspection in this static site.
 
 ```typescript
 Task({
   subagent_type: "debugger",
-  name: "db-state-inspector",
-  description: "Inspect database state",
+  name: "content-state-inspector",
+  description: "Inspect OTB content and schema state",
   run_in_background: true,
-  prompt: `TASK: Inspect database state related to the failure
+  prompt: `TASK: Inspect static content state related to the failure
 
 SYMPTOM: [paste error]
-AFFECTED TABLE(S): [if known]
+AFFECTED CONTENT: [if known]
 
 MISSION:
-1. Read apps/api/drizzle/schema.ts to understand table structure
-2. Construct targeted SELECT queries to verify data state
-3. Check for: orphaned rows, missing FK references, tenant_id gaps
-4. Verify enum values match schema definition
-5. Check indexes exist for all FK columns
+1. Read src/content.config.ts to understand the Content Collection schema
+2. Read src/content/products/otb.json and verify the failing field exists
+3. Trace the consuming Astro component/page
+4. Check for schema/type mismatch, missing assets, invalid URLs, or WhatsApp prefix violations
+5. Verify Harvard/legal copy does not imply affiliation, endorsement, certification, or partnership
 
-IMPORTANT: Do NOT run psql directly. Return the queries you would run.
-The lead agent will execute them after review.
+IMPORTANT: Do not edit files. Return findings only.
 
 RETURN:
-- Table structure summary
-- Diagnostic queries (ready to run)
-- Suspected data inconsistencies`,
+- Content/schema summary
+- Suspected inconsistency with file:line
+- Recommended minimal fix`,
 });
 ```

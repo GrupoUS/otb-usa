@@ -63,7 +63,7 @@ Before claiming any fix is complete, all items must be checked:
 
 `debugger` (Iron Law, Pack Selector, Phase 0-5, sub-agent templates, verification gates, Common Root Causes Catalog) and `senior-prompt-engineer` (handoff contract for escalations to evaluator) are preloaded via the `skills:` frontmatter field — no explicit `Skill()` call needed at session start.
 
-Invoke additional project-specific skills (e.g., `astro`, `gpus-theme`, `performance-optimization`) as needed based on the error domain.
+Invoke additional project-specific skills (e.g., `astro`, `otb-theme`, `performance-optimization`) as needed based on the error domain.
 
 ---
 

@@ -22,7 +22,7 @@ const pageUrl =
 	canonical ??
 	new URL(
 		Astro.url.pathname,
-		Astro.site ?? "https://harmonic-pascal.grupous.com.br",
+		Astro.site ?? "https://otb.drasacha.com.br",
 	).toString();
 const absoluteOgImage = ogImage.startsWith("http")
 	? ogImage
@@ -32,7 +32,7 @@ const organizationJsonLd = {
 	"@context": "https://schema.org",
 	"@type": "Organization",
 	name: "Grupo US",
-	url: site || "https://harmonic-pascal.grupous.com.br",
+	url: site || "https://otb.drasacha.com.br",
 	logo: `${site}/images/otb/otb-logo-gold.png`,
 	sameAs: [] as string[],
 	contactPoint: {
@@ -54,6 +54,7 @@ const jsonLdPayload = jsonLd
 <!doctype html>
 <html lang="pt-BR">
 	<head>
+		<script is:inline>document.documentElement.classList.add("js");</script>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#1a1a2e" />

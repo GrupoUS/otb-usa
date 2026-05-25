@@ -143,7 +143,7 @@ kill -9 <PID>
 
 - Large `public/` images slow dev server → Optimize images
 - Too many Content Collection entries → Use filtering
-- Heavy npm packages → Consider lighter alternatives
+- Heavy dependencies → Consider lighter alternatives
 
 ## Deployment Issues
 
@@ -170,7 +170,7 @@ bun run build 2>&1 | grep -E "\.js|\.css|total"
 bunx astro check
 
 # Lighthouse
-npx lighthouse http://localhost:4321 --preset=desktop
+bunx lighthouse http://localhost:4321 --preset=desktop
 ```
 
 ## Quick Diagnostic Commands

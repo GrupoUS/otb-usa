@@ -129,7 +129,7 @@ For runtime speed (frontend + API).
 
 OWASP top-10 sanity sweep + dependency + header check.
 
-**Step 1 — Dependencies.** Run `${tooling.packageManager} audit` (or `npm audit` / `pnpm audit` / `yarn audit`). Cross-check against GHSA / Snyk for any package with no maintainer activity > 2 years.
+**Step 1 — Dependencies.** Run `bun audit` when available for the current Bun version. Cross-check against GHSA / Snyk for any package with no maintainer activity > 2 years.
 
 **Step 2 — Secret scanning.** `git log --all -G "ApiKey|SecretKey|password|token|secret" --since="6 months ago"` — or use `gitleaks` / `truffleHog` for thorough scan. Confirm `.env` files are gitignored.
 

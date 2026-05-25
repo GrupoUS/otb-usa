@@ -27,15 +27,23 @@ workflow_type: parallelization
 
 ---
 
+## Setup
+
+```typescript
+Skill("superpowers:using-superpowers");           // meta — bootstrap (per _shared.md § 0.5)
+Skill("superpowers:dispatching-parallel-agents"); // explorer + librarian = parallel batch with distinct scope
+```
+
+If the research scope is open-ended (user says "should we build X?" / "how should we approach Y?" / no concrete artifact requested), also invoke `Skill("superpowers:brainstorming")` to frame the right questions before research. Skip when the user asked a concrete factual question (`how does library X handle Y?`).
+
 ## Execution
 
 1. Fire `explorer` (custom agent, **NOT** built-in `Explore`) in background for codebase analysis.
-2. Fire `librarian` in background for external documentation **IF** any library, package, or external API is mentioned. Inject this tool-precedence guidance into the librarian prompt: "Use Context7 (`mcp__claude_ai_Context7__resolve-library-id` → `query-docs`) FIRST for API signatures, config, version migration. Fall back to Tavily ONLY for CVE notices, community-pattern news, ecosystem updates. WebFetch is last resort."
-3. Both agents return findings using the shared schema in `.claude/skills/senior-prompt-engineer/references/parallel-batch-contracts.md` (single column shape across both members).
-4. Continue reading immediately — do not wait for agents.
-5. Collect background results.
-6. Consolidate per `parallel-batch-contracts.md § 5` (dedupe by Finding, max Confidence/Impact, sort by severity).
-7. **Do NOT implement.** Research only.
+2. Fire `librarian` in background for external documentation **IF** any library, package, or external API is mentioned.
+3. Continue reading immediately — do not wait for agents.
+4. Collect background results.
+5. Output structured findings table with confidence (1-5), source, impact.
+6. **Do NOT implement.** Research only.
 
 ---
 
@@ -96,12 +104,10 @@ Direct quotes for important claims. Actionable insights only.
 
 ## Findings format
 
-Per `.claude/skills/senior-prompt-engineer/references/parallel-batch-contracts.md § 2`:
-
-| # | Finding | Confidence (1-5) | Source | Impact (Low/Med/High) |
+| # | Finding | Confidence | Source | Impact |
 |---|---|---|---|---|
-| 1 | … | 4 | code | high |
-| 2 | … | 5 | docs | high |
+| 1 | … | 4 | codebase: path/file | high |
+| 2 | … | 5 | docs: URL | high |
 
 ## Knowledge gaps
 

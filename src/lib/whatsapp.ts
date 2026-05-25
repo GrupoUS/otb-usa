@@ -6,7 +6,7 @@
 export const WHATSAPP_SDR_E164 = "556294705081";
 
 export const WHATSAPP_DEFAULT_MESSAGE =
-	"Olá, Laura! Gostaria de falar sobre os programas do Grupo US e qual faz sentido para o meu momento.";
+	"Olá, Laura! Quero saber mais sobre a próxima turma do OTB nos Estados Unidos.";
 
 const REQUIRED_PREFIX = "Olá, Laura!";
 

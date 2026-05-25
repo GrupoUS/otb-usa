@@ -43,8 +43,8 @@ Common Astro recovery patterns (from `astro` skill → troubleshooting.md):
 - **Content Collection not found** → Check `src/content/<name>/` exists with at least one file
 - **Hydration mismatch** → Guard browser-only APIs with `typeof window !== 'undefined'`
 - **Tailwind classes not working** → Verify `@import "tailwindcss"` in global.css + `@tailwindcss/vite` in astro.config.mjs
-- **ViewTransitions error** → Replace with `ClientRouter` from `astro:transitions` (Astro 6)
-- **config.ts errors** → Astro 6 infers schemas, delete `src/content/config.ts`
+- **Transition-router error** → Remove `ClientRouter` / `ViewTransitions`; OTB USA stays Astro static MPA
+- **config.ts errors** → This repo uses `src/content.config.ts`; remove accidental `src/content/config.ts` files
 
 ## Step 4: CONSULT oracle
 
@@ -65,7 +65,7 @@ Before declaring unrecoverable, verify:
 - [ ] Vite cache cleared (`rm -rf node_modules/.vite .astro`)
 - [ ] `bunx astro check` passes (TypeScript + Content Collections)
 - [ ] `bun run build` succeeds (full static build)
-- [ ] No `ViewTransitions` usage (must be `ClientRouter`)
+- [ ] No `ClientRouter` / `ViewTransitions` usage (static MPA only)
 - [ ] Using `src/content.config.ts` (project uses explicit Zod schemas, NOT inference)
 - [ ] React island props are plain objects (`.data`, not `CollectionEntry`)
 - [ ] `client:*` directives only on `.tsx` files, never `.astro`

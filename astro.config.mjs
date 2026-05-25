@@ -7,7 +7,7 @@ import { defineConfig, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://harmonic-pascal.grupous.com.br",
+	site: "https://otb.drasacha.com.br",
 	fonts: [
 		{
 			name: "Playfair Display",

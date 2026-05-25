@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /404
 
-Sitemap: https://harmonic-pascal.grupous.com.br/sitemap-index.xml
+Sitemap: https://otb.drasacha.com.br/sitemap-index.xml

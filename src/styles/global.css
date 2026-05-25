@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@source not "../../.claude";
+@source not "../../docs";
+@source not "../../evals";
+
 /* ===== Design System (Navy/Gold) ===== */
 
 @theme {
@@ -194,28 +198,31 @@ body {
 	}
 }
 
-/* Base state: hidden until IntersectionObserver triggers */
-[data-reveal] {
+/* Progressive enhancement: pre-reveal state applies only when the inline
+   `<html class="js">` flag is present. If the script never runs (network
+   error, blocked, parser delay), content stays visible instead of stuck
+   at opacity:0 on the navy background. */
+.js [data-reveal] {
 	opacity: 0;
 }
 
-[data-reveal].revealed {
+.js [data-reveal].revealed {
 	will-change: transform, opacity;
 }
 
-[data-reveal="up"].revealed {
+.js [data-reveal="up"].revealed {
 	animation: reveal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-[data-reveal="left"].revealed {
+.js [data-reveal="left"].revealed {
 	animation: reveal-left 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-[data-reveal="right"].revealed {
+.js [data-reveal="right"].revealed {
 	animation: reveal-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-[data-reveal="scale"].revealed {
+.js [data-reveal="scale"].revealed {
 	animation: reveal-scale 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -241,8 +248,8 @@ body {
 
 /* Reveal: visible immediately when user prefers reduced motion */
 @media (prefers-reduced-motion: reduce) {
-	[data-reveal],
-	[data-reveal].revealed {
+	.js [data-reveal],
+	.js [data-reveal].revealed {
 		opacity: 1;
 		animation: none !important;
 		transform: none;
@@ -324,7 +331,10 @@ body {
 /* ===== Enhanced Card Hover ===== */
 
 @utility card-glow-hover {
-	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	transition:
+		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-glow-hover:hover {

@@ -30,3 +30,4 @@ __pycache__/
 
 # Lighthouse cache (created by chrome-launcher on WSL)
 C\:*
+.vercel

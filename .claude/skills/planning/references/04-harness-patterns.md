@@ -54,12 +54,12 @@ Use these anchors to prevent score drift. Calibrate evaluator judgment before ea
 - [ ] `exact/path/to/other.ts` — [what it does]
 
 **Acceptance Criteria:**
-- [ ] `bun test apps/api/src/path/test.ts` passes
-- [ ] `${tooling.packageManager} run ${tooling.typeChecker}` reports 0 errors
-- [ ] [Playwright: user can do X without Y error]
+- [ ] `bun run lint` passes
+- [ ] `bunx astro check` reports 0 errors
+- [ ] `bun run build` succeeds
 - [ ] Edge case: [describe at least 1 edge case and expected behavior]
 
-**Done Definition:** `${tooling.packageManager} run ${tooling.typeChecker} && ${tooling.packageManager} run ${tooling.testRunner} <path>`
+**Done Definition:** `bun run lint && bunx astro check && bun run build`
 
 **Boundary (NOT in this sprint):**
 - [Feature A] — defer to Sprint N+1

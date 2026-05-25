@@ -1,0 +1,16 @@
+/*
+ * OTB Theme - optional portable CSS token artifact.
+ * Runtime source of truth for this repo: src/styles/global.css.
+ */
+
+:root {
+  --color-navy: #1a1a2e;
+  --color-navy-light: #2a2a40;
+  --color-navy-lighter: #3d3d5c;
+  --color-gold: #d4af37;
+  --color-gold-light: #e8c96a;
+  --color-gold-dark: #b8960c;
+  --color-text-primary: #fafaf9;
+  --color-text-muted: #94a3b8;
+  --color-whatsapp: #25d366;
+}

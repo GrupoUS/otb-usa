@@ -128,8 +128,8 @@ Key: `display=swap` prevents Flash of Invisible Text (FOIT).
 # Check bundle sizes
 ANALYZE=true bun run build
 
-# Lighthouse audit
-npx lighthouse http://localhost:4321 --preset=desktop
+# Lighthouse audit (with local preview running)
+bunx lighthouse http://localhost:4321 --preset=desktop
 ```
 
 ## Preloading & Prefetching

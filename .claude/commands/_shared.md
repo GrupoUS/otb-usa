@@ -24,27 +24,64 @@ Substitution placeholders used in commands (resolve at runtime):
 | `${project.name}` | `project.name` |
 | `${project.stagingUrl}` | `project.stagingUrl` |
 | `${project.locale}` | `project.locale` |
+| `${paths.backendRoot}` | `paths.backendRoot` |
 | `${paths.frontendRoot}` | `paths.frontendRoot` |
+| `${paths.schemaRoot}` | `paths.schemaRoot` |
 | `${paths.libRoot}` | `paths.libRoot` |
 | `${paths.componentsRoot}` | `paths.componentsRoot` |
-| `${paths.stylesRoot}` | `paths.stylesRoot` |
 | `${tooling.packageManager}` | `tooling.packageManager` |
 | `${tooling.buildTool}` | `tooling.buildTool` |
 | `${tooling.typeChecker}` | `tooling.typeChecker` |
 | `${tooling.linter}` | `tooling.linter` |
+| `${tooling.testRunner}` | `tooling.testRunner` |
 | `${gates.lighthouse.*}` | `gates.lighthouse.*` |
 | `${gates.lcp/cls/inp/initialJsKb}` | `gates.*` |
+| `${rulesDir}` | `rulesDir` (defaults to `.claude/rules`) |
 
-### Rule file resolution
+**Rule layer.** All project rules + supplements live under `${rulesDir}`. No overlay folder, no overlay-first resolution. Tier 2 rules auto-load via `globs:` frontmatter; supplements load on demand by command/skill:
 
-Rules live at `.claude/rules/<file>.md` and are project-authoritative. When a command or skill says "read `.claude/rules/<file>.md`", read it directly:
+| File | Purpose |
+|---|---|
+| `${rulesDir}/routing-supplements.md` | Project-specific routing matrix rows (loaded by `/prime`, `/implement`) |
+| `${rulesDir}/verify-supplements.md` | Project-specific smoke tests (loaded by `/verify`) |
+| `Skill("debugger")` → `references/anti-patterns.md` | Project-specific bug patterns + Negative Constraints index |
+| `Skill("planning")` → `references/layer-map.md` | Project-specific layer map for sprint phase ordering |
+| `Skill("otb-usa")` → product/legal references | OTB USA product, copy, audience, CTA and Harvard legal guardrails |
+| `${rulesDir}/docs/evolution/` | Runtime data: errors.jsonl, memory.db, HANDOFF.md (not docs) |
 
-```bash
-RULE=frontend.md
-cat ".claude/rules/$RULE"
+Project identity, cardinal rules, and constraints live in **root `AGENTS.md`** (always loaded as Tier 1).
+
+---
+
+## Section 0.5: Superpowers Bootstrap
+
+Every command **MUST** invoke the superpowers meta-router as the first skill load, before any other skill, agent, or Bash call:
+
+```typescript
+Skill("superpowers:using-superpowers"); // meta-router — sets discipline + announce pattern
 ```
 
-Available rules: `frontend.md`, `DESIGN.md`, `stability.md`, `seo.md`. See `.claude/rules/README.md` for scope of each.
+This loads the discipline-skill index and the "announce-before-action" rule. OTB domain skills (`debugger`, `planning`, `evolution-core`, `otb-usa`, `otb-theme`, `astro`, `performance-optimization`) are loaded **after** the superpowers method layer, per § 12 (Skill invocation order).
+
+Exceptions:
+- `/prime` is a context loader — it only **recommends** the next command run the bootstrap.
+- Subagents skip the bootstrap (superpowers `<SUBAGENT-STOP>` directive).
+
+---
+
+## Section 0.7: Path Conventions
+
+Specs, plans, and learnings produced by the superpowers pipeline use these canonical paths:
+
+| Artifact | Path | Producer |
+|---|---|---|
+| Design spec | `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` | `Skill("superpowers:brainstorming")` |
+| Implementation plan | `docs/superpowers/plans/YYYY-MM-DD-<topic>-plan.md` | `Skill("superpowers:writing-plans")` |
+| Session handoff | `${rulesDir}/docs/evolution/HANDOFF.md` | `Skill("evolution-core")` § Session Handoff |
+| Audit report | `docs/AUDIT-REPORT-YYYY-MM-DD.md` | `/debug audit` |
+| Phase tracker | `.claude/logs/progress.md` | `/implement` (append on phase complete) |
+
+Folders auto-created on first write. OTB USA `.claude/logs/progress.md` remains the chronological phase tracker when a command requires phase tracking.
 
 ---
 
@@ -58,12 +95,31 @@ Available rules: `frontend.md`, `DESIGN.md`, `stability.md`, `seo.md`. See `.cla
 
 ```bash
 # Resolve from config
-${tooling.packageManager} run ${tooling.typeChecker}    # or `bunx tsgo`, `npx tsc --noEmit`, etc.
-${tooling.packageManager} run lint                       # or direct: `bunx biome check`, `eslint .`
-${tooling.packageManager} run test                       # only when test runner configured
+bunx astro check                                      # OTB type/content gate
+${tooling.packageManager} run lint                     # or direct: `bunx biome check`, `bunx oxlint`
+${tooling.packageManager} run test                     # only when test runner configured
 ```
 
 > **Pre-commit:** run formatter+linter on every manually edited file. Most linters (`biome`, `eslint`) treat errors as build-breaking — they fail CI immediately.
+
+---
+
+## Section 1.5: Verification Gate (evidence before completion)
+
+Before any command (or phase inside a command) claims success, invoke:
+
+```typescript
+Skill("superpowers:verification-before-completion");
+```
+
+The skill enforces: a verification command was actually run, its full stdout + exit code are captured, and the claim of "done / fixed / passing" cites that evidence. No claim without evidence.
+
+Apply at:
+- Tail of any command that mutates code (`/implement`, `/debug` fix mode, `/design` Phase 2, `/perf fix`, `/evolve`).
+- Inside `/verify` Phase 0 — gates pass condition becomes evidence-bound, not assumption-bound.
+- Per-phase tail inside `/implement` Mode B and `/debug` fix mode.
+
+Anti-pattern: marking a task complete after only inspecting code; running `bun run type-check` then forgetting to check exit code; assuming a fix worked because the diff "looks right".
 
 ---
 
@@ -74,7 +130,7 @@ ${tooling.packageManager} run test                       # only when test runner
 | L1-L2 | Single file, known pattern, trivial | Direct — no agents |
 | L3 | Multi-file, single domain | 1 background agent |
 | L4-L5 | Multi-domain, parallel changes | 2-3 parallel agents |
-| L6+ | Architecture, multi-service | Agent Teams |
+| L6+ | Architecture, multi-service | Coordinator + specialist agents; use Agent Teams only when the runtime exposes them |
 
 ---
 
@@ -92,8 +148,6 @@ ${tooling.packageManager} run test                       # only when test runner
 | Architecture consultation | `evaluator` (Mode 3) | Caller decides |
 
 Read-only agents (`explorer`, `librarian`) **must** use `run_in_background: true`.
-
-> **Spawn contract:** every `Agent()` / `Task()` invocation MUST inject the 5 mandatory context fields from `.claude/skills/senior-prompt-engineer/references/agent-handoff-contracts.md § 1`. Do not duplicate the field list in command bodies — link only.
 
 **Explorer vs Librarian:**
 
@@ -113,15 +167,16 @@ Before any task, load the right tier:
 
 | Domain | Command | Loads |
 |---|---|---|
-| Frontend | `/prime frontend` | frontend.md baseline + staged design refs on demand |
+| Frontend | `/prime frontend` | DESIGN.md baseline (merged web-layer rule) + staged design refs on demand |
 | Backend / API / DB | `/prime backend` | backend.md + database.md + stability.md baseline + targeted refs |
 | Full-stack / multi-domain | `/prime` (auto) or `/prime fullstack` | Intent-based Tier 2 + exact Tier 3 only when justified |
-| Continuing prior session | Read `.claude/docs/evolution/HANDOFF.md` first | — |
+| Continuing prior session | Read `${rulesDir}/docs/evolution/HANDOFF.md` first | — |
 
 **Tier 3 (read on demand only):**
-- `docs/architecture/` (if exists) — runtime/env, schema reference, learnings
-- `docs/design-specs/` (if exists) — design system foundation, frontend learnings, feature specs
-- ADRs — irreversible decisions; read when scope touches that decision
+- `Skill("otb-usa")` — OTB product, audience, CTA, legal/Harvard guardrails
+- `Skill("otb-theme")` — Navy/Gold tokens, design canon, frontend handoff
+- `Skill("astro")` — static Astro MPA, Content Collections, OTB overlay
+- `${rulesDir}/docs/` — project Tier-3 markdown the host project chooses to keep outside skills (e.g. PRDs, planning docs)
 
 ---
 
@@ -133,7 +188,7 @@ Before any task, load the right tier:
 |---|---|---|---|---|
 | `Agent()` | Spawn subagent | L3+ tasks needing specialist | L1-L2 (overhead > value) | Background agents cannot Write/Edit |
 | `Skill()` | Load domain context | Before any domain action — even 1% match | Never skip | Multiple skills OK; process skills before implementation skills |
-| `TeamCreate / TaskCreate` | Agent teams | L6+ multi-service tasks with true parallelism | Below L6 (coordination overhead) | Must `TeamDelete` when done |
+| Agent Team tools | Runtime-native agent teams | L6+ multi-service tasks with true parallelism and team tools available | Below L6, or when tools are unavailable | If unavailable, use a coordinator agent plus explicit phase gates |
 | `mcp__tavily__search` | Web search (current) | Research, version checks, CVE audits, external API patterns | Known codebase patterns (use Grep) | Add year/version to query for non-stale |
 | `mcp__claude_ai_Context7__*` | Library/framework docs | Any library Q: API, config, migration | General research (Tavily); internal (Grep) | resolve-library-id first → query-docs |
 | `mcp__sequential-thinking__sequentialthinking` | Multi-step reasoning | L4+, ambiguous, 3+ file errors, irreversible | L1-L2, known patterns | Invoke BEFORE acting |
@@ -149,12 +204,11 @@ Single source of truth — used by `/implement`, `/design`, `/verify`, `/debug a
 | Domain / task signal | Primary skill | Supporting skills |
 |---|---|---|
 | Bug fix / runtime error / regression | `debugger` | `evolution-core` (post-fix capture) |
-| Plan / decompose / architecture decision | `planning` | `senior-prompt-engineer` (mandatory when plan spawns ≥2 agents) |
-| Multi-agent orchestration / handoff schema / agent file authoring | `senior-prompt-engineer` | `planning` (if planning involved) |
-| UI / component / page / design system | `ui-ux-pro-max` + `frontend-design` | `debugger` (if mid-fix) |
-| Performance / SEO / security baseline / Core Web Vitals / bundle | `performance-optimization` | `supabase-postgres-best-practices` (DB perf) |
-| Postgres query / schema / RLS perf | `supabase-postgres-best-practices` | `supabase` |
-| Supabase product (Database, Auth, Storage, Edge Functions, Realtime, MCP) | `supabase` | `supabase-postgres-best-practices` |
+| Plan / decompose / architecture decision | `planning` | `senior-prompt-engineer` (if AI feature) |
+| UI / component / page / design system | `otb-theme` + `astro` | `debugger` (if mid-fix) |
+| Performance / SEO / security baseline / Core Web Vitals / bundle | `performance-optimization` | Host database/performance skill if present |
+| Database query / schema / permission model | Host database skill if present | `debugger` |
+| External provider / deployment / product API | Host provider skill if present | `librarian` for external docs |
 | Spreadsheet / financial model | `xlsx` | — |
 | Skill creation / iteration | `skill-creator` | — |
 | Memory / cross-session learning | `evolution-core` | — |
@@ -166,6 +220,14 @@ If domain isn't listed → no skill applies; use rules + tool docs directly.
 
 ## Section 7: Parallel Agent Spawn pattern
 
+Before any parallel batch, invoke:
+
+```typescript
+Skill("superpowers:dispatching-parallel-agents");
+```
+
+This skill enforces: distinct scope per agent, shared return contract, single-message dispatch, stopping conditions. The numbered rules below are the local OTB USA quick-reference.
+
 When invoking 2+ agents in parallel:
 
 1. **Single message** — all `Agent()` calls in the same response (concurrent execution).
@@ -176,16 +238,6 @@ When invoking 2+ agents in parallel:
 6. **Maximum 5 spawns per user request** (per CLAUDE.md stopping conditions). At 5 → checkpoint with user.
 
 Anti-pattern: spawning agents serially across multiple messages → loses parallelism + multiplies overhead.
-
----
-
-## Section 7.5: Handoff Contract Schema
-
-All agents — single, parallel-batch, or coordinator-managed — return findings using the canonical schema in `.claude/skills/senior-prompt-engineer/references/agent-handoff-contracts.md`. Parallel batches additionally conform to `.claude/skills/senior-prompt-engineer/references/parallel-batch-contracts.md` (shared columns + severity scale + consolidation rules).
-
-The 5 mandatory context fields injected on every spawn live in the same skill (`agent-handoff-contracts.md § 1`). Commands MUST link to the SSOT — do not redeclare the field list in command bodies.
-
-Coordinator failure recovery (max 2 resubmissions per task on `REVISION_REQUIRED` before `BLOCKED` → `/debug recover`): see `agent-handoff-contracts.md § 4`.
 
 ---
 
@@ -266,12 +318,12 @@ Hard limit: 3 cycles. After 3 unresolved → flag to user as a research blocker.
 | Guardrail | Canonical location | Trigger |
 |---|---|---|
 | Stability checklist A-L | `.claude/rules/stability.md` | Any code change |
-| Render mode declaration | `.claude/rules/frontend.md` | Page/route changes |
-| Content Collections SSOT | `.claude/rules/frontend.md` | Product/team copy edits |
-| External redirect tri-sync | `.claude/rules/frontend.md` | externalSiteUrl change |
-| WhatsApp SSOT | `.claude/rules/frontend.md` | WhatsApp URL/CTA edits |
-| Design tokens / no hex | `.claude/rules/DESIGN.md` | Style changes |
-| Anti-patterns + debug triage | `.claude/rules/stability.md` | Per-project bugs |
+| DB FK index requirement | `.claude/rules/database.md` | Schema changes |
+| Render mode + polling + mutations | `.claude/rules/DESIGN.md` | Page/route changes |
+| RLS / auth model | `.claude/rules/database.md` + `.claude/rules/backend.md` | Auth/data changes |
+| Webhook idempotency | `.claude/rules/integrations.md` | Webhook handlers |
+| Design tokens / no hex / mobile scroll owner | `.claude/rules/DESIGN.md` | Style changes |
+| Project-specific anti-patterns | `Skill("debugger")` → `references/anti-patterns.md` | Per-project bugs |
 | Pre-commit formatter/linter | `${tooling.linter}` per AGENTS.md | Every commit |
 
 ---
@@ -280,8 +332,10 @@ Hard limit: 3 cycles. After 3 unresolved → flag to user as a research blocker.
 
 When a task touches multiple domains, invoke skills in this order:
 
-1. **Process skills first** — `planning`, `debugger`, `evolution-core` (set the methodology)
-2. **Domain skills second** — `supabase`, `supabase-postgres-best-practices`, `performance-optimization`, `senior-prompt-engineer`
-3. **Implementation/design skills last** — `ui-ux-pro-max`, `frontend-design`, `xlsx`, `skill-creator`
+1. **Meta layer** — `superpowers:using-superpowers` (always first, per § 0.5)
+2. **Superpowers method** — `superpowers:brainstorming` / `writing-plans` / `executing-plans` / `subagent-driven-development` / `test-driven-development` / `systematic-debugging` / `verification-before-completion` / `requesting-code-review` / `receiving-code-review` / `dispatching-parallel-agents` / `using-git-worktrees` / `finishing-a-development-branch` / `writing-skills` (HOW: discipline + format)
+3. **OTB knowledge** — `otb-usa`, `planning`, `debugger`, `evolution-core` (WHAT: product rules, bug catalog, layer-map, anti-patterns, memory)
+4. **Domain skills** — `astro`, `performance-optimization`, `senior-prompt-engineer`
+5. **Implementation/design skills last** — `otb-theme`, `ui-ux-pro-max`, `xlsx`, `skill-creator`
 
-Multiple skills can be loaded in the same response; order matters because earlier skills set context that later ones build on.
+Multiple skills can be loaded in the same response; order matters because earlier skills set context that later ones build on. The pipeline `spec (brainstorming) → plan (writing-plans) → execute (executing-plans / subagent-driven-development) → verify (verification-before-completion) → review (requesting-code-review / receiving-code-review) → finish (finishing-a-development-branch)` is the canonical flow for any L3+ feature work.
