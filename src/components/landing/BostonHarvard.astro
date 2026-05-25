@@ -45,7 +45,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 				{bostonHarvard.descricao}
 			</p>
 
-			<div class="mt-8 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_70%,transparent)] px-4 py-2 text-xs uppercase tracking-[0.2em] text-text-primary/80">
+			<div class="mt-8 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-navy-soft-70 px-4 py-2 text-xs uppercase tracking-[0.2em] text-text-primary/80">
 				<Icon name="calendar" size={14} strokeWidth={2} class="text-gold" />
 				{bostonHarvard.datas}
 			</div>
@@ -58,7 +58,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 					data-reveal="up"
 					data-reveal-delay={String(idx + 2)}
 				>
-					<div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-gold)_35%,transparent)] bg-[color-mix(in_srgb,var(--color-gold)_10%,transparent)] text-gold">
+					<div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-mid-35 bg-gold-tint-10 text-gold">
 						<Icon name={cardIcons[idx] ?? "sparkles"} size={22} strokeWidth={1.75} />
 					</div>
 					<h3 class="font-serif text-lg font-semibold leading-tight text-text-primary">
@@ -71,19 +71,20 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 
 		{bostonHarvard.freshStats && bostonHarvard.freshStats.length === 3 && (
 			<div
-				class="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5"
+				class="mt-16 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-x-10 sm:divide-x sm:divide-gold/20"
 				aria-label="Diferenciais de Fresh Specimens"
 			>
 				{bostonHarvard.freshStats.map((stat, idx) => (
 					<div
-						class="glass-card flex flex-col items-start gap-2 rounded-2xl p-7"
+						class="flex flex-col items-start gap-3 sm:px-8 sm:first:pl-0 sm:last:pr-0"
 						data-reveal="up"
 						data-reveal-delay={String(idx + 2)}
 					>
-						<span class="font-serif text-5xl font-bold leading-none text-gradient-gold tabular-nums sm:text-6xl">
+						<span class="block h-px w-12 bg-gold" aria-hidden="true"></span>
+						<span class="font-serif text-6xl font-bold leading-[0.95] tracking-tight tabular-nums text-text-primary sm:text-7xl">
 							{stat.valor}
 						</span>
-						<span class="text-[11px] font-semibold uppercase tracking-[0.22em] text-text-muted">
+						<span class="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold/85">
 							{stat.rotulo}
 						</span>
 					</div>

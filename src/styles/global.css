@@ -42,8 +42,24 @@ body {
 
 /* ===== Custom Utilities ===== */
 
-@utility gold-glow {
-	box-shadow: 0 0 20px color-mix(in srgb, var(--color-gold) 30%, transparent);
+/* Consolidated tint utilities — replace the 3 highest-frequency inline color-mix
+   tokens used across landing components. Restrained set; exotic one-off tints
+   (12%, 15%, 18%, 22%, 25%, 30%, 45%, 55%, 60%) stay inline by intent. */
+
+@utility bg-gold-tint-10 {
+	background-color: color-mix(in srgb, var(--color-gold) 10%, transparent);
+}
+
+@utility bg-navy-soft-70 {
+	background-color: color-mix(
+		in srgb,
+		var(--color-navy-light) 70%,
+		transparent
+	);
+}
+
+@utility border-gold-mid-35 {
+	border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
 }
 
 @utility glass-card {
@@ -292,40 +308,6 @@ body {
 /* Card hover lift effect */
 .card-hover-lift:hover {
 	transform: translateY(-6px) scale(1.01);
-}
-
-/* ===== Aceternity UI Animations ===== */
-
-@keyframes spotlight {
-	0% {
-		opacity: 0;
-		transform: translate(-72%, -62%) scale(0.5);
-	}
-	100% {
-		opacity: 1;
-		transform: translate(-50%, -40%) scale(1);
-	}
-}
-
-@utility animate-spotlight {
-	animation: spotlight 2s ease 0.75s 1 forwards;
-}
-
-@keyframes aurora {
-	from {
-		background-position:
-			50% 50%,
-			50% 50%;
-	}
-	to {
-		background-position:
-			350% 50%,
-			350% 50%;
-	}
-}
-
-@utility animate-aurora {
-	animation: aurora 60s linear infinite;
 }
 
 /* ===== Enhanced Card Hover ===== */

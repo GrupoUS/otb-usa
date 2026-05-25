@@ -50,11 +50,14 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 					{investimento.descricao}
 				</p>
 
-				<ul class="mt-8 space-y-3" aria-label="O que está incluído">
+				<ul
+					class="mt-8 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2"
+					aria-label="O que está incluído"
+				>
 					{investimento.beneficios.map((b) => (
-						<li class="flex items-start gap-3 text-sm leading-relaxed text-text-primary/90 sm:text-base">
-							<span class="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] text-gold">
-								<Icon name="check" size={14} strokeWidth={2.5} />
+						<li class="flex items-start gap-3 text-sm leading-relaxed text-text-primary/90">
+							<span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] text-gold">
+								<Icon name="check" size={12} strokeWidth={2.5} />
 							</span>
 							<span>{b}</span>
 						</li>

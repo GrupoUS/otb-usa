@@ -42,7 +42,7 @@ const { audience } = Astro.props;
 				<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					{audience.categorias.map((c, idx) => (
 						<li
-							class="card-glow-hover group flex items-center gap-4 rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_70%,transparent)] p-5 transition-colors hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)]"
+							class="card-glow-hover group flex items-center gap-4 rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] bg-navy-soft-70 p-5 transition-colors hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)]"
 							data-reveal="up"
 							data-reveal-delay={String(((idx % 6) + 1))}
 						>
@@ -55,26 +55,35 @@ const { audience } = Astro.props;
 				</ul>
 
 				{audience.personaBullets && audience.personaBullets.length > 0 && (
-					<div class="mt-12" data-reveal="up" data-reveal-delay="2">
+					<div class="mt-14" data-reveal="up" data-reveal-delay="2">
+						<div class="flex items-center gap-3">
+							<span class="h-px w-10 bg-gold/60"></span>
+							<span class="text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
+								Perfil do aluno
+							</span>
+						</div>
 						{audience.personaIntro && (
-							<p class="max-w-2xl font-serif text-base leading-relaxed text-text-primary/85 italic sm:text-lg">
+							<p class="mt-5 max-w-2xl font-serif text-xl leading-snug tracking-tight text-text-primary sm:text-2xl">
 								{audience.personaIntro}
 							</p>
 						)}
-						<ul class="mt-6 space-y-3">
+						<ol class="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
 							{audience.personaBullets.map((bullet, idx) => (
 								<li
-									class="flex items-start gap-3 text-sm leading-relaxed text-text-primary/90 sm:text-base"
+									class="flex items-baseline gap-4 text-sm leading-relaxed text-text-primary/90 sm:text-base"
 									data-reveal="up"
-									data-reveal-delay={String(idx + 3)}
+									data-reveal-delay={String((idx % 4) + 3)}
 								>
-									<span class="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] text-gold">
-										<Icon name="check" size={14} strokeWidth={2.5} />
+									<span
+										class="shrink-0 font-serif text-2xl font-semibold leading-none tabular-nums text-gold/80 sm:text-3xl"
+										aria-hidden="true"
+									>
+										{String(idx + 1).padStart(2, "0")}
 									</span>
-									<span>{bullet}</span>
+									<span class="border-l border-gold/20 pl-4">{bullet}</span>
 								</li>
 							))}
-						</ul>
+						</ol>
 					</div>
 				)}
 			</div>

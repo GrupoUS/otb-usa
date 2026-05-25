@@ -41,9 +41,15 @@ const { turmas } = Astro.props;
 						class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
 					/>
 					<figcaption
-						class="absolute inset-x-0 bottom-0 bg-linear-to-t from-navy via-navy/70 to-transparent p-6 pt-16 text-sm text-text-muted"
+						class="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-linear-to-t from-navy via-navy/80 to-transparent p-6 pt-20"
 					>
-						{foto.alt}
+						<span class="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">
+							<span class="h-px w-6 bg-gold/70"></span>
+							Edição {String(idx + 1).padStart(2, "0")}
+						</span>
+						<span class="font-serif text-base leading-snug text-text-primary">
+							{foto.alt}
+						</span>
 					</figcaption>
 				</figure>
 			))}
