@@ -1,0 +1,18 @@
+---
+/**
+ * Decorative section divider. Navy → Gold filete.
+ * Cardinal #3: no emoji. Cardinal #7: no inline hex (uses CSS tokens).
+ */
+export interface Props {
+	class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<div class={`relative mx-auto h-px w-full max-w-7xl ${className}`} aria-hidden="true">
+	<div
+		class="absolute inset-0 bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--color-gold)_55%,transparent)] to-transparent"
+	>
+	</div>
+</div>

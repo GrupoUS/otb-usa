@@ -1,0 +1,118 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { whatsappUrlWithText } from "../../lib/whatsapp";
+import Icon from "../icons/Icon.astro";
+
+export interface Props {
+	hero: CollectionEntry<"products">["data"]["hero"];
+}
+
+const { hero } = Astro.props;
+const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
+---
+
+<section
+	id="topo"
+	class="relative isolate overflow-hidden landing-mesh-bg"
+	aria-labelledby="hero-heading"
+>
+	<div
+		class="absolute inset-0 -z-10 opacity-30"
+		aria-hidden="true"
+		style={`background-image: linear-gradient(180deg, color-mix(in srgb, var(--color-navy) 80%, transparent) 0%, var(--color-navy) 85%), url('${hero.background.image}'); background-size: cover; background-position: center;`}
+	>
+	</div>
+
+	<div class="mx-auto grid min-h-[92vh] max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 lg:grid-cols-12 lg:gap-16 lg:px-8">
+		<div class="lg:col-span-8" data-reveal="up">
+			<div class="mb-8 flex flex-wrap items-center gap-3">
+				<span
+					class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)] px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.22em] text-gold backdrop-blur"
+				>
+					<Icon name="map-pin" size={14} strokeWidth={2} />
+					Boston • Estados Unidos
+				</span>
+			</div>
+
+			<h1
+				id="hero-heading"
+				class="font-serif text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-[4.25rem]"
+			>
+				<span class="block text-text-primary">{hero.headline}</span>
+				{hero.highlight && (
+					<span class="mt-2 block text-shimmer">{hero.highlight}</span>
+				)}
+			</h1>
+
+			<p
+				class="mt-8 max-w-2xl text-lg leading-relaxed text-text-muted sm:text-xl"
+				data-reveal="up"
+				data-reveal-delay="2"
+			>
+				{hero.subheadline}
+			</p>
+
+			<ul
+				class="mt-10 flex flex-wrap gap-2.5"
+				data-reveal="up"
+				data-reveal-delay="3"
+				aria-label="Diferenciais do programa"
+			>
+				{hero.badges.slice(1).map((badge: string) => (
+					<li
+						class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_70%,transparent)] px-3.5 py-1.5 text-xs font-medium text-text-primary/90"
+					>
+						<span class="h-1.5 w-1.5 rounded-full bg-gold gold-pulse-glow" aria-hidden="true"></span>
+						{badge}
+					</li>
+				))}
+			</ul>
+
+			<div class="mt-12 flex flex-wrap items-center gap-4" data-reveal="up" data-reveal-delay="4">
+				<a
+					href={ctaHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="group inline-flex items-center gap-3 rounded-full bg-gold px-7 py-4 font-semibold text-navy shadow-[0_18px_45px_-12px_color-mix(in_srgb,var(--color-gold)_55%,transparent)] transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+					aria-label="Falar com Laura no WhatsApp"
+				>
+					<Icon name="message-circle" size={20} strokeWidth={2.25} />
+					<span>{hero.cta.label}</span>
+					<Icon name="arrow-right" size={18} strokeWidth={2.25} class="transition-transform duration-300 group-hover:translate-x-1" />
+				</a>
+				<a
+					href="#programa"
+					class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] px-6 py-3.5 text-sm font-medium text-text-primary/90 transition-colors hover:border-gold hover:text-gold"
+				>
+					Conhecer o programa
+				</a>
+			</div>
+		</div>
+
+		<div class="lg:col-span-4" data-reveal="scale" data-reveal-delay="2">
+			<div class="glass-card-bright relative rounded-3xl p-8 float-gentle">
+				<div class="text-[11px] uppercase tracking-[0.32em] text-gold/80">
+					Imersão internacional
+				</div>
+				<div class="mt-4 font-serif text-3xl leading-tight text-text-primary">
+					Boston &amp; ecossistema acadêmico de
+					<span class="text-gradient-gold">Harvard</span>
+				</div>
+				<div class="mt-6 space-y-3">
+					<div class="flex items-start gap-3 text-sm text-text-muted">
+						<Icon name="graduation-cap" size={18} class="mt-0.5 text-gold" />
+						<span>320 horas de formação executiva</span>
+					</div>
+					<div class="flex items-start gap-3 text-sm text-text-muted">
+						<Icon name="shield-check" size={18} class="mt-0.5 text-gold" />
+						<span>Certificação MEC</span>
+					</div>
+					<div class="flex items-start gap-3 text-sm text-text-muted">
+						<Icon name="users" size={18} class="mt-0.5 text-gold" />
+						<span>Networking internacional premium</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

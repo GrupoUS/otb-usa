@@ -1,0 +1,101 @@
+{
+  "skill": "performance-optimization",
+  "version": "2.0.0",
+  "assertions": [
+    {
+      "id": "A01",
+      "description": "Output specifies a pack (performance-core, database-performance, security-baseline, or seo-geo-baseline)",
+      "type": "structural",
+      "check": "contains_one_of: [\"performance-core\", \"database-performance\", \"security-baseline\", \"seo-geo-baseline\"]",
+      "critical": true
+    },
+    {
+      "id": "A02",
+      "description": "Output includes a before/after metric table",
+      "type": "format",
+      "check": "contains: \"| Before |\"",
+      "critical": true
+    },
+    {
+      "id": "A03",
+      "description": "Output does NOT claim improvement without evidence",
+      "type": "behavioral",
+      "check": "not_contains: \"should improve\"",
+      "critical": true
+    },
+    {
+      "id": "A04",
+      "description": "Output references bun run check as a validation step",
+      "type": "structural",
+      "check": "contains: \"bun run check\"",
+      "critical": true
+    },
+    {
+      "id": "A05",
+      "description": "Output does NOT apply Next.js patterns to the Vite stack",
+      "type": "behavioral",
+      "check": "not_contains: \"app/robots.ts\"",
+      "critical": true
+    },
+    {
+      "id": "A06",
+      "description": "LCP target is stated as <= 2.5s when performance is discussed",
+      "type": "behavioral",
+      "check": "contains: \"2.5s\"",
+      "critical": false
+    },
+    {
+      "id": "A07",
+      "description": "Database pack: output references connection pool configuration (max, idleTimeoutMillis, or connectionTimeoutMillis)",
+      "type": "structural",
+      "check": "contains_one_of: [\"max:\", \"idleTimeoutMillis\", \"connectionTimeoutMillis\"]",
+      "critical": true
+    },
+    {
+      "id": "A08",
+      "description": "Database pack: output identifies N+1 patterns or SELECT * anti-patterns",
+      "type": "structural",
+      "check": "contains_one_of: [\"N+1\", \"SELECT *\", \"db.select().from\", \"inArray\"]",
+      "critical": true
+    },
+    {
+      "id": "A09",
+      "description": "Database pack: output does NOT recommend Next.js-specific DB patterns or ORMs not used in this project",
+      "type": "behavioral",
+      "check": "not_contains_one_of: [\"Prisma\", \"Sequelize\", \"TypeORM\"]",
+      "critical": false
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "T01",
+      "input": "Optimize the dashboard page for Core Web Vitals performance",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A06"]
+    },
+    {
+      "id": "T02",
+      "input": "Run a security baseline check on the application",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A05"]
+    },
+    {
+      "id": "T03",
+      "input": "Improve SEO readiness for the landing page",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A05"]
+    },
+    {
+      "id": "T04",
+      "input": "Full audit: performance, security, and SEO across the entire application",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A05", "A06"]
+    },
+    {
+      "id": "T05",
+      "input": "Optimize database query performance for the leads router",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A07", "A08"]
+    },
+    {
+      "id": "T06",
+      "input": "The API p95 is above 140ms. Diagnose and fix database bottlenecks.",
+      "expected_assertions": ["A01", "A02", "A03", "A07", "A08"]
+    }
+  ]
+}

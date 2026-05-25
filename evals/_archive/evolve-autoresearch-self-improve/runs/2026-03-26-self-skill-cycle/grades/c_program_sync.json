@@ -1,0 +1,46 @@
+{
+  "iteration": 1,
+  "candidate_id": "c_program_sync",
+  "status": "scored",
+  "hypothesis": "An explicit self-improvement boundary section should fix the two-target ambiguity without adding much complexity.",
+  "changes_summary": "Adds a section for self-improvement runs and command sync after one winning target.",
+  "prompt_path": "candidates/c_program_sync.prompt.txt",
+  "samples": [
+    {
+      "sample_id": "s01",
+      "criteria": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      },
+      "notes": "Ordinary run remains fully specified."
+    },
+    {
+      "sample_id": "s02",
+      "criteria": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      },
+      "notes": "Now clearly separates scored target from later command sync."
+    },
+    {
+      "sample_id": "s03",
+      "criteria": {
+        "C1": 0,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1
+      },
+      "notes": "Still weak on limited retry judgement and explicit crash row discipline."
+    }
+  ]
+}

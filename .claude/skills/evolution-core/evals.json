@@ -1,0 +1,136 @@
+{
+  "skill": "evolution-core",
+  "version": "2.0.0",
+  "assertions": [
+    {
+      "id": "A01",
+      "description": "Output references memory_manager.py as the CLI tool when memory intent",
+      "type": "structural",
+      "check": "contains: \"memory_manager.py\"",
+      "critical": true
+    },
+    {
+      "id": "A02",
+      "description": "Output uses correct CLI commands (capture, load_context, session, stats)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"capture\", \"load_context\", \"session start\", \"session end\", \"stats\"]",
+      "critical": true
+    },
+    {
+      "id": "A03",
+      "description": "Output references JSONL files for storage (errors.jsonl, sessions.jsonl)",
+      "type": "structural",
+      "check": "contains_one_of: [\".jsonl\", \"errors.jsonl\", \"sessions.jsonl\"]",
+      "critical": false
+    },
+    {
+      "id": "A04",
+      "description": "Output does NOT suggest modifying evolution files directly (use CLI instead)",
+      "type": "behavioral",
+      "check": "not_contains: \"echo >>\"",
+      "critical": true
+    },
+    {
+      "id": "A05",
+      "description": "Output references the evolution docs directory path",
+      "type": "structural",
+      "check": "contains_one_of: [\".claude/docs/evolution\", \"evolution/\"]",
+      "critical": false
+    },
+    {
+      "id": "A06",
+      "description": "Output references SQLite or memory.db for the persistent store",
+      "type": "structural",
+      "check": "contains_one_of: [\"SQLite\", \"sqlite\", \"memory.db\"]",
+      "critical": false
+    },
+    {
+      "id": "A07",
+      "description": "Output references hooks for automatic capture",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"hook\", \"session_context\", \"task_completed\", \"subagent_stop\", \"PostToolUse\", \"SessionStart\"]",
+      "critical": false
+    },
+    {
+      "id": "A08",
+      "description": "Routing surface (SKILL.md main body) is concise — pushes detail to references/",
+      "type": "format",
+      "check": "word_count_max: 600",
+      "critical": false
+    },
+    {
+      "id": "A09",
+      "description": "Optimizer intent: output references frozen harness + fixed grading budget rule",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"frozen harness\", \"fixed grading budget\", \"samples_per_iteration\", \"harness.json\"]",
+      "critical": true
+    },
+    {
+      "id": "A10",
+      "description": "Optimizer intent: references append-only experiments.tsv / keep|discard|crash decisions",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"experiments.tsv\", \"append-only\", \"keep | discard\", \"keep|discard\", \"crash\"]",
+      "critical": true
+    },
+    {
+      "id": "A11",
+      "description": "Optimizer intent: cites Karpathy autoresearch single-mutable-artifact rule",
+      "type": "structural",
+      "check": "contains_one_of: [\"karpathy/autoresearch\", \"single mutable artifact\", \"target_skill_prompt\", \"program.md\"]",
+      "critical": false
+    },
+    {
+      "id": "A12",
+      "description": "GPUS site intent: cites cardinal rule (Lucide / SSG / getCollection / no layout-prop animation)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"Lucide\", \"getCollection\", \"SSG\", \"transform/opacity\", \"Astro static\", \"MPA\"]",
+      "critical": true
+    },
+    {
+      "id": "A13",
+      "description": "GPUS site intent: routes to commercial-first heuristic (copy / SEO / CTA / funnel) before perf",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"copy and offer clarity\", \"commercial\", \"CTA\", \"funnel\", \"SEO\"]",
+      "critical": true
+    },
+    {
+      "id": "A14",
+      "description": "GPUS site intent: produces <answer> XML shape with baseline / experiment / validation / log_entry",
+      "type": "structural",
+      "check": "contains_one_of: [\"<answer>\", \"<baseline>\", \"<experiment>\", \"<validation>\", \"<log_entry>\"]",
+      "critical": false
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "T01",
+      "input": "How do I capture a bug fix learning using the evolution-core system?",
+      "expected_assertions": ["A01", "A02", "A04", "A05", "A08"]
+    },
+    {
+      "id": "T02",
+      "input": "How do I load historical context at the start of a new session?",
+      "expected_assertions": ["A01", "A02", "A05", "A06", "A08"]
+    },
+    {
+      "id": "T03",
+      "input": "How does the evolution-core system automatically capture errors?",
+      "expected_assertions": ["A01", "A03", "A04", "A05", "A07", "A08"]
+    },
+    {
+      "id": "T04",
+      "input": "Full overview: explain evolution-core architecture (memory + optimizer + GPUS profile), storage, CLI, hooks, and integration with /evolve.",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A05", "A06", "A07", "A09", "A10", "A11"]
+    },
+    {
+      "id": "T05",
+      "input": "Run a Karpathy-style optimize loop over the `debugger` skill prompt. What scripts and rules apply?",
+      "expected_assertions": ["A09", "A10", "A11"]
+    },
+    {
+      "id": "T06",
+      "input": "Run an autoresearch experiment on the GPUS Astro site to improve the home hero CTA. What is the priority order and output shape?",
+      "expected_assertions": ["A12", "A13", "A14"]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+Especificação de copy — Curso de Aurículo (landing Grupo US)
+
+1) H1: abrir com âncora de prazo nas quatro primeiras palavras (ex.: "Em 3 dias presenciais,") e citar auriculoterapia + perfuração auricular antes do fecho com o nome do curso.
+2) CTA primário: verbo de inscrição em primeira pessoa e tempo presente (ex.: "Quero me inscrever agora"). Nunca CTA genérico tipo "Saiba mais" como primário.
+3) helperText: uma linha que diga onde estão valores/lote/parcelamento (checkout) e que o WhatsApp é para dúvidas antes de fechar, com a Laura.
+4) Meta description: promessa + menção explícita de que valores ficam no checkout; sem inventar preço ou vagas.
+5) Tagline: uma frase, foco em ICP (saúde/estética), viabilidade sem equipamento caro ou formação longa.
+6) FAQ: manter pergunta dedicada a "onde vejo investimento" e "como me inscrever / dúvidas" alinhadas ao dual path checkout + Laura.
+7) Proibido: urgência falsa (últimas vagas inventadas, contagem falsa).

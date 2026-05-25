@@ -1,0 +1,46 @@
+{
+  "iteration": 0,
+  "candidate_id": "baseline",
+  "status": "scored",
+  "hypothesis": "",
+  "changes_summary": "",
+  "prompt_path": "candidates/baseline.prompt.txt",
+  "samples": [
+    {
+      "sample_id": "s01",
+      "criteria": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 0,
+        "C4": 0,
+        "C5": 0,
+        "C6": 0
+      },
+      "notes": ""
+    },
+    {
+      "sample_id": "s02",
+      "criteria": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 0,
+        "C4": 0,
+        "C5": 0,
+        "C6": 0
+      },
+      "notes": ""
+    },
+    {
+      "sample_id": "s03",
+      "criteria": {
+        "C1": 0,
+        "C2": 0,
+        "C3": 0,
+        "C4": 0,
+        "C5": 0,
+        "C6": 0
+      },
+      "notes": ""
+    }
+  ]
+}

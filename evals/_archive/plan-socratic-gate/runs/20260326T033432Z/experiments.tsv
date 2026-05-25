@@ -1,0 +1,5 @@
+iteration	candidate_id	score	delta_vs_baseline	decision	hypothesis	changes_summary
+0	baseline	9.0	0.0	keep		unchanged — C1 trigger generic, C5 WHY absent
+1	candidate-A	15.0	6.0	keep		Added WHY parenthetical inline to section header
+2	candidate-B	15.0	6.0	discard		Ties candidate-A; adds more text without new binary gain
+3	candidate-C	15.0	6.0	discard		Ties candidate-A; reorders or restructures without new binary gain

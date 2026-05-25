@@ -1,0 +1,2 @@
+- This run used human/manual grading, not model-graded outputs.
+- The command still needs program-layer sync after the skill winner is applied.

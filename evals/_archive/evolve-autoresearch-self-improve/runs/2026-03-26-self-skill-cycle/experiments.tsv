@@ -1,0 +1,4 @@
+iteration	candidate_id	score	delta_vs_baseline	decision	hypothesis	changes_summary
+0	baseline	11	0	keep	Current skill already freezes the harness and artifacts; measure gaps around self-improvement sync and crash discipline.	Unchanged current SKILL.md.
+1	c_program_sync	17	6	keep	An explicit self-improvement boundary section should fix the two-target ambiguity without adding much complexity.	Adds a section for self-improvement runs and command sync after one winning target.
+2	c_program_sync_crash	18	7	keep	Adding both program-layer sync and crash discipline should close the repo-alignment gaps exposed by Karpathy program.md.	Adds self-improvement run protocol plus crash discipline and retry/crash-row guidance.

@@ -1,0 +1,52 @@
+{
+  "created_utc": "2026-03-26T03:27:55.200469+00:00",
+  "run_id": "2026-03-26-self-skill-cycle",
+  "skill_slug": "evolve-autoresearch-self-improve",
+  "target_skill_name": "evolve_autoresearch_skill_self_improve",
+  "task_domain": "Self-improvement of the EVOLVE_AUTORESEARCH meta-skill for prompt optimization workflows inspired by karpathy/autoresearch.",
+  "criteria": [
+    {
+      "id": "C1",
+      "text": "Clearly distinguishes ordinary target-prompt optimization from self-improvement of this meta-skill or the /evolve command."
+    },
+    {
+      "id": "C2",
+      "text": "Requires baseline-first evaluation and a frozen harness before any candidate scoring."
+    },
+    {
+      "id": "C3",
+      "text": "Defines explicit crash handling with limited retry judgement and crash logging semantics."
+    },
+    {
+      "id": "C4",
+      "text": "Enforces the same fixed test pool and sample budget for baseline and every candidate."
+    },
+    {
+      "id": "C5",
+      "text": "Requires concrete disk artifacts for the run: harness snapshot, fixed test cases, experiments TSV, and evolve-response XML."
+    },
+    {
+      "id": "C6",
+      "text": "If a self-improvement run also updates /evolve, says that command sync happens only after one target artifact wins the run."
+    }
+  ],
+  "scoring_formula": "total_score = sum over 3 samples of 6 binary criteria passes",
+  "resources": {
+    "max_iterations": 3,
+    "samples_per_iteration": 3,
+    "max_cost_per_iteration": null
+  },
+  "plateau_threshold": 3,
+  "candidates_per_iteration": 2,
+  "minimum_distinct_test_cases": 3,
+  "test_case_distribution": {
+    "representative": 1,
+    "boundary": 1,
+    "adversarial": 1
+  },
+  "logging_preferences": {
+    "keep_all_candidates": true,
+    "store_rationale": true
+  },
+  "run_path_hint": "/home/mauricio/gpus/evals/evolve-autoresearch-self-improve/runs/2026-03-26-self-skill-cycle"
+}

@@ -1,0 +1,64 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon, { type IconName } from "../icons/Icon.astro";
+
+export interface Props {
+	why: CollectionEntry<"products">["data"]["why"];
+}
+
+const { why } = Astro.props;
+
+const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
+---
+
+<section id="por-que-otb" class="relative py-28 sm:py-32" aria-labelledby="why-heading">
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<div class="max-w-3xl" data-reveal="up">
+			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
+				<span class="h-px w-10 bg-gold/60"></span>
+				Diferenciais
+			</span>
+			<h2
+				id="why-heading"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl"
+			>
+				<span class="text-text-primary">{why.headline}</span>
+				{why.highlight && (
+					<span class="ml-3 text-gradient-gold">{why.highlight}</span>
+				)}
+			</h2>
+		</div>
+
+		<div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-7">
+			{why.cards.map((card: { titulo: string; descricao: string }, idx: number) => (
+				<article
+					class="glass-card card-glow-hover relative flex flex-col gap-5 rounded-2xl p-7"
+					data-reveal="up"
+					data-reveal-delay={String(idx + 2)}
+					data-glow-card
+				>
+					<div class="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-gold)_35%,transparent)] bg-[color-mix(in_srgb,var(--color-gold)_10%,transparent)] text-gold">
+						<Icon name={cardIcons[idx] ?? "sparkles"} size={22} strokeWidth={1.75} />
+					</div>
+					<h3 class="font-serif text-xl font-semibold leading-tight text-text-primary">
+						{card.titulo}
+					</h3>
+					<p class="text-sm leading-relaxed text-text-muted">{card.descricao}</p>
+				</article>
+			))}
+		</div>
+	</div>
+
+	<script is:inline>
+		(() => {
+			const cards = document.querySelectorAll("[data-glow-card]");
+			cards.forEach((card) => {
+				card.addEventListener("pointermove", (e) => {
+					const rect = card.getBoundingClientRect();
+					card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+					card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+				});
+			});
+		})();
+	</script>
+</section>

@@ -1,0 +1,4 @@
+created_utc=2026-03-26T03:08:18.935236+00:00
+target_skill_name=delegate
+note=autoresearch on expanded CONTEXT section (6 fields) added 2026-03-25
+skill_slug=delegate

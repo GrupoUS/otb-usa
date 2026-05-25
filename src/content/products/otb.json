@@ -1,0 +1,290 @@
+{
+	"slug": "otb",
+	"version": "1.0.0-draft",
+	"locale": "pt-BR",
+
+	"seo": {
+		"title": "OTB Estados Unidos — MBA em Business Aesthetic Health",
+		"description": "O primeiro MBA do mundo em Business Aesthetic Health com imersão internacional em Boston, no ecossistema acadêmico de Harvard. 320 horas, 10 módulos, demonstração anatômica avançada e networking premium.",
+		"ogImage": "/og/otb-default.jpg"
+	},
+
+	"hero": {
+		"headline": "O primeiro MBA do mundo em",
+		"highlight": "Business Aesthetic Health",
+		"subheadline": "Imersão internacional em Boston, no ecossistema acadêmico de Harvard. Para profissionais de Saúde Estética Avançada que querem elevar técnica, visão de negócio e posicionamento internacional.",
+		"badges": [
+			"Boston • Estados Unidos",
+			"Certificação MEC",
+			"320 horas de programa",
+			"Demonstração anatômica avançada",
+			"Networking premium"
+		],
+		"cta": {
+			"label": "Falar com Laura no WhatsApp",
+			"whatsappMessage": "Olá, Laura! Quero saber mais sobre a próxima turma do OTB nos Estados Unidos.",
+			"checkoutUrl": null
+		},
+		"background": {
+			"image": "/images/otb/boston-skyline-hero.jpg",
+			"alt": "Vista aérea da cidade de Boston, Estados Unidos, ao entardecer."
+		}
+	},
+
+	"why": {
+		"headline": "Por que",
+		"highlight": "OTB Estados Unidos",
+		"cards": [
+			{
+				"titulo": "Programa Certificado",
+				"descricao": "320 horas, 10 módulos online e imersão internacional. Certificação MEC e diferenciação real para o profissional de Saúde Estética Avançada."
+			},
+			{
+				"titulo": "Visão de negócio internacional",
+				"descricao": "Business, gestão, marketing, vendas e posicionamento clínico — aprendendo a operar uma carreira premium com referência em uma das praças mais sofisticadas dos Estados Unidos."
+			},
+			{
+				"titulo": "Aprendizado prático em ambiente acadêmico de referência",
+				"descricao": "Demonstração anatômica avançada em cadáver fresco, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica."
+			}
+		]
+	},
+
+	"audience": {
+		"headline": "Para quem é o OTB",
+		"quote": "Idealizamos o OTB para profissionais de Saúde Estética que rompem as barreiras do convencional — e querem operar com excelência clínica, visão de negócio e referência internacional.",
+		"categorias": [
+			{ "nome": "Médicos", "icone": "stethoscope" },
+			{ "nome": "Odontólogos", "icone": "smile" },
+			{ "nome": "Biomédicos", "icone": "microscope" },
+			{ "nome": "Enfermeiros", "icone": "heart-pulse" },
+			{ "nome": "Fisioterapeutas", "icone": "activity" },
+			{ "nome": "Farmacêuticos", "icone": "pill" }
+		],
+		"legenda": "Profissionais habilitados conforme regulamentação do respectivo conselho de classe.",
+		"background": {
+			"image": "/images/otb/cambridge-academic.jpg",
+			"alt": "Rua de Cambridge, Massachusetts, próxima ao ecossistema acadêmico de Harvard."
+		}
+	},
+
+	"programa": {
+		"headline": "Seu programa —",
+		"highlight": "320 horas de formação executiva",
+		"descricao": "Conteúdo distribuído entre 10 módulos online de business, gestão clínica, marketing, vendas e governança, somados a uma imersão presencial internacional em Boston e ao redor do ecossistema acadêmico de Harvard.",
+		"horas": 320,
+		"cards": [
+			{
+				"titulo": "Conteúdo online",
+				"descricao": "10 módulos completos de business, gestão clínica, marketing, vendas, finanças, sistemas, IA, jurídico e práticas demonstrativas."
+			},
+			{
+				"titulo": "Imersão internacional em Boston",
+				"descricao": "Vivência presencial no polo acadêmico mais denso dos Estados Unidos, com encontros executivos, ambiente clínico de referência e networking internacional."
+			},
+			{
+				"titulo": "Demonstração anatômica avançada",
+				"descricao": "Experiência prática demonstrativa em cadáver fresco, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica."
+			}
+		]
+	},
+
+	"turmas": {
+		"headline": "Já formamos turmas internacionais.",
+		"descricao": "Esta é a próxima fronteira.",
+		"fotos": [
+			{
+				"src": "/images/otb/turma-grupo-1.jpg",
+				"alt": "Turma do OTB reunida durante imersão internacional anterior."
+			},
+			{
+				"src": "/images/otb/turma-grupo-2.jpg",
+				"alt": "Segunda turma do OTB em encontro presencial."
+			}
+		]
+	},
+
+	"modulos": {
+		"headline": "Trilha de conteúdo —",
+		"highlight": "10 módulos para transformar a operação",
+		"descricao": "Currículo de business avançado, gestão clínica e prática demonstrativa.",
+		"lista": [
+			{
+				"numero": "01",
+				"titulo": "Mentalidade e Visão Empresarial",
+				"subtitulo": "Operar com olhar de dono e visão de longo prazo."
+			},
+			{
+				"numero": "02",
+				"titulo": "Gestão Clínica",
+				"subtitulo": "Processos, indicadores e maturidade operacional."
+			},
+			{
+				"numero": "03",
+				"titulo": "Contratação de Time, Cultura e Liderança",
+				"subtitulo": "Construir times que entregam excelência consistente."
+			},
+			{
+				"numero": "04",
+				"titulo": "Marketing de Relacionamento",
+				"subtitulo": "Posicionamento, autoridade e captação premium."
+			},
+			{
+				"numero": "05",
+				"titulo": "Expansão e Franquias",
+				"subtitulo": "Escala com governança e padronização."
+			},
+			{
+				"numero": "06",
+				"titulo": "Educação Financeira Empresarial",
+				"subtitulo": "Pricing, custos, fluxo e investimentos."
+			},
+			{
+				"numero": "07",
+				"titulo": "Sistemas e IA — Facilitadores de Negócio",
+				"subtitulo": "Automação clínica e inteligência aplicada."
+			},
+			{
+				"numero": "08",
+				"titulo": "Vendas: Captação, Follow-Up e Fidelização",
+				"subtitulo": "Funil completo para ticket alto e recorrência."
+			},
+			{
+				"numero": "09",
+				"titulo": "Jurídico e Contabilidade Empresarial",
+				"subtitulo": "Estrutura segura e tributação inteligente."
+			},
+			{
+				"numero": "10",
+				"titulo": "Associações de Práticas Demonstrativas",
+				"subtitulo": "Anatomia aplicada, segurança técnica e decisão clínica."
+			}
+		]
+	},
+
+	"bostonHarvard": {
+		"headline": "Imersão internacional —",
+		"highlight": "Boston e o ecossistema acadêmico de Harvard",
+		"descricao": "Uma vivência projetada para profissionais que querem operar em outro patamar: ambiente acadêmico denso, encontros executivos e prática demonstrativa de referência.",
+		"datas": "Próxima edição — datas em breve",
+		"cards": [
+			{
+				"titulo": "Demonstração anatômica avançada em cadáver fresco",
+				"descricao": "Experiência prática demonstrativa em ambiente acadêmico internacional, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica."
+			},
+			{
+				"titulo": "Encontros executivos no ecossistema de Boston",
+				"descricao": "Sessões de business, gestão e posicionamento internacional em uma das praças acadêmicas mais densas do mundo."
+			},
+			{
+				"titulo": "Networking premium em Cambridge e Boston",
+				"descricao": "Imersão profissional cercado por profissionais de alta performance e instituições de referência global."
+			}
+		],
+		"background": {
+			"image": "/images/otb/boston-networking-premium.jpg",
+			"alt": "Profissionais em sessão de networking executivo em Boston, Estados Unidos."
+		}
+	},
+
+	"speakers": {
+		"headline": "Quem ensina —",
+		"highlight": "Especialistas que constroem a próxima geração da Saúde Estética",
+		"descricao": "Profissionais de referência que vão compartilhar técnica, estratégia e prática clínica durante a imersão presencial.",
+		"lista": [
+			{
+				"nome": "Sacha Gualberto",
+				"area": "Inovação e Marketing",
+				"bio": "CEO do Grupo US. Referência em inovação, marketing estratégico e posicionamento de clínicas de alta performance em Saúde Estética Avançada.",
+				"instagram": "https://www.instagram.com/drasachagualberto",
+				"foto": "/images/otb/speakers/speaker-sacha.jpg"
+			},
+			{
+				"nome": "Ana Carolina",
+				"area": "Empreendedorismo, Cultura e Business",
+				"bio": "Especialista em empreendedorismo, cultura organizacional e modelos de negócio para o ecossistema de Saúde Estética.",
+				"instagram": "https://www.instagram.com/carolteixeira_br",
+				"foto": "/images/otb/speakers/speaker-ana.jpg"
+			},
+			{
+				"nome": "Mariana Laranja",
+				"area": "Minilift e Fios de PDO",
+				"bio": "Referência em rejuvenescimento facial com Minilift e Fios de PDO — técnica, segurança e resultado clínico.",
+				"instagram": "https://www.instagram.com/dra_mariana_laranja",
+				"foto": "/images/otb/speakers/speaker-mariana.jpg"
+			},
+			{
+				"nome": "Dieick de Sá",
+				"area": "Harmonização Facial",
+				"bio": "Especialista em Harmonização Facial com foco em anatomia aplicada, planejamento clínico e resultado natural.",
+				"instagram": "https://www.instagram.com/drdieickdesa",
+				"foto": "/images/otb/speakers/speaker-dieick.jpg"
+			},
+			{
+				"nome": "Rosana Vecchi",
+				"area": "Gerenciamento de Pele (Natural Face)",
+				"bio": "Especialista em gerenciamento de pele com a metodologia Natural Face — protocolo clínico para resultado consistente.",
+				"instagram": "https://www.instagram.com/dra.rosanaa",
+				"foto": "/images/otb/speakers/speaker-rosana.jpg"
+			}
+		]
+	},
+
+	"investimento": {
+		"headline": "Investimento —",
+		"highlight": "O passaporte para uma carreira internacional",
+		"descricao": "Programa completo, certificação MEC, imersão internacional e prática demonstrativa avançada.",
+		"moeda": "US$",
+		"preco": "4.000",
+		"parcelamento": [
+			"Cartão de crédito (consultar condições)",
+			"Boleto à vista (consultar desconto)"
+		],
+		"beneficios": [
+			"Certificação MEC",
+			"320 horas de programa",
+			"Imersão internacional em Boston",
+			"Demonstração anatômica avançada em cadáver fresco",
+			"Networking internacional premium"
+		],
+		"tagline": "Aplicação imediata. Posicionamento internacional. Networking de longo alcance.",
+		"cta": {
+			"label": "Falar com Laura no WhatsApp",
+			"whatsappMessage": "Olá, Laura! Quero garantir minha vaga na próxima turma do OTB Estados Unidos.",
+			"secondaryLabel": "Saber mais sobre o programa",
+			"checkoutUrl": null
+		}
+	},
+
+	"faq": [
+		{
+			"pergunta": "Esta é uma certificação oficial Harvard?",
+			"resposta": "Não. O OTB é um programa do Grupo US. A imersão internacional acontece em Boston, na região do ecossistema acadêmico de Harvard, mas não há vínculo, patrocínio, endosso ou certificação oficial por Harvard University."
+		},
+		{
+			"pergunta": "Quem pode participar do OTB?",
+			"resposta": "Profissionais habilitados de Saúde Estética: enfermeiros, fisioterapeutas, biomédicos, odontólogos, farmacêuticos e médicos. Cada profissional deve respeitar a regulamentação do seu respectivo conselho de classe."
+		},
+		{
+			"pergunta": "Como funciona o programa de 320 horas?",
+			"resposta": "São 10 módulos online cobrindo business, gestão, marketing, vendas, finanças, sistemas, IA, jurídico e práticas demonstrativas — somados a uma imersão presencial internacional em Boston."
+		},
+		{
+			"pergunta": "Como é a demonstração anatômica avançada em cadáver fresco?",
+			"resposta": "É uma experiência prática demonstrativa, conduzida por especialistas, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica. Sem sensacionalismo — formação clínica de alto nível."
+		},
+		{
+			"pergunta": "Quais as datas da próxima imersão em Boston?",
+			"resposta": "As datas da próxima edição serão anunciadas em breve. Para entrar na lista de prioridade, fale com Laura no WhatsApp."
+		},
+		{
+			"pergunta": "Como funciona o parcelamento?",
+			"resposta": "Cartão de crédito ou boleto à vista, condições no fechamento. Fale com Laura no WhatsApp para receber as opções atualizadas."
+		}
+	],
+
+	"legal": {
+		"disclaimer": "Harvard é marca registrada de Harvard University. Esta experiência não implica vínculo, patrocínio, endosso ou certificação oficial por Harvard University. Referências a Harvard, Cambridge, Boston e ao ecossistema acadêmico da região têm fins exclusivamente descritivos do contexto da imersão internacional do programa OTB. Programa oferecido por Grupo US.",
+		"creditosImagens": "Imagens: licenciamento conforme acervo Grupo US e bancos de imagens autorizados."
+	}
+}

@@ -1,0 +1,5 @@
+iteration	candidate_id	score	delta_vs_baseline	decision	hypothesis	changes_summary
+0	baseline	18	0	keep	Copy já alinhado a checkout Kiwify e Laura; medir contra novo critério C7.	"JSON curso-auriculo pré-run; H1 começava com ""Adicione"" — falha C7 nas 3 amostras."
+1	c_weak_cta	14	-4	discard	CTA genérico reduz atrito lexical; testar perda de intenção comercial.	"Variante hipotética com label ""Saiba mais sobre o curso"" — falha C1 em todas as amostras."
+2	c_jargon_stack	17	-1	discard	Headline técnica máxima aumenta credibilidade percebida.	"Variante com jargão denso no H1 e helper longo — 1 amostra ""preço primeiro"" falhou C2 (escaneabilidade)."
+3	c_timeframe_action	21	3	keep	Âncora temporal no início do H1 + CTA em 1ª pessoa + helper curto maximiza critérios sem quebrar compliance.	"H1 ""Em 3 dias presenciais…""; label ""Quero me inscrever agora""; helper com checkout vs Laura; description/tagline enxutos."

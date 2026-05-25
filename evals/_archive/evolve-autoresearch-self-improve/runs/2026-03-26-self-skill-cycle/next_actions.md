@@ -1,0 +1,2 @@
+- Apply the winning self-improvement diffs to `.claude/skills/evolve-autoresearch/SKILL.md`.
+- Sync matching operational rules into `.claude/commands/evolve.md` only after the skill winner is chosen.

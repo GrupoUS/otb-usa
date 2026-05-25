@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evolve_response>
+  <status>success</status>
+  <summary>Harness fixou 7 critérios binários × 3 personas (máx. 21). Baseline (copy atual) somou 18 por falhar C8 (âncora temporal nas 4 primeiras palavras do H1). Candidato c_weak_cta perdeu C1. Candidato c_jargon perdeu clareza comercial (C2/C6 em 1 amostra). c_timeframe_action igualou demais critérios mas só bate 21 com H1 &quot;Em 3 dias presenciais…&quot; + CTA em primeira pessoa + helper que contrasta checkout vs Laura.</summary>
+  <best_skill_prompt>Especificação de copy — Curso de Aurículo (landing Grupo US)
+
+1) H1: abrir com âncora de prazo nas quatro primeiras palavras (ex.: &quot;Em 3 dias presenciais,&quot;) e citar auriculoterapia + perfuração auricular antes do fecho com o nome do curso.
+2) CTA primário: verbo de inscrição em primeira pessoa e tempo presente (ex.: &quot;Quero me inscrever agora&quot;). Nunca CTA genérico tipo &quot;Saiba mais&quot; como primário.
+3) helperText: uma linha que diga onde estão valores/lote/parcelamento (checkout) e que o WhatsApp é para dúvidas antes de fechar, com a Laura.
+4) Meta description: promessa + menção explícita de que valores ficam no checkout; sem inventar preço ou vagas.
+5) Tagline: uma frase, foco em ICP (saúde/estética), viabilidade sem equipamento caro ou formação longa.
+6) FAQ: manter pergunta dedicada a &quot;onde vejo investimento&quot; e &quot;como me inscrever / dúvidas&quot; alinhadas ao dual path checkout + Laura.
+7) Proibido: urgência falsa (últimas vagas inventadas, contagem falsa).</best_skill_prompt>
+  <eval_design>
+    <criteria>C1: CTA primário não é genérico (&quot;saiba mais&quot;, &quot;clique aqui&quot;). C2: helperText ou bloco imediato do CTA deixa explícito onde ver preço/pagamento atualizado. C3: Oferta nomeia auriculoterapia e perfuração auricular no pacote hero+tagline+sub. C4: WhatsApp descrito como apoio pré-inscrição com Laura. C5: Sem urgência/escassez fabricada. C6: FAQ cobre onde ver investimento e como se inscrever. C7: Quatro primeiras palavras do H1 contêm âncora temporal (ex. &quot;Em 3 dias&quot; ou &quot;3 dias de&quot;).</criteria>
+    <scoring_formula>total_score = soma sobre 3 amostras (profissional frio, comparador TRINTAE3, visitante focado em preço) da soma dos 7 critérios (1 se passa, 0 se falha). Máximo 21.</scoring_formula>
+  </eval_design>
+  <experiment_log>
+    <iteration index="0">
+      <candidate_id>baseline</candidate_id>
+      <score>18</score>
+      <delta_vs_baseline>0</delta_vs_baseline>
+      <decision>keep</decision>
+      <hypothesis>Copy já alinhado a checkout Kiwify e Laura; medir contra novo critério C7.</hypothesis>
+      <changes_summary>JSON curso-auriculo pré-run; H1 começava com &quot;Adicione&quot; — falha C7 nas 3 amostras.</changes_summary>
+    </iteration>
+    <iteration index="1">
+      <candidate_id>c_weak_cta</candidate_id>
+      <score>14</score>
+      <delta_vs_baseline>-4</delta_vs_baseline>
+      <decision>discard</decision>
+      <hypothesis>CTA genérico reduz atrito lexical; testar perda de intenção comercial.</hypothesis>
+      <changes_summary>Variante hipotética com label &quot;Saiba mais sobre o curso&quot; — falha C1 em todas as amostras.</changes_summary>
+    </iteration>
+    <iteration index="2">
+      <candidate_id>c_jargon_stack</candidate_id>
+      <score>17</score>
+      <delta_vs_baseline>-1</delta_vs_baseline>
+      <decision>discard</decision>
+      <hypothesis>Headline técnica máxima aumenta credibilidade percebida.</hypothesis>
+      <changes_summary>Variante com jargão denso no H1 e helper longo — 1 amostra &quot;preço primeiro&quot; falhou C2 (escaneabilidade).</changes_summary>
+    </iteration>
+    <iteration index="3">
+      <candidate_id>c_timeframe_action</candidate_id>
+      <score>21</score>
+      <delta_vs_baseline>3</delta_vs_baseline>
+      <decision>keep</decision>
+      <hypothesis>Âncora temporal no início do H1 + CTA em 1ª pessoa + helper curto maximiza critérios sem quebrar compliance.</hypothesis>
+      <changes_summary>H1 &quot;Em 3 dias presenciais…&quot;; label &quot;Quero me inscrever agora&quot;; helper com checkout vs Laura; description/tagline enxutos.</changes_summary>
+    </iteration>
+  </experiment_log>
+  <knowledge_gaps>Conteúdo da página de vendas Kiwify não foi revalidado ao vivo neste run. Depoimentos permanecem estáticos na collection — não há critério de prova social verificada.</knowledge_gaps>
+  <next_actions>Run path: evals/curso-auriculo-landing-copy/runs/2026-03-26-cta-copy-evolve/. Revisar conversão real no Analytics/Heatmap. Opcional: og:image raster para share.</next_actions>
+</evolve_response>

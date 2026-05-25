@@ -1,0 +1,30 @@
+<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- GP-US Stylized Monogram - Refined S Curve -->
+
+  <!-- U Path -->
+  <!-- Shifted Left by 15px to center in 150px viewbox -->
+  <!-- Left Stem X=25 (was 40), Right Stem X=75 (was 90) -->
+  <path d="M25 20 L25 100 A 25 25 0 0 0 75 100 L75 60" stroke="#d4af37" stroke-width="6" stroke-linecap="round" fill="none" />
+  
+  <!-- Right Stem Dot -->
+  <circle cx="75" cy="60" r="6" fill="#d4af37" />
+  
+  <!-- U Top Left Star (4-point) -->
+  <path d="M25 8 L29 16 L37 18 L29 20 L25 28 L21 20 L13 18 L21 16 Z" fill="#d4af37" />
+
+  <!-- S Path - Smoother Cubic Bezier Curves -->
+  <!-- Start Dot (mid-left of S, X=85 Y=70) -->
+  <circle cx="85" cy="70" r="6" fill="#d4af37" />
+  
+  <!-- S Body Curve -->
+  <!-- Start at Dot (85,70) -->
+  <!-- Curve Down-Right to Bottom Loop (Control1: 95,110 | Control2: 135,100 | End: 125,75) -->
+  <!-- Curve Up-Left to Top Inflection (Control1: 115,50 | Control2: 95,40 | End: 115,20) -->
+  <!-- End at Star position (approx 125,20) -->
+  <path d="M85 70 C 95 110, 145 100, 125 75 C 105 50, 95 30, 125 20" stroke="#d4af37" stroke-width="6" stroke-linecap="round" fill="none" />
+  
+  <!-- S End Star (Top Right) at 125,20 -->
+  <!-- Rotated 4-point Star -->
+  <path d="M125 20 L129 26 L137 28 L129 30 L125 38 L121 30 L113 28 L121 26 Z" fill="#d4af37" />
+
+</svg>

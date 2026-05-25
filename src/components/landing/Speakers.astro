@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon from "../icons/Icon.astro";
+
+export interface Props {
+	speakers: CollectionEntry<"products">["data"]["speakers"];
+}
+
+const { speakers } = Astro.props;
+---
+
+<section id="speakers" class="relative py-28 sm:py-32" aria-labelledby="speakers-heading">
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<div class="mx-auto max-w-3xl text-center" data-reveal="up">
+			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
+				<span class="h-px w-10 bg-gold/60"></span>
+				Especialistas
+			</span>
+			<h2
+				id="speakers-heading"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl"
+			>
+				<span class="text-text-primary">{speakers.headline}</span>
+				{speakers.highlight && (
+					<span class="mt-2 block text-gradient-gold">{speakers.highlight}</span>
+				)}
+			</h2>
+			<p class="mt-4 text-base text-text-muted sm:text-lg">{speakers.descricao}</p>
+		</div>
+
+		<ul class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6">
+			{speakers.lista.map((s: { nome: string; area: string; bio: string; instagram: string; foto: string }, idx: number) => (
+				<li
+					class="group flex flex-col items-center text-center"
+					data-reveal="up"
+					data-reveal-delay={String(Math.min(idx + 1, 6))}
+				>
+					<a
+						href={s.instagram}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="relative mb-6 inline-block transition-transform duration-300 group-hover:scale-[1.04] focus-visible:scale-[1.04]"
+						aria-label={`Instagram de ${s.nome}`}
+					>
+						<span
+							class="absolute -inset-1 rounded-full bg-[conic-gradient(from_180deg_at_50%_50%,var(--color-gold)_0deg,var(--color-gold-light)_120deg,var(--color-gold-dark)_240deg,var(--color-gold)_360deg)] opacity-60 blur-sm transition-opacity duration-500 group-hover:opacity-100"
+							aria-hidden="true"
+						></span>
+						<span class="relative block h-32 w-32 overflow-hidden rounded-full border-2 border-[color-mix(in_srgb,var(--color-gold)_55%,transparent)] bg-navy-light">
+							<img
+								src={s.foto}
+								alt={`Retrato profissional de ${s.nome}.`}
+								width="256"
+								height="256"
+								loading="lazy"
+								fetchpriority="low"
+								class="h-full w-full object-cover"
+							/>
+						</span>
+						<span class="absolute -bottom-2 right-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-gold)_60%,transparent)] bg-navy text-gold shadow-md">
+							<Icon name="instagram" size={14} />
+						</span>
+					</a>
+					<h3 class="font-serif text-lg font-semibold text-text-primary">{s.nome}</h3>
+					<p class="mt-1 text-xs uppercase tracking-[0.16em] text-gold/80">{s.area}</p>
+					<p class="mt-3 px-2 text-sm leading-relaxed text-text-muted">{s.bio}</p>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>

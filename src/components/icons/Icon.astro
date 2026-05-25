@@ -1,0 +1,44 @@
+---
+import { ICON_PATHS, type IconName } from "./icon-paths";
+
+export type { IconName } from "./icon-paths";
+
+export interface Props {
+	name: IconName;
+	size?: number;
+	strokeWidth?: number;
+	class?: string;
+	label?: string;
+}
+
+const {
+	name,
+	size = 24,
+	strokeWidth = 1.75,
+	class: className = "",
+	label,
+} = Astro.props;
+const titleId = label
+	? `icon-title-${Math.random().toString(36).slice(2, 8)}`
+	: undefined;
+const renderPaths = ICON_PATHS[name];
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width={size}
+	height={size}
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="currentColor"
+	stroke-width={strokeWidth}
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	class={className}
+	aria-hidden={label ? undefined : "true"}
+	role={label ? "img" : undefined}
+	aria-labelledby={titleId}
+>
+	{label && <title id={titleId}>{label}</title>}
+	{renderPaths.map((d) => <path d={d} />)}
+</svg>

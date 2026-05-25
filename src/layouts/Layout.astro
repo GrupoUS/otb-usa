@@ -1,0 +1,135 @@
+---
+import "../styles/global.css";
+
+export interface Props {
+	title: string;
+	description: string;
+	ogImage?: string;
+	canonical?: string;
+	jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+	title,
+	description,
+	ogImage = "/og/otb-default.jpg",
+	canonical,
+	jsonLd,
+} = Astro.props;
+
+const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const pageUrl =
+	canonical ??
+	new URL(
+		Astro.url.pathname,
+		Astro.site ?? "https://harmonic-pascal.grupous.com.br",
+	).toString();
+const absoluteOgImage = ogImage.startsWith("http")
+	? ogImage
+	: `${site}${ogImage}`;
+
+const organizationJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	name: "Grupo US",
+	url: site || "https://harmonic-pascal.grupous.com.br",
+	logo: `${site}/images/otb/otb-logo-gold.png`,
+	sameAs: [] as string[],
+	contactPoint: {
+		"@type": "ContactPoint",
+		telephone: "+556294705081",
+		contactType: "sales",
+		areaServed: "BR",
+		availableLanguage: ["pt-BR"],
+	},
+};
+
+const jsonLdPayload = jsonLd
+	? Array.isArray(jsonLd)
+		? [organizationJsonLd, ...jsonLd]
+		: [organizationJsonLd, jsonLd]
+	: organizationJsonLd;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#1a1a2e" />
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={pageUrl} />
+
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+		<link rel="alternate icon" href="/favicon.ico" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="pt_BR" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={absoluteOgImage} />
+		<meta property="og:url" content={pageUrl} />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={absoluteOgImage} />
+
+		<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLdPayload)} />
+
+		<noscript>
+			<style>
+				[data-reveal] {
+					opacity: 1 !important;
+					transform: none !important;
+					animation: none !important;
+				}
+			</style>
+		</noscript>
+	</head>
+
+	<body>
+		<a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+
+		<main id="conteudo-principal" tabindex="-1">
+			<slot />
+		</main>
+
+		<slot name="floating" />
+
+		<script>
+			const initReveal = () => {
+				const items = document.querySelectorAll<HTMLElement>("[data-reveal]");
+				if (!items.length) return;
+
+				if (typeof IntersectionObserver === "undefined") {
+					items.forEach((el) => el.classList.add("revealed"));
+					return;
+				}
+
+				const observer = new IntersectionObserver(
+					(entries, obs) => {
+						for (const entry of entries) {
+							if (entry.isIntersecting) {
+								entry.target.classList.add("revealed");
+								obs.unobserve(entry.target);
+							}
+						}
+					},
+					{ rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
+				);
+
+				items.forEach((el) => observer.observe(el));
+			};
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", initReveal, { once: true });
+			} else {
+				initReveal();
+			}
+		</script>
+	</body>
+</html>

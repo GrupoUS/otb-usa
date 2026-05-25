@@ -1,0 +1,84 @@
+{
+  "skill": "xlsx",
+  "version": "1.0.0",
+  "assertions": [
+    {
+      "id": "A01",
+      "description": "Output enforces zero formula errors requirement (#REF!, #DIV/0!, #VALUE!, #N/A, #NAME?)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"zero formula error\", \"no formula error\", \"#REF!\", \"#DIV/0!\", \"formula error\"]",
+      "critical": true
+    },
+    {
+      "id": "A02",
+      "description": "Output references color coding standards for financial models (blue=inputs, black=formulas)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"color coding\", \"blue text\", \"Blue text\", \"color convention\", \"RGB\"]",
+      "critical": false
+    },
+    {
+      "id": "A03",
+      "description": "Output uses pandas for data analysis when reading spreadsheets",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"pandas\", \"pd.read_excel\", \"DataFrame\", \"import pd\"]",
+      "critical": true
+    },
+    {
+      "id": "A04",
+      "description": "Output references LibreOffice or recalc.py for formula recalculation",
+      "type": "structural",
+      "check": "contains_one_of: [\"LibreOffice\", \"recalc.py\", \"recalculate\"]",
+      "critical": false
+    },
+    {
+      "id": "A05",
+      "description": "Output does NOT use hardcoded values in formulas (use cell references)",
+      "type": "behavioral",
+      "check": "not_contains: \"hardcoded values in formulas\"",
+      "critical": true
+    },
+    {
+      "id": "A06",
+      "description": "Output references number formatting standards (currency, percentages, negatives)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"format\", \"$#,##0\", \"percentage\", \"parentheses\", \"number format\"]",
+      "critical": false
+    },
+    {
+      "id": "A07",
+      "description": "Output preserves existing template conventions when editing files",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"preserve\", \"existing\", \"template\", \"match\", \"convention\"]",
+      "critical": false
+    },
+    {
+      "id": "A08",
+      "description": "Output length is under 600 words for focused responses",
+      "type": "format",
+      "check": "word_count_max: 600",
+      "critical": false
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "T01",
+      "input": "Create a financial model spreadsheet for tracking monthly revenue projections with formulas for growth rates.",
+      "expected_assertions": ["A01", "A02", "A05", "A06", "A08"]
+    },
+    {
+      "id": "T02",
+      "input": "Read and analyze the data from an existing .xlsx file with sales data. Summarize trends and patterns.",
+      "expected_assertions": ["A01", "A03", "A07", "A08"]
+    },
+    {
+      "id": "T03",
+      "input": "I need to recalculate all formulas in a spreadsheet that was edited externally. How do I ensure formula integrity?",
+      "expected_assertions": ["A01", "A04", "A05", "A08"]
+    },
+    {
+      "id": "T04",
+      "input": "Full spreadsheet project: create a financial model with revenue projections, expense tracking, color coding, formatted outputs, and formula validation.",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08"]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+	modulos: CollectionEntry<"products">["data"]["modulos"];
+}
+
+const { modulos } = Astro.props;
+---
+
+<section id="modulos" class="relative py-28 sm:py-32" aria-labelledby="modulos-heading">
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<div class="mx-auto max-w-3xl text-center" data-reveal="up">
+			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
+				<span class="h-px w-10 bg-gold/60"></span>
+				Trilha online
+			</span>
+			<h2
+				id="modulos-heading"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl"
+			>
+				<span class="text-text-primary">{modulos.headline}</span>
+				{modulos.highlight && (
+					<span class="mt-2 block text-gradient-gold">{modulos.highlight}</span>
+				)}
+			</h2>
+			<p class="mt-4 text-base text-text-muted sm:text-lg">{modulos.descricao}</p>
+		</div>
+
+		<div class="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+			{modulos.lista.map((m: { numero: string; titulo: string; subtitulo?: string }, idx: number) => (
+				<article
+					class="group flex items-start gap-5 rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)] p-5 transition-all duration-300 hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] hover:bg-[color-mix(in_srgb,var(--color-navy-light)_80%,transparent)]"
+					data-reveal={idx % 2 === 0 ? "left" : "right"}
+					data-reveal-delay={String(Math.min((idx % 6) + 1, 6))}
+				>
+					<div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--color-gold)_10%,transparent)] font-serif text-lg font-bold text-gold">
+						{m.numero}
+					</div>
+					<div class="flex-1">
+						<h3 class="font-serif text-lg font-semibold leading-tight text-text-primary transition-colors group-hover:text-gold">
+							{m.titulo}
+						</h3>
+						{m.subtitulo && (
+							<p class="mt-1.5 text-sm leading-relaxed text-text-muted">{m.subtitulo}</p>
+						)}
+					</div>
+				</article>
+			))}
+		</div>
+	</div>
+</section>

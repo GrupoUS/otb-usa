@@ -1,0 +1,287 @@
+/**
+ * GPUS Theme - Portable CSS Theme Tokens
+ *
+ * Copy this file to your project and import in your main CSS:
+ * @import "./theme-tokens.css";
+ *
+ * Note: @plugin and @theme are Tailwind CSS v4 directives.
+ * IDE linters may show warnings - these are false positives.
+ */
+
+/* stylelint-disable at-rule-no-unknown */
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --color-sidebar-background: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    /* === LIGHT THEME === */
+    /* Background layers */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    /* Cards & elevated surfaces */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    /* Popover & dropdowns */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary action - Gold */
+    --primary: 38 60% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Gold */
+    --secondary: 38 50% 85%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted backgrounds */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 25% 40%;
+
+    /* Accent highlights */
+    --accent: 38 60% 95%;
+    --accent-foreground: 222 47% 11%;
+
+    /* Destructive/Error */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & inputs */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 38 60% 45%;
+
+    /* Chart colors */
+    --chart-1: 38 60% 45%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 0 84% 60%;
+    --chart-5: 217 91% 60%;
+
+    /* Radius */
+    --radius: 0.625rem;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 38 60% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 38 60% 95%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 38 60% 45%;
+  }
+
+  .dark {
+    /* === DARK THEME - NAVY/GOLD === */
+
+    /* Background layers */
+    --background: 211 49% 10%;
+    --foreground: 39 44% 65%;
+
+    /* Cards & elevated surfaces */
+    --card: 212 48% 13%;
+    --card-foreground: 39 44% 65%;
+
+    /* Popover & dropdowns */
+    --popover: 211 49% 10%;
+    --popover-foreground: 39 44% 65%;
+
+    /* Primary action - GOLD */
+    --primary: 39 44% 65%;
+    --primary-foreground: 48 10% 80%;
+
+    /* Secondary */
+    --secondary: 211 49% 10%;
+    --secondary-foreground: 39 44% 65%;
+
+    /* Muted */
+    --muted: 39 29% 54%;
+    --muted-foreground: 48 10% 80%;
+
+    /* Accent */
+    --accent: 26 5% 27%;
+    --accent-foreground: 39 44% 65%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 30 11% 11%;
+
+    /* Borders & inputs */
+    --border: 26 6% 21%;
+    --input: 26 6% 21%;
+    --ring: 39 29% 54%;
+
+    /* Chart colors */
+    --chart-1: 234 89% 74%;
+    --chart-2: 239 84% 67%;
+    --chart-3: 243 75% 59%;
+    --chart-4: 245 58% 51%;
+    --chart-5: 244 55% 41%;
+
+    /* Custom brand colors */
+    --us-purple-light: 270 70% 70%;
+
+    /* Sidebar */
+    --sidebar-background: 212 48% 13%;
+    --sidebar-foreground: 39 44% 65%;
+    --sidebar-primary: 40 14% 66%;
+    --sidebar-primary-foreground: 207 37% 25%;
+    --sidebar-accent: 26 5% 27%;
+    --sidebar-accent-foreground: 39 44% 65%;
+    --sidebar-border: 39 29% 54%;
+    --sidebar-ring: 39 29% 54%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+  }
+}
+
+/* Smooth theme transitions */
+html {
+  transition: color-scheme 0.3s ease;
+}
+
+body,
+.bg-background,
+.bg-card,
+.bg-popover,
+.bg-muted,
+.bg-accent,
+.bg-sidebar {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+@layer utilities {
+  .bg-mesh {
+    background-image:
+      radial-gradient(
+        at 40% 20%,
+        hsl(var(--primary) / 0.1) 0px,
+        transparent 50%
+      ),
+      radial-gradient(at 80% 0%, hsl(var(--accent) / 0.1) 0px, transparent 50%),
+      radial-gradient(
+        at 0% 50%,
+        hsl(var(--primary) / 0.05) 0px,
+        transparent 50%
+      );
+  }
+
+  .glass-card {
+    background: hsl(var(--card) / 0.8);
+    border: 1px solid hsl(var(--border) / 0.5);
+    backdrop-filter: blur(12px);
+  }
+
+  .bg-noise {
+    position: relative;
+  }
+
+  .bg-noise::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+}
+
+/* View Transition API for theme toggle animation */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+@layer utilities {
+  @keyframes ripple {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+  .animate-ripple {
+    animation: ripple 0.6s linear;
+  }
+}

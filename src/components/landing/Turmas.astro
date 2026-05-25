@@ -1,0 +1,52 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+	turmas: CollectionEntry<"products">["data"]["turmas"];
+}
+
+const { turmas } = Astro.props;
+---
+
+<section id="turmas" class="relative py-28 sm:py-32" aria-labelledby="turmas-heading">
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<div class="mx-auto max-w-3xl text-center" data-reveal="up">
+			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
+				<span class="h-px w-10 bg-gold/60"></span>
+				Histórico
+			</span>
+			<h2
+				id="turmas-heading"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl md:text-5xl"
+			>
+				{turmas.headline}
+			</h2>
+			<p class="mt-4 font-serif text-xl text-gradient-gold">{turmas.descricao}</p>
+		</div>
+
+		<div class="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
+			{turmas.fotos.map((foto: { src: string; alt: string }, idx: number) => (
+				<figure
+					class="card-hover-lift group relative overflow-hidden rounded-3xl border border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)]"
+					data-reveal={idx === 0 ? "left" : "right"}
+					data-reveal-delay="2"
+				>
+					<img
+						src={foto.src}
+						alt={foto.alt}
+						width="900"
+						height="600"
+						loading="lazy"
+						fetchpriority="low"
+						class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+					/>
+					<figcaption
+						class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy via-navy/70 to-transparent p-6 pt-16 text-sm text-text-muted"
+					>
+						{foto.alt}
+					</figcaption>
+				</figure>
+			))}
+		</div>
+	</div>
+</section>

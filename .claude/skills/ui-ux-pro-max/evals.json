@@ -1,0 +1,91 @@
+{
+  "skill": "ui-ux-pro-max",
+  "version": "1.0.0",
+  "assertions": [
+    {
+      "id": "A01",
+      "description": "Output references accessibility requirements (contrast, aria, keyboard navigation)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"accessibility\", \"contrast\", \"aria\", \"keyboard\", \"WCAG\", \"a11y\"]",
+      "critical": true
+    },
+    {
+      "id": "A02",
+      "description": "Output does NOT use hardcoded hex colors in component code",
+      "type": "behavioral",
+      "check": "not_contains: \"bg-[#\"",
+      "critical": true
+    },
+    {
+      "id": "A03",
+      "description": "Output references semantic color tokens (not raw hex values)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"semantic\", \"token\", \"--primary\", \"--foreground\", \"bg-primary\", \"text-foreground\"]",
+      "critical": true
+    },
+    {
+      "id": "A04",
+      "description": "Output references responsive design or mobile-first approach",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"responsive\", \"mobile\", \"breakpoint\", \"mobile-first\", \"sm:\", \"lg:\"]",
+      "critical": true
+    },
+    {
+      "id": "A05",
+      "description": "Output references touch target minimum size (44x44px)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"44\", \"touch target\", \"touch\", \"tap target\", \"min-h-11\", \"min-w-11\"]",
+      "critical": false
+    },
+    {
+      "id": "A06",
+      "description": "Output does NOT use emoji as icons (SVG icons required)",
+      "type": "behavioral",
+      "check": "not_contains: \"emoji as icon\"",
+      "critical": false
+    },
+    {
+      "id": "A07",
+      "description": "Output references animation/transition best practices (150-300ms, reduced-motion)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"animation\", \"transition\", \"reduced-motion\", \"duration\", \"motion\"]",
+      "critical": false
+    },
+    {
+      "id": "A08",
+      "description": "Output prioritizes accessibility rules by the skill's priority table (Priority 1-10)",
+      "type": "behavioral",
+      "check": "contains_one_of: [\"priority\", \"Priority\", \"critical\", \"CRITICAL\"]",
+      "critical": false
+    },
+    {
+      "id": "A09",
+      "description": "Output length is under 700 words for focused responses",
+      "type": "format",
+      "check": "word_count_max: 700",
+      "critical": false
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "T01",
+      "input": "Review this dashboard card component for UI/UX quality: it uses bg-[#0f4c75] for the header and has no aria labels on icon buttons.",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A09"]
+    },
+    {
+      "id": "T02",
+      "input": "Design a new settings page with form inputs, toggles, and a save button. What UX guidelines should I follow?",
+      "expected_assertions": ["A01", "A03", "A04", "A05", "A07", "A09"]
+    },
+    {
+      "id": "T03",
+      "input": "The mobile version of the CRM page has tiny buttons that are hard to tap. How should I fix touch interaction issues?",
+      "expected_assertions": ["A01", "A04", "A05", "A07", "A09"]
+    },
+    {
+      "id": "T04",
+      "input": "Full UI audit: review a landing page for accessibility, color system, responsive behavior, animation, and overall UX quality.",
+      "expected_assertions": ["A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08", "A09"]
+    }
+  ]
+}

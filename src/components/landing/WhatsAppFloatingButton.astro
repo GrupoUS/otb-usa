@@ -1,0 +1,29 @@
+---
+import {
+	WHATSAPP_DEFAULT_MESSAGE,
+	whatsappUrlWithText,
+} from "../../lib/whatsapp";
+import Icon from "../icons/Icon.astro";
+
+export interface Props {
+	message?: string;
+	label?: string;
+}
+
+const {
+	message = WHATSAPP_DEFAULT_MESSAGE,
+	label = "Falar com Laura no WhatsApp",
+} = Astro.props;
+const href = whatsappUrlWithText(message);
+---
+
+<a
+	href={href}
+	target="_blank"
+	rel="noopener noreferrer"
+	aria-label={label}
+	class="fixed bottom-5 right-5 z-50 inline-flex items-center gap-3 rounded-full bg-gold px-5 py-3.5 font-semibold text-navy shadow-[0_18px_45px_-12px_color-mix(in_srgb,var(--color-gold)_55%,transparent)] transition-transform duration-300 hover:scale-[1.04] focus-visible:scale-[1.04] sm:bottom-7 sm:right-7"
+>
+	<Icon name="message-circle" size={20} strokeWidth={2.25} />
+	<span class="hidden text-sm sm:inline">Falar com Laura</span>
+</a>

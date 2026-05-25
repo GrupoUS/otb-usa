@@ -1,0 +1,46 @@
+{
+  "iteration": 0,
+  "candidate_id": "baseline",
+  "status": "scored",
+  "hypothesis": "Current skill already freezes the harness and artifacts; measure gaps around self-improvement sync and crash discipline.",
+  "changes_summary": "Unchanged current SKILL.md.",
+  "prompt_path": "candidates/baseline.prompt.txt",
+  "samples": [
+    {
+      "sample_id": "s01",
+      "criteria": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 0,
+        "C4": 1,
+        "C5": 1,
+        "C6": 0
+      },
+      "notes": "Happy path is strong but baseline does not explicitly separate baseline setup from later self-improvement sync."
+    },
+    {
+      "sample_id": "s02",
+      "criteria": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 0,
+        "C4": 1,
+        "C5": 1,
+        "C6": 0
+      },
+      "notes": "Program-layer sync to /evolve after one winning target is implied, not explicit."
+    },
+    {
+      "sample_id": "s03",
+      "criteria": {
+        "C1": 0,
+        "C2": 1,
+        "C3": 0,
+        "C4": 1,
+        "C5": 1,
+        "C6": 0
+      },
+      "notes": "Crash semantics exist indirectly, but no limited retry judgement or explicit append-only crash protocol section."
+    }
+  ]
+}

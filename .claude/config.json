@@ -1,0 +1,57 @@
+{
+  "project": {
+    "name": "gp-us-harmonic-pascal",
+    "displayName": "GP-US Harmonic Pascal",
+    "stack": "astro-static-tailwindv4",
+    "stagingUrl": "http://localhost:4321",
+    "productionUrl": "https://harmonic-pascal.grupous.com.br",
+    "locale": "pt-BR"
+  },
+  "overlay": ".claude/overlay/gp-us-harmonic-pascal",
+  "paths": {
+    "backendRoot": "",
+    "frontendRoot": "src",
+    "schemaRoot": "",
+    "stylesRoot": "src/styles",
+    "componentsRoot": "src/components",
+    "libRoot": "src/lib"
+  },
+  "tooling": {
+    "packageManager": "bun",
+    "buildTool": "astro",
+    "typeChecker": "astro-check",
+    "linter": "biome",
+    "testRunner": "",
+    "deployer": "railway",
+    "frontendFramework": "astro+react-islands",
+    "database": "",
+    "orm": ""
+  },
+  "gates": {
+    "lighthouse": {
+      "performance": 95,
+      "accessibility": 95,
+      "bestPractices": 95,
+      "seo": 95
+    },
+    "lcp": 2500,
+    "cls": 0,
+    "inp": 100,
+    "initialJsKb": 50
+  },
+  "protectedFiles": {
+    "exact": [
+      "tsconfig.json",
+      "biome.json",
+      "lefthook.yml"
+    ],
+    "segments": [],
+    "contains": [
+      "bun.lockb"
+    ]
+  },
+  "rulesDir": ".claude/rules",
+  "templatesDir": ".claude/templates",
+  "agentsFile": "AGENTS.md",
+  "claudeMdFile": ".claude/CLAUDE.md"
+}

@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { defaultWhatsAppUrl } from "../../lib/whatsapp";
+import Icon from "../icons/Icon.astro";
+
+export interface Props {
+	legal: CollectionEntry<"products">["data"]["legal"];
+}
+
+const { legal } = Astro.props;
+const whatsappHref = defaultWhatsAppUrl();
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="relative border-t border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] bg-[color-mix(in_srgb,var(--color-navy)_92%,black_8%)]">
+	<div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+		<div class="grid grid-cols-1 gap-12 md:grid-cols-12">
+			<div class="md:col-span-5">
+				<a href="#topo" class="inline-flex items-center gap-3" aria-label="OTB — Voltar ao topo">
+					<img
+						src="/images/otb/otb-logo-gold.png"
+						alt="Logo OTB em dourado."
+						width="44"
+						height="44"
+						loading="lazy"
+						class="h-11 w-11"
+					/>
+					<span class="font-serif text-2xl font-semibold text-text-primary">OTB</span>
+				</a>
+				<p class="mt-5 max-w-md text-sm leading-relaxed text-text-muted">
+					O primeiro MBA do mundo em Business Aesthetic Health. Programa do Grupo US, com imersão internacional em Boston, no ecossistema acadêmico de Harvard.
+				</p>
+				<div class="mt-6 flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-text-muted/80">
+					<Icon name="map-pin" size={14} strokeWidth={2} class="text-gold" />
+					Sede Grupo US — Goiânia, GO
+				</div>
+			</div>
+
+			<nav class="md:col-span-4" aria-label="Seções da página">
+				<div class="text-xs uppercase tracking-[0.22em] text-gold/80">Navegação</div>
+				<ul class="mt-5 grid grid-cols-2 gap-3 text-sm text-text-muted">
+					<li><a class="transition-colors hover:text-gold" href="#por-que-otb">Por que OTB</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#publico">Para quem é</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#programa">Programa</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#turmas">Turmas</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#modulos">Módulos</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#boston-harvard">Boston</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#speakers">Especialistas</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#investimento">Investimento</a></li>
+					<li><a class="transition-colors hover:text-gold" href="#faq">FAQ</a></li>
+				</ul>
+			</nav>
+
+			<div class="md:col-span-3">
+				<div class="text-xs uppercase tracking-[0.22em] text-gold/80">Contato</div>
+				<p class="mt-5 text-sm leading-relaxed text-text-muted">
+					Fale com Laura, nossa SDR, e descubra qual programa do Grupo US faz sentido para o seu momento.
+				</p>
+				<a
+					href={whatsappHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="mt-4 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
+				>
+					<Icon name="message-circle" size={14} strokeWidth={2.25} />
+					Falar no WhatsApp
+				</a>
+			</div>
+		</div>
+
+		<div class="mt-14 border-t border-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] pt-8">
+			<p class="text-xs leading-relaxed text-text-muted/80">
+				{legal.disclaimer}
+			</p>
+			{legal.creditosImagens && (
+				<p class="mt-3 text-xs leading-relaxed text-text-muted/70">{legal.creditosImagens}</p>
+			)}
+			<p class="mt-6 text-xs text-text-muted/60">
+				© {currentYear} Grupo US — Todos os direitos reservados.
+			</p>
+		</div>
+	</div>
+</footer>

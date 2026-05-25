@@ -1,0 +1,6 @@
+iteration	candidate_id	score	delta_vs_baseline	decision	hypothesis	changes_summary
+0	baseline	12.0	0.0	keep		unchanged prompt — baseline eval, CONTEXT section missing WHY rationale (C4 fails)
+1	candidate-A	15.0	3.0	keep		added parenthetical WHY rationale inline in section 7 header — fills C4 gap
+1	candidate-B	15.0	3.0	discard		blockquote format — ties with A, discarded by simplicity rule
+2	candidate-C	15.0	3.0	discard		format hint in prior-findings field — ties, complexity not justified
+2	candidate-D	15.0	3.0	discard		reorder fields (plan state before prior findings) — ties, stability risk
