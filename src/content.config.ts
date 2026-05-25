@@ -7,7 +7,7 @@ const ctaSchema = z.object({
 	whatsappMessage: z.string().refine((m) => m.startsWith("Olá, Laura!"), {
 		message: "WhatsApp message must start with 'Olá, Laura!' (SDR SSOT).",
 	}),
-	checkoutUrl: z.string().url().nullable().optional(),
+	checkoutUrl: z.url().nullable().optional(),
 	secondaryLabel: z.string().optional(),
 });
 
@@ -22,7 +22,7 @@ const products = defineCollection({
 			title: z.string().min(20).max(70),
 			description: z.string().min(120).max(220),
 			ogImage: z.string(),
-			canonical: z.string().url().optional(),
+			canonical: z.url().optional(),
 		}),
 
 		hero: z.object({
@@ -39,6 +39,7 @@ const products = defineCollection({
 		}),
 
 		why: z.object({
+			positioningQuote: z.string().min(60).max(220).optional(),
 			headline: z.string(),
 			highlight: z.string().optional(),
 			cards: z
@@ -54,6 +55,12 @@ const products = defineCollection({
 		audience: z.object({
 			headline: z.string(),
 			quote: z.string(),
+			personaIntro: z.string().min(80).max(320).optional(),
+			personaBullets: z
+				.array(z.string().min(40).max(240))
+				.min(3)
+				.max(6)
+				.optional(),
 			categorias: z
 				.array(
 					z.object({
@@ -73,6 +80,7 @@ const products = defineCollection({
 			headline: z.string(),
 			highlight: z.string().optional(),
 			descricao: z.string(),
+			narrativa: z.string().min(80).max(320).optional(),
 			horas: z.number().int().positive(),
 			cards: z
 				.array(
@@ -123,6 +131,15 @@ const products = defineCollection({
 					}),
 				)
 				.length(3),
+			freshStats: z
+				.array(
+					z.object({
+						valor: z.string().min(2).max(12),
+						rotulo: z.string().min(10).max(80),
+					}),
+				)
+				.length(3)
+				.optional(),
 			background: z.object({
 				image: z.string(),
 				alt: z.string(),
@@ -139,7 +156,7 @@ const products = defineCollection({
 						nome: z.string(),
 						area: z.string(),
 						bio: z.string().max(280),
-						instagram: z.string().url(),
+						instagram: z.url(),
 						foto: z.string(),
 					}),
 				)
@@ -217,8 +234,8 @@ const products = defineCollection({
 							contato: z
 								.object({
 									whatsapp: z.string().optional(),
-									instagram: z.string().url().optional(),
-									email: z.string().email().optional(),
+									instagram: z.url().optional(),
+									email: z.email().optional(),
 								})
 								.optional(),
 						}),

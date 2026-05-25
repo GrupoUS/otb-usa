@@ -32,6 +32,16 @@ const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 					{programa.descricao}
 				</p>
 
+				{programa.narrativa && (
+					<p
+						class="mt-6 max-w-xl border-l-2 border-gold/40 pl-5 font-serif text-base leading-relaxed text-text-primary/85 italic sm:text-lg"
+						data-reveal="up"
+						data-reveal-delay="1"
+					>
+						{programa.narrativa}
+					</p>
+				)}
+
 				<div class="mt-10 inline-flex items-baseline gap-3 rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_70%,transparent)] px-6 py-4 tabular-nums">
 					<span class="font-serif text-5xl font-bold text-gradient-gold">{programa.horas}</span>
 					<span class="text-sm uppercase tracking-[0.18em] text-text-muted">horas</span>

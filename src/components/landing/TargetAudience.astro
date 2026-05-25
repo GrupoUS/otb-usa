@@ -53,6 +53,30 @@ const { audience } = Astro.props;
 						</li>
 					))}
 				</ul>
+
+				{audience.personaBullets && audience.personaBullets.length > 0 && (
+					<div class="mt-12" data-reveal="up" data-reveal-delay="2">
+						{audience.personaIntro && (
+							<p class="max-w-2xl font-serif text-base leading-relaxed text-text-primary/85 italic sm:text-lg">
+								{audience.personaIntro}
+							</p>
+						)}
+						<ul class="mt-6 space-y-3">
+							{audience.personaBullets.map((bullet, idx) => (
+								<li
+									class="flex items-start gap-3 text-sm leading-relaxed text-text-primary/90 sm:text-base"
+									data-reveal="up"
+									data-reveal-delay={String(idx + 3)}
+								>
+									<span class="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] text-gold">
+										<Icon name="check" size={14} strokeWidth={2.5} />
+									</span>
+									<span>{bullet}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
 			</div>
 		</div>
 	</div>

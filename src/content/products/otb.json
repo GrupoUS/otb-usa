@@ -33,6 +33,7 @@
 	},
 
 	"why": {
+		"positioningQuote": "O OTB não é para quem está começando. É para quem já chegou longe e sabe que o próximo nível exige uma visão diferente de tudo.",
 		"headline": "Os três pilares do",
 		"highlight": "OTB Estados Unidos",
 		"cards": [
@@ -54,6 +55,14 @@
 	"audience": {
 		"headline": "Para quem é o OTB",
 		"quote": "Idealizamos o OTB para profissionais de Saúde Estética que querem operar em outro patamar — técnicas avançadas de Harmonização Facial, Corporal e Íntima, com excelência clínica, visão de negócio e referência internacional.",
+		"personaIntro": "Se você tem carreira estabelecida em Saúde Estética e sente que domina a técnica, mas percebe que ainda falta posicionamento de negócio, visão de mercado global e o networking que move carreiras — você está no lugar certo.",
+		"personaBullets": [
+			"Médico, biomédico, dentista, farmacêutico ou fisioterapeuta com prática clínica consolidada em Saúde Estética.",
+			"Profissional que quer ampliar a visão além do consultório — entendendo business, posicionamento e escala.",
+			"Quem busca conexão com padrão internacional de excelência, não apenas atualização técnica.",
+			"Profissional que entende US$ 3.500 como investimento estratégico de carreira — e quer tomar a decisão com consciência.",
+			"Quem deseja ser visto e reconhecido nos maiores palcos da Saúde Estética mundial."
+		],
 		"categorias": [
 			{ "nome": "Médicos", "icone": "stethoscope" },
 			{ "nome": "Odontólogos", "icone": "smile" },
@@ -73,6 +82,7 @@
 		"headline": "Seu programa —",
 		"highlight": "320 horas de formação executiva",
 		"descricao": "320 horas distribuídas entre 10 módulos online de business, gestão clínica, marketing, vendas, finanças, sistemas, IA e jurídico — somados a uma imersão presencial de 3 dias em Boston, com Anatomy Review e prática com Fresh Specimens.",
+		"narrativa": "Duas turmas já levaram empreendedores a Boston — palestras com experts globais, prática em Fresh Specimens e vivências reais em Cambridge. A 3ª Edição vai ainda mais longe.",
 		"horas": 320,
 		"cards": [
 			{
@@ -182,6 +192,11 @@
 				"descricao": "Imersão entre empreendedores internacionais de Saúde Estética Avançada em uma das praças acadêmicas mais densas do mundo."
 			}
 		],
+		"freshStats": [
+			{ "valor": "≤ 48h", "rotulo": "Frescor máximo dos specimens" },
+			{ "valor": "100%", "rotulo": "Dos alunos injetam e dissecam" },
+			{ "valor": "ASA", "rotulo": "Anatomy Society of America" }
+		],
 		"background": {
 			"image": "/images/otb/boston-networking-premium.jpg",
 			"alt": "Profissionais em sessão de networking executivo em Boston, Estados Unidos."
@@ -243,13 +258,15 @@
 			"Boleto bancário parcelado — taxa de 5% sobre o número de parcelas"
 		],
 		"beneficios": [
-			"MBA (Instituto IESA / Grupo US)",
-			"ASA Fresh Specimens Course Certificate",
-			"320 horas de programa",
+			"MBA Business Online — 12 meses de plataforma (Instituto IESA / Grupo US)",
 			"Imersão internacional de 3 dias em Boston",
-			"Fresh Specimens ≤ 48h post-mortem",
+			"Palestras com corpo docente de referência",
+			"Prática demonstrativa com Fresh Specimens ≤ 48h post-mortem",
 			"Anatomy Review com correspondente americano",
-			"Networking internacional premium"
+			"Aluno injeta e disseca a mesma peça",
+			"ASA Fresh Specimens Course Certificate",
+			"Networking internacional premium",
+			"Suporte acadêmico durante todo o programa"
 		],
 		"tagline": "Aplicação imediata. Posicionamento internacional. Networking de longo alcance.",
 		"cta": {

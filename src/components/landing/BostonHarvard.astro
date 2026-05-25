@@ -69,6 +69,28 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 			))}
 		</div>
 
+		{bostonHarvard.freshStats && bostonHarvard.freshStats.length === 3 && (
+			<div
+				class="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5"
+				aria-label="Diferenciais de Fresh Specimens"
+			>
+				{bostonHarvard.freshStats.map((stat, idx) => (
+					<div
+						class="glass-card flex flex-col items-start gap-2 rounded-2xl p-7"
+						data-reveal="up"
+						data-reveal-delay={String(idx + 2)}
+					>
+						<span class="font-serif text-5xl font-bold leading-none text-gradient-gold tabular-nums sm:text-6xl">
+							{stat.valor}
+						</span>
+						<span class="text-[11px] font-semibold uppercase tracking-[0.22em] text-text-muted">
+							{stat.rotulo}
+						</span>
+					</div>
+				))}
+			</div>
+		)}
+
 		{agenda && agenda.length > 0 && (
 			<div class="mt-20" aria-label="Agenda de 3 dias em Boston">
 				<div class="mb-8 flex items-center gap-3" data-reveal="up">
