@@ -47,12 +47,12 @@ const faqJsonLd = {
 					<summary
 						class="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-left text-base font-medium text-text-primary transition-colors hover:text-gold sm:px-8 sm:text-lg"
 					>
-						<span class="min-w-0 break-words font-serif">{item.pergunta}</span>
-						<span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-gold)_35%,transparent)] text-gold transition-transform duration-300 group-open:rotate-180">
+						<span class="min-w-0 wrap-break-word font-serif">{item.pergunta}</span>
+						<span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-mid-35 text-gold transition-transform duration-300 group-open:rotate-180">
 							<Icon name="chevron-down" size={18} strokeWidth={2.25} />
 						</span>
 					</summary>
-					<div class="break-words px-6 pb-6 text-sm leading-relaxed text-text-muted sm:px-8 sm:text-base">
+					<div class="wrap-break-word px-6 pb-6 text-sm leading-relaxed text-text-muted sm:px-8 sm:text-base">
 						{item.resposta}
 					</div>
 				</details>

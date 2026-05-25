@@ -91,7 +91,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 											>
 												{statusLabel[l.status]}
 											</span>
-											<span class="min-w-0 break-words font-serif text-sm font-semibold text-text-primary sm:text-base">
+											<span class="min-w-0 wrap-break-word font-serif text-sm font-semibold text-text-primary sm:text-base">
 												{l.label}
 											</span>
 										</div>
@@ -140,7 +140,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 										class="mt-1 shrink-0 text-gold/60"
 										aria-hidden="true"
 									/>
-									<span class="min-w-0 break-words">{p}</span>
+									<span class="min-w-0 wrap-break-word">{p}</span>
 								</li>
 							))}
 						</ul>
