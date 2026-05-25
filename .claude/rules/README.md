@@ -34,7 +34,7 @@
 
 ## Cardinal rules
 
-Non-negotiable invariants live in `.claude/CLAUDE.md § Cardinal rules`: Bun-only, branch protection, static MPA, Content Collections SSOT, WhatsApp SSOT, no hardcoded hex outside `@theme`, no layout-property animation.
+Non-negotiable invariants live in `.claude/CLAUDE.md § Cardinal rules`: Bun-only, main-only branch workflow (no feature branches), static MPA, Content Collections SSOT, WhatsApp SSOT, no hardcoded hex outside `@theme`, no layout-property animation.
 
 ## OTB-only guard
 

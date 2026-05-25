@@ -88,6 +88,13 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 - Nunca `npm`, `yarn` ou `pnpm`.
 - Git read-only com `git --no-pager`; comandos que podem abrir editor com `GIT_EDITOR=true`.
 
+### Branch workflow — main-only
+
+- Sempre trabalhar em `main`. **Não criar feature branches.**
+- Commit direto em `main` após gates passarem (`bun run lint && bunx astro check && bun run build`).
+- Sem force-push, sem auto-merge de PR.
+- Detalhe em `.claude/rules/commit.md § Branch workflow`.
+
 ---
 
 ## Authority precedence

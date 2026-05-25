@@ -43,9 +43,7 @@ DANGEROUS_PATTERNS = [
     re.compile(r"^DROP DATABASE", re.IGNORECASE),
     re.compile(r"^DROP TABLE", re.IGNORECASE),
     re.compile(r"^TRUNCATE", re.IGNORECASE),
-    # Branch protection: main/master are read-only mirrors
-    re.compile(r"^git\s+(checkout|switch)\s+(-[^\s]+\s+)*\b(main|master)\b"),
-    re.compile(r"^git\s+push\b.*\b(main|master)\b"),
+    # Main-only workflow: protect destructive operations on main but allow edits + push
     re.compile(r"^git\s+push\b.*(--force|-f)\b"),
     re.compile(r"^gh\s+pr\s+(merge|approve)\b"),
     # OTB is Bun-only

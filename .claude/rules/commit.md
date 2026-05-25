@@ -53,11 +53,13 @@ Per `.claude/config.json::protectedFiles.exact`:
 
 Edit with explicit reason and validate after.
 
-## Branch protection
+## Branch workflow — main-only
 
-`main` is read-only. Workflow: `dev-test → PR → user approves → user merges`.
+Single-branch repository. Always edit on `main`.
 
-- Never work directly on `main`.
-- Never push to `main`.
-- Never force-push shared branches.
-- Never auto-merge your own PR.
+- **Always work on `main`.** No feature branches, no `dev-test`, no `feature/*`, no `fix/*`.
+- **Never create new branches** unless the user explicitly requests one for an isolated experiment.
+- **Never force-push** (`--force` / `-f`) — destructive on shared history.
+- **Never auto-merge or auto-approve PRs.**
+- Commits go directly to `main` after the manual gate checklist + automated `lefthook` pre-commit gate.
+- Push to `origin/main` after commit.

@@ -51,6 +51,7 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 6. **NEVER inline `wa.me/...`.** Usar `src/lib/whatsapp.ts`.
 7. **NEVER hardcode hex** fora do bloco `@theme` em `src/styles/global.css`. Usar tokens semânticos.
 8. **NEVER animate layout properties** (`width`, `height`, `top`, `left`, `padding`, `margin`). Motion: `transform` + `opacity`.
+9. **MAIN-ONLY branch workflow.** Sempre editar em `main`. Não criar feature branches, `dev-test`, `feature/*`, `fix/*`. Sem force-push, sem auto-merge.
 
 ---
 
