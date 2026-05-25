@@ -1,0 +1,57 @@
+[
+  {
+    "label": "Check: lint",
+    "command": "bun",
+    "args": ["run", "lint"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "hide": "on_success",
+    "save": "all"
+  },
+  {
+    "label": "Check: Astro",
+    "command": "bunx",
+    "args": ["astro", "check"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "hide": "on_success",
+    "save": "all"
+  },
+  {
+    "label": "Build",
+    "command": "bun",
+    "args": ["run", "build"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "hide": "on_success",
+    "save": "all"
+  },
+  {
+    "label": "Gate: predeploy",
+    "command": "bun",
+    "args": ["run", "predeploy"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "hide": "on_success",
+    "save": "all"
+  },
+  {
+    "label": "Fix: lint",
+    "command": "bun",
+    "args": ["run", "lint:fix"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "hide": "never",
+    "save": "all"
+  }
+]

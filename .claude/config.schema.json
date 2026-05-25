@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OTB USA Claude Project Config",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["project", "paths", "tooling", "gates"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "displayName", "stack", "stagingUrl", "productionUrl", "locale"],
+      "properties": {
+        "name": { "type": "string" },
+        "displayName": { "type": "string" },
+        "stack": { "type": "string" },
+        "stagingUrl": { "type": "string" },
+        "productionUrl": { "type": "string" },
+        "locale": { "type": "string" }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "tooling": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["packageManager", "buildTool", "typeChecker", "linter"],
+      "properties": {
+        "packageManager": { "type": "string" },
+        "buildTool": { "type": "string" },
+        "typeChecker": { "type": "string" },
+        "linter": { "type": "string" },
+        "testRunner": { "type": "string" },
+        "deployer": { "type": "string" },
+        "frontendFramework": { "type": "string" },
+        "database": { "type": "string" },
+        "orm": { "type": "string" }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "lighthouse": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "lcp": { "type": "number" },
+        "cls": { "type": "number" },
+        "inp": { "type": "number" },
+        "initialJsKb": { "type": "number" }
+      }
+    },
+    "protectedFiles": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "exact": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "segments": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "contains": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "rulesDir": { "type": "string" },
+    "templatesDir": { "type": "string" },
+    "agentsFile": { "type": "string" },
+    "claudeMdFile": { "type": "string" }
+  }
+}

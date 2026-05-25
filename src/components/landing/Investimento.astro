@@ -84,7 +84,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 									>
 										<div class="flex items-center gap-3">
 											<span
-												class={`inline-flex h-7 min-w-[64px] items-center justify-center rounded-full px-3 text-[10px] font-semibold uppercase tracking-[0.18em] ${isActive ? "bg-gold text-navy" : isPast ? "bg-text-muted/20 text-text-muted" : "border border-gold/40 text-gold"}`}
+												class={`inline-flex h-7 min-w-16 items-center justify-center rounded-full px-3 text-[10px] font-semibold uppercase tracking-[0.18em] ${isActive ? "bg-gold text-navy" : isPast ? "bg-text-muted/20 text-text-muted" : "border border-gold/40 text-gold"}`}
 											>
 												{statusLabel[l.status]}
 											</span>

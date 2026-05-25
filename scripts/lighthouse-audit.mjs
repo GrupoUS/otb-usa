@@ -85,7 +85,7 @@ async function main() {
       }
     }
   } finally {
-    await chrome.kill();
+    chrome.kill();
   }
 
   if (failed) {
