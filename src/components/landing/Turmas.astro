@@ -17,7 +17,7 @@ const { turmas } = Astro.props;
 			</span>
 			<h2
 				id="turmas-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl md:text-5xl"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance text-text-primary sm:text-4xl md:text-5xl"
 			>
 				{turmas.headline}
 			</h2>
@@ -38,6 +38,7 @@ const { turmas } = Astro.props;
 						height="600"
 						loading="lazy"
 						fetchpriority="low"
+						decoding="async"
 						class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
 					/>
 					<figcaption

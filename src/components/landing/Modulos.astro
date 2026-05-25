@@ -8,7 +8,7 @@ export interface Props {
 const { modulos } = Astro.props;
 ---
 
-<section id="modulos" class="relative py-28 sm:py-32" aria-labelledby="modulos-heading">
+<section id="modulos" class="relative py-24 sm:py-28" aria-labelledby="modulos-heading">
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center" data-reveal="up">
 			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
@@ -17,7 +17,7 @@ const { modulos } = Astro.props;
 			</span>
 			<h2
 				id="modulos-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
 			>
 				<span class="text-text-primary">{modulos.headline}</span>
 				{modulos.highlight && (

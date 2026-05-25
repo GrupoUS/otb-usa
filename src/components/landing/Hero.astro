@@ -95,6 +95,20 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 			</div>
 		</div>
 
+		<a
+			href="#programa"
+			aria-label="Rolar para o programa"
+			class="pointer-events-auto absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.32em] text-text-muted/70 transition-colors hover:text-gold focus-visible:text-gold md:flex"
+		>
+			<span aria-hidden="true">Role para descobrir</span>
+			<Icon
+				name="chevron-down"
+				size={18}
+				strokeWidth={2}
+				class="scroll-hint-bounce text-gold"
+			/>
+		</a>
+
 		<div class="lg:col-span-4" data-reveal="scale" data-reveal-delay="2">
 			<div class="glass-card-bright relative rounded-3xl p-8">
 				<div class="text-[11px] uppercase tracking-[0.32em] text-gold/80">

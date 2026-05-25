@@ -39,7 +39,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 				</span>
 				<h2
 					id="investimento-heading"
-					class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl"
+					class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
 				>
 					<span class="text-text-primary">{investimento.headline}</span>
 					{investimento.highlight && (
@@ -85,17 +85,17 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 										class={`flex flex-col gap-1 rounded-xl border ${tone} px-4 py-3 sm:flex-row sm:items-center sm:justify-between`}
 										aria-current={isActive ? "true" : undefined}
 									>
-										<div class="flex items-center gap-3">
+										<div class="flex min-w-0 items-center gap-3">
 											<span
-												class={`inline-flex h-7 min-w-16 items-center justify-center rounded-full px-3 text-[10px] font-semibold uppercase tracking-[0.18em] ${isActive ? "bg-gold text-navy" : isPast ? "bg-text-muted/20 text-text-muted" : "border border-gold/40 text-gold"}`}
+												class={`inline-flex h-7 min-w-16 shrink-0 items-center justify-center rounded-full px-3 text-[10px] font-semibold uppercase tracking-[0.18em] ${isActive ? "bg-gold text-navy" : isPast ? "bg-text-muted/20 text-text-muted" : "border border-gold/40 text-gold"}`}
 											>
 												{statusLabel[l.status]}
 											</span>
-											<span class="font-serif text-sm font-semibold text-text-primary sm:text-base">
+											<span class="min-w-0 break-words font-serif text-sm font-semibold text-text-primary sm:text-base">
 												{l.label}
 											</span>
 										</div>
-										<div class="flex items-baseline gap-2 tabular-nums">
+										<div class="flex min-w-0 flex-wrap items-baseline gap-2 tabular-nums">
 											<span class="text-xs text-text-muted">{l.moeda}</span>
 											<span class={`font-serif text-lg font-semibold ${isActive ? "text-gradient-gold" : "text-text-primary/80"}`}>
 												{l.preco}
@@ -132,7 +132,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 						<div class="text-xs uppercase tracking-[0.18em] text-text-muted">Parcelamento</div>
 						<ul class="mt-3 space-y-2 text-sm text-text-primary/90">
 							{investimento.parcelamento.map((p) => (
-								<li class="flex items-start gap-2.5">
+								<li class="flex min-w-0 items-start gap-2.5">
 									<Icon
 										name="chevron-right"
 										size={14}
@@ -140,7 +140,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 										class="mt-1 shrink-0 text-gold/60"
 										aria-hidden="true"
 									/>
-									<span>{p}</span>
+									<span class="min-w-0 break-words">{p}</span>
 								</li>
 							))}
 						</ul>

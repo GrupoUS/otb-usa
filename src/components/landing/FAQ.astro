@@ -22,7 +22,7 @@ const faqJsonLd = {
 };
 ---
 
-<section id="faq" class="relative py-28 sm:py-32" aria-labelledby="faq-heading">
+<section id="faq" class="relative py-24 sm:py-28" aria-labelledby="faq-heading">
 	<div class="mx-auto max-w-4xl px-6 lg:px-8">
 		<div class="text-center" data-reveal="up">
 			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
@@ -31,7 +31,7 @@ const faqJsonLd = {
 			</span>
 			<h2
 				id="faq-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl md:text-5xl"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance text-text-primary sm:text-4xl md:text-5xl"
 			>
 				Dúvidas comuns sobre o OTB
 			</h2>
@@ -47,12 +47,12 @@ const faqJsonLd = {
 					<summary
 						class="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-left text-base font-medium text-text-primary transition-colors hover:text-gold sm:px-8 sm:text-lg"
 					>
-						<span class="font-serif">{item.pergunta}</span>
+						<span class="min-w-0 break-words font-serif">{item.pergunta}</span>
 						<span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-gold)_35%,transparent)] text-gold transition-transform duration-300 group-open:rotate-180">
 							<Icon name="chevron-down" size={18} strokeWidth={2.25} />
 						</span>
 					</summary>
-					<div class="px-6 pb-6 text-sm leading-relaxed text-text-muted sm:px-8 sm:text-base">
+					<div class="break-words px-6 pb-6 text-sm leading-relaxed text-text-muted sm:px-8 sm:text-base">
 						{item.resposta}
 					</div>
 				</details>

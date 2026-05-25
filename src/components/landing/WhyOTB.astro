@@ -20,7 +20,7 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 			</span>
 			<h2
 				id="why-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
 			>
 				<span class="text-text-primary">{why.headline}</span>
 				{why.highlight && (
@@ -48,7 +48,7 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 			)}
 		</div>
 
-		<div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-7">
+		<div class="mt-16 grid grid-cols-1 gap-6 md:mt-20 md:grid-cols-3 md:gap-7">
 			{why.cards.map((card, idx) => (
 				<article
 					class="glass-card card-glow-hover relative flex flex-col gap-5 rounded-2xl p-7"
@@ -70,14 +70,25 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 
 	<script is:inline>
 		(() => {
-			const cards = document.querySelectorAll("[data-glow-card]");
-			cards.forEach((card) => {
-				card.addEventListener("pointermove", (e) => {
-					const rect = card.getBoundingClientRect();
-					card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-					card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+			try {
+				const cards = document.querySelectorAll("[data-glow-card]");
+				if (!cards.length) return;
+				// Respect motion preferences — pointer-glow is decorative.
+				const reduceMotion =
+					typeof window.matchMedia === "function" &&
+					window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+				if (reduceMotion) return;
+				cards.forEach((card) => {
+					if (!(card instanceof HTMLElement)) return;
+					card.addEventListener("pointermove", (e) => {
+						const rect = card.getBoundingClientRect();
+						card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+						card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+					});
 				});
-			});
+			} catch {
+				/* decorative; failure is acceptable */
+			}
 		})();
 	</script>
 </section>

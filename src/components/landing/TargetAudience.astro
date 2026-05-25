@@ -26,7 +26,7 @@ const { audience } = Astro.props;
 				</span>
 				<h2
 					id="audience-heading"
-					class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-text-primary sm:text-4xl md:text-5xl"
+					class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance text-text-primary sm:text-4xl md:text-5xl"
 				>
 					{audience.headline}
 				</h2>
@@ -70,7 +70,7 @@ const { audience } = Astro.props;
 						<ol class="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
 							{audience.personaBullets.map((bullet, idx) => (
 								<li
-									class="flex items-baseline gap-4 text-sm leading-relaxed text-text-primary/90 sm:text-base"
+									class="flex min-w-0 items-baseline gap-4 text-sm leading-relaxed text-text-primary/90 sm:text-base"
 									data-reveal="up"
 									data-reveal-delay={String((idx % 4) + 3)}
 								>
@@ -80,7 +80,7 @@ const { audience } = Astro.props;
 									>
 										{String(idx + 1).padStart(2, "0")}
 									</span>
-									<span class="border-l border-gold/20 pl-4">{bullet}</span>
+									<span class="min-w-0 break-words border-l border-gold/20 pl-4">{bullet}</span>
 								</li>
 							))}
 						</ol>

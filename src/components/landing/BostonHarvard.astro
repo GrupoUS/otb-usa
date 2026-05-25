@@ -16,7 +16,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 
 <section
 	id="boston-harvard"
-	class="relative isolate overflow-hidden py-28 sm:py-32"
+	class="relative isolate overflow-hidden py-32 sm:py-36"
 	aria-labelledby="boston-heading"
 >
 	<div
@@ -34,7 +34,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 			</span>
 			<h2
 				id="boston-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
 			>
 				<span class="text-text-primary">{bostonHarvard.headline}</span>
 				{bostonHarvard.highlight && (
@@ -71,7 +71,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 
 		{bostonHarvard.freshStats && bostonHarvard.freshStats.length === 3 && (
 			<div
-				class="mt-16 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-x-10 sm:divide-x sm:divide-gold/20"
+				class="mt-20 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-x-10 sm:divide-x sm:divide-gold/20"
 				aria-label="Diferenciais de Fresh Specimens"
 			>
 				{bostonHarvard.freshStats.map((stat, idx) => (
@@ -93,7 +93,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 		)}
 
 		{agenda && agenda.length > 0 && (
-			<div class="mt-20" aria-label="Agenda de 3 dias em Boston">
+			<div class="mt-24" aria-label="Agenda de 3 dias em Boston">
 				<div class="mb-8 flex items-center gap-3" data-reveal="up">
 					<Icon name="calendar" size={18} strokeWidth={2} class="text-gold" />
 					<span class="text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
@@ -111,7 +111,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 								<span class="font-serif text-3xl font-bold text-gradient-gold tabular-nums">
 									Dia {d.dia}
 								</span>
-								<span class="text-[11px] uppercase tracking-[0.22em] text-gold/80">
+								<span class="text-[11px] uppercase tracking-[0.22em] tabular-nums text-gold/80">
 									{d.data}
 								</span>
 							</div>

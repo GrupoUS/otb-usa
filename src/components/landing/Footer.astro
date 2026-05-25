@@ -23,6 +23,8 @@ const currentYear = new Date().getFullYear();
 						width="44"
 						height="44"
 						loading="lazy"
+						fetchpriority="low"
+						decoding="async"
 						class="h-11 w-11"
 					/>
 					<span class="font-serif text-2xl font-semibold text-text-primary">OTB</span>
@@ -38,16 +40,16 @@ const currentYear = new Date().getFullYear();
 
 			<nav class="md:col-span-4" aria-label="Seções da página">
 				<div class="text-xs uppercase tracking-[0.22em] text-gold/80">Navegação</div>
-				<ul class="mt-5 grid grid-cols-2 gap-3 text-sm text-text-muted">
-					<li><a class="transition-colors hover:text-gold" href="#por-que-otb">Por que OTB</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#publico">Para quem é</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#programa">Programa</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#turmas">Turmas</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#modulos">Módulos</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#boston-harvard">Boston</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#speakers">Especialistas</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#investimento">Investimento</a></li>
-					<li><a class="transition-colors hover:text-gold" href="#faq">FAQ</a></li>
+				<ul class="mt-5 grid grid-cols-2 gap-x-3 text-sm text-text-muted">
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#por-que-otb">Por que OTB</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#publico">Para quem é</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#programa">Programa</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#turmas">Turmas</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#modulos">Módulos</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#boston-harvard">Boston</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#speakers">Especialistas</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#investimento">Investimento</a></li>
+					<li><a class="inline-flex min-h-11 items-center transition-colors hover:text-gold" href="#faq">FAQ</a></li>
 				</ul>
 			</nav>
 
@@ -60,7 +62,7 @@ const currentYear = new Date().getFullYear();
 					href={whatsappHref}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="mt-4 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
+					class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
 				>
 					<Icon name="message-circle" size={14} strokeWidth={2.25} />
 					Falar no WhatsApp
@@ -69,11 +71,11 @@ const currentYear = new Date().getFullYear();
 		</div>
 
 		<div class="mt-14 border-t border-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] pt-8">
-			<p class="text-xs leading-relaxed text-text-muted/80">
+			<p class="max-w-3xl break-words text-xs leading-relaxed text-text-muted/80">
 				{legal.disclaimer}
 			</p>
 			{legal.creditosImagens && (
-				<p class="mt-3 text-xs leading-relaxed text-text-muted/70">{legal.creditosImagens}</p>
+				<p class="mt-3 max-w-3xl break-words text-xs leading-relaxed text-text-muted/70">{legal.creditosImagens}</p>
 			)}
 			<p class="mt-6 text-xs text-text-muted/60">
 				© {currentYear} Grupo US — Todos os direitos reservados.
