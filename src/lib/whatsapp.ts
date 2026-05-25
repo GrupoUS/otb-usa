@@ -21,6 +21,14 @@ export function whatsappUrlWithText(message: string): string {
 	return `https://wa.me/${WHATSAPP_SDR_E164}?text=${encodeURIComponent(message)}`;
 }
 
+export function whatsappPartnerUrl(phone: string, message: string): string {
+	const digits = phone.replace(/\D/g, "");
+	if (digits.length < 10) {
+		throw new Error(`Partner WhatsApp phone too short. Received: "${phone}"`);
+	}
+	return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+}
+
 export function isWhatsAppDestination(url: string): boolean {
 	return WHATSAPP_URL_PATTERN.test(url);
 }

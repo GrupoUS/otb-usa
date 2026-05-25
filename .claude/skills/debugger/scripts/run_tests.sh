@@ -1,15 +1,19 @@
 #!/bin/bash
-# Debug Skill - Backend Test Runner
-# Run biome + vitest for full backend validation
+# Debug Skill - OTB USA validation runner
+# Runs the canonical Astro static-site gate for this project.
 
-set -e  # Exit on error
+set -e
 
-echo "🔍 Running lint & type check..."
-bun run check
-
-echo ""
-echo "🧪 Running tests..."
-bun test "$@"
+echo "🔍 Running lint..."
+bun run lint
 
 echo ""
-echo "✅ All checks passed!"
+echo "🔎 Running Astro check..."
+bunx astro check
+
+echo ""
+echo "🏗️ Running production build..."
+bun run build
+
+echo ""
+echo "✅ OTB USA validation gate passed!"

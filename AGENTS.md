@@ -130,3 +130,4 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 ## Recent learnings
 
 - **2026-05-25** — Repositório reconfigurado como OTB USA-only; referências herdadas de site institucional/produtos paralelos removidas dos guias canônicos.
+- **2026-05-25** — Briefing oficial da **3ª Edição OTB EUA** (Boston, 19–21 abr 2027) absorvido em `Skill('otb-usa')` → `references/edicao-3-boston.md` + `manual-resumo.md`. Schema `src/content.config.ts` ganhou campos opcionais `edicao`, `lotes`, `agenda`, `parceiros`. Phase 2 do plano (`docs/analise-o-https-docs-google-com-document-vast-pancake.md`) bloqueada por gate stakeholder: Lote 1 ativo, ASA, wording Anatomy Review, escopo taxa 5%, contatos parceiros, datas online, copy "íntima". Lote 0 (US$ 3.000) venceu em 30 abr 2026.

@@ -25,6 +25,12 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 
 	<div class="mx-auto grid min-h-[92vh] max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 lg:grid-cols-12 lg:gap-16 lg:px-8">
 		<div class="lg:col-span-8" data-reveal="up">
+			{hero.eyebrow && (
+				<p class="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold/80 tabular-nums">
+					{hero.eyebrow}
+				</p>
+			)}
+
 			<div class="mb-8 flex flex-wrap items-center gap-3">
 				<span
 					class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)] px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.22em] text-gold backdrop-blur"
@@ -36,7 +42,7 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 
 			<h1
 				id="hero-heading"
-				class="font-serif text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-[4.25rem]"
+				class="font-serif text-4xl font-bold leading-[1.05] tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-[4.25rem]"
 			>
 				<span class="block text-text-primary">{hero.headline}</span>
 				{hero.highlight && (
@@ -58,7 +64,7 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 				data-reveal-delay="3"
 				aria-label="Diferenciais do programa"
 			>
-				{hero.badges.slice(1).map((badge: string) => (
+				{hero.badges.slice(1).map((badge) => (
 					<li
 						class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_70%,transparent)] px-3.5 py-1.5 text-xs font-medium text-text-primary/90"
 					>
@@ -101,7 +107,7 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 				<div class="mt-6 space-y-3">
 					<div class="flex items-start gap-3 text-sm text-text-muted">
 						<Icon name="graduation-cap" size={18} class="mt-0.5 text-gold" />
-						<span>320 horas de formação executiva</span>
+						<span><span class="tabular-nums text-text-primary/90">320</span> horas de formação executiva</span>
 					</div>
 					<div class="flex items-start gap-3 text-sm text-text-muted">
 						<Icon name="shield-check" size={18} class="mt-0.5 text-gold" />

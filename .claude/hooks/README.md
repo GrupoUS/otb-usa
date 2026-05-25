@@ -11,10 +11,10 @@ Project-specific values (project name, package manager, protected paths) come fr
 ## Configured hooks
 
 ### SessionStart
-- **`session_context.py`** — emits a short `additionalContext` tag (`[PROJECT] Bun | branch:<branch> | gates: check+lint+test`). One line, ~80 chars. Source-aware: `startup` / `resume` / `compact`.
+- **`session_context.py`** — emits a short `additionalContext` tag (`[PROJECT] Bun | branch:<branch> | gates: lint+astro-check+build`). One line, ~80 chars. Source-aware: `startup` / `resume` / `compact`.
 
 ### PreToolUse
-- **`smart_bash_approver.py`** (matcher `Bash`) — auto-allows safe commands (read-only git/gh, Bun test/lint/build/check commands, version checks, local read commands); blocks dangerous patterns (`rm -rf /`, `DROP DATABASE`, main/master checkout or push, PR merge/approve, non-Bun package managers, `mkfs`, fork bomb, etc.); asks on cleanup, branch-changing, mutative git/gh, long-running dev server, and unknown commands.
+- **`smart_bash_approver.py`** (matcher `Bash`) — auto-allows safe commands (read-only git/gh, Bun lint/build/predeploy commands, `bunx` tools, version checks, local read commands); blocks dangerous patterns (`rm -rf /`, `DROP DATABASE`, main/master checkout or push, PR merge/approve, non-Bun package managers, `mkfs`, fork bomb, etc.); asks on cleanup, branch-changing, mutative git/gh, long-running dev server, and unknown commands.
 - **`protect_files.py`** (matcher `Edit|Write`) — blocks edits to sensitive files. Generic defaults: `.env*`, lockfiles (`bun.lockb`, `bun.lock`, `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`), `.git/`, `credentials/`, `secrets/`, `api-keys/`. Per-project additions read from `config.json::protectedFiles` + `${overlay}/protected-files.json`.
 - **`task_routing_guard.py`** (matcher `Agent`) — validates `subagent_type` against the known set, and enforces `run_in_background: true` for read-only research agents (`explore`, `explorer-agent`, `librarian`) when the runtime exposes the field.
 
@@ -50,7 +50,7 @@ git status, git diff, git log, git branch, git fetch, git show, git stash, git r
 ls, cat, head, tail, grep, rg, find, which, pwd, echo, tree, stat, wc
 
 # Package manager (Bun only)
-bun install, bun run test, bun run lint, bun run build, bunx <tool>
+bun install, bun run lint, bun run build, bunx astro check, bunx <tool>
 # npm / npx / pnpm / yarn are blocked in this project
 
 # Type checkers
@@ -101,10 +101,10 @@ python -m py_compile .claude/hooks/*.py
 
 # Session context — must stay short
 echo '{"source":"startup"}' | python .claude/hooks/session_context.py
-# expect: {"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"[PROJECT] Bun | branch:<...> | gates: check+lint+test"}}
+# expect: {"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"[PROJECT] Bun | branch:<...> | gates: lint+astro-check+build"}}
 
 # Bash approver
-echo '{"tool_input":{"command":"bun test"}}' | python .claude/hooks/smart_bash_approver.py    # allow
+echo '{"tool_input":{"command":"bun run lint"}}' | python .claude/hooks/smart_bash_approver.py    # allow
 echo '{"tool_input":{"command":"rm -rf /"}}' | python .claude/hooks/smart_bash_approver.py    # deny
 
 # File protection

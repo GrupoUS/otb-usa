@@ -20,7 +20,7 @@ Why format-only on PostToolUse:
 
   OXLint `--fix` is intentionally NOT used in PostToolUse for the same reason.
   Lint fixes only run at Stop (read-only check) or manually
-  (`bunx biome check --write && bun run lint:oxlint`).
+  (`bunx biome check --write && bun run lint`).
 
 Triggers:
   PostToolUse (Write|Edit) — format mode
@@ -28,6 +28,7 @@ Triggers:
 
 Always fails open: any internal error → exit 0 (never wedge a session).
 """
+
 import json
 import re
 import subprocess
@@ -57,7 +58,9 @@ def read_input() -> dict[str, object]:
 def run_format(data: dict[str, object]) -> None:
     file_path = str(
         data.get("file_path")
-        or typing.cast(dict[str, object], data.get("tool_input", {})).get("file_path", "")
+        or typing.cast(dict[str, object], data.get("tool_input", {})).get(
+            "file_path", ""
+        )
     )
     if not file_path:
         return
@@ -81,7 +84,9 @@ def get_modified_files() -> list[str]:
     try:
         result = subprocess.run(
             ["git", "diff", "--name-only", "--diff-filter=ACM"],
-            capture_output=True, text=True, timeout=GIT_DIFF_TIMEOUT_S,
+            capture_output=True,
+            text=True,
+            timeout=GIT_DIFF_TIMEOUT_S,
         )
         files = result.stdout.strip().splitlines()
         return [f for f in files if f.endswith(LINT_EXTENSIONS)][:MAX_LINT_FILES]
@@ -101,7 +106,9 @@ def run_check(data: dict[str, object]) -> None:
     try:
         result = subprocess.run(
             ["bunx", "oxlint", *modified],
-            capture_output=True, text=True, timeout=LINT_TIMEOUT_S,
+            capture_output=True,
+            text=True,
+            timeout=LINT_TIMEOUT_S,
         )
         raw_output = result.stdout + result.stderr
     except Exception:
@@ -113,10 +120,14 @@ def run_check(data: dict[str, object]) -> None:
         return
 
     truncated = "\n".join(raw_output.splitlines()[-30:])[:2000]
-    print(json.dumps({
-        "decision": "block",
-        "reason": f"OXLint found {error_count} error(s). Fix them before stopping:\n\n{truncated}",
-    }))
+    print(
+        json.dumps(
+            {
+                "decision": "block",
+                "reason": f"OXLint found {error_count} error(s). Fix them before stopping:\n\n{truncated}",
+            }
+        )
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────

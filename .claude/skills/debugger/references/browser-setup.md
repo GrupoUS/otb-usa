@@ -1,51 +1,49 @@
-# Browser Setup — Authenticated vs Public
+# Browser Setup — OTB USA Static Site
 
-## Browser Mode Selection
-
-| Page Type | Tool | Command |
-|-----------|------|---------|
-| **Public** (landing, pricing) | Playwright MCP | `mcp__playwright__browser_navigate` + `browser_snapshot` + `browser_take_screenshot` |
-| **Public** (alternative) | agent-browser | `agent-browser open URL --headless` |
-| **Authenticated** (dashboard, CRM, financeiro) | Claude Chrome extension | `claude --chrome` (official — works with Clerk session) |
-| **Authenticated** (fallback) | cdp.py + node | `python .claude/scripts/cdp.py launch` → login → `cdp.py navigate/analyze` |
+OTB USA is a public static Astro landing. Browser evidence should focus on public routes, responsive behavior, anchors, console/network errors, and generated static output.
 
 ---
 
-## Authenticated Browser Setup
+## Browser Mode Selection
 
-Pages behind Clerk auth require an active login session. Use one of these approaches:
+| Scenario | Tool | Command / Action |
+|---|---|---|
+| Public route smoke | Playwright MCP when available | `browser_navigate` → `browser_snapshot` → `browser_take_screenshot` |
+| Public route fallback | agent-browser | `agent-browser open http://localhost:4321 --headless` → `snapshot` → `screenshot` |
+| Static output inspection | CLI | inspect `dist/index.html`, `dist/otb/index.html`, `dist/sitemap-0.xml`, `dist/robots.txt` |
 
-### Option A — Claude Code Chrome Extension (recommended)
+Default local URL: `http://localhost:4321`.
+
+---
+
+## Evidence Checklist
+
+- `/` renders the full funnel: Hero → WhyOTB → TargetAudience → Programa → Turmas → Modulos → BostonHarvard → Speakers → Investimento → FAQ.
+- `#programa` anchor exists on `/`.
+- `/otb` is compatibility-only: redirect/noindex fallback and canonical `/`.
+- No console errors from React islands or reveal script.
+- No network 404 for assets referenced by `src/content/products/otb.json`.
+- Keyboard focus starts at skip link and remains visible.
+- Reduced-motion mode does not rely on layout animation.
+
+---
+
+## CLI Smoke Examples
 
 ```bash
-# Requires Claude Chrome extension installed in Chrome (chrome.google.com/webstore)
-claude --chrome
-# → Claude attaches to existing Chrome session with Clerk login already active
-# → Use /chrome slash command or --chrome flag
+bun run build
+grep -RIn 'id="programa"' dist/index.html
+grep -RIn '<legacy-domain>' dist || true
+grep -RIn 'drasacha.com.br/otb' dist/sitemap-0.xml || true
 ```
 
-### Option B — cdp.py with node (advanced CDP)
+Use `|| true` only for read-only smoke checks where “no matches” is the expected result; do not use it to mask build/lint/check failures.
 
-```bash
-# Step 1: Check if Chrome CDP is already running
-python .claude/scripts/cdp.py check
+---
 
-# Step 2: If NOT running, launch Chrome with debugging
-python .claude/scripts/cdp.py launch
-# → User completes login in the Chrome window
-# → Session persists in C:\Users\Mauri\chrome-debug-profile
+## Constraints
 
-# Step 3: Use CDP commands for browser automation
-python .claude/scripts/cdp.py info                     # Current URL + title
-python .claude/scripts/cdp.py navigate "<url>"         # Navigate to URL
-python .claude/scripts/cdp.py screenshot /tmp/out.png  # Capture screenshot
-python .claude/scripts/cdp.py analyze                  # Page metrics (dead anchors, empty buttons, errors)
-python .claude/scripts/cdp.py eval "<js expression>"   # Run JS in page context
-```
-
-### Key Constraints
-
-- Chrome MUST use `--user-data-dir=C:\Users\Mauri\chrome-debug-profile` — otherwise `--remote-debugging-port` is ignored by existing Chrome instances
-- Clerk JWT tokens auto-refresh — cookie export to headless does NOT work reliably
-- `agent-browser` is standalone and does NOT support attaching to existing Chrome (no `connect` subcommand)
-- In CDP mode, do NOT call `agent-browser close` — it kills the user's Chrome session
+- Do not start long-running servers without a timeout.
+- Do not use npm/yarn/pnpm.
+- Do not add browser tooling dependencies unless explicitly requested.
+- Do not treat `/otb` as a second landing; `/` is canonical.

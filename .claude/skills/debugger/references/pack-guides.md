@@ -1,116 +1,99 @@
-# Pack Execution Guides
+# Pack Execution Guides — OTB USA
 
-Detailed execution flows, key rules, and common patterns for each debug pack.
-
----
-
-## 8a. `frontend-debug`
-
-**Scope:** React/UI regressions, hydration errors, interaction failures, visual glitches.
-
-**Execution flow:**
-1. Pre-flight (Phase 0) + agent-browser check
-2. Launch 3 sub-agents: Evidence Collector + Code Archaeologist + Regression Hunter
-3. While agents work, run quality gates as baseline
-4. Consolidate findings → select hypothesis
-5. Apply minimal fix
-6. Verification gates
-7. Browser evidence: screenshot + console + network + responsive viewports
-8. Report
-
-**Key rules:**
-- NEVER fix without capturing initial screenshot first
-- NEVER interact with page without calling `agent-browser snapshot` first (refs invalidate after DOM changes)
-- Choose browser mode: headless for public pages, CDP for authenticated pages (see `references/browser-setup.md`)
-- Default target: `${project.stagingUrl}` from `.claude/config.json` (override with `url=` argument)
-- In CDP mode, do NOT call `agent-browser close` — it kills the user's Chrome session
-
-**Common frontend patterns:**
-- `Select controlled/uncontrolled` → `value={undefined}` transitioning to string
-- Hydration mismatch → dynamic values computed differently on server vs client
-- Infinite re-render → `useEffect` dep array includes unstable reference (new object/array each render)
-- Loading skeleton stuck → query never resolves, check `staleTime` and `enabled` condition
+Detailed execution flows for the static Astro debug packs.
 
 ---
 
-## 8b. `backend-debug`
+## `frontend-debug`
 
-**Scope:** Hono/tRPC procedure failures, service errors, mutation side effects.
+**Scope:** Astro components, React islands, CSS, hydration, accessibility, visual/interaction regressions.
 
 **Execution flow:**
-1. Pre-flight (Phase 0)
-2. Launch 2 sub-agents: Code Archaeologist + Regression Hunter
-3. If mutation involved, also launch DB State Inspector
-4. Consolidate → hypothesis
-5. Minimal fix
-6. Verification gates
-7. Database validation (psql)
-8. Report
+1. Pre-flight: `git --no-pager status --short` and reproduce symptom.
+2. Capture baseline evidence when browser-visible: screenshot/snapshot/viewport notes.
+3. Launch Code Archaeologist + Regression Hunter if the issue spans multiple files.
+4. Run or inspect the specific failing command/output.
+5. Select one root-cause hypothesis.
+6. Apply the smallest targeted fix.
+7. Run `bun run lint && bunx astro check && bun run build`.
+8. Browser/static smoke: verify affected route/anchor/interaction in `dist` or local preview.
+9. Report changed files, evidence, warnings, and remaining risks.
 
 **Key rules:**
-- Always verify procedure boundary: `protectedProcedure` vs `adminProcedure` vs `mentoradoProcedure`
-- Check Zod input schema matches what frontend sends
-- Verify `Promise.all` vs sequential for batch operations
-- Never use `db.transaction()` with Neon HTTP driver — use `db.batch()` or sequential `await`
-- Always guard `.returning()[0]` against empty arrays
-
-**Common backend patterns:**
-- `No transactions support in neon-http driver` → use sequential await or db.batch()
-- `Cannot read properties of undefined` after insert → unguarded `.returning()[0]`
-- HTTP 500 on mutation → same as above, or unhandled async rejection
-- `TRPCError UNAUTHORIZED` → procedure context not forwarding userId
+- Prefer static Astro and CSS before React islands.
+- Do not animate layout properties; use `transform` + `opacity`.
+- Do not add hardcoded hex in components; use tokens.
+- Do not add product copy in components when it belongs in `otb.json`.
 
 ---
 
-## 8c. `auth-db-debug`
+## `content-debug`
 
-**Scope:** Clerk authentication, role/permission mismatches, tenant isolation failures.
+**Scope:** `src/content/products/otb.json`, `src/content.config.ts`, WhatsApp CTA, legal/Harvard copy, referenced assets.
 
 **Execution flow:**
-1. Pre-flight (Phase 0)
-2. Launch 2 sub-agents: Code Archaeologist + Regression Hunter
-3. Launch DB State Inspector to verify user/mentorado/role state
-4. Consolidate → hypothesis
-5. Minimal fix
-6. Verification gates
-7. Database validation: verify role assignments, tenant boundaries, FK integrity
-8. Report
+1. Read `src/content.config.ts` and the relevant `otb.json` fields.
+2. Trace the consuming component/page.
+3. Check for schema mismatch, missing field, missing asset, invalid URL, or WhatsApp prefix violation.
+4. Apply a minimal schema+JSON or asset fix.
+5. Run the OTB gate.
+6. Smoke generated `dist` for the affected text/asset/canonical URL.
 
 **Key rules:**
-- Verify `resolveMentoradoForUser` priority chain: team membership → owner lookup → admin/mentor
-- Every UPDATE must include `eq(table.mentoradoId, ctx.mentorado.id)` — TOCTOU ownership check
-- Verify `CLERK_WEBHOOK_SECRET` matches between environments
-- Check Clerk middleware matcher covers the affected route
+- `otb.json` is product/copy SSOT.
+- WhatsApp messages must start with `Olá, Laura!`.
+- Harvard is context only; never affiliation, endorsement, certification, or partnership.
+- Dates, price, and legal claims require stakeholder confirmation if changed.
 
-**Common auth patterns:**
-- `auth()` returns null → middleware matcher missing the route
-- Mentorado not found → corrupted auto-created record, fix with `UPDATE mentorados SET user_id = NULL`
-- Cross-tenant data leak → missing `mentoradoId` filter in WHERE clause
-- Webhook 400 → env mismatch between local `.env` and production/staging
+**Common patterns:**
+- Build/check error on collection → JSON shape drift from schema.
+- 404 asset → JSON points to a missing `public/**` path.
+- CTA points outside helper → inline `wa.me` or wrong message prefix.
 
 ---
 
-## 8d. `systematic-audit`
+## `seo-debug`
 
-**Scope:** Full cross-layer stability sweep. Post-release hardening or periodic health check.
+**Scope:** `astro.config.mjs`, `src/layouts/Layout.astro`, `src/pages/*.astro`, `public/robots.txt`, OG/Twitter image, sitemap, canonical URL.
 
 **Execution flow:**
-1. Pre-flight (Phase 0) + agent-browser check
-2. Launch 4 sub-agents:
-   - Evidence Collector (browser baseline of critical flows)
-   - Code Archaeologist (scan for unstable patterns across codebase)
-   - Regression Hunter (cross-reference MEMORY.md for known issues)
-   - DB State Inspector (FK integrity, orphaned rows, missing indexes)
-3. **Inventory first, NO fixes** — classify all findings as P0/P1/P2/P3
-4. Present findings table to user for prioritization
-5. Fix P0 issues one at a time, with verification after each
-6. Then P1, then P2
-7. Final gates: `bun run type-check && bun run lint:oxlint:check && bun run test && bun run build`
-8. Browser evidence of critical flows post-fix
-9. Full report with remaining P3 items logged
+1. Confirm canonical domain from `.claude/config.json`: `https://otb.drasacha.com.br`.
+2. Inspect `astro.config.mjs` `site`, redirects, and sitemap filter.
+3. Inspect `Layout.astro` canonical/OG/JSON-LD generation.
+4. Build and inspect `dist/index.html`, `dist/sitemap-0.xml`, `dist/sitemap-index.xml`, and `dist/robots.txt`.
+5. Fix only the mismatch.
+6. Rerun the OTB gate and targeted grep smoke.
 
 **Key rules:**
-- NEVER fix during inventory phase
-- One fix at a time, validate after each
-- Track progress with TaskCreate/TaskUpdate
-- Cross-reference `.claude/rules/stability.md` (Stability Audit Checklist A-L)
+- `/` is canonical.
+- `/otb` is compatibility-only: noindex/redirect fallback and excluded from sitemap.
+- OG images must exist under `public/**` and resolve as absolute URLs in generated HTML.
+- Do not reintroduce legacy domains.
+
+---
+
+## `systematic-audit`
+
+**Scope:** Full static-site hardening sweep after a set of changes.
+
+**Execution flow:**
+1. Pre-flight: branch/status + current diff summary.
+2. Inventory first, no fixes:
+   - Evidence Collector: browser/static output evidence.
+   - Code Archaeologist: changed files and dependency chain.
+   - Content State Inspector: schema, JSON, assets, WhatsApp/legal.
+   - Regression Hunter: known OTB static anti-patterns.
+3. Classify findings as P0/P1/P2/P3.
+4. Fix P0/P1 one at a time; do not batch unrelated hypotheses.
+5. Run `bun run lint && bunx astro check && bun run build`.
+6. Targeted smoke:
+   - no active legacy references outside archives/dist;
+   - sitemap includes only canonical URLs;
+   - referenced content assets exist;
+   - no inline `wa.me` outside `src/lib/whatsapp.ts`.
+7. Report remaining P2/P3 items separately.
+
+**Key rules:**
+- Never fix during inventory unless the user explicitly asked for direct implementation.
+- Keep changes surgical and OTB-only.
+- Do not alter production/deploy config without explicit confirmation.

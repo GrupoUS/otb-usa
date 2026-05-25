@@ -28,13 +28,13 @@ const { modulos } = Astro.props;
 		</div>
 
 		<div class="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-			{modulos.lista.map((m: { numero: string; titulo: string; subtitulo?: string }, idx: number) => (
+			{modulos.lista.map((m, idx) => (
 				<article
-					class="group flex items-start gap-5 rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)] p-5 transition-all duration-300 hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] hover:bg-[color-mix(in_srgb,var(--color-navy-light)_80%,transparent)]"
+					class="group flex items-start gap-5 rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)] p-5 transition-colors duration-300 hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] hover:bg-[color-mix(in_srgb,var(--color-navy-light)_80%,transparent)]"
 					data-reveal={idx % 2 === 0 ? "left" : "right"}
 					data-reveal-delay={String(Math.min((idx % 6) + 1, 6))}
 				>
-					<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--color-gold)_10%,transparent)] font-serif text-lg font-bold text-gold">
+					<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--color-gold)_10%,transparent)] font-serif text-2xl font-bold leading-none text-gradient-gold tabular-nums">
 						{m.numero}
 					</div>
 					<div class="flex-1">

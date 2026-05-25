@@ -107,11 +107,8 @@ SAFE_PATTERNS = [
     re.compile(r"^less "),
     re.compile(r"^more "),
     # Bun-only package manager development commands
-    re.compile(
-        r"^bun (run )?(test|check|lint|build|type-check|format|predeploy)(\s|$)"
-    ),
+    re.compile(r"^bun run (lint|build|predeploy|format|lint:fix)(\s|$)"),
     re.compile(r"^bun install(\s|$)"),
-    re.compile(r"^bun test(\s|$)"),
     re.compile(r"^bun -"),
     re.compile(r"^bun x "),
     re.compile(r"^bunx "),
@@ -144,8 +141,8 @@ SAFE_PATTERNS = [
     re.compile(r"^biome(\s|$)"),
     re.compile(r"^tsgo --"),
     re.compile(r"^vite --version"),
-    # Test / coverage
-    re.compile(r"^(bun test --coverage|vitest --coverage|playwright test)"),
+    # Optional visual/E2E commands should stay explicit in project scripts.
+    re.compile(r"^bun run lighthouse:audit(\s|$)"),
 ]
 
 # Commands that are often legitimate but must remain user-mediated.

@@ -1,157 +1,86 @@
-# Debugging Patterns & Checklists
+# Debugging Patterns & Checklists — OTB USA
 
-Quick reference for implementation patterns and security checks.
+Quick reference for static Astro/content/SEO debugging.
 
 ---
 
-## Async Testing: Condition-Based Waiting
+## Static Assertion Patterns
 
-Replace arbitrary timeouts with condition polling.
-
-### Core Pattern
-
-```typescript
-// ❌ BEFORE: Guessing at timing
-await new Promise((r) => setTimeout(r, 50));
-const result = getResult();
-expect(result).toBeDefined();
-
-// ✅ AFTER: Waiting for condition
-await waitFor(() => getResult() !== undefined);
-const result = getResult();
-expect(result).toBeDefined();
-```
-
-### waitFor Implementation
-
-```typescript
-async function waitFor<T>(
-  condition: () => T | undefined | null | false,
-  description: string,
-  timeoutMs = 5000,
-): Promise<T> {
-  const startTime = Date.now();
-
-  while (true) {
-    const result = condition();
-    if (result) return result;
-
-    if (Date.now() - startTime > timeoutMs) {
-      throw new Error(`Timeout waiting for ${description}`);
-    }
-
-    await new Promise((r) => setTimeout(r, 10)); // Poll every 10ms
-  }
-}
-```
-
-### Quick Patterns
+Prefer deterministic checks over visual guessing.
 
 | Scenario | Pattern |
-|----------|---------|
-| Wait for event | `waitFor(() => events.find(e => e.type === 'DONE'))` |
-| Wait for state | `waitFor(() => machine.state === 'ready')` |
-| Wait for count | `waitFor(() => items.length >= 5)` |
-| Wait for DOM | `waitFor(() => document.querySelector('.loaded'))` |
-
-### When Arbitrary Timeout IS Correct
-
-```typescript
-// First: wait for triggering condition
-await waitForEvent(manager, "TOOL_STARTED");
-// Then: wait for timed behavior (documented!)
-await new Promise((r) => setTimeout(r, 200)); // 2 ticks at 100ms intervals
-```
+|---|---|
+| Anchor exists | `grep -RIn 'id="programa"' dist/index.html` |
+| Legacy domain absent | `grep -RIn '<legacy-domain>' . --exclude-dir=_archive --exclude-dir=dist` |
+| Sitemap canonical only | inspect `dist/sitemap-0.xml` for `https://otb.drasacha.com.br/` only |
+| OG image exists | check `public/og/otb-default.jpg` and generated `og:image` |
+| WhatsApp helper only | grep `wa.me/` in `src` and allow only `src/lib/whatsapp.ts` |
+| Static-only Astro | grep `ClientRouter`, `prerender = false`, SSR adapters |
 
 ---
 
-## Testing Pyramid
-
-```
-        /\
-       /E2E\       ← Few, slow, high confidence
-      /------\
-     / Integ. \    ← Some, medium speed
-    /----------\
-   /   Unit     \  ← Many, fast, isolated
-```
-
-| Layer | Tool | Count | When to Use |
-|-------|------|-------|-------------|
-| **Unit** | Vitest | 70% | Pure functions, business logic |
-| **Integration** | Vitest + tRPC | 20% | API routes, DB queries, auth |
-| **E2E** | Playwright | 10% | Critical user journeys |
-
-### Test Commands
+## Content Collection Checks
 
 ```bash
-bun test                        # Run all tests
-bun test path/to/file.test.ts   # Specific file
-bun test --coverage             # With coverage
-bun test --watch                # Watch mode
+bunx astro check
 ```
 
-### Test Naming
+When an asset is referenced by `otb.json`, verify the file exists under `public/`:
 
+```bash
+python -c "import json, pathlib; data=json.load(open('src/content/products/otb.json', encoding='utf-8')); paths=[data['seo']['ogImage'], data['hero']['background']['image'], data['audience']['background']['image'], data['bostonHarvard']['background']['image']]; missing=[p for p in paths if not pathlib.Path('public', p.lstrip('/')).exists()]; print(missing)"
 ```
-describe('[Component]')
-  it('[should] [expected behavior] [when condition]')
-```
+
+Expected result: `[]`.
 
 ---
 
-## Security Checklist (OWASP 2025)
+## UI / Accessibility Smoke
 
-### Quick Checks
+- One `<h1>` on the canonical page.
+- Skip link points to `#conteudo-principal`.
+- CTA anchors point to existing IDs.
+- Focus-visible styles remain visible.
+- No emoji icons; use Lucide/SVG.
+- Reduced-motion users are not forced through layout animations.
+- Static/no-JS fallback reveals content.
 
-| Check | Command/Pattern |
-|-------|-----------------|
-| Auth verified | `if (!ctx.user) throw new Error("Unauthorized")` |
-| No exposed secrets | `grep -r "sk_live\|password\|api_key" src/` |
-| Parameterized queries | `db.select().where(eq(users.id, userId))` |
-| Dependency audit | `bun audit` |
+---
 
-### Access Control
+## SEO Smoke
 
-```typescript
-// ✅ Always verify auth + ownership
-const identity = await ctx.auth.getUserIdentity();
-if (!identity) throw new Error("Unauthorized");
+| Check | Expected |
+|---|---|
+| `astro.config.mjs site` | `https://otb.drasacha.com.br` |
+| `robots.txt` sitemap | `https://otb.drasacha.com.br/sitemap-index.xml` |
+| Home canonical | `https://otb.drasacha.com.br/` |
+| `/otb` | noindex/redirect fallback to `/` |
+| Sitemap | only canonical URL(s), no `/otb` |
+| OG/Twitter image | absolute URL to existing asset |
+| Organization JSON-LD | Grupo US as organization, OTB as product/page context |
 
-const item = await ctx.db.get(itemId);
-if (item.userId !== identity.subject) throw new Error("Forbidden");
+---
+
+## OTB Legal/Copy Guardrails
+
+- Product copy lives in `src/content/products/otb.json`.
+- Harvard may be mentioned only as context/ecosystem.
+- Never imply Harvard affiliation, endorsement, certification, official partnership, or diploma.
+- `Grupo US` is the parent brand; do not broaden CTAs to non-OTB programs.
+- WhatsApp messages must start with `Olá, Laura!`.
+
+---
+
+## Validation Commands
+
+```bash
+bun run lint
+bunx astro check
+bun run build
 ```
 
-### Injection Prevention
+Full gate:
 
-```typescript
-// ✅ Parameterized (Drizzle)
-db.select().from(users).where(eq(users.id, userId));
-
-// ❌ NEVER string concat SQL
-db.execute(`SELECT * FROM users WHERE id = ${userId}`);
+```bash
+bun run lint && bunx astro check && bun run build
 ```
-
-### Security Review Checklist
-
-**Authentication:**
-- [ ] All routes require auth check
-- [ ] Session tokens are HTTP-only cookies
-- [ ] Rate limiting on login attempts
-
-**Authorization:**
-- [ ] Resource ownership verified
-- [ ] Admin routes protected
-
-**Data Protection:**
-- [ ] HTTPS enforced in production
-- [ ] PII handling follows LGPD
-
-**Input Validation:**
-- [ ] All inputs validated with Zod
-- [ ] File uploads type-checked
-- [ ] Size limits enforced
-
-**Logging:**
-- [ ] Failed auth attempts logged
-- [ ] No sensitive data in logs

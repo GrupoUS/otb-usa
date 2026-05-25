@@ -4,7 +4,7 @@
 
 set -e
 
-URL="${1:-http://localhost:3000}"
+URL="${1:-http://localhost:4321}"
 SCREENSHOT_PATH="${2:-./debug-screenshot.png}"
 
 echo "🌐 Frontend Testing with agent-browser"
@@ -16,7 +16,7 @@ if ! command -v agent-browser &> /dev/null; then
     echo "⚠️  agent-browser not installed"
     echo ""
     echo "Install with:"
-    echo "  npm install -g agent-browser"
+    echo "  bun add -g agent-browser"
     echo "  agent-browser install"
     exit 1
 fi

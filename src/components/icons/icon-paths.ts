@@ -1,6 +1,7 @@
 export type IconName =
 	| "check"
 	| "chevron-down"
+	| "chevron-right"
 	| "stethoscope"
 	| "smile"
 	| "microscope"
@@ -21,6 +22,7 @@ export type IconName =
 export const ICON_PATHS: Record<IconName, string[]> = {
 	check: ["M20 6 9 17l-5-5"],
 	"chevron-down": ["m6 9 6 6 6-6"],
+	"chevron-right": ["m9 18 6-6-6-6"],
 	stethoscope: [
 		"M11 2v2",
 		"M5 2v2",

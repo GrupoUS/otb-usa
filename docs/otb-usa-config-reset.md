@@ -8,7 +8,7 @@ Align the Astro app and `.claude/` orchestration layer with the OTB USA product 
 
 - Project identity: OTB USA — Grupo US.
 - Canonical URL: `https://otb.drasacha.com.br`.
-- Public routes: `/` and `/otb`.
+- Public route: `/` (`/otb` is a compatibility redirect to `/`).
 - Content SSOT: `src/content/products/otb.json`.
 - Theme SSOT: `src/styles/global.css` and `.claude/skills/otb-theme/`.
 - Product/CTA/legal SSOT: `.claude/skills/otb-usa/`.

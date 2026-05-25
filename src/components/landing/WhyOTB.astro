@@ -30,7 +30,7 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 		</div>
 
 		<div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-7">
-			{why.cards.map((card: { titulo: string; descricao: string }, idx: number) => (
+			{why.cards.map((card, idx) => (
 				<article
 					class="glass-card card-glow-hover relative flex flex-col gap-5 rounded-2xl p-7"
 					data-reveal="up"

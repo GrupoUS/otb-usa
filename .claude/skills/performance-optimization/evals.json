@@ -25,9 +25,9 @@
     },
     {
       "id": "A04",
-      "description": "Output references bun run check as a validation step",
+      "description": "Output references the OTB USA validation gate as a validation step",
       "type": "structural",
-      "check": "contains: \"bun run check\"",
+      "check": "contains_one_of: [\"bun run lint\", \"bunx astro check\", \"bun run build\"]",
       "critical": true
     },
     {

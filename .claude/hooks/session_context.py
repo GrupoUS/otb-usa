@@ -10,21 +10,24 @@ turn's system prompt.
 
 Trigger: SessionStart (startup | resume | compact)
 """
+
 import json
 import os
 import subprocess
 import sys
 import typing
-
 from pathlib import Path
 
 
 def read_input() -> dict[str, object]:
     try:
         import select
+
         if select.select([sys.stdin], [], [], 0.2)[0]:
             raw = sys.stdin.read()
-            return typing.cast(dict[str, object], json.loads(raw)) if raw.strip() else {}
+            return (
+                typing.cast(dict[str, object], json.loads(raw)) if raw.strip() else {}
+            )
     except Exception:
         pass
     return {}
@@ -34,7 +37,10 @@ def get_git_branch(project_dir: str) -> str:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            capture_output=True, text=True, timeout=3, cwd=project_dir,
+            capture_output=True,
+            text=True,
+            timeout=3,
+            cwd=project_dir,
         )
         return result.stdout.strip() or "unknown"
     except Exception:
@@ -47,7 +53,9 @@ def get_project_dir() -> str:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--show-toplevel"],
-            capture_output=True, text=True, timeout=3,
+            capture_output=True,
+            text=True,
+            timeout=3,
         )
         return result.stdout.strip() or os.getcwd()
     except Exception:
@@ -59,7 +67,9 @@ def load_project_config(project_dir: str) -> dict[str, object]:
     if not config_path.is_file():
         return {}
     try:
-        return typing.cast(dict[str, object], json.loads(config_path.read_text(errors="replace")))
+        return typing.cast(
+            dict[str, object], json.loads(config_path.read_text(errors="replace"))
+        )
     except Exception:
         return {}
 
@@ -73,16 +83,18 @@ def main() -> None:
 
     config = load_project_config(project_dir)
     project = typing.cast(dict[str, object], config.get("project", {}))
-    project_name = str(project.get("name", "")).strip().upper() or Path(project_dir).name.upper()
+    project_name = (
+        str(project.get("name", "")).strip().upper() or Path(project_dir).name.upper()
+    )
     tooling = typing.cast(dict[str, object], config.get("tooling", {}))
     pkg_mgr = str(tooling.get("packageManager", "")).strip()
     pkg_tag = pkg_mgr.capitalize() if pkg_mgr else ""
 
     base_tag = f"[{project_name}]" + (f" {pkg_tag}" if pkg_tag else "")
     prefixes = {
-        "startup": f"{base_tag} | branch:{branch} | gates: check+lint+test",
-        "compact": f"{base_tag} | branch:{branch} | gates: check+lint+test (post-compact)",
-        "resume":  f"{base_tag} resumed | branch:{branch}",
+        "startup": f"{base_tag} | branch:{branch} | gates: lint+astro-check+build",
+        "compact": f"{base_tag} | branch:{branch} | gates: lint+astro-check+build (post-compact)",
+        "resume": f"{base_tag} resumed | branch:{branch}",
     }
     additional_context = prefixes.get(source, f"{base_tag} | branch:{branch}")
 

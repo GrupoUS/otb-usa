@@ -1,53 +1,43 @@
-# Sub-Agent Prompt Templates
+# Sub-Agent Prompt Templates — OTB USA
 
-Full TypeScript prompt templates for Phase 1 parallel research agents.
+Prompt templates for Phase 1 parallel research agents in the OTB static Astro repo.
 
 ---
 
 ## Sub-agent A: Evidence Collector
 
-**For `frontend-debug` and `systematic-audit` only.** Captures live browser state.
+**For `frontend-debug`, `seo-debug`, and `systematic-audit`.** Captures public static-site evidence.
 
 ```typescript
 Task({
   subagent_type: "debugger",
   name: "evidence-collector",
-  description: "Capture browser evidence",
+  description: "Capture public route evidence",
   run_in_background: true,
-  prompt: `TASK: Capture browser evidence for debugging
+  prompt: `TASK: Capture browser/static evidence for OTB USA debugging
 
 CONTEXT: [paste bug description or failing URL]
+DEFAULT URL: http://localhost:4321
 
-BROWSER MODE SELECTION:
-- Public page (landing, /pricing, public-facing routes) → agent-browser headless
-- Authenticated page (/dashboard, /admin, app-internal routes) → python .claude/scripts/cdp.py
+MISSION:
+1. Inspect the generated/static route involved in the bug.
+2. Capture screenshot/snapshot if browser tooling is available.
+3. Check console/network symptoms if browser tooling is available.
+4. For SEO issues, inspect dist/index.html, dist/otb/index.html, dist/sitemap-0.xml, dist/robots.txt.
+5. Do not edit files.
 
-MODE A — HEADLESS (public pages):
-  agent-browser open "[URL]" --headless
-  agent-browser snapshot
-  agent-browser screenshot e2e-screenshots/debug/00-initial.png
-  agent-browser eval "document.querySelector('#react-error-overlay')?.textContent || 'no overlay'"
-  agent-browser get title && agent-browser get url
-  agent-browser close
-
-MODE B — CDP (authenticated pages):
-  python .claude/scripts/cdp.py check          # Verify Chrome CDP is running
-  python .claude/scripts/cdp.py navigate "[URL]"
-  python .claude/scripts/cdp.py analyze        # Page metrics (dead anchors, empty buttons, errors)
-  python .claude/scripts/cdp.py screenshot e2e-screenshots/debug/00-initial.png
-  python .claude/scripts/cdp.py eval "document.querySelector('#react-error-overlay')?.textContent || 'no overlay'"
-  # Do NOT close Chrome — keeps the user's session alive
-
-IMPORTANT: agent-browser does NOT support attaching to an existing Chrome session (no 'connect' subcommand). For authenticated pages, use cdp.py or claude --chrome.
+VERIFY SPECIFICALLY:
+- / renders the full funnel.
+- #programa exists when Hero CTA points to it.
+- /otb is noindex/redirect fallback and canonicalizes to /.
+- No missing public assets for content JSON fields.
 
 RETURN:
-- Browser mode used (headless / CDP)
-- Screenshot path
-- Page metrics from analyze (if CDP mode)
-- React error overlay text if present
-- Page URL and title
-
-DO NOT fix anything. Evidence collection only.`,
+- Evidence source used (browser/CLI/dist)
+- Screenshot path if captured
+- Relevant generated HTML/sitemap findings
+- Any console/network errors
+- Confidence and recommended next investigation step`,
 });
 ```
 
@@ -55,39 +45,39 @@ DO NOT fix anything. Evidence collection only.`,
 
 ## Sub-agent B: Code Archaeologist
 
-**For all packs.** Identifies code context around the failure.
+**For all packs.** Identifies code/content context around the failure.
 
 ```typescript
 Task({
-  subagent_type: "explorer",
+  subagent_type: "explorer-agent",
   name: "code-archaeologist",
-  description: "Investigate failing code",
+  description: "Investigate failing OTB code path",
   run_in_background: true,
-  prompt: `TASK: Investigate code context for debugging
+  prompt: `TASK: Investigate code context for OTB USA debugging
 
 SYMPTOM: [paste error message or failing behavior]
-AFFECTED AREA: [component/route/procedure name if known]
+AFFECTED AREA: [component/route/content field if known]
 
 MISSION:
-1. Search codebase for the failing component, route, or procedure
-2. Identify the EXACT file:line where the error originates
-3. Run: git log --oneline -10 -- <affected-files> to find last commits
-4. Map related dependencies:
-   - tRPC procedures called by the component
-   - Drizzle queries used by the procedure
-   - Clerk middleware/auth checks in the path
-   - Zod schemas validating input
-5. Check for recent changes that could have caused regression
+1. Search the repo for the failing component, route, content field, asset path, or config key.
+2. Identify exact file:line where the error originates.
+3. Run: git --no-pager log --oneline -10 -- <affected-files>.
+4. Map the static dependency chain:
+   - content field/config key
+   - page/component consuming it
+   - helper/layout involved
+   - generated dist artifact to inspect
+5. Check for recent changes that could have caused regression.
 
-RETURN (Findings Table format):
+RETURN:
 | # | Finding | Confidence (1-5) | Source | Impact |
-|---|---------|------------------|--------|--------|
+|---|---|---:|---|---|
 
 Plus:
 - Affected file paths with line ranges
 - Last 3 commits touching those files
-- Dependency chain (component → procedure → query → table)
-- Knowledge Gaps identified`,
+- Dependency chain
+- Knowledge gaps`,
 });
 ```
 
@@ -95,35 +85,35 @@ Plus:
 
 ## Sub-agent C: Regression Hunter
 
-**For all packs.** Matches symptom against known patterns.
+**For all packs.** Matches symptoms against OTB static-site patterns.
 
 ```typescript
 Task({
-  subagent_type: "explorer",
+  subagent_type: "explorer-agent",
   name: "regression-hunter",
-  description: "Match against known patterns",
+  description: "Match against OTB static patterns",
   run_in_background: true,
-  prompt: `TASK: Match debugging symptom against known patterns
+  prompt: `TASK: Match debugging symptom against OTB static-site patterns
 
 SYMPTOM: [paste error message or failing behavior]
 
 MISSION:
-1. Read .claude/skills/debugger/references/consolidated-domain-rules.md
-2. Scan the Common Root Causes Catalog in this SKILL.md
-3. Search MEMORY.md for matching patterns (project auto-memory)
-4. Check \`.claude/rules/stability.md\` (Stability Audit Checklist A-L) for relevant rules
+1. Read .claude/skills/debugger/SKILL.md Common Root Causes Catalog.
+2. Read .claude/skills/debugger/references/consolidated-domain-rules.md.
+3. Check .claude/rules/stability.md for relevant rules.
+4. Search active source/docs for matching legacy/domain/asset/route patterns.
 
 If MATCH found:
-- Return: pattern name, root cause, recommended fix, file guidance
+- Return pattern name, root cause, recommended fix, file guidance.
 
 If NO MATCH:
-- Generate top-3 hypotheses ranked by probability
-- For each: hypothesis statement, evidence for/against, suggested investigation step
+- Generate top 3 hypotheses ranked by probability.
+- For each: evidence for/against and next investigation step.
 
 RETURN:
 - Match status: MATCHED / NO_MATCH
-- If matched: pattern details + fix guidance
-- If not matched: ranked hypotheses with investigation plan`,
+- Pattern details or ranked hypotheses
+- Minimal verification command/smoke`,
 });
 ```
 
@@ -131,13 +121,13 @@ RETURN:
 
 ## Sub-agent D: Content State Inspector
 
-**For OTB Astro/content debugging.** Replaces database inspection in this static site.
+**For `content-debug`, `seo-debug`, and `systematic-audit`.** Verifies content/schema/assets/legal state.
 
 ```typescript
 Task({
   subagent_type: "debugger",
   name: "content-state-inspector",
-  description: "Inspect OTB content and schema state",
+  description: "Inspect OTB content, schema, assets, and legal copy",
   run_in_background: true,
   prompt: `TASK: Inspect static content state related to the failure
 
@@ -145,17 +135,18 @@ SYMPTOM: [paste error]
 AFFECTED CONTENT: [if known]
 
 MISSION:
-1. Read src/content.config.ts to understand the Content Collection schema
-2. Read src/content/products/otb.json and verify the failing field exists
-3. Trace the consuming Astro component/page
-4. Check for schema/type mismatch, missing assets, invalid URLs, or WhatsApp prefix violations
-5. Verify Harvard/legal copy does not imply affiliation, endorsement, certification, or partnership
-
-IMPORTANT: Do not edit files. Return findings only.
+1. Read src/content.config.ts to understand the Content Collection schema.
+2. Read src/content/products/otb.json and verify the failing field exists.
+3. Check every referenced public asset exists.
+4. Trace the consuming Astro component/page.
+5. Verify WhatsApp messages start with: Olá, Laura!
+6. Verify Harvard/legal copy does not imply affiliation, endorsement, certification, or partnership.
+7. Do not edit files.
 
 RETURN:
 - Content/schema summary
-- Suspected inconsistency with file:line
+- Missing/mismatched field or asset with file:line
+- Legal/WhatsApp risk if any
 - Recommended minimal fix`,
 });
 ```

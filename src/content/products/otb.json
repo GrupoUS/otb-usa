@@ -1,28 +1,29 @@
 {
 	"slug": "otb",
-	"version": "1.0.0-draft",
+	"version": "1.1.0-edicao-3",
 	"locale": "pt-BR",
 
 	"seo": {
-		"title": "OTB Estados Unidos — MBA em Business Aesthetic Health",
-		"description": "O primeiro MBA do mundo em Business Aesthetic Health com imersão internacional em Boston, no ecossistema acadêmico de Harvard. 320 horas, 10 módulos, demonstração anatômica avançada e networking premium.",
+		"title": "OTB Estados Unidos 3ª Edição — Boston, 19 a 21 de abril de 2027",
+		"description": "MBA em Business Aesthetic Health com imersão em Boston, 19 a 21 abr 2027. 320 horas, 10 módulos online, prática Fresh Specimens e Anatomy Review com correspondente americano. Certificações MBA Instituto IESA + ASA.",
 		"ogImage": "/og/otb-default.jpg"
 	},
 
 	"hero": {
+		"eyebrow": "3ª Edição — Boston, 19 a 21 de abril de 2027",
 		"headline": "O primeiro MBA do mundo em",
 		"highlight": "Business Aesthetic Health",
-		"subheadline": "Imersão internacional em Boston, no ecossistema acadêmico de Harvard. Para profissionais de Saúde Estética Avançada que querem elevar técnica, visão de negócio e posicionamento internacional.",
+		"subheadline": "Imersão internacional em Boston, com prática anatômica Fresh Specimens e Anatomy Review com correspondente americano. Para profissionais de Saúde Estética Avançada que querem operar em outro patamar.",
 		"badges": [
-			"Boston • Estados Unidos",
-			"Certificação MEC",
+			"3ª Edição — Boston, abr 2027",
+			"MBA Instituto IESA + ASA Fresh Specimens",
 			"320 horas de programa",
-			"Demonstração anatômica avançada",
-			"Networking premium"
+			"Fresh Specimens ≤ 48h",
+			"Networking internacional"
 		],
 		"cta": {
 			"label": "Falar com Laura no WhatsApp",
-			"whatsappMessage": "Olá, Laura! Quero saber mais sobre a próxima turma do OTB nos Estados Unidos.",
+			"whatsappMessage": "Olá, Laura! Quero saber mais sobre a 3ª Edição do OTB em Boston, de 19 a 21 de abril de 2027.",
 			"checkoutUrl": null
 		},
 		"background": {
@@ -32,27 +33,27 @@
 	},
 
 	"why": {
-		"headline": "Por que",
+		"headline": "Os três pilares do",
 		"highlight": "OTB Estados Unidos",
 		"cards": [
 			{
-				"titulo": "Programa Certificado",
-				"descricao": "320 horas, 10 módulos online e imersão internacional. Certificação MEC e diferenciação real para o profissional de Saúde Estética Avançada."
+				"titulo": "Formação técnica avançada",
+				"descricao": "Anatomia aplicada com Fresh Specimens (≤ 48h post-mortem). Alunos injetam e dissecam, com acesso direto a todo o corpo docente nas estações."
 			},
 			{
-				"titulo": "Visão de negócio internacional",
-				"descricao": "Business, gestão, marketing, vendas e posicionamento clínico — aprendendo a operar uma carreira premium com referência em uma das praças mais sofisticadas dos Estados Unidos."
+				"titulo": "Branding internacional",
+				"descricao": "Corpo docente de referência em Boston, em uma das praças acadêmicas mais densas do mundo. Sua autoridade entra em outro patamar."
 			},
 			{
-				"titulo": "Aprendizado prático em ambiente acadêmico de referência",
-				"descricao": "Demonstração anatômica avançada em cadáver fresco, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica."
+				"titulo": "Networking global",
+				"descricao": "Imersão entre empreendedores de Saúde Estética Avançada com ambição internacional. Conexões que abrem operação além-fronteiras."
 			}
 		]
 	},
 
 	"audience": {
 		"headline": "Para quem é o OTB",
-		"quote": "Idealizamos o OTB para profissionais de Saúde Estética que rompem as barreiras do convencional — e querem operar com excelência clínica, visão de negócio e referência internacional.",
+		"quote": "Idealizamos o OTB para profissionais de Saúde Estética que querem operar em outro patamar — técnicas avançadas de Harmonização Facial, Corporal e Íntima, com excelência clínica, visão de negócio e referência internacional.",
 		"categorias": [
 			{ "nome": "Médicos", "icone": "stethoscope" },
 			{ "nome": "Odontólogos", "icone": "smile" },
@@ -71,20 +72,20 @@
 	"programa": {
 		"headline": "Seu programa —",
 		"highlight": "320 horas de formação executiva",
-		"descricao": "Conteúdo distribuído entre 10 módulos online de business, gestão clínica, marketing, vendas e governança, somados a uma imersão presencial internacional em Boston e ao redor do ecossistema acadêmico de Harvard.",
+		"descricao": "320 horas distribuídas entre 10 módulos online de business, gestão clínica, marketing, vendas, finanças, sistemas, IA e jurídico — somados a uma imersão presencial de 3 dias em Boston, com Anatomy Review e prática com Fresh Specimens.",
 		"horas": 320,
 		"cards": [
 			{
 				"titulo": "Conteúdo online",
-				"descricao": "10 módulos completos de business, gestão clínica, marketing, vendas, finanças, sistemas, IA, jurídico e práticas demonstrativas."
+				"descricao": "10 módulos de business, gestão clínica, marketing, vendas, finanças, sistemas, IA, jurídico e práticas demonstrativas."
 			},
 			{
-				"titulo": "Imersão internacional em Boston",
-				"descricao": "Vivência presencial no polo acadêmico mais denso dos Estados Unidos, com encontros executivos, ambiente clínico de referência e networking internacional."
+				"titulo": "Imersão de 3 dias em Boston",
+				"descricao": "Visita guiada ao campus de Harvard, módulos executivos e Anatomy Review com correspondente americano. Networking premium em uma das praças acadêmicas mais densas do mundo."
 			},
 			{
-				"titulo": "Demonstração anatômica avançada",
-				"descricao": "Experiência prática demonstrativa em cadáver fresco, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica."
+				"titulo": "Fresh Specimens ≤ 48h",
+				"descricao": "Prática anatômica avançada: alunos injetam e dissecam com Fresh Specimens (≤ 48h post-mortem) e acesso direto a todo o corpo docente nas estações."
 			}
 		]
 	},
@@ -165,20 +166,20 @@
 	"bostonHarvard": {
 		"headline": "Imersão internacional —",
 		"highlight": "Boston e o ecossistema acadêmico de Harvard",
-		"descricao": "Uma vivência projetada para profissionais que querem operar em outro patamar: ambiente acadêmico denso, encontros executivos e prática demonstrativa de referência.",
-		"datas": "Próxima edição — datas em breve",
+		"descricao": "Três dias entre Boston e o ecossistema acadêmico de Harvard. Visita guiada ao campus, sessões executivas, Anatomy Review com Mike — correspondente americano que aprofunda planos e variações anatômicas — e Fresh Specimens.",
+		"datas": "19 a 21 de abril de 2027 — Boston, Estados Unidos",
 		"cards": [
 			{
-				"titulo": "Demonstração anatômica avançada em cadáver fresco",
-				"descricao": "Experiência prática demonstrativa em ambiente acadêmico internacional, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica."
+				"titulo": "Anatomy Review com correspondente americano",
+				"descricao": "Mike conduz a revisão de planos e variações anatômicas em ambiente acadêmico em Boston. Caráter descritivo do perfil profissional, sem vínculo institucional com Harvard."
 			},
 			{
-				"titulo": "Encontros executivos no ecossistema de Boston",
-				"descricao": "Sessões de business, gestão e posicionamento internacional em uma das praças acadêmicas mais densas do mundo."
+				"titulo": "Fresh Specimens (≤ 48h post-mortem)",
+				"descricao": "Prática demonstrativa com alunos injetando e dissecando. Acesso direto a todo o corpo docente nas estações de cadáver."
 			},
 			{
-				"titulo": "Networking premium em Cambridge e Boston",
-				"descricao": "Imersão profissional cercado por profissionais de alta performance e instituições de referência global."
+				"titulo": "Networking premium em Boston",
+				"descricao": "Imersão entre empreendedores internacionais de Saúde Estética Avançada em uma das praças acadêmicas mais densas do mundo."
 			}
 		],
 		"background": {
@@ -207,6 +208,13 @@
 				"foto": "/images/otb/speakers/speaker-ana.jpg"
 			},
 			{
+				"nome": "Dieick de Sá",
+				"area": "Planejamento Facial Global",
+				"bio": "Referência em planejamento facial global — anatomia aplicada, integração de planos faciais e resultado natural em Harmonização Facial avançada.",
+				"instagram": "https://www.instagram.com/drdieickdesa",
+				"foto": "/images/otb/speakers/speaker-dieick.jpg"
+			},
+			{
 				"nome": "Mariana Laranja",
 				"area": "Minilift e Fios de PDO",
 				"bio": "Referência em rejuvenescimento facial com Minilift e Fios de PDO — técnica, segurança e resultado clínico.",
@@ -214,16 +222,9 @@
 				"foto": "/images/otb/speakers/speaker-mariana.jpg"
 			},
 			{
-				"nome": "Dieick de Sá",
-				"area": "Harmonização Facial",
-				"bio": "Especialista em Harmonização Facial com foco em anatomia aplicada, planejamento clínico e resultado natural.",
-				"instagram": "https://www.instagram.com/drdieickdesa",
-				"foto": "/images/otb/speakers/speaker-dieick.jpg"
-			},
-			{
 				"nome": "Rosana Vecchi",
-				"area": "Gerenciamento de Pele (Natural Face)",
-				"bio": "Especialista em gerenciamento de pele com a metodologia Natural Face — protocolo clínico para resultado consistente.",
+				"area": "Flacidez Facial",
+				"bio": "Especialista em tratamento de flacidez facial — protocolo clínico para resultado consistente, seguro e natural.",
 				"instagram": "https://www.instagram.com/dra.rosanaa",
 				"foto": "/images/otb/speakers/speaker-rosana.jpg"
 			}
@@ -232,25 +233,28 @@
 
 	"investimento": {
 		"headline": "Investimento —",
-		"highlight": "O passaporte para uma carreira internacional",
-		"descricao": "Programa completo, certificação MEC, imersão internacional e prática demonstrativa avançada.",
+		"highlight": "Lotes escalonados, quanto mais cedo melhor",
+		"descricao": "Lote 1 ativo. O OTB segue um modelo de lotes escalonados — MBA Instituto IESA + ASA Fresh Specimens, imersão internacional de 3 dias em Boston e prática anatômica avançada.",
 		"moeda": "US$",
-		"preco": "4.000",
+		"preco": "3.500",
+		"escassez": "Lote 1 ativo. Lote 2 (US$ 4.000) liberado por volume ou data — confirmar disponibilidade.",
 		"parcelamento": [
-			"Cartão de crédito (consultar condições)",
-			"Boleto à vista (consultar desconto)"
+			"Cartão de crédito (parcelas conforme operadora)",
+			"Boleto bancário parcelado — taxa de 5% sobre o número de parcelas"
 		],
 		"beneficios": [
-			"Certificação MEC",
+			"MBA (Instituto IESA / Grupo US)",
+			"ASA Fresh Specimens Course Certificate",
 			"320 horas de programa",
-			"Imersão internacional em Boston",
-			"Demonstração anatômica avançada em cadáver fresco",
+			"Imersão internacional de 3 dias em Boston",
+			"Fresh Specimens ≤ 48h post-mortem",
+			"Anatomy Review com correspondente americano",
 			"Networking internacional premium"
 		],
 		"tagline": "Aplicação imediata. Posicionamento internacional. Networking de longo alcance.",
 		"cta": {
 			"label": "Falar com Laura no WhatsApp",
-			"whatsappMessage": "Olá, Laura! Quero garantir minha vaga na próxima turma do OTB Estados Unidos.",
+			"whatsappMessage": "Olá, Laura! Quero garantir minha vaga no Lote 1 da 3ª Edição do OTB Estados Unidos.",
 			"secondaryLabel": "Saber mais sobre o programa",
 			"checkoutUrl": null
 		}
@@ -259,32 +263,144 @@
 	"faq": [
 		{
 			"pergunta": "Esta é uma certificação oficial Harvard?",
-			"resposta": "Não. O OTB é um programa do Grupo US. A imersão internacional acontece em Boston, na região do ecossistema acadêmico de Harvard, mas não há vínculo, patrocínio, endosso ou certificação oficial por Harvard University."
+			"resposta": "Não. O OTB é um programa do Grupo US. A imersão internacional acontece em Boston, no ecossistema acadêmico de Harvard, mas não há vínculo, patrocínio, endosso ou certificação oficial por Harvard University. A visita guiada ao campus de Harvard tem caráter descritivo, sem atividade acadêmica oficial dentro de Harvard."
+		},
+		{
+			"pergunta": "Quais são as certificações entregues?",
+			"resposta": "Duas certificações: MBA emitido em parceria com o Instituto IESA / Grupo US e certificado de prática anatômica Fresh Specimens pela Anatomy Society of America (ASA)."
+		},
+		{
+			"pergunta": "Como é o Anatomy Review?",
+			"resposta": "Conduzido por Mike, correspondente americano, o Anatomy Review aprofunda planos e variações anatômicas em ambiente acadêmico em Boston. A menção a 'correspondente' descreve o perfil profissional do palestrante, sem vínculo institucional com Harvard."
 		},
 		{
 			"pergunta": "Quem pode participar do OTB?",
-			"resposta": "Profissionais habilitados de Saúde Estética: enfermeiros, fisioterapeutas, biomédicos, odontólogos, farmacêuticos e médicos. Cada profissional deve respeitar a regulamentação do seu respectivo conselho de classe."
+			"resposta": "Profissionais habilitados de Saúde Estética: enfermeiros, fisioterapeutas, biomédicos, odontólogos, farmacêuticos e médicos. Cada profissional deve respeitar a regulamentação do seu respectivo conselho de classe — inclusive nas técnicas de Harmonização Facial, Corporal e Íntima."
 		},
 		{
 			"pergunta": "Como funciona o programa de 320 horas?",
-			"resposta": "São 10 módulos online cobrindo business, gestão, marketing, vendas, finanças, sistemas, IA, jurídico e práticas demonstrativas — somados a uma imersão presencial internacional em Boston."
+			"resposta": "São 10 módulos online cobrindo business, gestão clínica, marketing, vendas, finanças, sistemas, IA, jurídico e práticas demonstrativas — somados a uma imersão presencial de 3 dias em Boston."
 		},
 		{
-			"pergunta": "Como é a demonstração anatômica avançada em cadáver fresco?",
-			"resposta": "É uma experiência prática demonstrativa, conduzida por especialistas, com foco em anatomia aplicada, segurança técnica e tomada de decisão clínica. Sem sensacionalismo — formação clínica de alto nível."
+			"pergunta": "Como é a demonstração anatômica em Fresh Specimens?",
+			"resposta": "Prática demonstrativa com Fresh Specimens (≤ 48h post-mortem). Os alunos injetam e dissecam, com acesso direto a todo o corpo docente nas estações. Foco em anatomia aplicada, segurança técnica e decisão clínica."
 		},
 		{
 			"pergunta": "Quais as datas da próxima imersão em Boston?",
-			"resposta": "As datas da próxima edição serão anunciadas em breve. Para entrar na lista de prioridade, fale com Laura no WhatsApp."
+			"resposta": "19 a 21 de abril de 2027, em Boston, Estados Unidos. Dia 1: visita guiada ao campus de Harvard. Dia 2: módulos executivos. Dia 3: cadáver lab com Fresh Specimens."
+		},
+		{
+			"pergunta": "Como funcionam os lotes de investimento?",
+			"resposta": "O OTB segue lotes escalonados. Lote 0 (US$ 3.000) encerrado em 30 abr 2026. Lote 1 (US$ 3.500) ativo a partir de 01 mai 2026. Lote 2 (US$ 4.000) será liberado por volume de inscritos ou por data — confirmar disponibilidade no momento da inscrição."
 		},
 		{
 			"pergunta": "Como funciona o parcelamento?",
-			"resposta": "Cartão de crédito ou boleto à vista, condições no fechamento. Fale com Laura no WhatsApp para receber as opções atualizadas."
+			"resposta": "Cartão de crédito com parcelas conforme operadora. Boleto bancário parcelado com taxa de 5% aplicada sobre o número de parcelas. Fale com Laura no WhatsApp para receber as opções atualizadas."
+		},
+		{
+			"pergunta": "Como organizo viagem, hospedagem e visto para Boston?",
+			"resposta": "O OTB indica parceiros operacionais: Gabriela Souza (Travel Legacy) para viagem e hospedagem, e Raquel Fleury para assessoria de visto US. Os contatos ficam disponíveis na seção Parceiros desta página."
 		}
 	],
 
+	"edicao": {
+		"numero": 3,
+		"ano": 2027,
+		"local": "Boston, Estados Unidos",
+		"badge": "3ª Edição — Boston, abr 2027"
+	},
+
+	"lotes": [
+		{
+			"id": "lote-0",
+			"label": "Lote 0",
+			"moeda": "US$",
+			"preco": "3.000",
+			"validade": "Encerrado em 30 abr 2026",
+			"status": "encerrado",
+			"nota": "Lançamento — aula gratuita + pitch"
+		},
+		{
+			"id": "lote-1",
+			"label": "Lote 1 — Ativo",
+			"moeda": "US$",
+			"preco": "3.500",
+			"validade": "A partir de 01 mai 2026",
+			"status": "ativo",
+			"nota": "Migração automática após o Lote 0"
+		},
+		{
+			"id": "lote-2",
+			"label": "Lote 2",
+			"moeda": "US$",
+			"preco": "4.000",
+			"validade": "Liberação por volume ou data — em breve",
+			"status": "futuro",
+			"nota": "Ativação por volume de inscritos ou por data"
+		}
+	],
+
+	"agenda": [
+		{
+			"dia": 1,
+			"data": "19 abr 2027",
+			"titulo": "Imersão Boston e visita guiada ao campus de Harvard",
+			"descricao": "Abertura da imersão internacional com visita guiada ao campus de Harvard, em caráter descritivo.",
+			"atividades": [
+				"Recepção da turma em Boston",
+				"Visita guiada ao campus de Harvard (caráter descritivo)",
+				"Welcome dinner com networking executivo"
+			]
+		},
+		{
+			"dia": 2,
+			"data": "20 abr 2027",
+			"titulo": "Business Theory — sessões executivas",
+			"descricao": "Dia dedicado a teoria de business, gestão clínica e posicionamento internacional.",
+			"atividades": [
+				"Módulos executivos com o corpo docente",
+				"Cases internacionais de Saúde Estética Avançada",
+				"Networking premium entre empreendedores"
+			]
+		},
+		{
+			"dia": 3,
+			"data": "21 abr 2027",
+			"titulo": "Cadáver lab — Fresh Specimens",
+			"descricao": "Prática demonstrativa com Fresh Specimens (≤ 48h) e Anatomy Review com correspondente americano.",
+			"atividades": [
+				"Estações com Fresh Specimens (≤ 48h post-mortem)",
+				"Alunos injetam e dissecam com acesso a todo o corpo docente",
+				"Anatomy Review com Mike — correspondente americano"
+			]
+		}
+	],
+
+	"parceiros": {
+		"headline": "Parceiros operacionais",
+		"descricao": "Travel, hospedagem e visto US — apoio operacional para a sua imersão internacional em Boston.",
+		"lista": [
+			{
+				"nome": "Gabriela Souza",
+				"papel": "Travel Legacy — viagem e hospedagem",
+				"descricao": "Apoio à organização de viagem, hospedagem e logística da imersão em Boston.",
+				"contato": {
+					"whatsapp": "+55 12 98877-2277"
+				}
+			},
+			{
+				"nome": "Raquel Fleury",
+				"papel": "Assessoria de visto US",
+				"descricao": "Apoio ao processo de visto B1/B2 para a imersão internacional.",
+				"contato": {
+					"whatsapp": "+55 62 98259-8625"
+				}
+			}
+		]
+	},
+
 	"legal": {
-		"disclaimer": "Harvard é marca registrada de Harvard University. Esta experiência não implica vínculo, patrocínio, endosso ou certificação oficial por Harvard University. Referências a Harvard, Cambridge, Boston e ao ecossistema acadêmico da região têm fins exclusivamente descritivos do contexto da imersão internacional do programa OTB. Programa oferecido por Grupo US.",
+		"disclaimer": "Harvard é marca registrada de Harvard University. Esta experiência não implica vínculo, patrocínio, endosso ou certificação oficial por Harvard University. Referências a Harvard, Cambridge, Boston e ao ecossistema acadêmico da região têm fins exclusivamente descritivos do contexto da imersão internacional do programa OTB. O 'Anatomy Review com Mike' é conduzido por correspondente americano — a referência descreve o perfil profissional do palestrante, sem vínculo institucional com Harvard University. A visita guiada ao campus tem fim descritivo, sem atividade acadêmica oficial dentro de Harvard. Certificações: MBA emitido em parceria com o Instituto IESA / Grupo US; certificado de prática anatômica Fresh Specimens pela Anatomy Society of America (ASA). Programa oferecido por Grupo US.",
 		"creditosImagens": "Imagens: licenciamento conforme acervo Grupo US e bancos de imagens autorizados."
 	}
 }

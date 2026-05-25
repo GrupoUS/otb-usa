@@ -8,6 +8,9 @@ import { defineConfig, fontProviders } from "astro/config";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://otb.drasacha.com.br",
+	redirects: {
+		"/otb": "/",
+	},
 	fonts: [
 		{
 			name: "Playfair Display",
@@ -24,7 +27,12 @@ export default defineConfig({
 			styles: ["normal"],
 		},
 	],
-	integrations: [react(), sitemap()],
+	integrations: [
+		react(),
+		sitemap({
+			filter: (page) => !/\/otb\/?$/.test(page),
+		}),
+	],
 	vite: {
 		plugins: [tailwindcss()],
 	},

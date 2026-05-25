@@ -25,6 +25,7 @@ const products = defineCollection({
 		}),
 
 		hero: z.object({
+			eyebrow: z.string().optional(),
 			headline: z.string(),
 			highlight: z.string().optional(),
 			subheadline: z.string(),
@@ -150,6 +151,7 @@ const products = defineCollection({
 			descricao: z.string(),
 			moeda: z.string(),
 			preco: z.string(),
+			escassez: z.string().optional(),
 			parcelamento: z.array(z.string()),
 			beneficios: z.array(z.string()).min(3),
 			tagline: z.string(),
@@ -164,6 +166,65 @@ const products = defineCollection({
 				}),
 			)
 			.min(4),
+
+		edicao: z
+			.object({
+				numero: z.number().int().positive(),
+				ano: z.number().int().positive(),
+				local: z.string(),
+				badge: z.string().optional(),
+			})
+			.optional(),
+
+		lotes: z
+			.array(
+				z.object({
+					id: z.string(),
+					label: z.string(),
+					moeda: z.string(),
+					preco: z.string(),
+					validade: z.string().optional(),
+					status: z.enum(["encerrado", "ativo", "futuro"]),
+					nota: z.string().optional(),
+				}),
+			)
+			.optional(),
+
+		agenda: z
+			.array(
+				z.object({
+					dia: z.number().int().positive(),
+					data: z.string(),
+					titulo: z.string(),
+					descricao: z.string(),
+					atividades: z.array(z.string()).min(1),
+				}),
+			)
+			.length(3)
+			.optional(),
+
+		parceiros: z
+			.object({
+				headline: z.string(),
+				descricao: z.string().optional(),
+				lista: z
+					.array(
+						z.object({
+							nome: z.string(),
+							papel: z.string(),
+							descricao: z.string().optional(),
+							contato: z
+								.object({
+									whatsapp: z.string().optional(),
+									instagram: z.string().url().optional(),
+									email: z.string().email().optional(),
+								})
+								.optional(),
+						}),
+					)
+					.min(1),
+			})
+			.optional(),
 
 		legal: z.object({
 			disclaimer: z.string().min(80),

@@ -1,152 +1,141 @@
-# Debug Methodology
+# Debug Methodology — OTB USA
 
-> 4-Phase systematic debugging: Investigate → Analyze Patterns → Hypothesize → Implement.
+> Systematic debugging for a static Astro landing: Investigate → Analyze Patterns → Hypothesize → Implement → Verify.
 
 ---
 
 ## Phase 1: Investigate
 
-**BEFORE attempting ANY fix.**
+**Before attempting any fix:**
 
-### Self-Interrogation (write answers)
-
-```
-1. What SHOULD happen? (expected behavior, exact values)
-2. What ACTUALLY happens? (observed behavior, exact values)
-3. WHERE do they diverge? (specific point)
+```text
+1. What should happen? Exact page, route, CTA, asset, or build result.
+2. What actually happens? Error output, broken URL, visual symptom, or generated HTML.
+3. Where do they diverge? File path, content field, component, or generated `dist` artifact.
 ```
 
 ### Read Error Messages Completely
 
-- Don't skip past errors
-- Read stack traces **completely** — line numbers, file paths, error codes
-- They often contain the exact solution
+- Read `bun run lint`, `bunx astro check`, and `bun run build` output fully.
+- For browser issues, capture console/network/screenshot evidence before editing.
+- For SEO issues, inspect generated `dist/index.html`, `dist/sitemap-0.xml`, and `dist/robots.txt`.
 
 ### Reproduce Consistently
 
-- Can you trigger it reliably?
-- What are the exact steps?
-- **If not reproducible → gather more data, don't guess**
+- Can you trigger it with a command or a local URL?
+- What exact route/viewport/action is involved?
+- If not reproducible, gather more evidence instead of guessing.
 
 ### Check Recent Changes
 
 ```bash
-git diff HEAD~5
-git log --oneline -10
+git --no-pager diff -- <affected-files>
+git --no-pager log --oneline -10 -- <affected-files>
 ```
 
-### Multi-Component Tracing
+### Static-Site Tracing
 
-For each boundary (client → tRPC → Drizzle → Neon):
+Trace data flow through the static stack:
 
-```typescript
-// Add logging at each layer
-console.error("=== tRPC input ===", { input, userId: ctx.userId });
-console.error("=== Service args ===", { mentoradoId, filters });
-console.error("=== Query params ===", { where: conditions });
-console.error("=== Result ===", { count: result.length });
+```text
+src/content/products/otb.json
+  → src/content.config.ts schema
+  → Astro page/component prop
+  → generated dist HTML/CSS/assets
+```
+
+For route/SEO issues, trace:
+
+```text
+astro.config.mjs site/redirects/sitemap
+  → src/layouts/Layout.astro canonical/OG/JSON-LD
+  → public/robots.txt
+  → dist output
 ```
 
 ---
 
 ## Phase 2: Analyze Patterns
 
-1. **Find Working Examples** — Locate similar working code
-2. **Compare Differences** — List EVERY difference, however small
-3. **Understand Dependencies** — What config/env does this need?
+1. **Find working examples** — similar component, section, CTA, or asset path.
+2. **Compare differences** — imports, props, content field, route, canonical, generated HTML.
+3. **Understand constraints** — OTB-only copy, static Astro, Bun-only, no inline `wa.me`, Harvard legal guardrails.
 
 ---
 
 ## Phase 3: Hypothesize
 
-**Scientific method — one variable at a time.**
+Use one variable at a time:
 
-1. **Form Single Hypothesis** — "X is the root cause because Y"
-2. **Test Minimally** — Smallest possible change
-3. **Verify Before Continuing**:
-   - Worked? → Phase 4
-   - Didn't work? → NEW hypothesis, don't add more fixes
+1. Form one hypothesis: “X is the root cause because Y.”
+2. Test minimally: one targeted file/change.
+3. Verify before continuing:
+   - Worked? → Phase 4.
+   - Failed? → new hypothesis; do not stack patches.
 
 ### Cognitive Biases to Avoid
 
 | Bias | Symptom | Countermeasure |
-|------|---------|----------------|
-| **Confirmation** | Seeking proof, ignoring disproof | Ask: "What would disprove this?" |
-| **Anchoring** | Fixating on first error | Read ENTIRE output before hypothesis |
-| **Fixation** | Persisting with wrong approach | 2-strike rule: change approach after 2 failures |
-| **Ownership** | "My code is fine" | Same scrutiny for your code as unfamiliar code |
-| **Optimism** | "That should fix it" | Run gates EVERY time |
-
-### Generate 3 Hypotheses
-
-Before committing to any fix:
-- [ ] Generated ≥ 2 alternative hypotheses
-- [ ] Evidence DISPROVES other hypotheses (not just proves mine)
-- [ ] Fix addresses ROOT CAUSE, not symptom
+|---|---|---|
+| Confirmation | Seeking proof, ignoring disproof | Ask what would disprove the hypothesis |
+| Anchoring | Fixating on first error | Read complete output before choosing fix |
+| Fixation | Persisting with wrong approach | Change hypothesis after 2 failed attempts |
+| Ownership | Assuming your code is fine | Review your changes as unfamiliar code |
+| Optimism | “That should fix it” | Run the gate every time |
 
 ---
 
 ## Phase 4: Implement
 
-### 1. Create Failing Test
+### 1. Prefer a Repro or Static Assertion
 
-```typescript
-it("should reject empty mentoradoId", () => {
-  expect(() => service.create({ mentoradoId: "" })).toThrow();
-});
+Examples:
+
+```bash
+bun run lint
+bunx astro check
+bun run build
+grep -RIn "missing-term" dist/index.html dist/sitemap-0.xml
+```
+
+For content/assets, a quick path check is useful:
+
+```bash
+python -c "import json, pathlib; data=json.load(open('src/content/products/otb.json', encoding='utf-8')); paths=[data['seo']['ogImage'], data['hero']['background']['image'], data['audience']['background']['image'], data['bostonHarvard']['background']['image']]; missing=[p for p in paths if not pathlib.Path('public', p.lstrip('/')).exists()]; print(missing)"
 ```
 
 ### 2. Implement Single Fix
 
-- ONE change at a time
-- No "while I'm here" improvements
+- One change at a time.
+- No “while I’m here” improvements.
+- Keep product copy in `src/content/products/otb.json` unless the text is generic routing/redirect chrome.
 
 ### 3. Verify Gates
 
 ```bash
-bun run type-check && bun run lint:oxlint:check && bun run test
+bun run lint && bunx astro check && bun run build
 ```
 
 ### 3-Fix Escalation Rule
 
-- **< 3 fixes failed** → Return to Phase 1
-- **≥ 3 fixes failed** → **STOP.** Question architecture. Discuss with user.
+- **< 3 fixes failed** → return to Phase 1.
+- **≥ 3 fixes failed** → stop and discuss architecture/requirements with the user.
 
 ---
 
 ## Root Cause Tracing
 
-Trace backward through call chain to find original trigger.
-
 ### 5-Step Backward Trace
 
-```
-1. Observe Symptom        → "column mentorado_id does not exist"
-2. Find Immediate Cause   → db.select().where(eq(metricas.mentorado_id, id))
-3. Ask: What Called This? → metricasRouter.getByMentorado(id)
-4. Keep Tracing Up        → id = undefined — context not yet loaded
-5. Find Original Trigger  → Query fires before auth resolves
-```
-
-**Fix at source:**
-
-```typescript
-// Root cause: query fires without mentoradoId
-const { data } = trpc.metricas.getByMentorado.useQuery(
-  { mentoradoId },
-  { enabled: !!mentoradoId } // ← Fix at source
-);
+```text
+1. Observe symptom      → “Hero CTA target does nothing on /”
+2. Immediate cause      → href="#programa" exists but section missing in dist/index.html
+3. Caller/source        → Hero.astro consumes hero CTA from otb.json
+4. Upstream structure   → index.astro rendered only partial funnel
+5. Root trigger         → canonical `/` diverged from full `/otb` route
 ```
 
-### Git Bisect for Regressions
-
-```bash
-git bisect start
-git bisect bad                    # Current is broken
-git bisect good HEAD~20           # This was working
-# Git guides you to exact commit
-git bisect reset
-```
+**Fix at source:** put the full funnel on canonical `/`, canonicalize `/otb`, and verify `dist/index.html` contains `id="programa"`.
 
 ---
 
@@ -172,23 +161,25 @@ git bisect reset
 ## Debug Report
 
 **Issue**: [Description]
-**Bug Type**: Cosmetic | Performance | Security | Functionality
+**Bug Type**: Content | SEO | Visual | Build | Runtime
 **Root Cause**: [5 Whys result]
-**Fix**: [What was changed]
+**Fix**: [What changed]
 **Verification**:
-- [ ] `bun run type-check` ✅
-- [ ] `bun run test` ✅
+- [ ] `bun run lint` ✅
+- [ ] `bunx astro check` ✅
+- [ ] `bun run build` ✅
+- [ ] Specific smoke: [grep/browser/output evidence]
 
-**Lessons Learned**: What would have caught this earlier?
+**Remaining warnings**: [List only if present]
 ```
 
 ### Commit Message
 
-```
-fix(scope): brief description
+```text
+fix(site): brief description
 
 Root cause: [5 Whys result]
-Fix: [What was changed]
+Fix: [What changed]
 
-Tested: bun run type-check ✅, bun run test ✅
+Tested: bun run lint ✅, bunx astro check ✅, bun run build ✅
 ```

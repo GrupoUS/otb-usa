@@ -89,15 +89,14 @@ Folders auto-created on first write. OTB USA `.claude/logs/progress.md` remains 
 
 | Timing | Gates |
 |---|---|
-| After each task | type-check |
-| After each phase | type-check + lint |
-| Final | type-check + lint + tests |
+| After focused source/config edit | `bun run lint` |
+| After content/schema/route edit | `bunx astro check` + targeted smoke |
+| Final | `bun run lint && bunx astro check && bun run build` |
 
 ```bash
-# Resolve from config
-bunx astro check                                      # OTB type/content gate
-${tooling.packageManager} run lint                     # or direct: `bunx biome check`, `bunx oxlint`
-${tooling.packageManager} run test                     # only when test runner configured
+bun run lint                                          # Biome + oxlint
+bunx astro check                                      # Astro type/content gate
+bun run build                                         # static production output
 ```
 
 > **Pre-commit:** run formatter+linter on every manually edited file. Most linters (`biome`, `eslint`) treat errors as build-breaking — they fail CI immediately.
@@ -119,7 +118,7 @@ Apply at:
 - Inside `/verify` Phase 0 — gates pass condition becomes evidence-bound, not assumption-bound.
 - Per-phase tail inside `/implement` Mode B and `/debug` fix mode.
 
-Anti-pattern: marking a task complete after only inspecting code; running `bun run type-check` then forgetting to check exit code; assuming a fix worked because the diff "looks right".
+Anti-pattern: marking a task complete after only inspecting code; running a non-canonical or nonexistent validation script and forgetting to check exit code; assuming a fix worked because the diff "looks right".
 
 ---
 

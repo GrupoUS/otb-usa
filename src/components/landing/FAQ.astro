@@ -11,7 +11,7 @@ const { faq } = Astro.props;
 const faqJsonLd = {
 	"@context": "https://schema.org",
 	"@type": "FAQPage",
-	mainEntity: faq.map((item: { pergunta: string; resposta: string }) => ({
+	mainEntity: faq.map((item) => ({
 		"@type": "Question",
 		name: item.pergunta,
 		acceptedAnswer: {
@@ -38,7 +38,7 @@ const faqJsonLd = {
 		</div>
 
 		<div class="mt-14 divide-y divide-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)]">
-			{faq.map((item: { pergunta: string; resposta: string }, idx: number) => (
+			{faq.map((item, idx) => (
 				<details
 					class="faq-item group"
 					data-reveal="up"

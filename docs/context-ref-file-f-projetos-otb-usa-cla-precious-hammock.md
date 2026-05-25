@@ -1,25 +1,29 @@
 # Plan — Visual + Copy + CTA uplift for `otb.drasacha.com.br/`
 
-> Scope: aprimorar visual, copy e CTAs da landing pública servida no host raiz `otb.drasacha.com.br/`, seguindo `.claude/rules/DESIGN.md` + `Skill('otb-theme')` + `Skill('otb-usa')` + `Skill('astro')`.
+> Scope: aprimorar visual, copy e CTAs da landing pública servida no host canônico `otb.drasacha.com.br/`, seguindo `.claude/rules/DESIGN.md` + `Skill('otb-theme')` + `Skill('otb-usa')` + `Skill('astro')`.
 
 ---
 
 ## Context
 
-Production URL `https://otb.drasacha.com.br/` resolve hoje para `src/pages/index.astro`, que renderiza apenas **4 seções**:
+**Host canônico do repo:** `https://otb.drasacha.com.br/`, alinhado com `.claude/config.json`, `README.md`, `PRODUCT.md`, `robots.txt` e `astro.config.mjs`.
+
+Se algum alias legado ainda receber tráfego em produção, ele deve redirecionar com 301 para `otb.drasacha.com.br` na plataforma de hospedagem, sem voltar a ser fonte canônica no repo.
+
+Antes da auditoria residual, `src/pages/index.astro` renderizava apenas **4 seções**:
 
 ```
 Hero → WhyOTB → TargetAudience → Investimento
 ```
 
-O funil completo (10 seções) existe em `src/pages/otb.astro`:
+O funil completo (10 seções) existia em `src/pages/otb.astro`:
 
 ```
 Hero → WhyOTB → TargetAudience → Programa → Turmas → Modulos →
 BostonHarvard → Speakers → Investimento → FAQ
 ```
 
-Resultado: o site canônico que o usuário compartilha está **mutilado** — sem prova social (Turmas), sem matriz curricular (Módulos), sem autoridade internacional (BostonHarvard), sem speakers, sem FAQ. O `#programa` âncora no Hero também é **dead anchor** no root (a seção não existe em `index.astro`). Isso quebra confiança e quebra a promessa do hero ("Conhecer o programa" → nada).
+Resultado pré-correção: a URL principal ficava incompleta — sem prova social (Turmas), matriz curricular (Módulos), autoridade internacional (BostonHarvard), speakers e FAQ. A versão completa em `/otb` também criava risco de rota concorrente. A auditoria residual passou a considerar `/` como rota canônica do funil completo e `/otb` como compat route redirecionada para `/`.
 
 Fundação técnica está sólida:
 - Tokens Navy/Gold limpos (`src/styles/global.css` `@theme`)
@@ -39,14 +43,14 @@ Logo: a alavanca de maior impacto é **unificação estrutural** + refinamento d
 
 Tornar `src/pages/index.astro` espelho do funil completo de `src/pages/otb.astro` e redirecionar `/otb` → `/` (canônico no host raiz).
 
-**Por quê:** o subdomínio `otb.drasacha.com.br` **é** o produto OTB; uma rota interna duplicada (`/otb`) divide sinais de SEO, gera índice duplo no sitemap e força o Hero a apontar `#programa` para uma âncora inexistente.
+**Por quê:** o subdomínio do produto **é** OTB; uma rota interna duplicada (`/otb`) divide sinais de SEO, gera índice duplo no sitemap e força o Hero a apontar `#programa` para uma âncora inexistente.
 
 **Como:**
 
-1. Mover o corpo do `<Layout>` de `src/pages/otb.astro` para `src/pages/index.astro` (incluindo breadcrumb JSON-LD), assumindo `Astro.site = https://otb.drasacha.com.br`. Ajustar item 2 do breadcrumb para `name: "MBA em Business Aesthetic Health"` apontando para a própria URL (auto-canônica).
-2. Substituir `src/pages/otb.astro` por redirecionamento estático para `/` via `astro.config.mjs` `redirects: { "/otb": "/" }` e remover o arquivo.
-3. Adicionar `/otb` ao filtro de `@astrojs/sitemap` em `astro.config.mjs` (exclude) — evita split index.
-4. Garantir `<link rel="canonical">` aponta sempre para o host raiz (já é o comportamento padrão de `Layout.astro`).
+1. Mover o corpo do `<Layout>` de `src/pages/otb.astro` para `src/pages/index.astro` (incluindo breadcrumb JSON-LD). Ajustar item 2 do breadcrumb para `name: "MBA em Business Aesthetic Health"` apontando para a própria URL (auto-canônica via `Astro.site`).
+2. Configurar redirecionamento de `/otb` para `/` via `astro.config.mjs` e manter `src/pages/otb.astro` como fallback estático `noindex` com meta refresh para `/` enquanto não houver autorização explícita para deletar arquivo.
+3. Adicionar `/otb` ao filtro de `@astrojs/sitemap` em `astro.config.mjs` (`filter: (page) => !/\/otb\/?$/.test(page)`) — evita split index.
+4. Garantir `<link rel="canonical">` aponta sempre para `https://otb.drasacha.com.br` (já é o comportamento padrão de `Layout.astro` + `astro.config.mjs`).
 
 ### Pilar 2 — Hero: amarrar autoridade + remover dead anchor
 
@@ -119,8 +123,8 @@ Garantir que em **cada viewport**:
 | Arquivo | Mudança |
 |---|---|
 | `src/pages/index.astro` | Reescrever para espelhar o funil completo de `otb.astro` + breadcrumb JSON-LD autoreferente |
-| `src/pages/otb.astro` | Deletar |
-| `astro.config.mjs` | `redirects: { "/otb": "/" }` + filtro `@astrojs/sitemap` exclude `/otb` |
+| `src/pages/otb.astro` | Fallback estático `noindex` com meta refresh para `/`; deletar somente com confirmação explícita |
+| `astro.config.mjs` | Corrigir `site` para host canônico real + `redirects: { "/otb": "/" }` + filtro `@astrojs/sitemap` exclude `/otb` |
 | `src/content.config.ts` | Estender schema: `hero.eyebrow` opcional, `investimento.escassez` opcional |
 | `src/content/products/otb.json` | Eyebrow, subheadline refinada, escassez, +2 FAQs (pendente confirmação stakeholder) |
 | `src/components/landing/Hero.astro` | Eyebrow render, `tabular-nums` no side-card, `text-balance` no H1 |
@@ -208,7 +212,6 @@ Branch: `dev-test` (atual) → PR para `main`. Nunca merge direto. Commit format
 
 ## Open questions para o usuário
 
-1. **Pilar 1 ok?** Confirma que `otb.drasacha.com.br/` deve ser o funil completo e que `/otb` deve redirecionar para `/`?
-2. **Pilar 3 copy** — autoriza a redação refinada de subheadline + `eyebrow` "Próxima edição internacional — 2026", ou prefere texto neutro sem ano (`"Próxima edição internacional"`)?
-3. **Escassez** — pode publicar `"Vagas limitadas por edição"` sem número exato, ou prefere omitir até confirmar nº de vagas?
-4. **FAQ logística** — pode publicar resposta "Passagem e hospedagem são responsabilidade do participante. Sob consulta para o pacote opcional via Laura" ou deixar como TBD?
+1. **Pilar 3 copy** — autoriza a redação refinada de subheadline + `eyebrow` "Próxima edição internacional — 2026", ou prefere texto neutro sem ano (`"Próxima edição internacional"`)?
+2. **Escassez** — pode publicar `"Vagas limitadas por edição"` sem número exato, ou prefere omitir até confirmar nº de vagas?
+3. **FAQ logística** — pode publicar resposta "Passagem e hospedagem são responsabilidade do participante. Sob consulta para o pacote opcional via Laura" ou deixar como TBD?

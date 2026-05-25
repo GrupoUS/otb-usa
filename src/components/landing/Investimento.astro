@@ -3,13 +3,24 @@ import type { CollectionEntry } from "astro:content";
 import { whatsappUrlWithText } from "../../lib/whatsapp";
 import Icon from "../icons/Icon.astro";
 
+type ProductData = CollectionEntry<"products">["data"];
+type Lote = NonNullable<ProductData["lotes"]>[number];
+
 export interface Props {
-	investimento: CollectionEntry<"products">["data"]["investimento"];
+	investimento: ProductData["investimento"];
+	lotes?: ProductData["lotes"];
 }
 
-const { investimento } = Astro.props;
+const { investimento, lotes } = Astro.props;
+const loteList = lotes as Lote[] | undefined;
 const ctaHref = whatsappUrlWithText(investimento.cta.whatsappMessage);
 const hasCheckout = Boolean(investimento.cta.checkoutUrl);
+
+const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
+	encerrado: "Encerrado",
+	ativo: "Ativo",
+	futuro: "Em breve",
+};
 ---
 
 <section
@@ -40,7 +51,7 @@ const hasCheckout = Boolean(investimento.cta.checkoutUrl);
 				</p>
 
 				<ul class="mt-8 space-y-3" aria-label="O que está incluído">
-					{investimento.beneficios.map((b: string) => (
+					{investimento.beneficios.map((b) => (
 						<li class="flex items-start gap-3 text-sm leading-relaxed text-text-primary/90 sm:text-base">
 							<span class="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] text-gold">
 								<Icon name="check" size={14} strokeWidth={2.5} />
@@ -53,6 +64,51 @@ const hasCheckout = Boolean(investimento.cta.checkoutUrl);
 				<p class="mt-8 font-serif text-base italic leading-relaxed text-text-primary/80 sm:text-lg">
 					{investimento.tagline}
 				</p>
+
+				{loteList && loteList.length > 0 && (
+					<div class="mt-10" aria-label="Lotes de investimento">
+						<div class="text-xs uppercase tracking-[0.22em] text-gold/80">Lotes escalonados</div>
+						<ol class="mt-4 space-y-3">
+							{loteList.map((l) => {
+								const isActive = l.status === "ativo";
+								const isPast = l.status === "encerrado";
+								const tone = isActive
+									? "border-gold/60 bg-[color-mix(in_srgb,var(--color-gold)_12%,transparent)]"
+									: isPast
+									? "border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] opacity-60"
+									: "border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)]";
+								return (
+									<li
+										class={`flex flex-col gap-1 rounded-xl border ${tone} px-4 py-3 sm:flex-row sm:items-center sm:justify-between`}
+										aria-current={isActive ? "true" : undefined}
+									>
+										<div class="flex items-center gap-3">
+											<span
+												class={`inline-flex h-7 min-w-[64px] items-center justify-center rounded-full px-3 text-[10px] font-semibold uppercase tracking-[0.18em] ${isActive ? "bg-gold text-navy" : isPast ? "bg-text-muted/20 text-text-muted" : "border border-gold/40 text-gold"}`}
+											>
+												{statusLabel[l.status]}
+											</span>
+											<span class="font-serif text-sm font-semibold text-text-primary sm:text-base">
+												{l.label}
+											</span>
+										</div>
+										<div class="flex items-baseline gap-2 tabular-nums">
+											<span class="text-xs text-text-muted">{l.moeda}</span>
+											<span class={`font-serif text-lg font-semibold ${isActive ? "text-gradient-gold" : "text-text-primary/80"}`}>
+												{l.preco}
+											</span>
+											{l.validade && (
+												<span class="text-[11px] uppercase tracking-[0.18em] text-text-muted">
+													· {l.validade}
+												</span>
+											)}
+										</div>
+									</li>
+								);
+							})}
+						</ol>
+					</div>
+				)}
 			</div>
 
 			<div class="lg:col-span-6" data-reveal="right" data-reveal-delay="2">
@@ -62,13 +118,25 @@ const hasCheckout = Boolean(investimento.cta.checkoutUrl);
 						<span class="font-serif text-xl text-text-muted">{investimento.moeda}</span>
 						<span class="font-serif text-6xl font-bold text-gradient-gold sm:text-7xl">{investimento.preco}</span>
 					</div>
+					{investimento.escassez && (
+						<p class="mt-3 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-gold/80">
+							<Icon name="sparkles" size={14} strokeWidth={2} aria-hidden="true" />
+							{investimento.escassez}
+						</p>
+					)}
 
 					<div class="mt-8 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6">
 						<div class="text-xs uppercase tracking-[0.18em] text-text-muted">Parcelamento</div>
 						<ul class="mt-3 space-y-2 text-sm text-text-primary/90">
-							{investimento.parcelamento.map((p: string) => (
-								<li class="flex items-start gap-2">
-									<span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gold" aria-hidden="true"></span>
+							{investimento.parcelamento.map((p) => (
+								<li class="flex items-start gap-2.5">
+									<Icon
+										name="chevron-right"
+										size={14}
+										strokeWidth={2.25}
+										class="mt-1 shrink-0 text-gold/60"
+										aria-hidden="true"
+									/>
 									<span>{p}</span>
 								</li>
 							))}

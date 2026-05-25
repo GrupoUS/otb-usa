@@ -1,6 +1,6 @@
 {
   "skill": "debugger",
-  "version": "1.0.0",
+  "version": "1.1.0-otb-static",
   "assertions": [
     {
       "id": "A01",
@@ -11,121 +11,74 @@
     },
     {
       "id": "A02",
-      "description": "Output does NOT suggest db.transaction() with Neon HTTP driver",
+      "description": "Output references the OTB USA validation gate",
       "type": "behavioral",
-      "check": "not_contains: \"db.transaction()\"",
+      "check": "contains_one_of: [\"bun run lint\", \"bunx astro check\", \"bun run build\", \"verification gate\", \"quality gate\"]",
       "critical": true
     },
     {
       "id": "A03",
-      "description": "Output references quality gates (type-check, lint, test)",
+      "description": "Output respects Astro static-only constraints",
       "type": "behavioral",
-      "check": "contains_one_of: [\"type-check\", \"bun run type-check\", \"quality gate\", \"verification gate\"]",
+      "check": "not_contains_one_of: [\"SSR adapter\", \"ClientRouter\", \"prerender = false\"]",
       "critical": true
     },
     {
       "id": "A04",
-      "description": "Output selects correct browser mode for authenticated pages (cdp.sh, NOT agent-browser connect)",
+      "description": "Output does not recommend non-Bun package managers",
       "type": "behavioral",
-      "check": "not_contains: \"agent-browser connect 9222\"",
+      "check": "not_contains_one_of: [\"npm install\", \"yarn add\", \"pnpm add\", \"npx \"]",
       "critical": true
     },
     {
       "id": "A05",
-      "description": "Output references cdp.sh for authenticated page testing",
+      "description": "Output keeps WhatsApp flow centralized",
       "type": "behavioral",
-      "check": "contains: \"cdp.sh\"",
-      "critical": false
+      "check": "not_contains: \"inline wa.me\"",
+      "critical": true
     },
     {
       "id": "A06",
-      "description": "Output uses agent-browser headless for public pages",
+      "description": "Output treats Harvard only as contextual ecosystem, not affiliation",
       "type": "behavioral",
-      "check": "contains_one_of: [\"agent-browser open\", \"--headless\", \"agent-browser\"]",
-      "critical": false
+      "check": "not_contains_one_of: [\"Harvard partnership\", \"Harvard certified\", \"Harvard endorsement\", \"affiliated with Harvard\"]",
+      "critical": true
     },
     {
       "id": "A07",
-      "description": "Output does NOT use console.log in fix suggestions (stability rule H)",
+      "description": "Output selects an OTB static debug pack when pack selection is discussed",
       "type": "behavioral",
-      "check": "not_contains: \"console.log\"",
+      "check": "contains_one_of: [\"frontend-debug\", \"content-debug\", \"seo-debug\", \"systematic-audit\"]",
       "critical": false
     },
     {
       "id": "A08",
-      "description": "Output does NOT use non-null assertion ! on optional data (stability rule B)",
+      "description": "Output references generated static artifact checks for SEO/content bugs",
       "type": "behavioral",
-      "check": "not_contains: \".returning()[0]!\"",
-      "critical": true
-    },
-    {
-      "id": "A09",
-      "description": "Output guards .returning()[0] access against empty arrays (stability rule C)",
-      "type": "behavioral",
-      "check": "contains_one_of: [\"guard\", \"if (!result\", \"if (!inserted\", \"??\", \"|| throw\", \"throw new\"]",
-      "critical": false
-    },
-    {
-      "id": "A10",
-      "description": "Output selects correct pack based on symptom type",
-      "type": "behavioral",
-      "check": "contains_one_of: [\"frontend-debug\", \"backend-debug\", \"auth-db-debug\", \"systematic-audit\"]",
-      "critical": false
-    },
-    {
-      "id": "A11",
-      "description": "Output references one fix at a time principle",
-      "type": "behavioral",
-      "check": "contains_one_of: [\"one change\", \"one fix\", \"uma correcao\", \"minimal fix\", \"smallest possible\"]",
-      "critical": false
-    },
-    {
-      "id": "A12",
-      "description": "Output does NOT use as any to silence type errors (stability rule I)",
-      "type": "behavioral",
-      "check": "not_contains: \"as any\"",
-      "critical": false
-    },
-    {
-      "id": "A13",
-      "description": "Output length is under 800 words for focused responses",
-      "type": "format",
-      "check": "word_count_max: 800",
-      "critical": false
-    },
-    {
-      "id": "A14",
-      "description": "Output references evidence confirmation (screenshot or DB validation)",
-      "type": "behavioral",
-      "check": "contains_one_of: [\"screenshot\", \"evidence\", \"screenshot\", \"psql\", \"validation\", \"browser\"]",
+      "check": "contains_one_of: [\"dist/index.html\", \"dist/sitemap-0.xml\", \"dist/robots.txt\", \"generated\"]",
       "critical": false
     }
   ],
   "test_cases": [
     {
       "id": "T01",
-      "input": "The CRM kanban page at /crm/leads shows a blank white screen after clicking a lead card. No errors in the console. How should I debug this?",
-      "expected_assertions": ["A01", "A03", "A04", "A05", "A10", "A11", "A13"]
+      "input": "The Hero CTA points to #programa, but clicking it on the homepage appears to do nothing. How should I debug this?",
+      "expected_assertions": ["A01", "A02", "A03", "A07", "A08"]
     },
     {
       "id": "T02",
-      "input": "I'm getting 'Cannot read properties of undefined' after inserting a new lead via mutation. The insert uses .returning()[0] to get the created row.",
-      "expected_assertions": ["A01", "A02", "A03", "A08", "A09", "A10", "A11", "A13"]
+      "input": "The social preview image is blank because /og/otb-default.jpg returns 404 after build.",
+      "expected_assertions": ["A01", "A02", "A03", "A08"]
     },
     {
       "id": "T03",
-      "input": "The landing page at / shows broken layout on mobile (375px). All data is public, no login needed.",
-      "expected_assertions": ["A01", "A03", "A06", "A10", "A11", "A13", "A14"]
+      "input": "Astro check fails after adding a new field to src/content/products/otb.json.",
+      "expected_assertions": ["A01", "A02", "A03", "A07"]
     },
     {
       "id": "T04",
-      "input": "Users report seeing data from other tenants on the financial summary page. This is a cross-tenant data leak.",
-      "expected_assertions": ["A01", "A02", "A03", "A04", "A05", "A10", "A11", "A12", "A13"]
-    },
-    {
-      "id": "T05",
-      "input": "Full debug: a dashboard page shows stale metrics that don't update after creating a new record. Need to investigate the full stack from query/cache layer to API handler to ORM query.",
-      "expected_assertions": ["A01", "A02", "A03", "A04", "A05", "A07", "A10", "A11", "A13", "A14"]
+      "input": "Audit if any legacy domain or non-OTB product references remain active outside archives.",
+      "expected_assertions": ["A01", "A02", "A03", "A07", "A08"]
     }
   ]
 }

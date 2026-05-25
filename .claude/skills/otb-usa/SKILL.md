@@ -31,6 +31,11 @@ Domain knowledge for the OTB Estados Unidos landing: product facts, audience, co
 - Use “Boston”, “Cambridge” and “ecossistema acadêmico de Harvard” as descriptive context only.
 - WhatsApp URLs go through `src/lib/whatsapp.ts`.
 - WhatsApp message copy lives in `src/content/products/otb.json` and starts with `Olá, Laura!` while Laura remains the active SDR.
+- Anatomy Review with "Mike — correspondente americano" is descriptive of the speaker's professional profile only — never imply endorsement, certification or institutional ties with Harvard.
+- The Harvard campus tour on Day 1 is descriptive/touristic — no official academic activity inside Harvard, no space-cession by Harvard University.
+- The two certifications are: (a) MBA emitted via Instituto IESA / Grupo US partnership and (b) ASA — Anatomy Society of America — Fresh Specimens Course Certificate. Never reattribute certifications to Harvard, MEC alone, or any other institution.
+- "Harmonização Facial, Corporal e Íntima" copy must always accompany the reminder that procedures must respect each professional council's regulation.
+- Do not mention Dubai as a former planned venue in public copy — the relocation is internal context only.
 
 ## Product snapshot
 
@@ -48,6 +53,7 @@ Domain knowledge for the OTB Estados Unidos landing: product facts, audience, co
 | File | Purpose |
 |---|---|
 | `references/manual-resumo.md` | Product facts, voice, audience, section intent |
+| `references/edicao-3-boston.md` | Snapshot of the 3ª Edição (Boston, abril 2027) + Phase 0 stakeholder gaps |
 | `references/produtos-e-rotas.md` | OTB route/canonical map |
 | `references/conflitos-fontes.md` | Conflict policy and legal guardrails |
 | `references/whatsapp-ssot.md` | WhatsApp helper/message rules |
