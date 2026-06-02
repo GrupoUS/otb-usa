@@ -1,6 +1,6 @@
 {
   "skill": "debugger",
-  "version": "1.1.0-otb-static",
+  "version": "1.1.0-gpus-static",
   "assertions": [
     {
       "id": "A01",
@@ -11,7 +11,7 @@
     },
     {
       "id": "A02",
-      "description": "Output references the OTB USA validation gate",
+      "description": "Output references the GPUS landing validation gate",
       "type": "behavioral",
       "check": "contains_one_of: [\"bun run lint\", \"bunx astro check\", \"bun run build\", \"verification gate\", \"quality gate\"]",
       "critical": true
@@ -39,14 +39,14 @@
     },
     {
       "id": "A06",
-      "description": "Output treats Harvard only as contextual ecosystem, not affiliation",
+      "description": "Output treats regulated-health claims (councils/credentials) as context, not affiliation",
       "type": "behavioral",
-      "check": "not_contains_one_of: [\"Harvard partnership\", \"Harvard certified\", \"Harvard endorsement\", \"affiliated with Harvard\"]",
+      "check": "not_contains_one_of: [\"guaranteed result\", \"official certification\", \"endorsed by\"]",
       "critical": true
     },
     {
       "id": "A07",
-      "description": "Output selects an OTB static debug pack when pack selection is discussed",
+      "description": "Output selects a GPUS static debug pack when pack selection is discussed",
       "type": "behavioral",
       "check": "contains_one_of: [\"frontend-debug\", \"content-debug\", \"seo-debug\", \"systematic-audit\"]",
       "critical": false
@@ -67,17 +67,17 @@
     },
     {
       "id": "T02",
-      "input": "The social preview image is blank because /og/otb-default.jpg returns 404 after build.",
+      "input": "The social preview image is blank because /og/<slug>.png returns 404 after build.",
       "expected_assertions": ["A01", "A02", "A03", "A08"]
     },
     {
       "id": "T03",
-      "input": "Astro check fails after adding a new field to src/content/products/otb.json.",
+      "input": "Astro check fails after adding a new field to src/content/products/<slug>.json.",
       "expected_assertions": ["A01", "A02", "A03", "A07"]
     },
     {
       "id": "T04",
-      "input": "Audit if any legacy domain or non-OTB product references remain active outside archives.",
+      "input": "Audit if any legacy domain or other-product references remain active outside archives.",
       "expected_assertions": ["A01", "A02", "A03", "A07", "A08"]
     }
   ]

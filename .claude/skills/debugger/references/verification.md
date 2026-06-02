@@ -1,4 +1,4 @@
-# Verification & Prevention — OTB USA
+# Verification & Prevention — GPUS Astro landing
 
 > Fix the bug and verify the static site artifact that users/search engines receive.
 
@@ -8,7 +8,7 @@
 
 | Layer | Purpose | Example |
 |---|---|---|
-| **1. Content schema** | Reject invalid product data | `src/content.config.ts` validates `otb.json` |
+| **1. Content schema** | Reject invalid product data | `src/content.config.ts` validates `${content.productJson}` |
 | **2. Component contract** | Render only expected fields | Astro props typed from Content Collections |
 | **3. Helper/SSOT** | Centralize sensitive behavior | WhatsApp URL via `src/lib/whatsapp.ts` |
 | **4. Generated artifact** | Confirm production output | inspect `dist/index.html`, sitemap, robots, assets |
@@ -19,7 +19,7 @@
 // Content schema guard
 const ctaSchema = z.object({
 	label: z.string().min(2),
-	whatsappMessage: z.string().refine((message) => message.startsWith("Olá, Laura!")),
+	whatsappMessage: z.string().refine((message) => message.startsWith("${lead.whatsappGreeting}")),
 });
 ```
 
@@ -42,7 +42,7 @@ import { whatsappUrlWithText } from "../../lib/whatsapp";
 ```bash
 # Generated artifact smoke
 bun run build
-grep -RIn 'https://otb.drasacha.com.br/' dist/index.html dist/sitemap-0.xml
+grep -RIn '${project.productionUrl}/' dist/index.html dist/sitemap-0.xml
 grep -RIn '<legacy-domain>' dist || true
 ```
 
@@ -53,8 +53,8 @@ grep -RIn '<legacy-domain>' dist || true
 | Bug Level | Required Actions |
 |---|---|
 | L1-L2 | Fix + targeted smoke |
-| L3-L4 | Fix + full OTB gate + generated artifact check |
-| L5+ | Fix + full OTB gate + browser evidence + note remaining risks |
+| L3-L4 | Fix + full validation gate + generated artifact check |
+| L5+ | Fix + full validation gate + browser evidence + note remaining risks |
 
 ### Regression Risk Assessment
 
@@ -69,7 +69,7 @@ grep -RIn '<legacy-domain>' dist || true
 Before closing a L3+ bug/audit:
 
 - [ ] Root cause stated with file evidence.
-- [ ] Fix is minimal and OTB-only.
+- [ ] Fix is minimal and on-product only.
 - [ ] `bun run lint && bunx astro check && bun run build` passed.
 - [ ] Relevant `dist` artifact was inspected.
 - [ ] No active legacy references outside archive/dist.

@@ -9,11 +9,13 @@ Astro achieves **40% faster load times** and **90% less JavaScript** compared to
 
 ## Core Web Vitals Targets
 
+> Advisory — medir & anotar, não bloquear merge. CLS é higiene de layout (mantém hard). O único hard floor de motion é `prefers-reduced-motion`.
+
 | Metric | Target | How Astro Helps |
 |--------|--------|----------------|
 | LCP (Largest Contentful Paint) | < 2.5s | Static HTML, preloaded assets |
 | CLS (Cumulative Layout Shift) | 0 | Explicit image dimensions |
-| INP (Interaction to Next Paint) | < 100ms | Minimal JS, deferred hydration |
+| INP (Interaction to Next Paint) | ~200ms | Minimal JS, deferred hydration |
 | FCP (First Contentful Paint) | < 1.8s | No JS blocking render |
 | TTFB (Time to First Byte) | < 800ms | Static files from CDN |
 
@@ -101,9 +103,11 @@ Key: `display=swap` prevents Flash of Invisible Text (FOIT).
 
 ## JavaScript Budget
 
+> Advisory. Libs de animação vivem dentro do seu island — nunca no entry da landing.
+
 | Category | Target |
 |----------|--------|
-| Initial JS bundle | < 50KB |
+| Initial JS bundle | ~< 50KB (advisory; libs de animação dentro do island) |
 | Per-island JS | As small as possible |
 | Total page JS | < 100KB |
 
@@ -147,28 +151,19 @@ bunx lighthouse http://localhost:4321 --preset=desktop
 
 ## Animation Performance
 
-Only animate `transform` and `opacity` (GPU-accelerated):
+Motion é ferramenta de design de primeira classe (3D tilt, parallax, glow, profundidade em camadas são incentivados — ver `docs/motion-depth-playbook.md`). Prefira `transform`/`opacity` (GPU-composited) quando o efeito for equivalente, por performance; layout props / 3D / parallax são permitidos quando o efeito pedir. Único hard floor: degradar sob `prefers-reduced-motion`.
 
 ```css
-/* ✅ Good — GPU composited */
+/* Preferido quando equivalente — GPU composited */
 .animate { transition: transform 0.3s, opacity 0.3s; }
 
-/* ❌ Bad — triggers layout/paint */
+/* OK quando o efeito pedir (layout/paint) — honrar prefers-reduced-motion */
 .animate { transition: width 0.3s, height 0.3s, top 0.3s; }
 ```
 
-With Framer Motion:
-```tsx
-// ✅ Good
-<motion.div animate={{ opacity: 1, y: 0 }} />
+### Accordion / expand panels
 
-// ❌ Bad
-<motion.div animate={{ width: "100%", height: 200 }} />
-```
-
-### Accordion / expand panels (exception)
-
-Do **not** drive FAQ (or similar) panel open/close with Framer `height` tweens or `layout` height animations. Use **CSS `grid-template-rows: 0fr` ↔ `1fr`** on a wrapper (see `references/islands-architecture.md` → *Known case: FAQ accordion*). That keeps Motion on `transform`/`opacity` only (e.g. chevron) while the panel reveal stays in CSS.
+FAQ (e similares): `<details>` nativo, CSS `grid-template-rows: 0fr` ↔ `1fr`, OU `height`/`AnimatePresence` animado — todos OK desde que honrem `prefers-reduced-motion` (ver `references/islands-architecture.md` → *Known case: FAQ accordion*).
 
 ## Checklist
 
@@ -178,6 +173,6 @@ Do **not** drive FAQ (or similar) panel open/close with Framer `height` tweens o
 - [ ] Fonts use `display=swap`
 - [ ] Only necessary islands use `client:load`
 - [ ] Below-fold islands use `client:visible`
-- [ ] Initial JS < 50KB
-- [ ] Animations use `transform`/`opacity` only in Framer Motion; expand/collapse panels use CSS grid `0fr`/`1fr`, not Motion `height`
-- [ ] `prefers-reduced-motion` handled for all animations
+- [ ] Initial JS ~< 50KB (advisory; libs de animação dentro do island, não no entry)
+- [ ] Motion prefere `transform`/`opacity` quando equivalente; layout/3D/parallax/`height` OK quando o efeito pedir
+- [ ] `prefers-reduced-motion` handled for all animations (hard floor)

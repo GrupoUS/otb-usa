@@ -1,8 +1,8 @@
-# View Transitions — OTB USA policy
+# View Transitions — GPUS Astro landing policy
 
 This reference is intentionally project-specific.
 
-OTB USA is an Astro static MPA. Do **not** add Astro's page-transition router in this repo.
+This is an Astro static MPA. Do **not** add Astro's page-transition router in this repo.
 
 ## Forbidden
 

@@ -2,7 +2,7 @@
 globs: src/**, .claude/**, public/**, scripts/**, astro.config.mjs, package.json, src/content/**
 ---
 
-# Commit Format + Pre-Commit Gate — OTB USA
+# Commit Format + Pre-Commit Gate — GPUS Astro Landing
 
 > Conventional Commits + lefthook pre-commit + manual gate checklist.
 
@@ -10,14 +10,14 @@ globs: src/**, .claude/**, public/**, scripts/**, astro.config.mjs, package.json
 
 Format: `<type>(<scope>): <subject>` — `feat | fix | docs | refactor | chore | test | perf | style | build | ci`.
 
-Scopes: `site`, `theme`, `content`, `seo`, `astro`, `config`, `scripts`, `.claude`, `deps`, `a11y`, `perf`.
+Scopes: `site`, `theme`, `content`, `seo`, `astro`, `config`, `form`, `tracking`, `scripts`, `.claude`, `deps`, `a11y`, `perf`.
 
 Examples:
 
-- `feat(site): add OTB USA hero section`
-- `fix(content): align OTB WhatsApp CTA copy`
-- `docs(.claude): align agents with OTB USA scope`
-- `refactor(theme): simplify OTB gold token utilities`
+- `feat(site): add landing hero section`
+- `fix(content): align WhatsApp CTA copy in product JSON`
+- `feat(form): wire registration form to lead endpoint`
+- `docs(.claude): align governance with project scope`
 
 One logical change per commit. Reference touched rule when useful.
 
@@ -32,12 +32,13 @@ Run in order before commit/PR:
 1. `bun run lint`
 2. `bunx astro check`
 3. `bun run build`
-4. Hex scan in UI files: no `#[0-9a-fA-F]{3,8}` outside `src/styles/global.css`.
-5. WhatsApp scan: no `wa.me/` outside `src/lib/whatsapp.ts`.
-6. Content drift scan: no OTB product/FAQ/pricing copy hardcoded in `.astro` / `.tsx`.
-7. Production noise scan: no `console.log` or `debugger`.
+4. Hex scan em UI files: nenhum `#[0-9a-fA-F]{3,8}` fora de `src/styles/global.css` (exceção: `<meta theme-color>`).
+5. WhatsApp scan: nenhum `wa.me/` fora de `src/lib/whatsapp.ts`.
+6. Content drift scan: nenhuma copy/FAQ/oferta hardcoded em `.astro`/`.tsx` (vive em `${content.productJson}`).
+7. Production noise scan: nenhum `console.log` ou `debugger`.
+8. Form/PII scan: campos com `<label>`, consent + link de privacidade presentes; sem PII logada.
 
-For UI/perf changes also run `bun run lighthouse:audit` with a local preview/dev server.
+Para mudanças de UI/perf também rodar `bun run lighthouse:audit` com preview/dev server local.
 
 ## Protected files
 
@@ -51,15 +52,18 @@ Per `.claude/config.json::protectedFiles.exact`:
 - `biome.json`
 - `lefthook.yml`
 
-Edit with explicit reason and validate after.
+Editar com razão explícita + validar. O hook `protect_files.py` bloqueia Write/Edit nesses arquivos (lê a lista de `config.json`).
+
+## Env / secrets
+
+- `PUBLIC_FORM_ENDPOINT`, `PUBLIC_GA4_ID`, `PUBLIC_FB_PIXEL_ID` vivem em env (Vercel / `.env` não commitado). Documentar em `.env.example` quando criados. Nunca commitar valores.
 
 ## Branch workflow — main-only
 
-Single-branch repository. Always edit on `main`.
+Single-branch repository. Sempre editar em `main`.
 
-- **Always work on `main`.** No feature branches, no `dev-test`, no `feature/*`, no `fix/*`.
-- **Never create new branches** unless the user explicitly requests one for an isolated experiment.
-- **Never force-push** (`--force` / `-f`) — destructive on shared history.
-- **Never auto-merge or auto-approve PRs.**
-- Commits go directly to `main` after the manual gate checklist + automated `lefthook` pre-commit gate.
-- Push to `origin/main` after commit.
+- **Sem feature branches**, sem `dev-test`, sem `feature/*`, sem `fix/*`.
+- **Never force-push** (`--force` / `-f`).
+- **Never auto-merge/auto-approve PRs.**
+- Commits direto em `main` após o manual gate + lefthook.
+- Push para `origin/main` e deploy Vercel só quando o usuário pedir.

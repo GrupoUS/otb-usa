@@ -1,5 +1,5 @@
 #!/bin/bash
-# Debug Skill - OTB USA validation runner
+# Debug Skill - GPUS Astro landing validation runner
 # Runs the canonical Astro static-site gate for this project.
 
 set -e
@@ -16,4 +16,4 @@ echo "🏗️ Running production build..."
 bun run build
 
 echo ""
-echo "✅ OTB USA validation gate passed!"
+echo "✅ GPUS landing validation gate passed!"

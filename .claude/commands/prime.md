@@ -1,8 +1,8 @@
 ---
-description: Load the right OTB USA context before implementation, design, debugging, or verification.
+description: Load the right GPUS Astro landing context before implementation, design, debugging, or verification.
 ---
 
-# /prime — OTB USA Context Loader
+# /prime — ${project.displayName} Context Loader
 
 **ARGUMENTS**: $ARGUMENTS
 
@@ -19,18 +19,19 @@ Use when the task scope is unclear, cross-domain, or L3+.
 | Mode / signal | Load |
 |---|---|
 | `frontend`, Astro, `.astro`, `src/**` | `.claude/rules/frontend.md`, `.claude/rules/DESIGN.md`, `.claude/rules/astro.md`, `Skill("astro")` |
-| Design/UI/visual polish | `Skill("otb-theme")`, `Skill("ui-ux-pro-max")` |
-| Product/copy/CTA/legal | `Skill("otb-usa")` |
+| Design/UI/visual polish | `Skill("gpus-theme")`, `Skill("ui-ux-pro-max")` |
+| Product/copy/CTA/legal | `Skill("grupo-us")` |
 | Build/runtime bug | `Skill("debugger")`, `Skill("astro")` |
 | Perf/SEO/a11y/security | `Skill("performance-optimization")`, `.claude/rules/seo.md` |
 | Planning/decomposition | `Skill("planning")` |
 
 ## 2. Project invariants to keep in context
 
-- OTB USA only; Grupo US is the parent brand, not a replacement scope.
-- Product copy source of truth: `src/content/products/otb.json`.
-- WhatsApp source of truth: `src/lib/whatsapp.ts`; messages start with `Olá, Laura!`.
-- Harvard can be referenced only as geographic/institutional context, with no affiliation/endorsement/certification claim.
+- ${project.displayName} (GPUS Astro landing, Dra. Sacha Gualberto); Grupo US is the parent brand.
+- Product copy source of truth: `${content.productJson}`.
+- WhatsApp source of truth: `src/lib/whatsapp.ts`; messages start with `${lead.whatsappGreeting}`.
+- Lead capture form (`${lead.formComponent}`) → Vercel function `api/inscricao.js` → NeonDB (`${lead.leadTable}`) with WhatsApp fallback; LGPD consent + privacy link required.
+- Lead destination + tracking IDs live in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`), never committed.
 - Astro static MPA only; no SPA router or SSR.
 - Bun only.
 

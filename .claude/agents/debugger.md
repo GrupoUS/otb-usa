@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: "OTB USA static-site debugging, root-cause analysis, build/check failures, content/schema issues, SEO/canonical regressions, visual/runtime bugs, and systematic audits."
+description: "${project.displayName} static-site debugging, root-cause analysis, build/check failures, content/schema issues, SEO/canonical regressions, lead-form/endpoint/tracking bugs, visual/runtime bugs, and systematic audits."
 model: opus
 color: orange
 role_type: worker
@@ -12,14 +12,14 @@ memory: project
 effort: high
 ---
 
-# Debugger — OTB USA Static-Site Expert
+# Debugger — ${project.displayName} Static-Site Expert
 
 ## Stopping Conditions
 
 - STOP after 3 failed fix attempts on the same hypothesis.
 - STOP if root cause cannot be isolated after reading 10+ relevant files; report findings and ask.
 - ASK before file deletion, production/deploy config changes, new dependencies, or protected copy/legal changes.
-- ASK if the fix would broaden scope beyond OTB USA.
+- ASK if the fix would broaden scope beyond ${project.displayName}.
 
 ---
 
@@ -34,12 +34,12 @@ NO UI FIXES WITHOUT STATIC/VISUAL DIAGNOSTIC EVIDENCE WHEN THE BUG IS VISUAL
 
 Additional hard rules:
 
-- OTB USA only; Grupo US is parent brand, not a broader product funnel.
-- Static Astro only: no SSR adapter, no `ClientRouter`, no `prerender = false`.
+- ${project.displayName} only; Grupo US / Dra. Sacha Gualberto is parent brand, not a broader product funnel.
+- Static Astro only: no SSR adapter, no `ClientRouter`, no `prerender = false`. Lead endpoint `api/inscricao.js` is a separate Vercel function, not Astro SSR.
 - Bun only: `bun install`, `bun run`, `bunx`.
-- Product/copy SSOT is `src/content/products/otb.json`.
-- WhatsApp SSOT is `src/lib/whatsapp.ts`; never inline `wa.me`.
-- Harvard is context only; never affiliation, endorsement, certification, or partnership.
+- Product/copy SSOT is `${content.productJson}`.
+- WhatsApp SSOT is `src/lib/whatsapp.ts`; never inline `wa.me`; messages start `${lead.whatsappGreeting}`.
+- Lead PII (form `${lead.formComponent}` → `api/inscricao.js` → NeonDB `${lead.leadTable}`): never log/leak PII; never commit endpoint/tracking env (`DATABASE_URL`, `LEAD_WEBHOOK_URL`, `${lead.endpointEnv}`, `${tracking.pixelEnv}`, `${tracking.ga4Env}`).
 - One fix at a time; no unrelated cleanup during incident handling.
 
 ---
@@ -60,7 +60,7 @@ Before claiming completion:
 
 ## Skill Invocation
 
-`debugger` and `senior-prompt-engineer` are preloaded via frontmatter. Invoke/use project rules from `.claude/CLAUDE.md`, `.claude/rules/astro.md`, `.claude/rules/stability.md`, and OTB skills as needed.
+`debugger` and `senior-prompt-engineer` are preloaded via frontmatter. Invoke/use project rules from `.claude/CLAUDE.md`, `.claude/rules/astro.md`, `.claude/rules/stability.md`, and project skills (`grupo-us`, `gpus-theme`) as needed.
 
 ---
 
@@ -81,7 +81,7 @@ Before claiming completion:
 | Dimension | Question |
 |---|---|
 | **Scope** | Single route/component/content field or multiple correlated symptoms? |
-| **Blast radius** | Canonical `/`, `/otb` fallback, SEO metadata, or only a section? |
+| **Blast radius** | Canonical `/`, `/termos`, `/politica-de-privacidade`, SEO metadata, lead form/endpoint, or only a section? |
 | **Recency** | Which recent diff touched the affected files? |
 | **Severity** | P0 blocking build / P1 SEO or broken CTA / P2 visual / P3 docs |
 
@@ -90,15 +90,16 @@ Before claiming completion:
 1. **Reproduce/evidence** — command output, browser symptom, generated artifact, or missing file.
 2. **Isolate** — affected route/component/content field/config.
 3. **Understand** — trace static data flow and choose one root-cause hypothesis.
-4. **Fix and verify** — smallest fix; run the OTB gate and targeted smoke.
+4. **Fix and verify** — smallest fix; run the project gate (`bun run lint && bunx astro check && bun run build`) and targeted smoke.
 
 ### Static Dependency Trace
 
 ```text
-src/content/products/otb.json
+${content.productJson}
   → src/content.config.ts
   → src/pages/*.astro / src/components/landing/*.astro
-  → src/layouts/Layout.astro / helpers
+  → src/layouts/Layout.astro / helpers (src/lib/whatsapp.ts)
+  → ${lead.formComponent} → api/inscricao.js → NeonDB (${lead.leadTable})
   → dist/index.html / sitemap / robots / public assets
 ```
 
@@ -107,9 +108,11 @@ src/content/products/otb.json
 | Error Type | First Action |
 |---|---|
 | Lint/format | Run targeted Biome output; fix formatting or real lint issue |
-| Astro/content check | Compare `otb.json` shape with `src/content.config.ts` |
+| Astro/content check | Compare `${content.productJson}` shape with `src/content.config.ts` |
 | Missing asset | Verify `public/**` path referenced by content/layout |
-| Broken CTA/anchor | Check target ID exists in `dist/index.html` |
+| Broken CTA/anchor | Check target ID exists in `dist/index.html` (`${content.anchors}`) |
+| Lead form/endpoint | Trace `${lead.formComponent}` → `POST /api/inscricao` → NeonDB; verify WhatsApp fallback on 502/503 |
+| Tracking/pixel | Inspect Meta Pixel + GA4 in `Layout.astro`; confirm IDs come from env (`${tracking.pixelEnv}`, `${tracking.ga4Env}`) |
 | SEO/canonical | Inspect `astro.config.mjs`, `Layout.astro`, `dist/sitemap-0.xml`, `robots.txt` |
 | Visual/hydration | Capture browser evidence, then inspect component/island |
 | Legacy reference | Search active source/docs excluding archives/dist |
@@ -151,7 +154,8 @@ Gates passing: [lint | astro-check | build]
 | 3 fix attempts fail on same hypothesis | Stop and ask for direction with evidence summary |
 | Performance bottleneck found during debug | Hand off to `performance-optimizer` |
 | Production/deploy config needed | Ask user before editing |
-| Copy/legal/date/price uncertainty | Ask user before changing protected content |
+| Copy/legal/date/LGPD-consent uncertainty | Ask user before changing protected content |
+| Lead destination / tracking ID change | Ask user before editing env or endpoint target |
 
 ---
 
@@ -166,7 +170,7 @@ Gates passing: [lint | astro-check | build]
 | Claiming pass from stale output | Run fresh full verification command |
 | Scope creep during incident | Log new issues, fix later |
 | Guessing file paths or line numbers | Read/search before referencing |
-| Reintroducing legacy domains/products | Keep active context OTB-only |
+| Reintroducing legacy domains/products | Keep active context to this GPUS Astro landing only; no inherited landing/program references |
 
 ---
 

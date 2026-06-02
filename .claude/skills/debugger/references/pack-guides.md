@@ -1,4 +1,4 @@
-# Pack Execution Guides — OTB USA
+# Pack Execution Guides — GPUS Astro landing
 
 Detailed execution flows for the static Astro debug packs.
 
@@ -21,28 +21,28 @@ Detailed execution flows for the static Astro debug packs.
 
 **Key rules:**
 - Prefer static Astro and CSS before React islands.
-- Do not animate layout properties; use `transform` + `opacity`.
+- Prefer `transform` + `opacity` when equivalent; honor `prefers-reduced-motion`.
 - Do not add hardcoded hex in components; use tokens.
-- Do not add product copy in components when it belongs in `otb.json`.
+- Do not add product copy in components when it belongs in `${content.productJson}`.
 
 ---
 
 ## `content-debug`
 
-**Scope:** `src/content/products/otb.json`, `src/content.config.ts`, WhatsApp CTA, legal/Harvard copy, referenced assets.
+**Scope:** `${content.productJson}`, `src/content.config.ts`, WhatsApp CTA, regulated-health legal copy, referenced assets.
 
 **Execution flow:**
-1. Read `src/content.config.ts` and the relevant `otb.json` fields.
+1. Read `src/content.config.ts` and the relevant `${content.productJson}` fields.
 2. Trace the consuming component/page.
 3. Check for schema mismatch, missing field, missing asset, invalid URL, or WhatsApp prefix violation.
 4. Apply a minimal schema+JSON or asset fix.
-5. Run the OTB gate.
+5. Run the validation gate.
 6. Smoke generated `dist` for the affected text/asset/canonical URL.
 
 **Key rules:**
-- `otb.json` is product/copy SSOT.
-- WhatsApp messages must start with `Olá, Laura!`.
-- Harvard is context only; never affiliation, endorsement, certification, or partnership.
+- `${content.productJson}` is product/copy SSOT.
+- WhatsApp messages must start with `${lead.whatsappGreeting}`.
+- Regulated-health claims stay descriptive: never imply official affiliation, endorsement, certification, or partnership (PRODUCT.md § Guardrails).
 - Dates, price, and legal claims require stakeholder confirmation if changed.
 
 **Common patterns:**
@@ -57,16 +57,16 @@ Detailed execution flows for the static Astro debug packs.
 **Scope:** `astro.config.mjs`, `src/layouts/Layout.astro`, `src/pages/*.astro`, `public/robots.txt`, OG/Twitter image, sitemap, canonical URL.
 
 **Execution flow:**
-1. Confirm canonical domain from `.claude/config.json`: `https://otb.drasacha.com.br`.
+1. Confirm canonical domain from `.claude/config.json`: `${project.productionUrl}`.
 2. Inspect `astro.config.mjs` `site`, redirects, and sitemap filter.
 3. Inspect `Layout.astro` canonical/OG/JSON-LD generation.
 4. Build and inspect `dist/index.html`, `dist/sitemap-0.xml`, `dist/sitemap-index.xml`, and `dist/robots.txt`.
 5. Fix only the mismatch.
-6. Rerun the OTB gate and targeted grep smoke.
+6. Rerun the validation gate and targeted grep smoke.
 
 **Key rules:**
 - `/` is canonical.
-- `/otb` is compatibility-only: noindex/redirect fallback and excluded from sitemap.
+- Any stale/compatibility route is noindex/redirect fallback and excluded from sitemap.
 - OG images must exist under `public/**` and resolve as absolute URLs in generated HTML.
 - Do not reintroduce legacy domains.
 
@@ -82,7 +82,7 @@ Detailed execution flows for the static Astro debug packs.
    - Evidence Collector: browser/static output evidence.
    - Code Archaeologist: changed files and dependency chain.
    - Content State Inspector: schema, JSON, assets, WhatsApp/legal.
-   - Regression Hunter: known OTB static anti-patterns.
+   - Regression Hunter: known GPUS static anti-patterns.
 3. Classify findings as P0/P1/P2/P3.
 4. Fix P0/P1 one at a time; do not batch unrelated hypotheses.
 5. Run `bun run lint && bunx astro check && bun run build`.
@@ -95,5 +95,5 @@ Detailed execution flows for the static Astro debug packs.
 
 **Key rules:**
 - Never fix during inventory unless the user explicitly asked for direct implementation.
-- Keep changes surgical and OTB-only.
+- Keep changes surgical and on-product only.
 - Do not alter production/deploy config without explicit confirmation.

@@ -43,7 +43,7 @@ Common Astro recovery patterns (from `astro` skill → troubleshooting.md):
 - **Content Collection not found** → Check `src/content/<name>/` exists with at least one file
 - **Hydration mismatch** → Guard browser-only APIs with `typeof window !== 'undefined'`
 - **Tailwind classes not working** → Verify `@import "tailwindcss"` in global.css + `@tailwindcss/vite` in astro.config.mjs
-- **Transition-router error** → Remove `ClientRouter` / `ViewTransitions`; OTB USA stays Astro static MPA
+- **Transition-router error** → Remove `ClientRouter` / `ViewTransitions`; ${project.displayName} stays Astro static MPA
 - **config.ts errors** → This repo uses `src/content.config.ts`; remove accidental `src/content/config.ts` files
 
 ## Step 4: CONSULT oracle

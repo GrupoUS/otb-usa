@@ -1,121 +1,74 @@
-# design-fix · Phase 3/7 · typeset
+---
+name: design-fix-typeset
+description: /design-fix phase 3/7 typeset — reading-measure caps (45–75ch), light-on-dark leading compensation, uppercase-label tracking consistency, text-pretty ragged-end polish. COPY FROZEN, structure/whitespace only.
+metadata:
+  type: project
+---
 
-## Phase commitment
+# /design-fix — PHASE 3/7: TYPESET
 
-Audited typographic hierarchy and microcopy across all landing
-sections. Adjustments stayed minimal: `text-balance` on every Playfair
-Display h2 to neutralize orphan/widow risk; footer legal disclaimer
-constrained to `max-w-3xl` to land within 65–75ch optimal measure;
-agenda date receives `tabular-nums` to align with numeral system
-established on prices/stats/horas. One microcopy upgrade (Investimento
-secondary CTA) — all stakeholder-gated strings preserved verbatim.
+> Supersedes the prior OTB-era typeset note (those components/copy no longer exist).
+> COPY IS FROZEN — only structure/hierarchy/measure/whitespace/rhythm touched; zero string edits.
 
-## Files touched
+## PHASE COMMITMENT
+Tightened reading measure into the 45–75ch comfort band on the wide body passages (Authority
+paragraphs, Audience intro, SectionHeading subtitles, FAQ answers), applied light-on-dark leading
+compensation (typography.md: bump leading on light text over dark), added `text-pretty` for cleaner
+ragged endings on prose, and normalized uppercase-label tracking. All via Tailwind scale utilities
+(8px grid) and `max-w-prose` (65ch). No hex, no copy rewrites, no layout-property animation,
+reduced-motion net untouched.
 
-- F:\Projetos\otb-usa\src\components\landing\Hero.astro — NOT touched (already had text-balance)
-- F:\Projetos\otb-usa\src\components\landing\WhyOTB.astro
-- F:\Projetos\otb-usa\src\components\landing\Investimento.astro
-- F:\Projetos\otb-usa\src\components\landing\TargetAudience.astro
-- F:\Projetos\otb-usa\src\components\landing\BostonHarvard.astro
-- F:\Projetos\otb-usa\src\components\landing\Speakers.astro
-- F:\Projetos\otb-usa\src\components\landing\Modulos.astro
-- F:\Projetos\otb-usa\src\components\landing\Turmas.astro
-- F:\Projetos\otb-usa\src\components\landing\Programa.astro
-- F:\Projetos\otb-usa\src\components\landing\FAQ.astro
-- F:\Projetos\otb-usa\src\components\landing\Parceiros.astro
-- F:\Projetos\otb-usa\src\components\landing\Footer.astro
-- F:\Projetos\otb-usa\src\content\products\otb.json
+## Files touched (absolute)
+- F:\Projetos\aula-trintae3\src\components\shared\SectionHeading.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Audience.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Authority.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Learn.astro
+- F:\Projetos\aula-trintae3\src\components\landing\NextStep.astro
+- F:\Projetos\aula-trintae3\src\components\landing\FAQ.astro
 
-## Diff summary
+## Diff summary (one line per file)
+- SectionHeading.astro — subtitle `max-w-2xl`(~80ch) → `max-w-prose`(65ch) + `leading-relaxed` (dark-bg compensation) + `text-pretty`.
+- Audience.astro — intro `max-w-2xl` → `max-w-prose` + `text-pretty`; note label `tracking-[0.06em]`→`[0.08em]` + `font-medium` (uppercase-label spacing consistency with Eyebrow family).
+- Authority.astro — paragraphs container gained `max-w-prose` (was unbounded in `lg:col-span-3`, ran >75ch) + `text-pretty` on each `<p>`.
+- Learn.astro — card body `+text-pretty`.
+- NextStep.astro — paragraphs `+text-pretty`.
+- FAQ.astro — answer `+max-w-prose +text-pretty`.
 
-- WhyOTB / Investimento / TargetAudience / BostonHarvard / Speakers /
-  Modulos / Turmas / Programa / FAQ / Parceiros .astro: `+text-balance`
-  on the `<h2>` Playfair display heading — neutralizes orphaned final
-  word at sm/md viewports where 3-line headlines were prone to "Estados/
-  Unidos" or "Saúde/Estética" widows.
-- BostonHarvard.astro: `+tabular-nums` on the agenda `d.data` span
-  (19 abr 2027 / 20 abr 2027 / 21 abr 2027) — consistent with the
-  prices/stats/horas numeral discipline.
-- Footer.astro: `+max-w-3xl` on legal disclaimer paragraph + creditos
-  imagens paragraph. Previously the disclaimer spanned the full
-  `max-w-7xl` container at lg+ (≈110ch), violating the 65–75ch optimal
-  measure. `max-w-3xl` resolves to ~768px → ~70ch for `text-xs`.
-- otb.json: `investimento.cta.secondaryLabel` microcopy upgrade.
+## Typographic fixes (typeset / typography / ux-writing)
+- **Measure 45–75ch** (typography.md "Readability & Measure"): Authority paragraphs were unbounded
+  on a wide desktop column → capped to `max-w-prose` (65ch). Audience intro + SectionHeading
+  subtitle + FAQ answer brought from ~80–90ch into band.
+- **Light-on-dark leading** (typography.md "light text on dark needs compensation"): SectionHeading
+  subtitle gained `leading-relaxed`; body passages already had it. (Letter-spacing/weight axes left
+  as-is — body is `text-text-muted` Inter at comfortable size.)
+- **Uppercase-label tracking** (typography.md ALL-CAPS tracking 0.05–0.12em): Audience `note`
+  metadata label 0.06em→0.08em + medium weight, aligning with the Eyebrow primitive convention.
+- **Ragged-end polish**: `text-pretty` (text-wrap: pretty) on all multi-line prose to reduce orphans
+  — pairs with the existing `text-balance` on headings (kept on h2/h1).
+- **Hierarchy/rhythm**: NextStep h2 (`text-3xl md:text-4xl`) intentionally subordinate to the
+  spine's `text-4xl→6xl` (it's a bridge card, not a numbered section) — left as designed. Learn
+  numeral→h3 (`mt-4`) > h3→body (`mt-3`) keeps subordinate spacing correct.
 
-## Microcopy diffs
+## UX-writing note (ux-writing.md reference not present on disk)
+- COPY FROZEN this chain — no microcopy edits. Pre-existing in-component literals ("Perguntas
+  frequentes", "Quem conduz a aula") were NOT touched (touch copy/schema → out of scope). ux-writing
+  reference file absent at `.claude/skills/impeccable/reference/ux-writing.md`; applied the
+  structure-only subset of typeset guidance.
 
-| Path | Before | After | Rationale |
-| --- | --- | --- | --- |
-| `investimento.cta.secondaryLabel` | "Saber mais sobre o programa" | "Conhecer o programa" | Tighter, more confident verb; echoes Hero secondary CTA ("Conhecer o programa") establishing a single repeated phrase — premium repetition over redundant variation. Saves 3 words / aligns CTA voice. |
-
-## Stakeholder-gated items NOT touched
-
-- `audience.legenda` — "conselho de classe" wording preserved.
-- `audience.quote` + FAQ — "íntima" preserved verbatim.
-- `investimento.escassez` — "Lote 1 ativo. Lote 2 (US$ 4.000) liberado
-  por volume ou data — confirmar disponibilidade." preserved verbatim
-  (stakeholder gate on Lote/disponibilidade wording).
-- `investimento.parcelamento[1]` — "taxa de 5% sobre o número de
-  parcelas" preserved verbatim.
-- `bostonHarvard.cards[0]` + `faq[2]` — "Anatomy Review com
-  correspondente americano" preserved.
-- `legal.disclaimer` — full Harvard non-affiliation block preserved.
-- `freshStats[2]` — "ASA — Anatomy Society of America" preserved.
-- All `hero.cta.whatsappMessage` + `investimento.cta.whatsappMessage`
-  WhatsApp strings — preserved (start "Olá, Laura!" zod refine intact).
-- FAQ datas online ("19 a 21 de abril de 2027, em Boston…") preserved.
-- Partner contacts (Gabriela Souza / Raquel Fleury) preserved.
-
-## Audit findings (no action required)
-
-- Type scale: all sizes resolve to the discrete Tailwind scale or
-  intentional bracket sizes (eyebrows `text-[11px]`, scroll cue
-  `text-[10px]`, eyebrow tracking `[0.32em]`). No arbitrary 11.5px.
-- Heading-to-body ratio: h2 `text-5xl` (md) ≈ 48px vs body `text-base`
-  16px → 3x — satisfies ≥ 2x DESIGN.md rule.
-- Weight: Playfair Display always `font-bold` on display heads;
-  `font-semibold` on h3 subheads; body `font-medium` only on small
-  badges/CTAs. No `font-bold` on body copy.
-- Line length: persona bullets in 2-col grid → each cell ~480px →
-  ~65ch at `text-sm`. WhyOTB positioning quote `max-w-3xl` at
-  `text-2xl` → ~50ch (intentional editorial measure). Programa
-  descricao / narrativa `max-w-xl` → ~55ch. Boston / Speakers /
-  Audience body `max-w-2xl` → ~70ch. All within band.
-- Tabular-nums: prices, stats, hero metrics, módulo numero, hora
-  count, audience bullet numerals, agenda data — verified.
-- Italic + serif blockquotes: WhyOTB positioning, Audience quote,
-  Programa narrativa, Investimento tagline — rhythm consistent.
-- Hero h1 already carries `text-balance` (no change needed).
-- All eyebrow labels share `text-[11px] font-semibold uppercase
-  tracking-[0.32em] text-gold` (single exception: footer/scroll cue
-  on 0.22em — intentional smaller-tracking context).
+## DEFERRED
+- layout (4/7): section `py-20` rhythm (tighter mobile vs generous desktop); differentiate NextStep vs FinalCTA centered cards; Authority own-grid vs spine.
+- adapt (5/7): verify `max-w-prose` body wraps cleanly at 360/390; soften `landing-vignette` on short mobile; Hero `lg:-ml-6` crowd at 1024px; 360px headline no overflow.
+- optimize (6/7): confirm Hero-headline LCP; Logo `fetchpriority=high`; ambient-anim 60fps.
+- polish (7/7): the 12 MOTION items (gradient sweep, parallax-lite, card hover richness, FAQ panel fade, header condense, MobileCTABar slide-up, etc.).
 
 ## Maestro 6-gate self-check
+- Safe Split: PASS — no layout change.
+- Glass Trap: PASS — no glass change.
+- Glow Trap: PASS — no gold added (tracking/measure only).
+- Bento Trap: N/A.
+- Blue Trap: PASS — no hex/color; tokens only.
+- Line Trap: PASS — no decorative hairline added.
 
-1. Cardinal rules — PASS (no new hex; tokens only; transform/opacity
-   preserved; Bun tooling; LF endings preserved per Edit semantics).
-2. Astro static-only — PASS (no SSR/SPA; no client directive change;
-   pure utility-class diffs + 1 JSON field).
-3. Content SSOT — PASS (microcopy edit lives in `otb.json`; no copy
-   added to `.astro`/`.tsx`).
-4. WhatsApp SSOT — PASS (untouched; CTA labels unchanged; messages
-   intact).
-5. Motion contract — PASS (no animation properties added; `text-balance`
-   is layout-text, not motion).
-6. Quality gates — PASS:
-   - `bunx astro check` → 23 files: 0 errors / 0 warnings / 0 hints.
-   - `bun run lint` (biome + oxlint) → 0 warnings / 0 errors.
-   - Build not re-run (no dependency/config change; tokens unchanged).
-
-## Handoff hint to layout (4/7)
-
-Typographic system is now disciplined: every display h2 balances on
-2-line wraps; legal copy lands within 70ch; agenda dates align with the
-numeral discipline. Layout phase can safely assume: (a) no h2 will
-overflow / orphan ugly at `sm:` boundary; (b) Investimento secondary
-CTA shares verb form with Hero secondary CTA — both say "Conhecer o
-programa" so layout phase may consider visual treatment unification.
-Open observation: Investimento descricao constrained to `max-w-xl`
-inside `lg:col-span-6` — at viewports `lg:1024–1280px` the column is
-~512px → text already constrained by container; the `max-w-xl` is
-redundant but harmless. Layout phase may verify or simplify.
+## astro check
+`bunx astro check` → 30 files, **0 errors, 0 warnings, 1 hint** (pre-existing ts(6385) in FROZEN
+src/content.config.ts:25 — not mine, ignored per task).

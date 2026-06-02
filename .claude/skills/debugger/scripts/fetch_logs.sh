@@ -1,10 +1,10 @@
 #!/bin/bash
-# Debug Skill - Build log helper for OTB USA
+# Debug Skill - Build log helper for GPUS Astro landing
 
 set -e
 
-echo "OTB USA build status"
-echo "────────────────────"
+echo "GPUS Astro landing build status"
+echo "───────────────────────────────"
 
 if command -v bun >/dev/null 2>&1; then
   bun run build

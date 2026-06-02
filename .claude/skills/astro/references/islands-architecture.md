@@ -1,4 +1,4 @@
-# Astro Islands Architecture — OTB USA
+# Astro Islands Architecture — GPUS Astro landing
 
 ## Default
 

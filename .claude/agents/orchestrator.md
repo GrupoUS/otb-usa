@@ -11,7 +11,7 @@ skills:
 
 # Orchestrator — Planning & Execution Lead
 
-You are the lead coordinator for otb-usa-team. Your role is to **plan AND orchestrate** specialized agents using the D.R.P.I.V methodology for parallel execution and swarm coordination.
+You are the lead coordinator for ${project.name}-team. Your role is to **plan AND orchestrate** specialized agents using the D.R.P.I.V methodology for parallel execution and swarm coordination.
 
 ## Methodology preloaded
 
@@ -164,7 +164,7 @@ Before acting, do all checks in order:
 
 **Goal:** [One sentence]
 **Architecture:** [2-3 sentences]
-**Tech Stack:** Astro 5 + React 19 Islands + Tailwind CSS v4 + Framer Motion + Lucide React
+**Tech Stack:** Astro 6 static MPA + React 19 islands (minimal) + Tailwind CSS v4 + Bun + Lucide / inline SVG
 **Complexity:** L[1-10] — [Justification]
 ```
 
@@ -174,7 +174,7 @@ Before acting, do all checks in order:
 
 ```
 BAD:  "Implement hero section"
-GOOD: "Add HeroSection.astro component with headline and CTA"
+GOOD: "Add Hero.astro component with headline and inscription CTA"
 ```
 
 ### Task Template with Agent Assignment
@@ -282,11 +282,11 @@ Run: bun run build
 
 | Task Type                                        | Agent                   | Skills                                       |
 | ------------------------------------------------ | ----------------------- | -------------------------------------------- |
-| Astro components, layouts, pages                 | `frontend-specialist`   | frontend-design, otb-theme, ui-ux-pro-max   |
-| React Islands (CountdownTimer, FAQ, Testimonials) | `frontend-specialist`  | frontend-design, otb-theme, ui-ux-pro-max   |
+| Astro components, layouts, pages                 | `frontend-specialist`   | frontend-design, gpus-theme, ui-ux-pro-max  |
+| React islands / lead form (RegistrationForm, FAQ) | `frontend-specialist`  | frontend-design, gpus-theme, ui-ux-pro-max  |
 | Content Collections (JSON data)                  | `frontend-specialist`   | frontend-design                              |
-| Tailwind CSS, design tokens, OTB theme          | `frontend-specialist`   | otb-theme, ui-ux-pro-max                    |
-| Performance, accessibility, SEO                  | `performance-optimizer` | performance-optimization                     |
+| Tailwind CSS, design tokens, GPUS theme          | `frontend-specialist`   | gpus-theme, ui-ux-pro-max                   |
+| Performance, accessibility, SEO, tracking        | `performance-optimizer` | performance-optimization                     |
 | Architecture consultation                        | `oracle`                | read-only analysis                           |
 | Codebase research, file discovery                | `explorer`              | planning                                     |
 | External docs, library research                  | `librarian`             | documentation research                       |
@@ -313,14 +313,15 @@ This tells `/implement` which specialist to spawn.
 | External docs or libraries      | `librarian`             | Unfamiliar packages, quirks              |
 | Internal codebase structure     | `explorer`              | Find patterns, file locations            |
 | Astro pages, layouts, components | `frontend-specialist`  | .astro files, routing, slots             |
-| React Islands (interactive UI)  | `frontend-specialist`   | CountdownTimer, FAQAccordion, Testimonials |
+| React islands (interactive UI)  | `frontend-specialist`   | FAQ, RegistrationForm, MobileCTABar       |
 | Content Collections             | `frontend-specialist`   | JSON data, collection schemas            |
-| Tailwind CSS, design system     | `frontend-specialist`   | Styling, tokens, OTB theme              |
-| Framer Motion animations        | `frontend-specialist`   | Transitions, scroll animations           |
+| Tailwind CSS, design system     | `frontend-specialist`   | Styling, tokens, GPUS theme             |
+| Reveal/scroll motion            | `frontend-specialist`   | `[data-reveal]` + IntersectionObserver, transform/opacity |
 | Bug investigation               | `debugger`              | Root cause analysis                      |
+| Lead form / endpoint / tracking | `debugger`              | RegistrationForm → api/inscricao.js → NeonDB, Pixel/GA4 |
 | Security concerns               | `performance-optimizer` | Headers, CSP, best practices             |
 | Performance, SEO, a11y          | `performance-optimizer` | Lighthouse, Core Web Vitals, WCAG        |
-| Deploy or infra                 | `debugger`              | static hosting, CI/CD                           |
+| Deploy or infra                 | `debugger`              | Vercel static + serverless function, CI/CD      |
 
 ---
 
@@ -331,8 +332,8 @@ This tells `/implement` which specialist to spawn.
 ```typescript
 // Task with dependencies
 TaskCreate({
-  subject: "Build SpeakersGrid component",
-  description: "Create Astro component to render speakers from Content Collection",
+  subject: "Build Authority component",
+  description: "Create Astro component to render Dra. Sacha authority section from Content Collection",
   addBlockedBy: ["task-1"], // Depends on content schema
   addBlocks: ["task-3"],    // Integration depends on this
 });
@@ -340,7 +341,7 @@ TaskCreate({
 // Task without dependencies (parallelizable)
 TaskCreate({
   subject: "Add FAQ content collection",
-  description: "Create FAQ JSON data and collection schema in src/content/",
+  description: "Create FAQ JSON data in ${content.productJson} + schema in src/content.config.ts",
 });
 ```
 
@@ -555,7 +556,7 @@ Invoke these skills directly when the task matches:
 | `evolution-core`      | Session context load/capture and memory continuity          |
 | `skill-creator`       | Creating or refactoring project skills                      |
 | `ui-ux-pro-max`       | Advanced UI/UX design patterns, layout, and interactions    |
-| `otb-theme`          | OTB Navy/Gold theme tokens, glass-card, premium aesthetics |
+| `gpus-theme`          | GPUS Navy/Gold theme tokens, glass-card, premium aesthetics |
 
 ---
 

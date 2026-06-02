@@ -1,20 +1,20 @@
 ---
-description: OTB USA design workflow for Astro landing pages and components.
+description: GPUS Astro landing design workflow for Astro landing pages and components.
 ---
 
-# /design — OTB USA Design Workflow
+# /design — ${project.displayName} Design Workflow
 
 **ARGUMENTS**: $ARGUMENTS
 
-Use this command for new or revised OTB USA page sections, landing components, visual hierarchy, motion, or copy/design alignment.
+Use this command for new or revised ${project.displayName} page sections, landing components, visual hierarchy, motion, or copy/design alignment.
 
 ## 0. Context load
 
 Load, in order:
 
 ```typescript
-Skill("otb-usa");       // product, audience, CTA, Harvard/legal guardrails
-Skill("otb-theme");     // OTB Navy/Gold design canon
+Skill("grupo-us");      // product, audience, CTA, LGPD/consent guardrails
+Skill("gpus-theme");    // Navy/Gold design canon
 Skill("astro");         // static MPA + Content Collections
 Skill("ui-ux-pro-max"); // creative execution layer when visual work is non-trivial
 ```
@@ -32,18 +32,18 @@ Before coding, state a short commitment:
 
 - Scope: exact section/component/page.
 - Hierarchy: what is primary, secondary, muted.
-- Tokens: how OTB Navy/Gold will be used.
+- Tokens: how Navy/Gold will be used.
 - Motion: only `transform` + `opacity`; respect `prefers-reduced-motion`.
-- Content: OTB product copy belongs in `src/content/products/otb.json` unless it is UI chrome.
+- Content: ${project.displayName} product copy belongs in `${content.productJson}` unless it is UI chrome.
 
 ## 2. Implementation rules
 
 - Astro static MPA only: no `ClientRouter`, no SSR adapter, no `prerender = false`.
-- Use Content Collections (`getEntry("products", "otb")`) for product data.
+- Use Content Collections (`getEntry("products", "${content.productSlug}")`) for product data.
 - Keep WhatsApp URLs centralized in `src/lib/whatsapp.ts`.
 - Use Tailwind v4 `@theme` tokens from `src/styles/global.css`; no hardcoded hex in components.
 - Gold is hierarchy, not decoration.
-- Avoid generic template layouts; OTB should feel premium, international, and restrained.
+- Avoid generic template layouts; the landing should feel premium, restrained, and built around Dra. Sacha's authority.
 
 ## 3. Routing by scope
 
@@ -64,7 +64,7 @@ bunx astro check
 bun run build
 ```
 
-If visual behavior changed, also inspect the affected route (`/` or `/otb`) manually or with a browser tool when available.
+If visual behavior changed, also inspect the affected route (`/` or any of `${content.legalRoutes}`) manually or with a browser tool when available.
 
 ## Anti-patterns
 
@@ -72,7 +72,7 @@ If visual behavior changed, also inspect the affected route (`/` or `/otb`) manu
 |---|---|
 | Start coding without a design commitment | State hierarchy/tokens/motion first |
 | Add SPA/router behavior | Keep Astro static MPA |
-| Hardcode commercial product copy in components | Move to `src/content/products/otb.json` |
+| Hardcode commercial product copy in components | Move to `${content.productJson}` |
 | Use gold everywhere | Use gold for hierarchy and decisive accents |
 | Animate layout properties | Animate `transform`/`opacity` only |
 | Inline `wa.me` URLs | Use `src/lib/whatsapp.ts` |

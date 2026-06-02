@@ -1,8 +1,8 @@
 ---
-description: Execute an approved OTB USA plan with focused code changes and validation.
+description: Execute an approved GPUS Astro landing plan with focused code changes and validation.
 ---
 
-# /implement — OTB USA Plan Execution
+# /implement — ${project.displayName} Plan Execution
 
 **ARGUMENTS**: $ARGUMENTS
 
@@ -10,22 +10,23 @@ Use to execute an approved plan or a clearly scoped implementation request.
 
 ## 0. Pre-flight
 
-1. Confirm branch is not `main`.
+1. Confirm branch is `main`.
 2. Read `.claude/config.json` for package manager and paths.
 3. Load relevant skills:
 
 ```typescript
 Skill("planning"); // when executing a plan
 Skill("astro");
-Skill("otb-usa");
-Skill("otb-theme"); // if UI/styling is touched
+Skill("grupo-us");
+Skill("gpus-theme"); // if UI/styling is touched
 ```
 
 ## 1. Execution rules
 
 - Touch only files required by the plan.
-- Keep OTB product copy in `src/content/products/otb.json` unless it is UI chrome.
-- Keep WhatsApp behavior centralized in `src/lib/whatsapp.ts`.
+- Keep product copy in `${content.productJson}` unless it is UI chrome.
+- Keep WhatsApp behavior centralized in `src/lib/whatsapp.ts`; messages start with `${lead.whatsappGreeting}`.
+- Keep lead destination + tracking IDs in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`); never hardcode or commit them.
 - Keep Astro static: no SSR adapter, no `ClientRouter`, no `prerender = false`.
 - Use Bun only.
 - Do not add dependencies without explicit approval.
@@ -43,7 +44,7 @@ Skill("otb-theme"); // if UI/styling is touched
 
 ## 3. Validation
 
-Run the narrowest useful check first, then the full OTB gate when code changed:
+Run the narrowest useful check first, then the full gate when code changed:
 
 ```bash
 bun run lint

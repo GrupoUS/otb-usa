@@ -1,4 +1,4 @@
-# Debug Methodology — OTB USA
+# Debug Methodology — GPUS Astro landing
 
 > Systematic debugging for a static Astro landing: Investigate → Analyze Patterns → Hypothesize → Implement → Verify.
 
@@ -38,7 +38,7 @@ git --no-pager log --oneline -10 -- <affected-files>
 Trace data flow through the static stack:
 
 ```text
-src/content/products/otb.json
+${content.productJson}
   → src/content.config.ts schema
   → Astro page/component prop
   → generated dist HTML/CSS/assets
@@ -59,7 +59,7 @@ astro.config.mjs site/redirects/sitemap
 
 1. **Find working examples** — similar component, section, CTA, or asset path.
 2. **Compare differences** — imports, props, content field, route, canonical, generated HTML.
-3. **Understand constraints** — OTB-only copy, static Astro, Bun-only, no inline `wa.me`, Harvard legal guardrails.
+3. **Understand constraints** — on-product copy, static Astro, Bun-only, no inline `wa.me`, regulated-health legal guardrails (PRODUCT.md § Guardrails).
 
 ---
 
@@ -101,14 +101,14 @@ grep -RIn "missing-term" dist/index.html dist/sitemap-0.xml
 For content/assets, a quick path check is useful:
 
 ```bash
-python -c "import json, pathlib; data=json.load(open('src/content/products/otb.json', encoding='utf-8')); paths=[data['seo']['ogImage'], data['hero']['background']['image'], data['audience']['background']['image'], data['bostonHarvard']['background']['image']]; missing=[p for p in paths if not pathlib.Path('public', p.lstrip('/')).exists()]; print(missing)"
+python -c "import json, pathlib; data=json.load(open('${content.productJson}', encoding='utf-8')); paths=[data['seo']['ogImage']]; missing=[p for p in paths if not pathlib.Path('public', p.lstrip('/')).exists()]; print(missing)"
 ```
 
 ### 2. Implement Single Fix
 
 - One change at a time.
 - No “while I’m here” improvements.
-- Keep product copy in `src/content/products/otb.json` unless the text is generic routing/redirect chrome.
+- Keep product copy in `${content.productJson}` unless the text is generic routing/redirect chrome.
 
 ### 3. Verify Gates
 
@@ -129,13 +129,13 @@ bun run lint && bunx astro check && bun run build
 
 ```text
 1. Observe symptom      → “Hero CTA target does nothing on /”
-2. Immediate cause      → href="#programa" exists but section missing in dist/index.html
-3. Caller/source        → Hero.astro consumes hero CTA from otb.json
+2. Immediate cause      → href="#<anchor>" exists but section missing in dist/index.html
+3. Caller/source        → Hero.astro consumes hero CTA from the product JSON
 4. Upstream structure   → index.astro rendered only partial funnel
-5. Root trigger         → canonical `/` diverged from full `/otb` route
+5. Root trigger         → canonical `/` diverged from the full route
 ```
 
-**Fix at source:** put the full funnel on canonical `/`, canonicalize `/otb`, and verify `dist/index.html` contains `id="programa"`.
+**Fix at source:** put the full funnel on canonical `/`, canonicalize any stale route, and verify `dist/index.html` contains the expected anchor.
 
 ---
 

@@ -2,7 +2,7 @@
 globs: .claude/**
 ---
 
-# Slash Commands + Skill Phase Ordering — OTB USA
+# Slash Commands + Skill Phase Ordering — GPUS Astro Landing
 
 ## Commands
 
@@ -28,7 +28,7 @@ Skip commands for L1–L2 trivial edits.
 |---|---|
 | Process | `senior-prompt-engineer`, `planning`, `evolution-core`, `debugger` |
 | Tech-stack | `astro` |
-| Project | `otb-usa`, `otb-theme` |
+| Project | `grupo-us`, `gpus-theme` |
 | Implementation | `ui-ux-pro-max`, `performance-optimization`, `skill-creator` |
 
 ## Agent ↔ skill default pairings
@@ -37,7 +37,7 @@ Skip commands for L1–L2 trivial edits.
 |---|---|---|
 | `debugger` | `debugger` | L3+ bug/crash/regression |
 | `performance-optimization` | `performance-optimizer` | L3+ perf/bundle/Lighthouse |
-| `otb-theme` | `frontend-specialist` | L3+ UI/page/component |
+| `gpus-theme` | `frontend-specialist` | L3+ UI/page/component |
 | `astro` | `frontend-specialist` | L3+ `.astro`, Content Collections, `client:*` |
 | `planning` | `project-planner` | L4+ plan handoff |
 | `verification-before-completion` | `verification-agent` | L3+ pre-merge gate |

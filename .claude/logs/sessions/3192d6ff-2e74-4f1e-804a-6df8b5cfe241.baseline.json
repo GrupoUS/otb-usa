@@ -1,0 +1,26 @@
+{
+  "session_id": "3192d6ff-2e74-4f1e-804a-6df8b5cfe241",
+  "started_at": "2026-06-01T20:53:09.787332+00:00",
+  "branch": "main",
+  "head_sha": "79a1bf0a4b7362a97bb5ba02a8309ea5630a57af",
+  "preexisting_dirty": [
+    ".claude/CLAUDE.md",
+    ".claude/config.json",
+    ".claude/logs/agent-orchestration-events.jsonl",
+    ".claude/rules/README.md",
+    ".claude/rules/astro.md",
+    ".claude/rules/commit.md",
+    ".claude/rules/mcp.md",
+    "AGENTS.md",
+    "astro.config.mjs",
+    "docs/design-claude-code-quiet-sparrow.md",
+    "public/robots.txt",
+    "src/components/landing/RegistrationForm.astro",
+    "src/layouts/Layout.astro",
+    ".claude/logs/sessions/66d8de86-1db5-4126-a212-b9688995941b.baseline.json",
+    ".env.example",
+    "api/",
+    "src/AGENTS.md",
+    "src/components/landing/AGENTS.md"
+  ]
+}

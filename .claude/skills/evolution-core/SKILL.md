@@ -1,6 +1,6 @@
 ---
 name: evolution-core
-description: Use at session start to load historical context; after fixing errors to capture learnings; when running Karpathy-style optimize loops over a target skill prompt with `<evolve_request>`; when running OTB USA site copy / SEO / CTA / conversion / funnel autoresearch experiments (`<area>` input). Provides persistent SQLite memory, the Python autoresearch toolchain, and the OTB commercial-first profile.
+description: Use at session start to load historical context; after fixing errors to capture learnings; when running Karpathy-style optimize loops over a target skill prompt with `<evolve_request>`; when running site copy / SEO / CTA / conversion / funnel autoresearch experiments on the GPUS Astro site (`<area>` input). Provides persistent SQLite memory, the Python autoresearch toolchain, and the GPUS commercial-first profile.
 ---
 
 # Evolution Core
@@ -13,15 +13,15 @@ Three sub-skills behind one routing surface. Load `references/<file>.md` for the
 |---|---|---|
 | Session start, capture learning, `/evolve` (no token), CLI memory ops | **memory** | [`references/memory.md`](references/memory.md) |
 | `/evolve optimize <skill>`, `<evolve_request>` XML in input, mutating a target prompt under multi-sample evals | **optimizer** (Karpathy autoresearch) | [`references/optimizer.md`](references/optimizer.md) |
-| `/evolve optimize site:<area>`, `<input><area>...</area></input>`, copy / SEO / CTA / conversion / funnel work on the OTB USA Astro site | **otb-profile** (extends optimizer) | [`references/otb-profile.md`](references/otb-profile.md) |
+| `/evolve optimize site:<area>`, `<input><area>...</area></input>`, copy / SEO / CTA / conversion / funnel work on the GPUS Astro site | **gpus-profile** (extends optimizer) | [`references/gpus-profile.md`](references/gpus-profile.md) |
 
-Site optimize runs load **both** `optimizer.md` (scoring contract) and `otb-profile.md` (commercial heuristics + cardinal rules + `<answer>` shape).
+Site optimize runs load **both** `optimizer.md` (scoring contract) and `gpus-profile.md` (commercial heuristics + cardinal rules + `<answer>` shape).
 
 ## Storage layout (shared)
 
 ```
 .claude/docs/evolution/        # JSONL + SQLite memory.db (memory sub-skill)
-evals/<skill-slug>/runs/<id>/  # autoresearch runs (optimizer + otb-profile)
+evals/<skill-slug>/runs/<id>/  # autoresearch runs (optimizer + gpus-profile)
   ├── harness.json
   ├── test_cases.jsonl
   ├── candidates/
@@ -30,7 +30,7 @@ evals/<skill-slug>/runs/<id>/  # autoresearch runs (optimizer + otb-profile)
   ├── applied.md               # keep promotions
   ├── backlog.md               # gaps + next actions
   └── best_skill_prompt.txt    # current winner
-evals/site/<area-slug>/        # OTB USA site profile runs
+evals/site/<area-slug>/        # GPUS site profile runs
   ├── runs/<tag>/run.md
   └── compound.md              # durable cross-run learnings
 ```

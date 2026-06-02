@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build log helper for OTB USA."""
+"""Build log helper for GPUS Astro landing."""
 
 from __future__ import annotations
 

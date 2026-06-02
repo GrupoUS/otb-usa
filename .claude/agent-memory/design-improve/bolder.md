@@ -1,69 +1,83 @@
 ---
 name: design-improve-bolder
-description: Impeccable bolder (phase 2/5) of OTB USA landing — typographic hierarchy lifts and structural boldness on Trilho A blocks while LOWERING gold/glass surfaces flagged by audit.
+description: Impeccable bolder (phase 2/5) of the Aula Gratuita TRINTAE3 landing — Hero Safe Split broken to asymmetric editorial, numbered section spine, gold demoted from headline-flood to accent. Navy/Gold preserved.
 metadata:
   type: project
 ---
 
-# DESIGN-IMPROVE — PHASE 2/5 BOLDER
+# design-improve — PHASE 2/5: BOLDER (impeccable)
 
-## Phase commitment
+> Supersedes the prior OTB-era bolder record (those components no longer exist post-rebuild).
+> NOTE: `C:\Users\Mauri\.claude\skills\impeccable\reference\bolder.md` is NOT installed on this
+> machine (also no impeccable skill dir / load-context). Proceeded on the bolder principles in the
+> agent contract: typographic boldness via Playfair scale/weight/tracking + structural asymmetry,
+> gold ≤10% surface, no a11y/CLS regression, no layout-property animation.
 
-Bolded with restraint, premium register intact. Lifts:
-- Pull-quote typography (WhyOTB + Programa) with serif scale jumps (xl→2xl) + structural left rules + a single gold opening-quote glyph.
-- Persona block (TargetAudience) promoted with its own eyebrow, larger serif intro, and 2-column numbered serif markers (replaces flat check list of italic prose).
-- BostonHarvard freshStats DEMOTED from glass-card-on-glass-card into bare typographic columns with a single gold rule per stat + numerals in primary text color (not gradient gold). Net effect: gold surface budget DOWN, scale UP — directly mitigates audit Glass + Glow warnings.
-- Investimento beneficios (9 items) split into 2-col grid at sm+ (Hick's Law fix).
-- One alternative section header (Programa "01" massive serif numeral) to break the 11x anaphora — only one variant, kept restrained.
-- Turmas captions get cohort eyebrow + serif title (was muted afterthought).
-- SectionDivider gains "dot" + "numeral" variants; applied 3 dot variants in index.astro to vary the 10-divider strip.
+## PHASE COMMITMENT
+Bolded with a premium/restrained register. Three structural moves: (1) broke the Hero 50/50 Safe
+Split into an asymmetric 7/5 editorial split with an oversized Playfair headline; (2) gave the page
+a numbered editorial spine via SectionHeading `index` + alternating left/center alignment, killing
+the near-identical-header anaphora; (3) reclaimed gold as hierarchy by demoting headline/numeral
+gold-floods to high-contrast `text-text-primary`, keeping gold for accents (rule, numeral ghost,
+eyebrow). Gold surface DOWN, type scale + contrast UP. No new hex, no new tokens, no motion changes
+(animate phase owns those), no color-system changes (colorize owns those).
 
-Intentionally kept restrained: did NOT add new gold halos, glows, or shimmers. Numerals on freshStats deliberately rendered in `text-text-primary` to LOWER the gold surface budget that overdrive will revisit. No motion changes (animate phase owns those). No color drift (colorize phase owns hex/color-mix consolidation).
+## Files touched (absolute)
+- F:\Projetos\aula-trintae3\src\components\shared\SectionHeading.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Hero.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Audience.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Learn.astro
+- F:\Projetos\aula-trintae3\src\components\landing\RegistrationForm.astro
+- F:\Projetos\aula-trintae3\src\components\landing\FAQ.astro
+- F:\Projetos\aula-trintae3\src\components\landing\FinalCTA.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Authority.astro
 
-## Files touched
+## Diff summary (one line per file)
+- SectionHeading.astro — added optional `index` (oversized Playfair ghost numeral, gold/35) + `kicker`; title now `text-text-primary` (was gold) at `lg:text-6xl` tracking-tight text-balance; accent bar `h-1 w-16` (was timid `h-0.5 w-15`); flex column honors align.
+- Hero.astro — Safe Split 50/50 → asymmetric 12-col 7/5; headline up to `lg:text-7xl` leading-[1.02] tracking-tight; eyebrow pill → inline gold-rule label; photo column overlaps (`-ml-6`) with `depth-5` for layered depth.
+- Audience.astro — SectionHeading `index={1}` `align="left"`; intro un-centered to match left editorial header.
+- Learn.astro — SectionHeading `index={2}` `align="left"`; card numeral → ghost gold/30 text-6xl; card `h3` gold → `text-text-primary` text-2xl (gold de-flooded).
+- RegistrationForm.astro — SectionHeading `index={3}` (centered).
+- FAQ.astro — SectionHeading `index={4}` (centered).
+- FinalCTA.astro — headline gold → `text-text-primary` `md:text-5xl` leading-[1.05] tracking-tight text-balance.
+- Authority.astro — eyebrow → inline gold-rule editorial label; name `h2` up to `lg:text-6xl` tracking-tight text-balance.
 
-- F:\Projetos\otb-usa\src\components\landing\SectionDivider.astro
-- F:\Projetos\otb-usa\src\components\landing\WhyOTB.astro
-- F:\Projetos\otb-usa\src\components\landing\TargetAudience.astro
-- F:\Projetos\otb-usa\src\components\landing\Programa.astro
-- F:\Projetos\otb-usa\src\components\landing\BostonHarvard.astro
-- F:\Projetos\otb-usa\src\components\landing\Investimento.astro
-- F:\Projetos\otb-usa\src\components\landing\Turmas.astro
-- F:\Projetos\otb-usa\src\pages\index.astro
+## What got bolder + why it stays on-brand
+- **Editorial spine (01–04):** structural numerals (derived from DOM order, NOT product copy) give
+  scannable rhythm; left-aligned Audience/Learn vs centered Form/FAQ breaks anaphora. F-pattern +
+  left-side bias friendly. Gold numeral at /35 is a ghost accent, not a flood.
+- **Hero asymmetry:** 7/5 + 7xl Playfair = a typographic statement, not a template split. The photo
+  overlap + depth-5 adds Z-axis depth. Avoids the #1 forbidden "Standard Hero Split".
+- **Gold reclaimed as hierarchy:** moving headlines/h3 to text-primary keeps gold ≤10% (Ouro raro);
+  Playfair weight/scale now carries authority, color stays restrained. On-brand for Dra. Sacha
+  "sofisticação sem excesso".
+- A11y: all titles now text-primary #fafaf9 on navy (≈14:1) — improved over gold headings. Gold
+  ghost numeral is `aria-hidden`. Heading order unchanged (one h1, h2 per section). Images keep
+  width/height → no CLS. No layout-property animation added.
 
-## Diff summary
+## DEFERRED — animate
+- Orchestrate Hero staggered page-load (eyebrow → headline → chips → CTAs → photo) instead of two reveals.
+- Learn ghost numerals could count-up / shimmer on scroll-in.
+- SectionHeading index numeral could fade/slide with its title (transform/opacity).
 
-- SectionDivider.astro — added `variant` ("line"|"dot"|"numeral") + optional `numeral` prop; default unchanged.
-- WhyOTB.astro — positioningQuote refactored: `<figure>` with gold serif open-quote glyph (text-6xl→7xl) + `<blockquote>` text-xl→2xl→[1.75rem] tracking-tight, left-rule preserved at gold/45.
-- TargetAudience.astro — persona block now has its own eyebrow ("Perfil do aluno"), personaIntro promoted to text-xl→2xl serif, personaBullets become `<ol>` 2-col grid with serif tabular numerals (01, 02, …) + thin gold left rule per item.
-- Programa.astro — header gains massive serif "01" numeral lead-in (alt-pattern); descricao demoted to small-caps eyebrow + body; narrativa promoted to text-xl→2xl serif blockquote with 3px gold left rule (clear differentiation).
-- BostonHarvard.astro — freshStats: glass-card removed; replaced by 3-col layout with `divide-x divide-gold/20`, single gold top hairline per stat, numerals text-6xl→7xl in `text-text-primary` (NOT gradient gold), label tracked uppercase gold/85.
-- Investimento.astro — beneficios list converted to 2-col grid at sm+; check chip slightly smaller (h-5/w-5) to balance density.
-- Turmas.astro — figcaption restructured: gold hairline + "Edição NN" eyebrow + serif title (was single muted line).
-- index.astro — 3 of 10 SectionDividers switched to `variant="dot"` at strategic anchors (Programa→Turmas, Modulos→BostonHarvard, Speakers→Investimento).
+## DEFERRED — colorize
+- A single richer gold-gradient (text-gradient-gold) focal moment on ONE hero highlight or FinalCTA — pick one, not many.
+- Audience highlight item (`bg-gold/10`) could get a slightly bolder ideal-persona treatment.
 
-## Deferred items by owning phase
-
-- ANIMATE: #10 (hero float-gentle motion budget), #15 (FAQ reveal opacity fade)
-- COLORIZE: #1 (Layout meta theme-color hex), #2 (inline color-mix consolidation into named utilities)
-- OVERDRIVE: #6 overdrive side (further gold-tint demotion — already partially executed by bolder), #8 (gold surface audit & ~30% demotion), #11 (dead-utility cleanup), #12 (Speakers conic-ring redesign)
+## DEFERRED — overdrive
+- Hero `landing-mesh-bg` is subtle → atmosphere/grain/texture depth layer.
+- glass-card still used in Learn/NextStep/FinalCTA/form/FAQ → reserve glass-card-bright for 1–2 focal CTAs (glass-fatigue).
+- Pre-existing content-drift smells out of bolder scope (do NOT fix here — touches copy/schema):
+  FAQ title literal "Perguntas frequentes" + Authority "Quem conduz a aula" live in components, not JSON.
 
 ## Maestro 6-gate self-check
+- Safe Split: **PASS** — Hero is now asymmetric 7/5 with an oversized typographic lead; 50/50 split removed. (Was NOTED in audit, now resolved.)
+- Glass Trap: PASS — no new glass introduced; over-use catalogued for overdrive.
+- Glow Trap: PASS (improved) — removed gold-flood headlines/h3; gold surface budget reduced. No new glow.
+- Bento Trap: N/A — no bento grid.
+- Blue Trap: PASS — Navy/Gold only; no new hex/tokens; no fintech blue, no purple/indigo.
+- Line Trap: PASS — accent bar bolded to h-1 w-16 (intentional motif) + gold eyebrow rules carry structure; no 4–8px geometry reliance.
 
-| Gate | Verdict | Notes |
-|---|---|---|
-| Safe Split | PASS | No new 50/50 splits introduced. Programa header stays 5/7; persona block remains nested in lg:col-span-7. |
-| Glass Trap | PASS (improved) | Removed one `glass-card` instance (freshStats). Net glass surfaces dropped from 6 to 5. Audit WARN resolved at the section level. |
-| Glow Trap | PASS (improved) | freshStats no longer uses `text-gradient-gold` for numerals. Numerals now `text-text-primary`; gold reserved for rule + label. One less large gold-gradient surface in viewport. |
-| Bento Trap | PASS | No new grids; persona 2-col + beneficios 2-col are content-justified (not bento). |
-| Blue Trap | PASS | Navy/Gold canon strictly preserved; no new tokens, no new colors. |
-| Line Trap | PASS | New hairlines are functional (stat-divider, persona left-rule, divider-dot) — each carries information, not decoration. Divider variant introduces variation, reducing previous monotony. |
-
-Overall Maestro: PASS. Two audit warnings (Glass + Glow) actively reduced by this phase.
-
-## Notes for downstream phases
-
-- Programa "01" numeral establishes a header-numeral system; if animate/overdrive want to extend, do so SPARINGLY (max 1 more section, e.g., BostonHarvard "02" or Investimento "03") — three is the maximum before re-anaphora.
-- SectionDivider `numeral` variant exists but unused in index.astro; available for OVERDRIVE if more divider variety is desired without adding new components.
-- All token usage strictly via `color-mix(in srgb, var(--color-gold) …%, transparent)` or named utilities. Zero new hex.
-- LF line endings preserved by editor; no CRLF risk.
+## astro check
+`bunx astro check` → 29 files, **0 errors, 0 warnings, 1 hint** (pre-existing ts(6385) in FROZEN
+src/content.config.ts:25 — not mine, ignored per task).

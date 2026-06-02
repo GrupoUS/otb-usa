@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "OTB USA Claude Project Config",
+  "title": "GPUS Astro Landing — Claude Project Config",
+  "description": "Per-project instance SSOT for GPUS Astro landing pages. Governance prose (.claude/, AGENTS.md) reads these values via ${...} placeholders so the same governance layer is portable across all Grupo US projects.",
   "type": "object",
   "additionalProperties": true,
   "required": ["project", "paths", "tooling", "gates"],
@@ -13,12 +14,50 @@
       "additionalProperties": true,
       "required": ["name", "displayName", "stack", "stagingUrl", "productionUrl", "locale"],
       "properties": {
-        "name": { "type": "string" },
-        "displayName": { "type": "string" },
+        "name": { "type": "string", "description": "Machine-readable slug, e.g. 'aula-trintae3'." },
+        "displayName": { "type": "string", "description": "Human-readable name, e.g. 'Aula Gratuita TRINTAE3 — Grupo US'." },
+        "parentBrand": { "type": "string", "description": "Parent brand, e.g. 'Grupo US · Dra. Sacha Gualberto'." },
+        "purpose": { "type": "string", "description": "One-line product purpose." },
         "stack": { "type": "string" },
         "stagingUrl": { "type": "string" },
         "productionUrl": { "type": "string" },
-        "locale": { "type": "string" }
+        "locale": { "type": "string" },
+        "designModelRepo": { "type": "string", "description": "Optional sibling repo used as the visual model, e.g. '../trintae3'." }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Content SSOT mapping for the landing.",
+      "properties": {
+        "productSlug": { "type": "string", "description": "Content Collection slug, e.g. 'aula-trintae3'." },
+        "productJson": { "type": "string", "description": "Path to the copy SSOT JSON, e.g. 'src/content/products/<slug>.json'." },
+        "ogImage": { "type": "string", "description": "Default OG image path under public/." },
+        "anchors": { "type": "array", "items": { "type": "string" }, "description": "Internal section anchors." },
+        "legalRoutes": { "type": "array", "items": { "type": "string" }, "description": "Legal routes, e.g. ['/termos','/politica-de-privacidade']." },
+        "sections": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Component → anchor map for design chains." }
+      }
+    },
+    "lead": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Lead capture + WhatsApp SDR config.",
+      "properties": {
+        "sdrName": { "type": "string", "description": "SDR display name, e.g. 'Laura' (GPUS default)." },
+        "whatsappGreeting": { "type": "string", "description": "Mandatory WhatsApp message prefix, e.g. 'Olá, Laura!'." },
+        "whatsappHelper": { "type": "string", "description": "WhatsApp SSOT helper module path." },
+        "formComponent": { "type": "string", "description": "Lead form component path." },
+        "endpointEnv": { "type": "string", "description": "Env var name holding the form POST endpoint." },
+        "leadTable": { "type": "string", "description": "DB table name for leads, if any." }
+      }
+    },
+    "tracking": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Analytics env var names (values live in env, never committed).",
+      "properties": {
+        "ga4Env": { "type": "string" },
+        "pixelEnv": { "type": "string" }
       }
     },
     "paths": {

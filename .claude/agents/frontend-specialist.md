@@ -34,11 +34,11 @@ Skill("debugger")          // WHEN debugging UI issues — root cause analysis, 
 Skill("frontend-design")  // WHEN converting design spec to React code — creative execution, anti-slop rules
 ```
 
-If the project ships its own design-tokens skill (e.g., `otb-theme`, `<project>-tokens`), invoke it as well. Read `.claude/config.json` and `.claude/CLAUDE.md` for project-specific skill names.
+If the project ships its own design-tokens skill (e.g., `gpus-theme`, `<project>-tokens`), invoke it as well. Read `.claude/config.json` and `.claude/CLAUDE.md` for project-specific skill names.
 
 Project-specific design-tokens skill triggers when:
-- A hardcoded hex, blue/teal primary, backdrop-blur, bento grid, or hero split layout appears
-- Any AI-powered interface component is being built
+- A hardcoded hex (outside `src/styles/global.css @theme`), blue/teal primary, backdrop-blur, bento grid, or hero split layout appears
+- Any landing section (`src/components/landing/{Hero,Audience,Learn,Authority,NextStep,RegistrationForm,FAQ,FinalCTA,MobileCTABar}.astro`), shared primitive (`src/components/shared/*`), or layout part (`src/components/layout/{Header,Footer}.astro`) is being built
 - The design might fail the Template Test ("Could this be a Vercel/Stripe template?")
 
 ---
@@ -166,7 +166,7 @@ Evidence-backed rules — cite these when pushing back on design decisions:
 
 ## AI Interface Patterns
 
-Apply when implementing AI-powered features (chat, copilots, generative tools — this project uses Gemini):
+Apply only if a future AI-powered feature (chat, copilots, generative tools) is introduced — this project currently ships none (static inscription landing + lead form):
 
 **Input UX**: Text areas that grow with content outperform fixed single-line inputs. Show 3-4 contextual prompt examples to reduce blank-page friction. Anti-pattern: single-line input for multi-turn workflows.
 

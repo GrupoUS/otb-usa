@@ -1,8 +1,8 @@
 ---
-description: OTB USA debugging protocol for Astro, styling, content, build, and runtime issues.
+description: GPUS Astro landing debugging protocol for Astro, styling, content, build, and runtime issues.
 ---
 
-# /debug — OTB USA Debugging
+# /debug — ${project.displayName} Debugging
 
 **ARGUMENTS**: $ARGUMENTS
 
@@ -17,9 +17,9 @@ Skill("astro");
 
 Add as needed:
 
-- `Skill("otb-theme")` for styling/design regressions.
+- `Skill("gpus-theme")` for styling/design regressions.
 - `Skill("performance-optimization")` for bundle, Lighthouse, CWV, or runtime performance.
-- `Skill("otb-usa")` for product/legal/CTA copy issues.
+- `Skill("grupo-us")` for product/legal/CTA copy issues.
 
 ## 1. Debug discipline
 
@@ -29,13 +29,13 @@ Add as needed:
 4. Do not simplify meaningful code just to silence diagnostics.
 5. Validate with evidence before claiming fixed.
 
-## 2. OTB invariants
+## 2. ${project.displayName} invariants
 
 - Astro static MPA only: no SSR, no `ClientRouter`, no `prerender = false`.
-- Content source of truth: `src/content/products/otb.json` + `src/content.config.ts`.
-- WhatsApp source of truth: `src/lib/whatsapp.ts`.
+- Content source of truth: `${content.productJson}` + `src/content.config.ts`.
+- WhatsApp source of truth: `src/lib/whatsapp.ts`; messages start with `${lead.whatsappGreeting}`.
 - Package manager: Bun only (`bun`, `bunx`).
-- Product/legal guardrail: Harvard references are contextual only; no partnership, endorsement, certification, or affiliation claim.
+- Lead/legal guardrail: LGPD consent + privacy link required on the form; lead destination + tracking IDs stay in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`), never committed.
 
 ## 3. Common checks
 

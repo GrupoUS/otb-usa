@@ -46,7 +46,7 @@ DANGEROUS_PATTERNS = [
     # Main-only workflow: protect destructive operations on main but allow edits + push
     re.compile(r"^git\s+push\b.*(--force|-f)\b"),
     re.compile(r"^gh\s+pr\s+(merge|approve)\b"),
-    # OTB is Bun-only
+    # GPUS projects are Bun-only
     re.compile(r"^(npm|npx|pnpm|yarn)\b"),
     re.compile(r"^corepack\b"),
 ]

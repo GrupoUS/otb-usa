@@ -1,7 +1,7 @@
-# Rules — Tier 2 Guardrails (OTB USA)
+# Rules — Tier 2 Guardrails (GPUS Astro Landing)
 
-> Tier-2 rules for **OTB USA** (Astro 6 + React 19 + Tailwind v4 + Bun + static-only MPA).
-> Project-specific values resolve from `.claude/config.json` + `Skill('astro')` + `Skill('otb-theme')` + `Skill('otb-usa')`.
+> Tier-2 rules para **landings Astro do Grupo US** (Astro 6 + React 19 + Tailwind v4 + Bun + static-only MPA, deploy Vercel). Valores de instância em `.claude/config.json`.
+> Project-specific values resolve from `.claude/config.json` + `Skill('astro')` + `Skill('gpus-theme')` + `Skill('grupo-us')`.
 
 ## Files
 
@@ -22,20 +22,20 @@
 |---|---|
 | `*.astro`, Content Collections, `client:*`, `astro.config.mjs` | `Skill('astro')` + `.claude/rules/astro.md` |
 | React 19 islands (`*.tsx`) | `Skill('astro')` |
-| Tailwind v4 `@theme` | `Skill('otb-theme')` + `Skill('astro')` |
+| Tailwind v4 `@theme` | `Skill('gpus-theme')` + `Skill('astro')` |
 
 ## Project signals
 
 | Surface | Skill |
 |---|---|
-| OTB USA product facts, copy, CTA, audience, legal | `Skill('otb-usa')` |
-| Navy/Gold dark-only token canon | `Skill('otb-theme')` |
-| WhatsApp Laura SSOT | `Skill('otb-usa')` → `references/whatsapp-ssot.md` |
+| Copy, CTA, público, oferta, legal do produto | `Skill('grupo-us')` |
+| Navy/Gold dark-first token canon | `Skill('gpus-theme')` + `DESIGN.md` |
+| WhatsApp SDR SSOT | `src/lib/whatsapp.ts` (prefixo `${lead.whatsappGreeting}`) |
 
 ## Cardinal rules
 
-Non-negotiable invariants live in `.claude/CLAUDE.md § Cardinal rules`: Bun-only, main-only branch workflow (no feature branches), static MPA, Content Collections SSOT, WhatsApp SSOT, no hardcoded hex outside `@theme`, no layout-property animation.
+Non-negotiable invariants live in `.claude/CLAUDE.md § Cardinal rules`: Bun-only, main-only branch workflow (no feature branches), static MPA, Content Collections SSOT (`${content.productJson}`), WhatsApp SSOT, no hardcoded hex outside `@theme`, motion expressivo (qualquer propriedade) honrando `prefers-reduced-motion`, lead/PII com consent LGPD, tracking/endpoint via env.
 
-## OTB-only guard
+## Scope guard
 
-Do not import routes, product copy, CTAs, examples or memory from non-OTB projects. Grupo US is parent-brand context only.
+Não importar rotas, product copy, CTAs, exemplos ou memória de outros projetos. Modelo de design opcional = `${project.designModelRepo}`. Grupo US / Dra. Sacha é o contexto de marca.

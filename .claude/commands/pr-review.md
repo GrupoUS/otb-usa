@@ -1,8 +1,8 @@
 ---
-description: OTB USA pull request review checklist and report template.
+description: GPUS Astro landing pull request review checklist and report template.
 ---
 
-# /pr-review — OTB USA PR Review
+# /pr-review — ${project.displayName} PR Review
 
 **ARGUMENTS**: $ARGUMENTS
 
@@ -13,8 +13,8 @@ Use for read-only PR review or local diff review. Do not approve, merge, auto-me
 ```typescript
 Skill("debugger");
 Skill("astro");
-Skill("otb-usa");
-Skill("otb-theme"); // if UI/styling changed
+Skill("grupo-us");
+Skill("gpus-theme"); // if UI/styling changed
 Skill("performance-optimization"); // if perf/SEO/a11y/security changed
 ```
 
@@ -34,12 +34,13 @@ If reviewing a PR and the user explicitly provided the PR number, `gh pr view` a
 
 Check whether the diff touches:
 
-- `src/content/products/otb.json` — product/copy/legal SSOT.
+- `${content.productJson}` — product/copy/legal SSOT.
 - `src/content.config.ts` — schema contract.
 - `src/lib/whatsapp.ts` — CTA/WhatsApp SSOT.
-- `astro.config.mjs` — static/canonical/sitemap contract.
-- `src/layouts/Layout.astro` — SEO/meta/JSON-LD shell.
-- `src/styles/global.css` — OTB token canon and motion utilities.
+- `${lead.formComponent}` + `api/inscricao.js` — lead capture path (form → NeonDB → WhatsApp fallback).
+- `astro.config.mjs` / `vercel.json` — static/canonical/sitemap/deploy contract.
+- `src/layouts/Layout.astro` — SEO/meta/JSON-LD shell + Meta Pixel/GA4 tracking.
+- `src/styles/global.css` — token canon and motion utilities.
 - `public/robots.txt` — SEO sitemap/crawl contract.
 
 ## 3. Required validation suggestions
@@ -57,7 +58,7 @@ For performance/SEO changes, also suggest `bun run lighthouse:audit` when a loca
 ## 4. Report template
 
 ```markdown
-## /pr-review — OTB USA
+## /pr-review — ${project.displayName}
 
 ### Verdict
 PASS | PASS WITH NOTES | REQUEST CHANGES
@@ -76,9 +77,10 @@ PASS | PASS WITH NOTES | REQUEST CHANGES
 - `bunx astro check`: pass/fail/not run
 - `bun run build`: pass/fail/not run
 
-### OTB guardrails
-- OTB-only context: pass/fail
-- Harvard legal guardrail: pass/fail/N/A
+### ${project.displayName} guardrails
+- Single-product scope (no cross-project bleed): pass/fail
+- LGPD consent + privacy link: pass/fail/N/A
+- Lead destination + tracking IDs kept in env: pass/fail/N/A
 - WhatsApp SSOT: pass/fail/N/A
 - Astro static contract: pass/fail
 ```

@@ -7,7 +7,7 @@ description: Use when implementing, debugging, or reviewing Astro components, pa
 
 Astro renders static HTML by default and hydrates interactive islands only when explicitly requested through `client:*` directives.
 
-## Repository override — OTB USA
+## Repository overlay (GPUS Astro landing)
 
 When working in this repo:
 
@@ -15,8 +15,7 @@ When working in this repo:
 - No `ClientRouter`.
 - No `prerender = false`.
 - No SSR adapter.
-- Product copy SSOT: `src/content/products/otb.json`.
-- Project overlay: `references/otb-usa-overlay.md`.
+- Product copy SSOT: `${content.productJson}`.
 
 If generic Astro docs conflict with `AGENTS.md` or `.claude/CLAUDE.md`, the repo rules win.
 
@@ -49,7 +48,7 @@ const { title } = Astro.props;
 
 ### Client directives
 
-| Directive | OTB usage |
+| Directive | Usage |
 |---|---|
 | none | default for static `.astro` |
 | `client:load` | only critical persistent UI |
@@ -62,9 +61,9 @@ const { title } = Astro.props;
 ```astro
 ---
 import { getEntry } from "astro:content";
-const otb = await getEntry("products", "otb");
-if (!otb) throw new Error("Missing products/otb.json");
-const { data } = otb;
+const product = await getEntry("products", "${content.productSlug}");
+if (!product) throw new Error("Missing ${content.productJson}");
+const { data } = product;
 ---
 ```
 
@@ -95,18 +94,17 @@ astro.config.mjs
 | `references/performance.md` | LCP, CLS, INP, images, fonts, bundle |
 | `references/view-transitions.md` | Generic Astro transitions; disabled here unless explicitly requested |
 | `references/troubleshooting.md` | Build/hydration/content errors |
-| `references/otb-usa-overlay.md` | OTB-specific render, content, layout and smoke rules |
 
 ## Common mistakes
 
 | Mistake | Fix |
 |---|---|
-| Hardcoding OTB copy in components | Move to `src/content/products/otb.json` |
+| Hardcoding product copy in components | Move to `${content.productJson}` |
 | Adding `client:*` to `.astro` components | Client directives apply to framework islands only |
 | Passing full collection entries to React | Pass plain `.data` |
-| Using `ClientRouter` | OTB is static MPA |
+| Using `ClientRouter` | This is a static MPA |
 | Setting `prerender = false` | Keep static generation |
 | Adding an SSR adapter | Not needed and forbidden |
 | Using npm/yarn/pnpm | Use Bun only |
 | Hardcoding hex in components | Add/use tokens in `src/styles/global.css` |
-| Animating layout properties | Use transform/opacity only |
+| Animating layout properties | OK quando o efeito pedir; preferir `transform`/`opacity` por performance; honrar `prefers-reduced-motion` |

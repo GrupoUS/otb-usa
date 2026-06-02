@@ -54,12 +54,12 @@
 - Touch target: **≥ 44 × 44 px** on mobile, ≥ 36 × 36 px on desktop.
 - Focus ring on `:focus-visible`: 2px solid + 2px offset.
 - Icon-only buttons require `aria-label`.
-- Active state via `transform: scale(0.98)` (transform-only, never `padding`).
+- Active state via `transform: scale(0.98)` (or any tactile press effect you like).
 
 ### Cards
 
 - Padding scales by viewport: smaller on mobile, larger on desktop.
-- Hover lift: `transform: translateY(-Npx)` + optional `scale(1.0X)` — never animate `top`.
+- Hover lift: `transform: translateY(-Npx)` + optional `scale(1.0X)`, or richer choreography — go bold.
 - Borders: ghost (low-contrast) by default; named token color on premium / focus.
 
 ### Inputs
@@ -124,18 +124,18 @@
 
 ## 7. Motion
 
-### Allowed
-- `transform` (translate, scale, rotate)
-- `opacity`
-- `filter` (sparingly — `blur`, `brightness`)
-- CSS grid `grid-template-rows: 0fr ↔ 1fr` for accordion / disclosure expansion
+Motion is encouraged — bold, dynamic, expressive. Animate freely.
 
-### Forbidden
-- Layout properties: `width`, `height`, `top`, `left`, `padding`, `margin`, `border-width`
-- `transition: all`
-- Animating accordion panel via `height: 0/auto` (use grid pattern above, or native `<details>`)
+### Allowed (anything)
+- `transform` (translate, scale, rotate, skew, 3D), `opacity`, `filter` (`blur`, `brightness`, `drop-shadow`), `clip-path`, animated gradients.
+- Layout properties — `width`, `height`, `top`, `left`, `padding`, `margin`, `border-width` — allowed when the effect calls for it.
+- `transition: all` allowed.
+- Accordion / disclosure may animate via `height`, CSS grid `0fr ↔ 1fr`, or native `<details>` — author's choice.
 
-### Required
+### Performance note (preference, not a rule)
+- `transform` + `opacity` animate on the compositor (no layout / paint) — prefer them when they produce the *same* visual result, for smoother INP. Not mandatory; reach for layout-property animation when it unlocks the effect you want. Trade-off (INP / CLS / Lighthouse) is an accepted project decision.
+
+### Required (accessibility only)
 - `prefers-reduced-motion` honored on every animation:
   ```css
   @media (prefers-reduced-motion: reduce) {
@@ -148,10 +148,10 @@
   ```
 - React / Framer islands wrap animations in the framework's reduced-motion hook.
 
-### Standard durations
-- Hover / focus: 150ms ease
-- Reveal on scroll: 300ms ease-out
-- Page transition: 200ms ease-in-out
+### Suggested durations (tune freely)
+- Hover / focus: ~150ms
+- Reveal on scroll: ~300–600ms
+- Page / hero choreography: as the moment deserves
 
 ---
 
@@ -175,19 +175,19 @@
 
 ## 9. Depth & elevation
 
-Layer by tonal contrast, not aggressive shadow:
+Layer with whatever reads best — tonal contrast, shadow, glow, glass. Dramatic depth is welcome.
 
 | Level | Surface | Effect |
 |---|---|---|
 | 0 | Page background | none |
 | 1 | Section alternate | tonal step |
-| 2 | Card | thin border, optional brand glow on premium |
-| 3 | Glass / blur | translucent + backdrop-blur |
-| 4 | Hover lift | `translateY(-Npx)` + soft shadow |
-| 5 | CTA halo | brand-color glow (sparingly — primary CTAs only) |
-| 6 | Modal | larger radius + heavier shadow + overlay |
+| 2 | Card | border + optional glow |
+| 3 | Glass / blur | translucent + backdrop-blur (use liberally) |
+| 4 | Hover lift | translate + shadow (soft or bold) |
+| 5 | CTA halo | brand-color glow — use where it earns attention |
+| 6 | Modal | large radius + heavy shadow + overlay |
 
-Shadows: soft, low-spread. Avoid `0 0 50px hard-color` — looks unstyled.
+Shadows and glows: soft *or* dramatic — your call. Big colored glows are fair game when they serve the design.
 
 ---
 
@@ -208,10 +208,10 @@ Shadows: soft, low-spread. Avoid `0 0 50px hard-color` — looks unstyled.
 | `tabular-nums` for numerics | Pure `#000` / `#fff` body text |
 | One icon library, named imports | `import *` of icon library |
 | 8px spacing grid | Inline custom CSS bypassing tokens |
-| Soft shadows / glow / glass | Aggressive `box-shadow` glows |
-| `prefers-reduced-motion` everywhere | Animate `width` / `height` / `top` / `left` / `padding` / `margin` |
+| Soft *or* dramatic shadows / glow / glass | Flat, depthless surfaces when depth would help |
+| `prefers-reduced-motion` honored | Ignoring `prefers-reduced-motion` |
 | `<button>` actions / `<a>` nav | `href="#"` placeholders |
-| `transform` + `opacity` only | `transition: all` |
+| Expressive motion (any property) | Janky motion with no reduced-motion fallback |
 | Validate contrast before commit | Cross-mode bleed |
 
 ---

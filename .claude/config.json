@@ -1,12 +1,42 @@
 {
   "$schema": "./config.schema.json",
   "project": {
-    "name": "otb-usa",
-    "displayName": "OTB USA — Grupo US",
+    "name": "aula-trintae3",
+    "displayName": "Aula Gratuita TRINTAE3 — Grupo US",
+    "parentBrand": "Grupo US · Dra. Sacha Gualberto",
+    "purpose": "Landing estática de inscrição para uma aula gratuita ao vivo de saúde estética avançada.",
     "stack": "astro-static-tailwindv4",
     "stagingUrl": "http://localhost:4321",
-    "productionUrl": "https://otb.drasacha.com.br",
-    "locale": "pt-BR"
+    "productionUrl": "https://aula33.gpus.com.br",
+    "locale": "pt-BR",
+    "designModelRepo": "../trintae3"
+  },
+  "content": {
+    "productSlug": "aula-trintae3",
+    "productJson": "src/content/products/aula-trintae3.json",
+    "ogImage": "/og/trintae3.png",
+    "anchors": ["#aula", "#para-quem", "#autoridade", "#inscricao", "#faq"],
+    "legalRoutes": ["/termos", "/politica-de-privacidade"],
+    "sections": {
+      "hero": "",
+      "audience": "#para-quem",
+      "learn": "#aula",
+      "authority": "#autoridade",
+      "form": "#inscricao",
+      "faq": "#faq"
+    }
+  },
+  "lead": {
+    "sdrName": "Laura",
+    "whatsappGreeting": "Olá, Laura!",
+    "whatsappHelper": "src/lib/whatsapp.ts",
+    "formComponent": "src/components/landing/RegistrationForm.astro",
+    "endpointEnv": "PUBLIC_FORM_ENDPOINT",
+    "leadTable": "aula_trintae3_leads"
+  },
+  "tracking": {
+    "ga4Env": "PUBLIC_GA4_ID",
+    "pixelEnv": "PUBLIC_FB_PIXEL_ID"
   },
   "paths": {
     "backendRoot": "",
@@ -22,12 +52,13 @@
     "typeChecker": "astro-check",
     "linter": "biome",
     "testRunner": "",
-    "deployer": "static-hosting",
+    "deployer": "vercel-static",
     "frontendFramework": "astro+react-islands",
     "database": "",
     "orm": ""
   },
   "gates": {
+    "advisory": true,
     "lighthouse": {
       "performance": 95,
       "accessibility": 95,
@@ -36,7 +67,7 @@
     },
     "lcp": 2500,
     "cls": 0,
-    "inp": 100,
+    "inp": 200,
     "initialJsKb": 50
   },
   "protectedFiles": {

@@ -1,6 +1,10 @@
-# OTB USA — AGENTS.md
+# GPUS Astro Landing — AGENTS.md
 
-> Guia comportamental e de orquestração para agentes no projeto **OTB USA — Grupo US**. As regras cardinais e a matriz de roteamento vivem em `.claude/CLAUDE.md`; regras de domínio em `.claude/rules/`; skills em `.claude/skills/`.
+> Guia comportamental e de orquestração para agentes em **landings Astro do Grupo US / Dra. Sacha Gualberto**. Camada genérica e portável: vale para qualquer projeto/produto GPUS construído nesta stack.
+>
+> **Valores de instância** (nome, domínio, slug, SDR, rotas, tracking) vivem em `.claude/config.json` e são lidos via placeholders `${...}` (ex.: `${project.displayName}`, `${content.productJson}`, `${lead.whatsappGreeting}`). Histórico desta instância: `docs/<project>-changelog.md`.
+>
+> Regras cardinais e matriz de roteamento vivem em `.claude/CLAUDE.md`; regras de domínio em `.claude/rules/`; skills em `.claude/skills/` (+ skills globais `grupo-us`, `gpus-theme`).
 
 ---
 
@@ -8,10 +12,10 @@
 
 | Tier | Files | Trigger |
 |---|---|---|
-| 1 | `AGENTS.md` + `.claude/CLAUDE.md` | início da sessão |
+| 1 | `AGENTS.md` + `.claude/CLAUDE.md` + `.claude/config.json` | início da sessão |
 | 2 | `.claude/rules/{frontend,DESIGN,stability,seo,astro,commit,mcp,commands}.md` | matriz em `.claude/CLAUDE.md` + `globs:` |
 | 3 | `.claude/skills/*/SKILL.md` + `references/` | skill auto-trigger |
-| Subdir | `<path>/AGENTS.md` | somente ao editar aquele subtree |
+| Subdir | `<path>/AGENTS.md` (ex.: `src/AGENTS.md`) | somente ao editar aquele subtree |
 
 Subdirectory `AGENTS.md` sobrescreve ou complementa este arquivo quando existir.
 
@@ -21,18 +25,20 @@ Subdirectory `AGENTS.md` sobrescreve ou complementa este arquivo quando existir.
 
 - **Think → Research → Plan → Decompose → Implement → Validate.**
 - **KISS / YAGNI.** Entregar só o necessário para o requisito atual.
-- **Single source of truth.** Copy do produto fica em `src/content/products/otb.json`; componentes consomem Content Collections.
-- **OTB-only context.** Não importar regras, rotas, produtos, CTAs ou memória de outros projetos. `Grupo US` é marca-mãe, não substituto do escopo OTB USA.
+- **Single source of truth.** Copy da landing em `${content.productJson}` (Content Collection); componentes consomem `.data`. Valores de instância em `.claude/config.json`.
+- **Escopo do produto.** Não importar regras, rotas, produtos, CTAs ou copy de outros projetos GPUS. Modelo de design opcional = `${project.designModelRepo}` quando definido.
 - **Implementar direto, code-first.** Referencie regras aplicadas quando relevante.
-- **Nunca assumir que corrigiu.** Validar depois de alterações.
-- **Minimalismo intencional.** Layout premium, autoral, sem cara de template.
+- **Nunca assumir que corrigiu.** Validar depois de alterações (`bun run lint && bunx astro check && bun run build`).
+- **Conversão com integridade.** Landing premium; nada de promessa/credencial/data fabricada. Copy não confirmada = PROPOSTA.
 
 ## Design philosophy
 
-- **Anti-genérico:** se parecer template, redesenhar.
-- **Autoridade internacional:** Boston/EUA, business, saúde estética avançada, sofisticação sem excesso.
-- **Ouro raro:** usar o gold como decisão e hierarquia, não decoração.
-- **Motion contido:** `transform` + `opacity`; nunca animar propriedades de layout.
+- **Anti-genérico:** se parecer template, redesenhar. Ousar é o default.
+- **Autoridade:** Dra. Sacha, saúde estética avançada, sofisticação com presença — criatividade e drama visual bem-vindos.
+- **Ouro com intenção:** gold como hierarquia e impacto, sem teto fixo de cobertura.
+- **Motion expressivo:** movimento, profundidade e animação incentivados. Qualquer propriedade pode ser animada (incl. layout); `transform`/`opacity` preferidos quando equivalentes, por performance. Único requisito: honrar `prefers-reduced-motion`.
+
+> Canon visual completo: root `DESIGN.md`. Posicionamento/conversão: root `PRODUCT.md`.
 
 ---
 
@@ -43,16 +49,15 @@ Subdirectory `AGENTS.md` sobrescreve ou complementa este arquivo quando existir.
 | Command | When to invoke |
 |---|---|
 | `/plan [task]` | L3+ antes de codar |
-| `/prime [auto\|frontend]` | início de tarefa cross-domain ou escopo incerto |
+| `/prime [auto\|frontend]` | início cross-domain ou escopo incerto |
 | `/research [question]` | lacuna externa de docs/práticas |
 | `/design [task]` | página, seção ou componente visual novo |
 | `/implement [plan-path]` | executar plano aprovado |
 | `/debug [audit\|frontend\|recover]` | erro, regressão ou build quebrado |
 | `/perf [build]` | performance, bundle, Lighthouse |
 | `/verify [quick\|spec-only\|paranoid]` | gate pós-implementação |
-| `/evolve [auto\|handoff]` | captura de aprendizado/autoresearch |
-| `/delegate` | delegação explícita |
-| `/recover` | recuperação após 2+ tentativas falhas |
+| `/evolve [auto\|handoff]` | captura de aprendizado |
+| `/delegate` · `/recover` | delegação / recuperação após 2+ falhas |
 
 L1–L2: editar direto, sem overhead.
 
@@ -60,10 +65,10 @@ L1–L2: editar direto, sem overhead.
 
 | Task signal | Agent |
 |---|---|
-| Astro / React islands / styling | `frontend-specialist` |
+| Astro / React islands / styling / form | `frontend-specialist` |
 | Bugs, regressões, build/type errors | `debugger` |
-| Performance, SEO, a11y, segurança | `performance-optimizer` |
-| Pesquisa interna do codebase | `explorer-agent` |
+| Performance, SEO, a11y, segurança, tracking | `performance-optimizer` |
+| Pesquisa interna do codebase | `explorer` |
 | Docs externas / libs | `librarian` |
 | Planejamento / PRD | `project-planner` |
 | Revisão de código | `code-reviewer` |
@@ -77,23 +82,22 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 |---|---|
 | Process | `senior-prompt-engineer`, `planning`, `evolution-core`, `debugger` |
 | Tech-stack | `astro` |
-| Project | `otb-usa`, `otb-theme` |
-| Implementation | `ui-ux-pro-max`, `performance-optimization`, `skill-creator` |
+| Project (brand) | `grupo-us`, `gpus-theme` |
+| Implementation | `ui-ux-pro-max`, `impeccable`, `performance-optimization`, `skill-creator` |
 
 ### Terminal
 
-- POSIX + paths com `/`, mesmo no Windows.
-- Sempre usar timeout.
-- **Bun only:** `bun install`, `bun run`, `bunx`.
-- Nunca `npm`, `yarn` ou `pnpm`.
-- Git read-only com `git --no-pager`; comandos que podem abrir editor com `GIT_EDITOR=true`.
+- Bun only: `bun install`, `bun run`, `bunx`. Nunca `npm`, `yarn`, `pnpm`.
+- Sempre usar timeout; comandos não-interativos.
+- Git read-only com `git --no-pager`; editor-risk com `GIT_EDITOR=true`.
+- Vercel: CLI autenticado (`vercel whoami`). Deploy/alias = sempre perguntar.
+- `rm -rf` em diretório pode ser bloqueado pelo `smart_bash_approver` hook — remover arquivos com `rm -f file...`.
 
 ### Branch workflow — main-only
 
 - Sempre trabalhar em `main`. **Não criar feature branches.**
-- Commit direto em `main` após gates passarem (`bun run lint && bunx astro check && bun run build`).
-- Sem force-push, sem auto-merge de PR.
-- Detalhe em `.claude/rules/commit.md § Branch workflow`.
+- Commit direto em `main` após gates passarem.
+- Sem force-push, sem auto-merge. Push/deploy só quando o usuário pedir.
 
 ---
 
@@ -101,10 +105,10 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 
 1. Subdirectory `AGENTS.md` quando existir
 2. `.claude/rules/*.md`
-3. `.claude/CLAUDE.md`
+3. `.claude/CLAUDE.md` + `.claude/config.json`
 4. Root `AGENTS.md`
 5. Tech-stack skill `astro`
-6. Project skills `otb-usa`, `otb-theme`
+6. Brand skills `grupo-us`, `gpus-theme`
 7. `docs/` sob demanda
 
 ---
@@ -115,7 +119,8 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 |---|---|
 | L1–L2, lint/type/style fixes | Autônomo |
 | File deletion, new dependency, schema-shape change | Confirmar primeiro |
-| Produção, deploy, destructive ops, force push | Sempre perguntar |
+| Destino de lead/form, IDs de tracking, env vars | Confirmar primeiro |
+| Produção (`astro.config.mjs`, `vercel.json`), deploy, destructive ops, force push | Sempre perguntar |
 
 ---
 
@@ -124,17 +129,19 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 | Need | Location |
 |---|---|
 | Cardinal rules + routing + stopping conditions | `.claude/CLAUDE.md` |
+| Valores de instância (nome, domínio, slug, SDR, rotas, tracking) | `.claude/config.json` |
 | Frontend/design/stability/SEO | `.claude/rules/{frontend,DESIGN,stability,seo}.md` |
-| Astro static-only + Content Collections + layout contracts | `.claude/rules/astro.md` + `Skill('astro')` → `references/otb-usa-overlay.md` |
-| OTB USA copy, produto, público, CTA, legal Harvard | `Skill('otb-usa')` |
-| OTB Navy/Gold tokens e design canon | `Skill('otb-theme')` |
+| Astro static-only + Content Collections + layout contracts | `.claude/rules/astro.md` + `Skill('astro')` |
+| Sistema de design visual (Navy/Gold, componentes, motion) | root `DESIGN.md` + `Skill('gpus-theme')` |
+| Posicionamento / conversão / CRO / guardrails | root `PRODUCT.md` |
+| Copy, público, CTA, funil, voz Dra. Sacha | `Skill('grupo-us')` |
 | Tooling, gates, protected files | `.claude/config.json` |
 | Commit / pre-commit | `.claude/rules/commit.md` |
 | MCP / terminal / debug loop | `.claude/rules/mcp.md` |
+| Histórico da instância | `docs/<project>-changelog.md` |
 
 ---
 
 ## Recent learnings
 
-- **2026-05-25** — Repositório reconfigurado como OTB USA-only; referências herdadas de site institucional/produtos paralelos removidas dos guias canônicos.
-- **2026-05-25** — Briefing oficial da **3ª Edição OTB EUA** (Boston, 19–21 abr 2027) absorvido em `Skill('otb-usa')` → `references/edicao-3-boston.md` + `manual-resumo.md`. Schema `src/content.config.ts` ganhou campos opcionais `edicao`, `lotes`, `agenda`, `parceiros`. Phase 2 do plano (`docs/analise-o-https-docs-google-com-document-vast-pancake.md`) bloqueada por gate stakeholder: Lote 1 ativo, ASA, wording Anatomy Review, escopo taxa 5%, contatos parceiros, datas online, copy "íntima". Lote 0 (US$ 3.000) venceu em 30 abr 2026.
+> Aprendizados específicos da instância vivem em `docs/<project>-changelog.md` (ex.: `docs/aula-trintae3-changelog.md`), não nesta governança portável. Capturar via `/evolve`.

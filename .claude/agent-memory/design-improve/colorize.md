@@ -1,97 +1,75 @@
 ---
 name: design-improve-colorize
-description: Impeccable colorize (phase 4/5) of OTB USA landing — consolidates 9 highest-frequency inline color-mix tokens into 3 named utilities, deletes 3 dead utilities, annotates the meta theme-color exception. Pure semantic-token tightening; zero new hex, zero new motion.
+description: Impeccable colorize (phase 4/5) of the Aula Gratuita TRINTAE3 landing — ONE focal text-gradient-gold moment on the Hero highlight + a structural/color lift on the Audience ideal-persona item. Existing tokens only, no new hex.
 metadata:
   type: project
 ---
 
-# DESIGN-IMPROVE — PHASE 4/5 COLORIZE
+# design-improve — PHASE 4/5: COLORIZE (impeccable)
 
-## Phase commitment
+> Supersedes the prior OTB-era colorize record (those components no longer exist post-rebuild).
+> Read F:\Projetos\aula-trintae3\.claude\skills\impeccable\reference\colorize.md (installed).
 
-Restrained consolidation. Picked the THREE highest-frequency inline `color-mix()` tokens across 7 components and promoted them to named `@utility` helpers in `src/styles/global.css`. Deleted three confirmed-dead utilities (`gold-glow`, `animate-spotlight`, `animate-aurora`) plus their orphan `@keyframes`. Annotated the meta theme-color literal in `Layout.astro` as the documented exception (HTML meta tags cannot read CSS vars; literal MUST mirror `--color-navy`). Did NOT invent new color roles, did NOT touch palette anchors, did NOT consolidate the long tail of one-off tints (12%, 15%, 18%, 22%, 25%, 30%, 45%, 55%, 60%) — those stay inline by intent to avoid 12 micro-utilities. Did NOT touch `src/content/products/otb.json` or `src/pages/index.astro`.
+## PHASE COMMITMENT
+Restrained strategy (gpus Ouro raro, gold ≤10% surface) — colorize is NOT re-goldenizing what
+bolder de-flooded. Exactly TWO purposeful touches: (1) ONE focal gold-gradient moment on the single
+highest-impact spot — the Hero headline highlight (above-fold, 7xl, first thing seen) — reusing the
+existing `text-gradient-gold` utility; (2) the Audience `highlight:true` ideal-persona item lifted
+to read clearly as "this is you" via stronger border + elevation + accent dot, color carrying
+meaning (wayfinding), not decoration. Existing tokens/utilities ONLY, zero new hex, zero new tokens,
+no motion changes (phase 3 owns motion), no layout-property animation, no CLS.
 
-## Files touched
+## Files touched (absolute)
+- F:\Projetos\aula-trintae3\src\components\landing\Hero.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Audience.astro
 
-- F:\Projetos\otb-usa\src\styles\global.css
-- F:\Projetos\otb-usa\src\layouts\Layout.astro
-- F:\Projetos\otb-usa\src\components\landing\WhyOTB.astro
-- F:\Projetos\otb-usa\src\components\landing\Programa.astro
-- F:\Projetos\otb-usa\src\components\landing\Parceiros.astro
-- F:\Projetos\otb-usa\src\components\landing\Modulos.astro
-- F:\Projetos\otb-usa\src\components\landing\BostonHarvard.astro
-- F:\Projetos\otb-usa\src\components\landing\Hero.astro
-- F:\Projetos\otb-usa\src\components\landing\TargetAudience.astro
+## Diff summary (one line per file)
+- Hero.astro — headline highlight span `text-gold` → `text-gradient-gold` (the one focal gold-gradient moment).
+- Audience.astro — `highlight:true` item: border `gold/40`→`gold/50` + `depth-2` elevation; accent dot enlarged `h-2 w-2`→`h-2.5 w-2.5` with `gold-glow` (regular items unchanged).
 
-## Diff summary
+## Focal color decision + contrast check
+- **Chosen spot: Hero highlight (NOT FinalCTA).** Highest impact: above-the-fold, largest type on
+  the page (lg:text-7xl), the literal headline focal word, seen before any scroll. FinalCTA is
+  below-fold and a full headline — gradienting it would re-flood gold and undo the bolder de-flood.
+  One signature gold moment, exactly as the brief specified (pick one, not both).
+- **Utility reused:** `text-gradient-gold` (global.css:554) — clips a static
+  `linear-gradient(135deg, var(--color-gold), var(--color-gold-light))` onto the text. Static (not
+  the animated `text-shimmer`), so no motion introduced and no reduced-motion concern.
+- **Contrast:** gradient spans gold #d4af37 (≈8:1 on navy) → gold-light #e8c96a (≈10:1 on navy).
+  Both endpoints exceed the WCAG large-text minimum (≥3:1) with large margin; the highlight is
+  display-scale (5xl–7xl), so large-text rules apply. PASS. (`-webkit-text-fill-color: transparent`
+  is the clip mechanism, not a contrast concern — the painted color IS the gradient.)
+- **Audience persona lift:** color is reinforced by non-color signals (border weight, depth-2
+  elevation, larger dot) — not color-alone (a11y). The `text-gold-light` label was already present
+  and unchanged (≈9:1 on the gold/10 tint over navy). No regression.
 
-- `global.css` — added 3 utilities; deleted 3 dead utilities (`gold-glow`, `animate-spotlight`, `animate-aurora`) and their exclusive keyframes (`spotlight`, `aurora`); biome auto-reformat applied.
-- `Layout.astro` — added Astro comment annotating the meta theme-color literal as the navy-token mirror exception.
-- `WhyOTB.astro` — icon chip: `border-gold-mid-35 bg-gold-tint-10`.
-- `Programa.astro` — icon chip + horas pill: 2 substitutions (`border-gold-mid-35 bg-gold-tint-10`, `bg-navy-soft-70`).
-- `Parceiros.astro` — partner icon chip: `border-gold-mid-35 bg-gold-tint-10`.
-- `Modulos.astro` — number chip: `bg-gold-tint-10` (border 30% one-off kept).
-- `BostonHarvard.astro` — boston card icon + datas pill: 2 substitutions (`border-gold-mid-35 bg-gold-tint-10`, `bg-navy-soft-70`).
-- `Hero.astro` — badge bg: `bg-navy-soft-70` (gold 25% border one-off kept).
-- `TargetAudience.astro` — categoria li bg: `bg-navy-soft-70` (gold 18% border one-off kept).
+## Missing token?
+NONE. Both touches used pre-existing utilities/tokens (`text-gradient-gold`, `depth-2`, `gold-glow`,
+`border-gold/50`, `bg-gold/10`, `bg-gold`). No color role was missing; nothing invented. (Per
+constraint: had a role been missing I would have STOPPED and reported rather than add a hex/token.)
 
-## New utilities added to global.css
-
-| Utility | CSS property | Token | Purpose | Replaced occurrences |
-|---|---|---|---|---|
-| `bg-gold-tint-10` | `background-color` | `color-mix(in srgb, var(--color-gold) 10%, transparent)` | Icon-chip backgrounds (gold-on-navy chips) | 5 (WhyOTB, Programa card, Parceiros, Modulos, BostonHarvard card) |
-| `bg-navy-soft-70` | `background-color` | `color-mix(in srgb, var(--color-navy-light) 70%, transparent)` | Panel/badge/pill backgrounds (translucent navy surface) | 4 (Programa horas, BostonHarvard datas, Hero badge, TargetAudience li) |
-| `border-gold-mid-35` | `border-color` | `color-mix(in srgb, var(--color-gold) 35%, transparent)` | Icon-chip borders matched with `bg-gold-tint-10` | 4 (WhyOTB, Programa card, Parceiros, BostonHarvard card) |
-
-Net: 9 inline `color-mix()` instances → 3 single-source utilities. Compiled CSS (verified in `dist/_astro/index*.css`) emits both progressive-enhancement `color-mix()` and `#RRGGBB+alpha` fallback — visual output is byte-equivalent to pre-refactor.
-
-## Utilities deleted
-
-| Utility | Lines | Consumers | Action |
-|---|---|---|---|
-| `@utility gold-glow` | global.css:45–47 | 0 (Grep src/) | Deleted |
-| `@utility animate-spotlight` + `@keyframes spotlight` | global.css:299–312 | 0 (Grep src/) | Deleted |
-| `@utility animate-aurora` + `@keyframes aurora` | global.css:314–329 | 0 (Grep src/) | Deleted |
-
-Did NOT delete `float-gentle` (still defined; used by mobile-disable media query and potentially elsewhere — animate phase noted it is no longer used in Hero but the utility was kept intentionally).
-
-## Meta-tag exception annotation
-
-`src/layouts/Layout.astro` line 60–61:
-
-```astro
-{/* meta theme-color cannot read CSS variables; literal MUST mirror --color-navy in src/styles/global.css @theme. Keep in sync if the navy token changes. */}
-<meta name="theme-color" content="#1a1a2e" />
-```
-
-Justification: HTML meta tag attributes are static strings parsed before the CSS engine; they cannot consume `var(--color-navy)`. Two alternatives were available: (a) keep the literal with an explicit token-mirror comment, (b) inject via a runtime script that reads the computed style. Option (a) was chosen per phase guidance — pragmatic, zero runtime cost, zero hydration concern, fail-loud if the navy token ever changes (developer reads the comment and updates both sites). This is the SINGLE documented cardinal #7 exception.
-
-## Hex scan result
-
-`Grep("#[0-9a-fA-F]{3,8}", src/, glob !global.css)` → **1 match: `src\layouts\Layout.astro:61` (the documented meta-tag exception only).**
-
-Zero hex outside the documented exception and the canonical `@theme` block. Cardinal #7 satisfied.
-
-## Deferred items by owning phase
-
-- **OVERDRIVE**: #6 overdrive side (further gold-tint demotion), #8 (gold surface audit & ~30% demotion), #12 (Speakers conic-ring redesign). The 3 newly-named utilities make the upcoming gold-budget audit easier — overdrive can count gold-utility occurrences directly instead of grepping `color-mix` patterns.
+## DEFERRED — overdrive
+- Hero `landing-mesh-bg` is subtle → atmosphere/grain/texture depth layer (mesh already animates
+  `mesh-drift`; overdrive could intensify carefully — verify FPS, keep gold within budget).
+- Glass fatigue: glass-card used in Learn/NextStep/FinalCTA/form/FAQ → reserve glass-card-bright for
+  1–2 focal CTAs.
+- Optional: a single richer surface tint or gilded-frame treatment on the Authority portrait (only
+  if it stays within the gold budget — colorize deliberately left it alone to avoid a second gold
+  focal moment competing with the Hero).
+- Possible Learn-numeral shimmer (deferred from animate) — overdrive call; would add gold motion.
+- Pre-existing content-drift literals (FAQ "Perguntas frequentes", Authority "Quem conduz a aula")
+  remain — out of scope for all visual phases (touches copy/schema).
 
 ## Maestro 6-gate self-check
+- Safe Split: PASS — no layout change.
+- Glass Trap: PASS — no new glass; over-use catalogued for overdrive.
+- Glow Trap: PASS — only addition is a single small `gold-glow` on the persona dot (one item per
+  grid); the Hero gradient is text-clip, not a halo. Gold surface stays ≤10%.
+- Bento Trap: N/A — no bento grid.
+- Blue Trap: PASS — Navy/Gold only; no new hex; no fintech blue, no purple/indigo.
+- Line Trap: PASS — no side-stripe borders (persona uses a full hairline border + tint + dot, per
+  colorize.md ban on >1px left/right accent stripes); no decorative hairline added.
 
-| Gate | Verdict | Notes |
-|---|---|---|
-| Safe Split | PASS | No layout/structure changes. |
-| Glass Trap | PASS | No new glass surfaces. Glass utility unchanged. |
-| Glow Trap | PASS | No new gold halos/shadows. Three gold-effect utilities DELETED (gold-glow, animate-spotlight, animate-aurora). |
-| Bento Trap | PASS | No grid changes. |
-| Blue Trap | PASS | Navy/Gold canon strictly preserved. No new hex anywhere. |
-| Line Trap | PASS | No hairlines added/removed. |
-
-Overall Maestro: **PASS** (6/6).
-
-## Notes for overdrive
-
-- The 3 new utilities are also the cleanest probe for "how often does each gold/navy tint appear in the wild?" — `bg-gold-tint-10` count = gold-chip count; `bg-navy-soft-70` count = soft-panel count. Use this to drive the gold-budget audit without re-grepping color-mix patterns.
-- If overdrive demotes some gold surfaces (per audit #8), the SAFEST channel is editing component classes (swap `bg-gold-tint-10` → `bg-navy-soft-70`, drop `border-gold-mid-35` entirely on N% of cards) rather than mutating the utility definitions. The utilities themselves are correct; the question is dosage.
-- `float-gentle` utility still exists in global.css but is no longer used in Hero (animate phase removed it). Overdrive may choose to delete it if no other consumer surfaces; verify with `Grep("float-gentle", src/)` before nuking — Hero is the only known consumer per repo history.
-- LF line endings preserved (biome auto-format respected the existing convention).
+## astro check
+`bunx astro check` → 29 files, **0 errors, 0 warnings, 1 hint** (pre-existing ts(6385) in FROZEN
+src/content.config.ts:25 — not mine, ignored per task).

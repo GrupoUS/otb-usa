@@ -2,14 +2,14 @@
 globs: src/**, astro.config.mjs, src/content.config.ts, .claude/**
 ---
 
-# Astro Invariants — OTB USA
+# Astro Invariants — GPUS Astro Landing
 
-> Project-specific Astro overlay for **OTB USA**. Framework deep-dive lives in `Skill('astro')`; repo overlay lives in `references/otb-usa-overlay.md`.
-> Stack: Astro 6 + React 19 islands + Tailwind v4 + Bun, static-only MPA.
+> Astro overlay portável para landings GPUS. Valores de instância em `.claude/config.json` (`${...}`). Framework deep-dive em `Skill('astro')`.
+> Stack: Astro 6 + React 19 islands (preferir zero) + Tailwind v4 + Bun, static-only MPA, deploy Vercel.
 
 ## 1. Render-mode invariant
 
-- Project ships static HTML via `bun run build`.
+- Projeto entrega HTML estático via `bun run build` → `dist/` (Vercel).
 - Never add `export const prerender = false`.
 - Never install SSR adapters.
 - Never introduce `ClientRouter` / SPA routing.
@@ -18,68 +18,73 @@ globs: src/**, astro.config.mjs, src/content.config.ts, .claude/**
 
 | Directive | When | Use case |
 |---|---|---|
-| none | default | Static `.astro`, zero JS |
-| `client:load` | only critical first-paint interactivity | persistent floating/contact UI if required |
-| `client:idle` | non-critical above-fold island | decorative/visual island after paint |
-| `client:visible` | below-fold interactive | carousel/reveal that truly needs JS |
-| `client:only="react"` | last resort | library cannot SSR due module-top browser APIs |
+| none | default | Static `.astro`, zero JS — **estado atual da página** |
+| `client:load` | só interatividade crítica de primeiro paint | raríssimo; preferir Astro puro + script inline |
+| `client:idle` | island não-crítico above-fold | island decorativo após paint |
+| `client:visible` | below-fold interativo | carousel/reveal que realmente precise de JS |
+| `client:only="react"` | last resort | lib que não SSR por browser API no módulo |
 
-Default = no directive. Pure Astro first; React island only when interactivity is proven.
+Default = sem directive. Astro puro primeiro; **ilha React só quando a interatividade for provada**. (O botão WhatsApp flutuante é Astro puro + script vanilla justamente por isso.)
 
 ## 3. Content Collections SSOT
 
-- Product copy lives in `src/content/products/otb.json`.
-- Schema lives in `src/content.config.ts`.
-- Pages load with `getEntry("products", "otb")` or equivalent.
-- Components receive plain `.data`, never the full collection entry.
-- Adding a field means updating schema + JSON + reader in one change.
+- Copy da landing vive em `${content.productJson}`.
+- Schema em `src/content.config.ts` (slug `${content.productSlug}`).
+- Página carrega via `getCollection("products")` + `find(slug === "${content.productSlug}")`.
+- Componentes recebem `.data` (sub-objetos: `hero`, `event`, `audience`, `learn`, `authority`, `nextStep`, `registration`, `faqs`, `finalCta`, `legal`), nunca a entry completa.
+- Adicionar campo = schema + JSON + leitor numa só mudança.
 
-## 4. OTB routes
+## 4. Rotas
 
-Current public routes are `/` and `/otb`. Do not add redirects or pages for non-OTB products. If a future external redirect is required, update `astro.config.mjs`, sitemap behavior and content references in one change.
+Rotas públicas: `/` (landing), `${content.legalRoutes}` (ex.: `/termos`, `/politica-de-privacidade`), `/404` (noindex). Âncoras internas: `${content.anchors}`. Não adicionar rotas/redirects de outros produtos. Mudança de rota/redirect = atualizar `astro.config.mjs` + sitemap + `robots.txt` numa só mudança.
 
 ## 5. WhatsApp SSOT
 
 - Never inline `wa.me/...`.
-- Phone/helper source: `src/lib/whatsapp.ts`.
-- Message text: `src/content/products/otb.json` CTA fields.
-- Detail: `Skill('otb-usa')` → `references/whatsapp-ssot.md`.
+- Número/helper: `${lead.whatsappHelper}` (`whatsappUrlWithText`, `whatsappUrlBase`, `WHATSAPP_SDR_E164`).
+- Toda mensagem começa com `${lead.whatsappGreeting}` (enforce em runtime + refine no schema).
+- Texto das mensagens vive nos campos `whatsapp.message` / `whatsappFallback.message` do JSON.
 
 ## 6. Layout contracts
 
 `src/layouts/Layout.astro` owns:
 
-- `<html lang="pt-BR">`;
-- SEO meta, OG/Twitter, canonical;
-- Organization JSON-LD + page JSON-LD payload;
-- skip link + `<main id="conteudo-principal">`;
-- default OG image;
-- `<noscript>` reveal fallback.
+- `<html lang="pt-BR">`, `<html class="js">` (inline, progressive enhancement);
+- SEO meta, OG/Twitter, canonical, robots (prop `noindex`);
+- `EducationalOrganization` JSON-LD + payload de página (`jsonLd` prop, array-merge);
+- `Header` + `<main id="conteudo-principal">` + `Footer` + `WhatsAppFloatingButton`;
+- skip link, `<noscript>` reveal fallback, IntersectionObserver reveal hardened;
+- default OG image (`${content.ogImage}`).
 
-Pages pass `title`, `description`, `ogImage`, optional `canonical` and JSON-LD payload.
+Páginas passam `title`, `description`, `ogImage`, `whatsappMessage`, `hasBottomBar`, opcional `canonical`/`breadcrumbs`/`noindex`/`jsonLd`.
 
 ## 7. Tailwind v4 `@theme`
 
-- Tokens live in `src/styles/global.css` `@theme`.
-- No hardcoded hex in `.astro` / `.tsx`.
-- Token canon: `Skill('otb-theme')`.
+- Tokens em `src/styles/global.css` `@theme` (Navy/Gold, fonts, escala clamp, motion, depth).
+- Sem hex hardcoded em `.astro`/`.tsx` (exceção: `<meta theme-color>` espelhando `--color-navy`).
+- Token canon: `Skill('gpus-theme')`.
+
+## 8. Formulário + tracking
+
+- `${lead.formComponent}`: form nativo acessível; submit POST a `import.meta.env.${lead.endpointEnv}` quando definido, senão fallback WhatsApp. PII → consent LGPD + link privacidade.
+- Tracking GA4/Meta Pixel via env (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) no `Layout.astro`; eventos sem duplicar. IDs/endpoint = aprovação.
 
 ## Anti-patterns
 
 | Don't | Why |
 |---|---|
-| `client:only="react"` without module-top browser API | unnecessary JS/client-only render |
-| `client:load` for decorative islands | steals main-thread budget |
-| hardcoded landing copy in components | bypasses OTB content SSOT |
-| `prerender = false` | breaks static contract |
-| `<ClientRouter />` | SPA behavior banned |
-| hardcoded `wa.me` outside helper | breaks WhatsApp SSOT |
-| hardcoded hex outside `global.css @theme` | breaks token canon |
+| `client:only="react"` sem browser API no módulo | JS/client-only desnecessário |
+| `client:load` para island decorativo | rouba main-thread budget |
+| copy da aula hardcoded em componente | fura o SSOT de conteúdo |
+| `prerender = false` | quebra contrato estático |
+| `<ClientRouter />` | SPA banido |
+| `wa.me` hardcoded fora do helper | fura WhatsApp SSOT |
+| hex fora de `global.css @theme` | fura token canon |
+| `site`/redirect/sitemap dessincronizados | SEO split / canonical errado |
 
 ## Pointers
 
 - Astro framework: `Skill('astro')`.
-- OTB overlay: `Skill('astro')` → `references/otb-usa-overlay.md`.
-- OTB product/copy: `Skill('otb-usa')`.
-- OTB theme/tokens: `Skill('otb-theme')`.
+- Copy/funil/voz: `Skill('grupo-us')`.
+- Theme/tokens: `Skill('gpus-theme')`.
 - Cardinal rules: `.claude/CLAUDE.md`.

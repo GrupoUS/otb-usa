@@ -1,8 +1,8 @@
 ---
-description: OTB USA performance, SEO, accessibility, and build optimization workflow.
+description: GPUS Astro landing performance, SEO, accessibility, and build optimization workflow.
 ---
 
-# /perf — OTB USA Performance
+# /perf — ${project.displayName} Performance
 
 **ARGUMENTS**: $ARGUMENTS
 
@@ -13,16 +13,17 @@ Use for Lighthouse, Core Web Vitals, bundle size, render cost, static asset, SEO
 ```typescript
 Skill("performance-optimization");
 Skill("astro");
-Skill("otb-theme"); // when visual/styling changes affect performance
+Skill("gpus-theme"); // when visual/styling changes affect performance
 ```
 
-## 1. OTB performance contract
+## 1. ${project.displayName} performance contract
 
-- Static Astro output only.
+- Static Astro output only (Vercel static deploy).
 - Initial JS should stay minimal; avoid unnecessary islands.
 - Decorative motion must not steal main-thread budget.
 - Prefer optimized images with dimensions and stable layout.
-- Preserve SEO canonical domain: `https://otb.drasacha.com.br`.
+- Tracking (Meta Pixel + GA4 via env) must not regress LCP/INP.
+- Preserve SEO canonical domain: `${project.productionUrl}`.
 - Respect Lighthouse targets from `.claude/config.json`.
 
 ## 2. Build validation
@@ -38,7 +39,7 @@ bun run build
 Primary routes:
 
 - `/`
-- `/otb`
+- `${content.legalRoutes}` (legal routes from `.claude/config.json` `content.legalRoutes`)
 
 Use the local script when available:
 

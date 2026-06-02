@@ -81,21 +81,21 @@
     },
     {
       "id": "A12",
-      "description": "OTB USA site intent: cites cardinal rule (Lucide / SSG / getCollection / no layout-prop animation)",
+      "description": "GPUS landing site intent: cites cardinal rule (Lucide / SSG / getCollection / no layout-prop animation)",
       "type": "behavioral",
       "check": "contains_one_of: [\"Lucide\", \"getCollection\", \"SSG\", \"transform/opacity\", \"Astro static\", \"MPA\"]",
       "critical": true
     },
     {
       "id": "A13",
-      "description": "OTB USA site intent: routes to commercial-first heuristic (copy / SEO / CTA / funnel) before perf",
+      "description": "GPUS landing site intent: routes to commercial-first heuristic (copy / SEO / CTA / funnel) before perf",
       "type": "behavioral",
       "check": "contains_one_of: [\"copy and offer clarity\", \"commercial\", \"CTA\", \"funnel\", \"SEO\"]",
       "critical": true
     },
     {
       "id": "A14",
-      "description": "OTB USA site intent: produces <answer> XML shape with baseline / experiment / validation / log_entry",
+      "description": "GPUS landing site intent: produces <answer> XML shape with baseline / experiment / validation / log_entry",
       "type": "structural",
       "check": "contains_one_of: [\"<answer>\", \"<baseline>\", \"<experiment>\", \"<validation>\", \"<log_entry>\"]",
       "critical": false
@@ -119,7 +119,7 @@
     },
     {
       "id": "T04",
-      "input": "Full overview: explain evolution-core architecture (memory + optimizer + OTB profile), storage, CLI, hooks, and integration with /evolve.",
+      "input": "Full overview: explain evolution-core architecture (memory + optimizer + GPUS profile), storage, CLI, hooks, and integration with /evolve.",
       "expected_assertions": [
         "A01",
         "A02",
@@ -140,7 +140,7 @@
     },
     {
       "id": "T06",
-      "input": "Run an autoresearch experiment on the OTB USA Astro site to improve the home hero CTA. What is the priority order and output shape?",
+      "input": "Run an autoresearch experiment on the GPUS Astro landing to improve the home hero CTA. What is the priority order and output shape?",
       "expected_assertions": ["A12", "A13", "A14"]
     }
   ]

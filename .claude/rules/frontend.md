@@ -60,7 +60,7 @@ globs: src/pages/**, src/components/**, src/layouts/**, src/styles/**, src/conte
 - Memoize hot list items only when rendering > 30 items.
 - `Set` / `Map` over repeated `.find()` / `.includes()` on hot paths.
 - No heavy libraries (>50KB) in main bundle. Per-island imports only.
-- Initial JS budget: < 50KB on prerendered pages.
+- Initial JS budget: ~< 50KB on prerendered pages (advisory — measure & annotate; animation libs load inside their island, not the entry).
 - LCP / above-fold images: explicit priority hint (`fetchpriority="high"`, eager loading).
 - Below-fold images: lazy loading + low priority.
 - Always set explicit `width` + `height` on images (CLS = 0).
@@ -73,7 +73,7 @@ globs: src/pages/**, src/components/**, src/layouts/**, src/styles/**, src/conte
 - Icon-only buttons require `aria-label`. Decorative icons: `aria-hidden="true"`.
 - `prefers-reduced-motion` honored on every animation (CSS + JS islands).
 - `<noscript>` fallback when reveal-on-scroll patterns hide content via opacity / transform.
-- FAQ / disclosure: native `<details>` or CSS grid `0fr ↔ 1fr` rows pattern. **Never** animate height.
+- FAQ / disclosure: native `<details>`, CSS grid `0fr ↔ 1fr`, or animated `height` — author's choice. Honor `prefers-reduced-motion`.
 
 ---
 
@@ -85,14 +85,11 @@ globs: src/pages/**, src/components/**, src/layouts/**, src/styles/**, src/conte
 | Mix icon libraries | One library per project — choose and stick with it |
 | `import * as Icons from '<lib>'` | Defeats tree-shaking — named imports only |
 | Emoji as UI icons | Inconsistent rendering; not accessible. SVG icons only |
-| Animate layout properties (`width`, `height`, `top`, `left`, `padding`, `margin`) | Forces layout / paint; janks INP. Use `transform` + `opacity` only |
-| `transition: all` | Animates unintended properties; perf overhead. Name properties explicitly |
 | Hardcode landing copy in components | Bypasses schema validation; drifts from data |
 | Inline secrets / API keys / auth tokens | Use deploy env, never commit |
 | Initial JS bundle > 50KB on prerendered pages | LCP / INP regression. Audit and split |
 | Skip link removed or repositioned past first focusable | Breaks keyboard navigation |
 | `<noscript>` reveal fallback dropped | JS-off users see blank sections |
-| FAQ panel height tween | Use CSS grid `0fr/1fr` or native `<details>` |
 | `client-only` directive on SSR-able islands | Pre-render every island that can be pre-rendered |
 | `setState` / mutation in render path | Re-render loops, hydration mismatch |
 

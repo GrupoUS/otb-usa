@@ -1,91 +1,76 @@
-# design-fix · Phase 4/7 · layout
+---
+name: design-fix-layout
+description: /design-fix phase 4/7 layout — unified responsive section-spacing spine (py-16 md:py-24 lg:py-28, 8px grid) + NextStep vs FinalCTA card differentiation. Authority asymmetric grid + Learn col logic confirmed intentional.
+metadata:
+  type: project
+---
 
-## Phase commitment
+# /design-fix — PHASE 4/7: LAYOUT
 
-Spatial rhythm was monotone — 9 of 11 sections shared `py-28 sm:py-32`,
-flattening hierarchy. Introduced 3 vertical-rhythm tiers anchored to
-content type: TIGHT (24/28) for modular/closing content, BASELINE
-(28/32) for premium narrative, GENEROUS (32/36) reserved for the
-centerpiece (BostonHarvard). Inside BostonHarvard, internal beat
-separators (cards → freshStats → agenda) widened so each block reads
-as its own intentional movement. Containers, asymmetric splits, card
-padding parity, gap progression, and grid topologies kept INTACT —
-they were already disciplined per the typeset + harden audits.
+> Supersedes the prior OTB-era layout note (those components no longer exist).
+> Structure/spacing only; no layout-property ANIMATION (static layout changes are fine).
 
-## Files touched
+## PHASE COMMITMENT
+Replaced the monotone uniform `py-20` (80px, identical on every breakpoint, every section) with a
+single responsive spacing spine — `py-16 md:py-24 lg:py-28` (64 / 96 / 112px, all 8px-grid) — so the
+page compresses on mobile and breathes generously on desktop with one consistent rhythm. Differentiated
+the two adjacent centered glass cards (NextStep vs FinalCTA) by size + emphasis so they read as
+distinct beats, not duplicates. Confirmed Authority's asymmetric 2/3 grid and Learn's 4→2col logic as
+intentional (no change). Tokens only, no hex, no CLS (image width/height untouched), reduced-motion net
+intact.
 
-- F:\Projetos\otb-usa\src\components\landing\BostonHarvard.astro
-- F:\Projetos\otb-usa\src\components\landing\Modulos.astro
-- F:\Projetos\otb-usa\src\components\landing\FAQ.astro
-- F:\Projetos\otb-usa\src\components\landing\WhyOTB.astro
+## Files touched (absolute)
+- F:\Projetos\aula-trintae3\src\components\landing\Audience.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Learn.astro
+- F:\Projetos\aula-trintae3\src\components\landing\Authority.astro
+- F:\Projetos\aula-trintae3\src\components\landing\RegistrationForm.astro
+- F:\Projetos\aula-trintae3\src\components\landing\FAQ.astro
+- F:\Projetos\aula-trintae3\src\components\landing\NextStep.astro
+- F:\Projetos\aula-trintae3\src\components\landing\FinalCTA.astro
 
-## Diff summary
+## Diff summary (one line per file)
+- Audience / Learn / Authority / RegistrationForm / FAQ — section padding `py-20` → `py-16 md:py-24 lg:py-28` (responsive spine; other classes incl. scroll-mt-24 / bg / id preserved).
+- NextStep — `py-20`→spine; card `max-w-3xl`→`max-w-2xl`, `p-8 md:p-12`→`p-8 md:p-10` (quieter, smaller bridge card).
+- FinalCTA — `py-20`→spine; card `p-8 md:p-12`→`p-10 md:p-14` (larger, climax; stays `max-w-3xl` + glass-card-bright).
 
-- BostonHarvard.astro: section padding `py-28 sm:py-32` → `py-32 sm:py-36` (centerpiece elevation); freshStats wrapper `mt-16` → `mt-20`; agenda wrapper `mt-20` → `mt-24` (internal beats separated).
-- Modulos.astro: section padding `py-28 sm:py-32` → `py-24 sm:py-28` (modular content, tighter cadence — mirrors Parceiros pattern).
-- FAQ.astro: section padding `py-28 sm:py-32` → `py-24 sm:py-28` (closing section before footer; releases tension).
-- WhyOTB.astro: cards grid wrapper `mt-16` → `mt-20` (separates editorial positioning-quote block from utility 3-card row — they are different content beats).
+## Layout fixes
+- **Vertical-rhythm spine** (layout.md "tight grouping / generous separation", DESIGN ≥96px desktop /
+  ≥64px mobile): all 7 sections now share `py-16 md:py-24 lg:py-28`. Mobile 64px keeps the funnel
+  compact (faster scroll to form); desktop 112px gives premium air. Uniform = an intentional beat, not
+  monotony (the variety now lives between mobile↔desktop, and in card sizing).
+- **NextStep vs FinalCTA differentiation** (layout.md "vary card sizes / break repetition"): they were
+  near-identical centered cards (both `max-w-3xl p-8 md:p-12`). Now NextStep is the smaller/quieter
+  bridge (`max-w-2xl`, `p-8 md:p-10`, plain `glass-card`) and FinalCTA is the larger/brighter climax
+  (`max-w-3xl`, `p-10 md:p-14`, `glass-card-bright`). Size + padding + surface tier all signal the
+  hierarchy — they no longer read as duplicates with the form between them.
+- **Hero** kept its bespoke `pt-32 pb-20 lg:pt-40 lg:pb-28` (it owns the top of the page; the spine is
+  for in-flow sections).
 
-## Section rhythm map (final)
+## Confirmed intentional (no change)
+- **Authority 5-col grid** (`lg:grid-cols-5`, portrait col-span-2 / text col-span-3): an asymmetric
+  2/3 split using an Eyebrow (not the numbered spine `index`). Per layout.md, asymmetry reads as
+  designed; deliberately distinct from the 01–04 spine sections. Correct as-is.
+- **Learn grid logic** (`length===4 ? lg:grid-cols-2 : lg:grid-cols-3`): 4 topics in a 3-col grid
+  would orphan one; 2×2 is the right call. Other counts get 3-col. Sound.
+- **Container widths / gutters**: Audience `max-w-5xl` (3-col grid), Learn/Authority `max-w-7xl`,
+  FAQ `max-w-3xl`, form `max-w-2xl` — content-appropriate; gutters uniform `px-4 sm:px-6 lg:px-8`.
 
-| Section        | Padding         | Tier       | Rationale                                       |
-| -------------- | --------------- | ---------- | ----------------------------------------------- |
-| Hero           | 92vh isolate    | full-bleed | LCP / first impression                          |
-| WhyOTB         | py-28 sm:py-32  | BASELINE   | Premium positioning + cards                     |
-| TargetAudience | py-28 sm:py-32  | BASELINE   | Audience qualification                          |
-| Programa       | py-28 sm:py-32  | BASELINE   | Program overview, asymmetric 5/7                |
-| Turmas         | py-28 sm:py-32  | BASELINE   | Historical proof (photos)                       |
-| Modulos        | py-24 sm:py-28  | TIGHT      | Modular online trail — denser cadence           |
-| BostonHarvard  | py-32 sm:py-36  | GENEROUS   | Centerpiece — international immersion           |
-| Speakers       | py-28 sm:py-32  | BASELINE   | Expert grid                                     |
-| Investimento   | py-28 sm:py-32  | BASELINE   | Conversion / pricing                            |
-| Parceiros      | py-24 sm:py-28  | TIGHT      | Operational context (already varied in repo)    |
-| FAQ            | py-24 sm:py-28  | TIGHT      | Closing section before footer                   |
-
-3 rhythm tiers across 11 sections. Hierarchy now signaled by space,
-not borders or background shifts.
-
-## Audit findings (no action required)
-
-- **Container widths**: Hero/WhyOTB/Audience/Programa/Turmas/Modulos/BostonHarvard/Speakers use `max-w-7xl`; Investimento/Parceiros narrow to `max-w-6xl`; FAQ narrows to `max-w-4xl`; Modulos inner cards `max-w-5xl`. Variation is intentional and consistent with content function — no action.
-- **Asymmetric splits**: Audience 5/7, Programa 5/7, Investimento 6/6 — 6/6 on Investimento is justified (CTA panel needs equal weight to drive conversion).
-- **Card padding**: Premium glass-cards (WhyOTB, Programa, BostonHarvard, Parceiros) use `p-7`. Denser grids (Audience categorias, Modulos, lote rows) use `p-5/px-4 py-3`. Parity is disciplined — no action.
-- **Card grid gaps**: WhyOTB `gap-6 md:gap-7`, Programa `gap-5`, BostonHarvard `gap-6`, Audience `gap-4`, Modulos `gap-4 md:gap-5`, Speakers `gap-8` (portraits — needs more air), Parceiros `gap-6`. All on the 4/5/6/7/8 progression — no monotone 4-everywhere; no action.
-- **Vertical rhythm between heading elements**: eyebrow → h2 `mt-5` (consistent across WhyOTB, Audience, Turmas, Modulos, BostonHarvard, Speakers, Investimento, Parceiros, FAQ). Programa uses `mt-6` (intentional — preceded by oversized 01 numeral). h2 → body `mt-6` standard (WhyOTB positioning quote uses `mt-10` — editorial pause). Disciplined.
-- **Container alignment**: all eyebrow + h2 + body in the same container parent — left edges align by inheritance. No drift detected.
-- **SectionDivider pattern**: index.astro alternates `line` (default) and `variant="dot"` at 3 points (Turmas before, BostonHarvard before, Investimento before). Pattern signals: dot = transition to a beat shift (proof / centerpiece / commerce). Intentional cluster-boundary marker — no action.
-- **Modulos grid topology**: 10 items in `md:grid-cols-2` inside `max-w-5xl` → 2-col 5-row at md+. Single column on mobile. Density is appropriate for short titles + optional subtitles (vs forcing 3-col which would shrink cards). No action.
-- **Hero glass card column 8/4**: at `lg:` the 4-col card holds 3 metric rows + 1 headline → comfortable. No action.
+## DEFERRED
+- adapt (5/7): verify spine at 360/390/768/1280 + short viewport; confirm `lg:py-28` doesn't strand
+  short content; FinalCTA `md:p-14` not cramped on 360; soften `landing-vignette` on short mobile;
+  Hero `lg:-ml-6` crowd at 1024px.
+- optimize (6/7): Hero-headline LCP; Logo `fetchpriority=high`; ambient-anim 60fps.
+- polish (7/7): the 12 MOTION items (gradient sweep, parallax-lite, card hover richness, FAQ panel
+  fade, header condense, MobileCTABar slide-up, etc.).
 
 ## Maestro 6-gate self-check
+- Safe Split: PASS — Hero asymmetry intact; Authority asymmetric split confirmed intentional.
+- Glass Trap: PASS — glass-card-bright still FinalCTA-only; NextStep stays plain glass-card.
+- Glow Trap: PASS — no gold added (spacing/size only).
+- Bento Trap: N/A.
+- Blue Trap: PASS — tokens only, no hex.
+- Line Trap: PASS — no decorative hairline/side-stripe added.
 
-1. Cardinal rules — PASS (no new hex; tokens only; transform/opacity untouched; Bun tooling; LF endings preserved per Edit semantics).
-2. Astro static-only — PASS (no SSR/SPA; no client directive change; pure utility-class diffs).
-3. Content SSOT — PASS (no copy added to `.astro`/`.tsx`; otb.json untouched per phase scope).
-4. WhatsApp SSOT — PASS (untouched).
-5. Motion contract — PASS (no animation property added; padding/margin changes are static layout, not transitions; no `transition: padding/margin` introduced).
-6. Quality gates — PASS:
-   - `bunx astro check` → 23 files: 0 errors / 0 warnings / 0 hints.
-   - `bun run lint` (biome + oxlint) → 0 warnings / 0 errors.
-   - Build not re-run (no dependency/config change; check + lint sufficient per phase convention).
-
-## Handoff hint to adapt (5/7)
-
-Vertical rhythm now has 3 intentional tiers. Adapt phase should verify
-on real viewport breakpoints:
-- (a) BostonHarvard at `py-36` doesn't create awkward whitespace on
-  short viewports (`sm:` portrait) — confirm the centerpiece still
-  reads as "elevated" not "stranded".
-- (b) Modulos `mt-16` heading-to-grid gap inside the new tighter
-  `py-24` shell still breathes — visually verify the eyebrow→h2→body
-  → grid sequence keeps pace.
-- (c) WhyOTB cards `mt-20` after `positioningQuote` — verify the
-  serif quote's `mt-10` parent + cards `mt-20` doesn't create double
-  pause at `< md` where cards stack vertically.
-- (d) BostonHarvard agenda `mt-24` — at `lg:` the 3-col agenda
-  separates well from freshStats; at `< lg` confirm the stacked
-  agenda cards still feel attached to the section (not orphaned).
-Open observation: index.astro `SectionDivider class="my-0"` means
-section padding fully owns vertical spacing — adapt phase may want
-to verify divider's intrinsic height (line vs dot variants) doesn't
-break the 8px-grid math at the tier transitions.
+## astro check
+`bunx astro check` → 30 files, **0 errors, 0 warnings, 1 hint** (pre-existing ts(6385) in FROZEN
+src/content.config.ts:25 — not mine, ignored per task).

@@ -47,19 +47,21 @@ Invariant per project lives in cardinal rules (`.claude/CLAUDE.md`).
 
 ---
 
-## Performance gates
+## Performance gates (ADVISORY)
 
-Universal Core Web Vitals thresholds:
+Core Web Vitals = **alvos orientativos: medir & anotar, NÃO travam merge** (doutrina "dinâmico forte" — motion/3D/parallax/glow podem trocar contra CWV; é decisão aceita de projeto):
 
-| Metric | Threshold |
+| Metric | Advisory target |
 |---|---|
-| LCP (Largest Contentful Paint) | < 2.5s |
-| CLS (Cumulative Layout Shift) | 0 |
-| INP (Interaction to Next Paint) | < 100ms |
-| Initial JS on prerendered pages | < 50KB |
-| Lighthouse Performance / A11y / BP / SEO | ≥ 95 on critical routes |
+| LCP | < 2.5s |
+| CLS | ~0 (manter `width`/`height` em imagens, `--py` só em transform livre) |
+| INP | ~200ms (afrouxado de 100ms para motion rico) |
+| Initial JS on prerendered pages | < 50KB (libs de animação **dentro do island**, fora da entry da landing) |
+| Lighthouse Perf / A11y / BP / SEO | ≥ 95 desejável em rotas críticas |
 
-Project-specific gates (route list, custom budget) → `.claude/config.json::gates`.
+Project gates (route list, budget) → `.claude/config.json::gates` (advisory).
+
+> **Hard floor (NÃO advisory — gate de merge):** a11y (`prefers-reduced-motion` estendido a 3D/parallax/glow, contraste, foco, labels), render-mode estático/MPA (sem SSR/SPA/`ClientRouter`), tokens-only (incl. sombra/glow/3D), Lucide-only, content/contato SSOT, contratos do Layout. Estes nunca afrouxam.
 
 ---
 
@@ -88,20 +90,13 @@ grep -rnE "<h1[^>]*>" <src>/pages | wc -l
 # expect: ≤ 1 per page
 ```
 
-### Layout-property animation forbidden
-
-```bash
-grep -rnE "transition.*\b(width|height|top|left|padding|margin)\b" <src>/styles
-# expect: empty (use transform + opacity)
-```
-
 ### Bundle audit
 
 ```bash
 ${tooling.packageManager} run ${tooling.buildTool}
 # After build, audit largest chunks:
 ls -lh <dist>/<assets>/*.js | sort -k5 -rh | head -5
-# expect: top initial-bundle files < 50KB on prerendered pages
+# advisory: top initial-bundle files ~< 50KB on prerendered pages (anotar; libs de animação ficam no island)
 ```
 
 ### Type / lint / test gates
@@ -150,8 +145,6 @@ ${tooling.packageManager} run ${tooling.buildTool}
 
 - Hardcoded hex outside design-token source.
 - Mixing icon libraries.
-- Animating layout properties (`width`, `height`, `top`, `left`, `padding`, `margin`).
-- `transition: all`.
 - Missing `width` / `height` on images → CLS hazard.
 - Pure black / white text on colored background.
 
@@ -159,7 +152,6 @@ ${tooling.packageManager} run ${tooling.buildTool}
 
 - Drop the skip link or move it past first focusable.
 - Drop the `<noscript>` fallback when reveal-on-scroll patterns hide content.
-- Animate disclosure panel via `height: 0/auto` (use CSS grid `0fr/1fr` or native `<details>`).
 - `href="#"` for actions.
 - Ignore `prefers-reduced-motion`.
 - Icon-only buttons missing `aria-label`.
@@ -177,7 +169,11 @@ ${tooling.packageManager} run ${tooling.buildTool}
 | Symptom | First check |
 |---|---|
 | Section blank with JS off | `<noscript>` reveal fallback present? |
-| FAQ stutters on expand | CSS grid `0fr/1fr` (or native `<details>`) — not height tween? |
+| FAQ stutters on expand | Layout thrash on low-end device? Switch to grid `0fr/1fr` or `transform` if needed — any approach is allowed |
+| Hover/tilt "morto" após reveal | Reveal usa `animation: … forwards`? Trava o `transform` no fim do keyframe → mascara hover/3D. Remover `forwards`, fixar fim com `.revealed{opacity:1}` (gotcha #1, `docs/motion-depth-playbook.md`) |
+| Tilt e hover-lift se anulam | Dois `transform` na mesma regra brigam — em card com `[data-tilt]`, o tilt É o hover (remover `card-hover-lift`) |
+| Glow/`::before` tinge o texto | `[data-glow-card]::before` precisa de `z-index: -1` (pinta acima do fundo, atrás do conteúdo) |
+| Parallax salta | `data-parallax` em elemento que já usa `transform` p/ posicionar — só onde o transform está livre |
 | LCP regression | Hero image priority hint + island hydration directive (idle vs eager)? |
 | CLS spike | Missing `width` / `height` on `<img>` / responsive image component? |
 | 404 on bookmarked URL | Redirect config entry missing? |

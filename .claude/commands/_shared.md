@@ -22,8 +22,25 @@ Substitution placeholders used in commands (resolve at runtime):
 | Placeholder | Source field |
 |---|---|
 | `${project.name}` | `project.name` |
+| `${project.displayName}` | `project.displayName` |
 | `${project.stagingUrl}` | `project.stagingUrl` |
+| `${project.productionUrl}` | `project.productionUrl` |
+| `${project.designModelRepo}` | `project.designModelRepo` |
 | `${project.locale}` | `project.locale` |
+| `${content.productJson}` | `content.productJson` |
+| `${content.productSlug}` | `content.productSlug` |
+| `${content.ogImage}` | `content.ogImage` |
+| `${content.anchors}` | `content.anchors` |
+| `${content.legalRoutes}` | `content.legalRoutes` |
+| `${content.sections.*}` | `content.sections.*` (section→anchor alias map) |
+| `${lead.sdrName}` | `lead.sdrName` |
+| `${lead.whatsappGreeting}` | `lead.whatsappGreeting` |
+| `${lead.whatsappHelper}` | `lead.whatsappHelper` |
+| `${lead.formComponent}` | `lead.formComponent` |
+| `${lead.endpointEnv}` | `lead.endpointEnv` |
+| `${lead.leadTable}` | `lead.leadTable` |
+| `${tracking.ga4Env}` | `tracking.ga4Env` |
+| `${tracking.pixelEnv}` | `tracking.pixelEnv` |
 | `${paths.backendRoot}` | `paths.backendRoot` |
 | `${paths.frontendRoot}` | `paths.frontendRoot` |
 | `${paths.schemaRoot}` | `paths.schemaRoot` |
@@ -46,7 +63,7 @@ Substitution placeholders used in commands (resolve at runtime):
 | `${rulesDir}/verify-supplements.md` | Project-specific smoke tests (loaded by `/verify`) |
 | `Skill("debugger")` → `references/anti-patterns.md` | Project-specific bug patterns + Negative Constraints index |
 | `Skill("planning")` → `references/layer-map.md` | Project-specific layer map for sprint phase ordering |
-| `Skill("otb-usa")` → product/legal references | OTB USA product, copy, audience, CTA and Harvard legal guardrails |
+| `Skill("grupo-us")` → product/legal references | ${project.displayName} product, copy, audience, CTA and LGPD/consent guardrails |
 | `${rulesDir}/docs/evolution/` | Runtime data: errors.jsonl, memory.db, HANDOFF.md (not docs) |
 
 Project identity, cardinal rules, and constraints live in **root `AGENTS.md`** (always loaded as Tier 1).
@@ -61,7 +78,7 @@ Every command **MUST** invoke the superpowers meta-router as the first skill loa
 Skill("superpowers:using-superpowers"); // meta-router — sets discipline + announce pattern
 ```
 
-This loads the discipline-skill index and the "announce-before-action" rule. OTB domain skills (`debugger`, `planning`, `evolution-core`, `otb-usa`, `otb-theme`, `astro`, `performance-optimization`) are loaded **after** the superpowers method layer, per § 12 (Skill invocation order).
+This loads the discipline-skill index and the "announce-before-action" rule. GPUS Astro landing domain skills (`debugger`, `planning`, `evolution-core`, `grupo-us`, `gpus-theme`, `astro`, `performance-optimization`) are loaded **after** the superpowers method layer, per § 12 (Skill invocation order).
 
 Exceptions:
 - `/prime` is a context loader — it only **recommends** the next command run the bootstrap.
@@ -81,7 +98,7 @@ Specs, plans, and learnings produced by the superpowers pipeline use these canon
 | Audit report | `docs/AUDIT-REPORT-YYYY-MM-DD.md` | `/debug audit` |
 | Phase tracker | `.claude/logs/progress.md` | `/implement` (append on phase complete) |
 
-Folders auto-created on first write. OTB USA `.claude/logs/progress.md` remains the chronological phase tracker when a command requires phase tracking.
+Folders auto-created on first write. The project `.claude/logs/progress.md` remains the chronological phase tracker when a command requires phase tracking.
 
 ---
 
@@ -172,9 +189,9 @@ Before any task, load the right tier:
 | Continuing prior session | Read `${rulesDir}/docs/evolution/HANDOFF.md` first | — |
 
 **Tier 3 (read on demand only):**
-- `Skill("otb-usa")` — OTB product, audience, CTA, legal/Harvard guardrails
-- `Skill("otb-theme")` — Navy/Gold tokens, design canon, frontend handoff
-- `Skill("astro")` — static Astro MPA, Content Collections, OTB overlay
+- `Skill("grupo-us")` — ${project.displayName} product, audience, CTA, LGPD/consent guardrails
+- `Skill("gpus-theme")` — Navy/Gold tokens, design canon, frontend handoff
+- `Skill("astro")` — static Astro MPA, Content Collections
 - `${rulesDir}/docs/` — project Tier-3 markdown the host project chooses to keep outside skills (e.g. PRDs, planning docs)
 
 ---
@@ -204,7 +221,7 @@ Single source of truth — used by `/implement`, `/design`, `/verify`, `/debug a
 |---|---|---|
 | Bug fix / runtime error / regression | `debugger` | `evolution-core` (post-fix capture) |
 | Plan / decompose / architecture decision | `planning` | `senior-prompt-engineer` (if AI feature) |
-| UI / component / page / design system | `otb-theme` + `astro` | `debugger` (if mid-fix) |
+| UI / component / page / design system | `gpus-theme` + `astro` | `debugger` (if mid-fix) |
 | Performance / SEO / security baseline / Core Web Vitals / bundle | `performance-optimization` | Host database/performance skill if present |
 | Database query / schema / permission model | Host database skill if present | `debugger` |
 | External provider / deployment / product API | Host provider skill if present | `librarian` for external docs |
@@ -225,7 +242,7 @@ Before any parallel batch, invoke:
 Skill("superpowers:dispatching-parallel-agents");
 ```
 
-This skill enforces: distinct scope per agent, shared return contract, single-message dispatch, stopping conditions. The numbered rules below are the local OTB USA quick-reference.
+This skill enforces: distinct scope per agent, shared return contract, single-message dispatch, stopping conditions. The numbered rules below are the local GPUS Astro landing quick-reference.
 
 When invoking 2+ agents in parallel:
 
@@ -333,8 +350,8 @@ When a task touches multiple domains, invoke skills in this order:
 
 1. **Meta layer** — `superpowers:using-superpowers` (always first, per § 0.5)
 2. **Superpowers method** — `superpowers:brainstorming` / `writing-plans` / `executing-plans` / `subagent-driven-development` / `test-driven-development` / `systematic-debugging` / `verification-before-completion` / `requesting-code-review` / `receiving-code-review` / `dispatching-parallel-agents` / `using-git-worktrees` / `finishing-a-development-branch` / `writing-skills` (HOW: discipline + format)
-3. **OTB knowledge** — `otb-usa`, `planning`, `debugger`, `evolution-core` (WHAT: product rules, bug catalog, layer-map, anti-patterns, memory)
+3. **GPUS Astro landing knowledge** — `grupo-us`, `planning`, `debugger`, `evolution-core` (WHAT: product rules, bug catalog, layer-map, anti-patterns, memory)
 4. **Domain skills** — `astro`, `performance-optimization`, `senior-prompt-engineer`
-5. **Implementation/design skills last** — `otb-theme`, `ui-ux-pro-max`, `xlsx`, `skill-creator`
+5. **Implementation/design skills last** — `gpus-theme`, `ui-ux-pro-max`, `xlsx`, `skill-creator`
 
 Multiple skills can be loaded in the same response; order matters because earlier skills set context that later ones build on. The pipeline `spec (brainstorming) → plan (writing-plans) → execute (executing-plans / subagent-driven-development) → verify (verification-before-completion) → review (requesting-code-review / receiving-code-review) → finish (finishing-a-development-branch)` is the canonical flow for any L3+ feature work.

@@ -1,8 +1,8 @@
 ---
-description: OTB USA post-implementation verification gate.
+description: GPUS Astro landing post-implementation verification gate.
 ---
 
-# /verify — OTB USA Verification Gate
+# /verify — ${project.displayName} Verification Gate
 
 **ARGUMENTS**: $ARGUMENTS
 
@@ -26,7 +26,7 @@ bun run build
 
 A gate is passing only if it was run and exited successfully in this session.
 
-## 2. OTB invariant smoke checks
+## 2. ${project.displayName} invariant smoke checks
 
 ```bash
 rg -n "ClientRouter|prerender = false|prerender: false|output:.*server|output:.*hybrid" src astro.config.mjs
@@ -39,13 +39,14 @@ Expected result for smoke checks: no active-source matches except intentional ru
 
 ## 3. Review checklist
 
-- Branch is not `main`.
+- Branch must be on `main`.
 - No dependency added without approval.
 - No protected file changed unintentionally.
-- OTB product copy remains in `src/content/products/otb.json` when applicable.
-- Harvard legal guardrail preserved.
-- WhatsApp message starts with `Olá, Laura!`.
-- Canonical domain is `https://otb.drasacha.com.br`.
+- Product copy remains in `${content.productJson}` when applicable.
+- LGPD consent + privacy link preserved on the registration form.
+- Lead destination + tracking IDs stay in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`), never committed.
+- WhatsApp message starts with `${lead.whatsappGreeting}`.
+- Canonical domain is `${project.productionUrl}`.
 
 ## 4. Verdict
 

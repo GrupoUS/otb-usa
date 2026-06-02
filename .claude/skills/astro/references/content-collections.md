@@ -1,20 +1,20 @@
-# Astro Content Collections — OTB USA
+# Astro Content Collections — GPUS Astro landing
 
 ## Project SSOT
 
 - Collection: `products`.
-- Entry: `src/content/products/otb.json`.
+- Entry: `${content.productJson}`.
 - Schema: `src/content.config.ts`.
-- Reader page: `src/pages/otb.astro` and `src/pages/index.astro`.
+- Reader page: `src/pages/index.astro`.
 
 ## Pattern
 
 ```astro
 ---
 import { getEntry } from "astro:content";
-const otb = await getEntry("products", "otb");
-if (!otb) throw new Error("Missing products/otb.json");
-const { data } = otb;
+const product = await getEntry("products", "${content.productSlug}");
+if (!product) throw new Error("Missing ${content.productJson}");
+const { data } = product;
 ---
 ```
 
@@ -25,7 +25,7 @@ Pass `data` or nested data objects to components. Do not pass the collection ent
 Anti-pattern:
 
 ```astro
-<h1>OTB Estados Unidos</h1>
+<h1>${project.displayName}</h1>
 <p>Copy comercial escrita direto no componente.</p>
 ```
 
@@ -41,10 +41,10 @@ Preferred:
 When adding fields:
 
 1. Update `src/content.config.ts`.
-2. Update `src/content/products/otb.json`.
+2. Update `${content.productJson}`.
 3. Update components that read the field.
 4. Run `bunx astro check` and `bun run build`.
 
 ## WhatsApp messages
 
-CTA message strings live in `otb.json` and are validated by schema. URL construction remains in `src/lib/whatsapp.ts`.
+CTA message strings live in `${content.productJson}` and are validated by schema. URL construction remains in `src/lib/whatsapp.ts`.

@@ -20,7 +20,7 @@ bunx unlighthouse --site ${project.stagingUrl} --throttle --samples 1
 
 # Specific routes only
 bunx unlighthouse --site ${project.stagingUrl} \
-  --urls /,/otb \
+  --urls / \
   --throttle --samples 1
 
 # Desktop mode

@@ -1,6 +1,6 @@
-# Sub-Agent Prompt Templates — OTB USA
+# Sub-Agent Prompt Templates — GPUS Astro landing
 
-Prompt templates for Phase 1 parallel research agents in the OTB static Astro repo.
+Prompt templates for Phase 1 parallel research agents in the GPUS static Astro repo.
 
 ---
 
@@ -14,7 +14,7 @@ Task({
   name: "evidence-collector",
   description: "Capture public route evidence",
   run_in_background: true,
-  prompt: `TASK: Capture browser/static evidence for OTB USA debugging
+  prompt: `TASK: Capture browser/static evidence for GPUS Astro landing debugging
 
 CONTEXT: [paste bug description or failing URL]
 DEFAULT URL: http://localhost:4321
@@ -23,13 +23,13 @@ MISSION:
 1. Inspect the generated/static route involved in the bug.
 2. Capture screenshot/snapshot if browser tooling is available.
 3. Check console/network symptoms if browser tooling is available.
-4. For SEO issues, inspect dist/index.html, dist/otb/index.html, dist/sitemap-0.xml, dist/robots.txt.
+4. For SEO issues, inspect dist/index.html, dist/sitemap-0.xml, dist/robots.txt.
 5. Do not edit files.
 
 VERIFY SPECIFICALLY:
 - / renders the full funnel.
-- #programa exists when Hero CTA points to it.
-- /otb is noindex/redirect fallback and canonicalizes to /.
+- The expected anchor exists when the Hero CTA points to it.
+- Any stale/compatibility route is noindex/redirect fallback and canonicalizes to /.
 - No missing public assets for content JSON fields.
 
 RETURN:
@@ -51,9 +51,9 @@ RETURN:
 Task({
   subagent_type: "explorer-agent",
   name: "code-archaeologist",
-  description: "Investigate failing OTB code path",
+  description: "Investigate failing code path",
   run_in_background: true,
-  prompt: `TASK: Investigate code context for OTB USA debugging
+  prompt: `TASK: Investigate code context for GPUS Astro landing debugging
 
 SYMPTOM: [paste error message or failing behavior]
 AFFECTED AREA: [component/route/content field if known]
@@ -85,15 +85,15 @@ Plus:
 
 ## Sub-agent C: Regression Hunter
 
-**For all packs.** Matches symptoms against OTB static-site patterns.
+**For all packs.** Matches symptoms against GPUS static-site patterns.
 
 ```typescript
 Task({
   subagent_type: "explorer-agent",
   name: "regression-hunter",
-  description: "Match against OTB static patterns",
+  description: "Match against GPUS static patterns",
   run_in_background: true,
-  prompt: `TASK: Match debugging symptom against OTB static-site patterns
+  prompt: `TASK: Match debugging symptom against GPUS static-site patterns
 
 SYMPTOM: [paste error message or failing behavior]
 
@@ -127,7 +127,7 @@ RETURN:
 Task({
   subagent_type: "debugger",
   name: "content-state-inspector",
-  description: "Inspect OTB content, schema, assets, and legal copy",
+  description: "Inspect product content, schema, assets, and legal copy",
   run_in_background: true,
   prompt: `TASK: Inspect static content state related to the failure
 
@@ -136,11 +136,11 @@ AFFECTED CONTENT: [if known]
 
 MISSION:
 1. Read src/content.config.ts to understand the Content Collection schema.
-2. Read src/content/products/otb.json and verify the failing field exists.
+2. Read ${content.productJson} and verify the failing field exists.
 3. Check every referenced public asset exists.
 4. Trace the consuming Astro component/page.
-5. Verify WhatsApp messages start with: Olá, Laura!
-6. Verify Harvard/legal copy does not imply affiliation, endorsement, certification, or partnership.
+5. Verify WhatsApp messages start with: ${lead.whatsappGreeting}
+6. Verify regulated-health/legal copy does not imply official affiliation, endorsement, certification, or partnership.
 7. Do not edit files.
 
 RETURN:

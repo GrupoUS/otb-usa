@@ -1,4 +1,4 @@
-# Debugging Patterns & Checklists — OTB USA
+# Debugging Patterns & Checklists — GPUS Astro landing
 
 Quick reference for static Astro/content/SEO debugging.
 
@@ -10,10 +10,10 @@ Prefer deterministic checks over visual guessing.
 
 | Scenario | Pattern |
 |---|---|
-| Anchor exists | `grep -RIn 'id="programa"' dist/index.html` |
+| Anchor exists | `grep -RIn 'id="<expected-anchor>"' dist/index.html` |
 | Legacy domain absent | `grep -RIn '<legacy-domain>' . --exclude-dir=_archive --exclude-dir=dist` |
-| Sitemap canonical only | inspect `dist/sitemap-0.xml` for `https://otb.drasacha.com.br/` only |
-| OG image exists | check `public/og/otb-default.jpg` and generated `og:image` |
+| Sitemap canonical only | inspect `dist/sitemap-0.xml` for `${project.productionUrl}/` only |
+| OG image exists | check the default OG image under `public/og/` and generated `og:image` |
 | WhatsApp helper only | grep `wa.me/` in `src` and allow only `src/lib/whatsapp.ts` |
 | Static-only Astro | grep `ClientRouter`, `prerender = false`, SSR adapters |
 
@@ -25,10 +25,10 @@ Prefer deterministic checks over visual guessing.
 bunx astro check
 ```
 
-When an asset is referenced by `otb.json`, verify the file exists under `public/`:
+When an asset is referenced by `${content.productJson}`, verify the file exists under `public/`:
 
 ```bash
-python -c "import json, pathlib; data=json.load(open('src/content/products/otb.json', encoding='utf-8')); paths=[data['seo']['ogImage'], data['hero']['background']['image'], data['audience']['background']['image'], data['bostonHarvard']['background']['image']]; missing=[p for p in paths if not pathlib.Path('public', p.lstrip('/')).exists()]; print(missing)"
+python -c "import json, pathlib; data=json.load(open('${content.productJson}', encoding='utf-8')); paths=[data['seo']['ogImage']]; missing=[p for p in paths if not pathlib.Path('public', p.lstrip('/')).exists()]; print(missing)"
 ```
 
 Expected result: `[]`.
@@ -42,7 +42,7 @@ Expected result: `[]`.
 - CTA anchors point to existing IDs.
 - Focus-visible styles remain visible.
 - No emoji icons; use Lucide/SVG.
-- Reduced-motion users are not forced through layout animations.
+- Reduced-motion users get reduced/disabled motion (`prefers-reduced-motion` honored).
 - Static/no-JS fallback reveals content.
 
 ---
@@ -51,23 +51,23 @@ Expected result: `[]`.
 
 | Check | Expected |
 |---|---|
-| `astro.config.mjs site` | `https://otb.drasacha.com.br` |
-| `robots.txt` sitemap | `https://otb.drasacha.com.br/sitemap-index.xml` |
-| Home canonical | `https://otb.drasacha.com.br/` |
-| `/otb` | noindex/redirect fallback to `/` |
-| Sitemap | only canonical URL(s), no `/otb` |
+| `astro.config.mjs site` | `${project.productionUrl}` |
+| `robots.txt` sitemap | `${project.productionUrl}/sitemap-index.xml` |
+| Home canonical | `${project.productionUrl}/` |
+| Stale/compatibility route | noindex/redirect fallback to `/` |
+| Sitemap | only canonical URL(s), no stale route |
 | OG/Twitter image | absolute URL to existing asset |
-| Organization JSON-LD | Grupo US as organization, OTB as product/page context |
+| Organization JSON-LD | Grupo US as organization, the product as product/page context |
 
 ---
 
-## OTB Legal/Copy Guardrails
+## Legal/Copy Guardrails
 
-- Product copy lives in `src/content/products/otb.json`.
-- Harvard may be mentioned only as context/ecosystem.
-- Never imply Harvard affiliation, endorsement, certification, official partnership, or diploma.
-- `Grupo US` is the parent brand; do not broaden CTAs to non-OTB programs.
-- WhatsApp messages must start with `Olá, Laura!`.
+- Product copy lives in `${content.productJson}`.
+- Regulated-health (saúde estética) claims may be stated only as descriptive context.
+- Never imply official affiliation, endorsement, certification, partnership, or diploma (PRODUCT.md § Guardrails).
+- `Grupo US` is the parent brand; do not broaden CTAs to off-product programs.
+- WhatsApp messages must start with `${lead.whatsappGreeting}`.
 
 ---
 

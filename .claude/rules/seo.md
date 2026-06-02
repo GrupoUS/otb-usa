@@ -113,12 +113,14 @@ When a page has matching content, emit the corresponding schema. Validate agains
 
 ## CWV thresholds
 
+> Advisory — targets orientativos: medir & anotar, não bloquear merge (a11y `prefers-reduced-motion` e CLS/layout hygiene seguem hard). Ver `.claude/rules/stability.md` § perf gates.
+
 | Metric | Threshold |
 |---|---|
-| LCP | < 2.5s |
+| LCP | < 2.5s (advisory) |
 | CLS | 0 |
-| INP | < 100ms |
-| Initial JS | < 50KB on prerendered pages |
+| INP | ~200ms (advisory) |
+| Initial JS | ~< 50KB on prerendered pages (advisory; libs de animação dentro do island) |
 
 Strategies:
 - Hero image with eager loading + `fetchpriority="high"`.

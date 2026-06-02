@@ -1,10 +1,10 @@
-# Astro configuration — OTB USA
+# Astro configuration — GPUS Astro landing
 
 ## `astro.config.mjs`
 
 Current project configuration:
 
-- `site`: `https://otb.drasacha.com.br`.
+- `site`: `${project.productionUrl}`.
 - Integrations: `@astrojs/react`, `@astrojs/sitemap`.
 - Vite plugin: `@tailwindcss/vite`.
 - Fonts: Playfair Display + Inter via Astro font providers.
