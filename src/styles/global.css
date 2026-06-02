@@ -282,9 +282,11 @@ body {
 	opacity: 0;
 }
 
-.js [data-reveal].revealed {
-	will-change: transform, opacity;
-}
+/* Intencionalmente SEM will-change permanente nos elementos revelados.
+   Deixá-lo em dezenas de cards promove camadas de composição demais →
+   o compositor thrasha e a tela pisca no hover (agravado por cards com
+   backdrop-filter sobre o mesh animado). O reveal é um one-shot curto;
+   o navegador compõe bem sem o hint. Ver docs/motion-depth-playbook. */
 
 .js [data-reveal="up"].revealed {
 	animation: reveal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -340,7 +342,6 @@ body {
 		transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
 		border-color 0.3s ease,
 		box-shadow 0.3s ease;
-	will-change: transform;
 }
 
 @utility gold-pulse-glow {
