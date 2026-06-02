@@ -97,7 +97,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 										</div>
 										<div class="flex flex-wrap items-baseline gap-x-2 gap-y-1 tabular-nums sm:justify-end sm:text-right">
 											<span class="text-xs text-text-muted">{l.moeda}</span>
-											<span class={`font-serif text-lg font-semibold ${isActive ? "text-gradient-gold" : "text-text-primary/80"}`}>
+											<span class={`font-sans text-lg font-bold tracking-tight ${isActive ? "text-gradient-gold" : "text-text-primary/80"}`}>
 												{l.preco}
 											</span>
 											{l.validade && (
@@ -118,8 +118,8 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 				<div class="glass-card-bright rounded-3xl p-8 sm:p-10">
 					<div class="text-xs uppercase tracking-[0.28em] text-gold/80">Investimento à vista</div>
 					<div class="mt-3 flex items-baseline gap-2 tabular-nums">
-						<span class="font-serif text-xl text-text-muted">{investimento.moeda}</span>
-						<span class="font-serif text-6xl font-bold text-gradient-gold sm:text-7xl">{investimento.preco}</span>
+						<span class="font-sans text-xl font-medium text-text-muted">{investimento.moeda}</span>
+						<span class="font-sans text-6xl font-bold tracking-tight text-gradient-gold sm:text-7xl">{investimento.preco}</span>
 					</div>
 					{investimento.escassez && (
 						<p class="mt-4 flex items-start gap-2 text-xs leading-relaxed text-text-muted">
