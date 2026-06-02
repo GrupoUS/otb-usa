@@ -36,10 +36,10 @@ function getMeta(src: string) {
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
 		<!-- Header -->
 		<div class="mx-auto max-w-3xl text-center" data-reveal="up">
-			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-crimson-bright">
-				<span class="h-px w-10 bg-crimson-bright/60"></span>
+			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
+				<span class="h-px w-10 bg-gold/60"></span>
 				Histórico
-				<span class="h-px w-10 bg-crimson-bright/60"></span>
+				<span class="h-px w-10 bg-gold/60"></span>
 			</span>
 			<h2
 				id="turmas-heading"
@@ -47,7 +47,7 @@ function getMeta(src: string) {
 			>
 				{turmas.headline}
 			</h2>
-			<p class="mt-4 font-serif text-xl text-gradient-crimson">{turmas.descricao}</p>
+			<p class="mt-4 font-serif text-xl text-gradient-gold">{turmas.descricao}</p>
 		</div>
 
 		<!--
@@ -64,7 +64,7 @@ function getMeta(src: string) {
 				const meta = getMeta(turmas.fotos[0].src);
 				return (
 					<figure
-						class="group relative col-span-1 overflow-hidden rounded-3xl border border-crimson-mid-35 sm:col-span-2 lg:col-span-3"
+						class="group relative col-span-1 overflow-hidden rounded-3xl border border-gold-mid-35 sm:col-span-2 lg:col-span-3"
 						data-reveal="scale"
 						data-reveal-delay="1"
 					>
@@ -87,7 +87,7 @@ function getMeta(src: string) {
 							{turmas.fotos[0].alt}
 						</figcaption>
 						<!-- Crimson corner accent -->
-						<span class="absolute left-0 top-0 h-1 w-20 rounded-br-sm bg-crimson-bright" aria-hidden="true"></span>
+						<span class="absolute left-0 top-0 h-1 w-20 rounded-br-sm bg-gold" aria-hidden="true"></span>
 					</figure>
 				);
 			})()}
@@ -130,7 +130,7 @@ function getMeta(src: string) {
 				const delay = String(Math.min(i + 2, 6));
 				return (
 					<figure
-						class="group relative col-span-1 overflow-hidden rounded-2xl border border-crimson-mid-35"
+						class="group relative col-span-1 overflow-hidden rounded-2xl border border-gold-mid-35"
 						data-reveal="up"
 						data-reveal-delay={delay}
 					>
@@ -189,8 +189,8 @@ function getMeta(src: string) {
 
 		<!-- Gallery footer accent line -->
 		<div class="mt-8 flex items-center gap-4" aria-hidden="true">
-			<span class="h-px flex-1 bg-[color-mix(in_srgb,var(--color-crimson-bright)_20%,transparent)]"></span>
-			<span class="h-1.5 w-1.5 rounded-full bg-crimson-bright/50"></span>
+			<span class="h-px flex-1 bg-[color-mix(in_srgb,var(--color-gold)_20%,transparent)]"></span>
+			<span class="h-1.5 w-1.5 rounded-full bg-gold/50"></span>
 			<span class="h-px flex-1 bg-[color-mix(in_srgb,var(--color-gold)_20%,transparent)]"></span>
 		</div>
 	</div>

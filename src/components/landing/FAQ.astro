@@ -48,13 +48,13 @@ const faqJsonLd = {
 						class="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-left text-base font-medium text-text-primary transition-colors hover:text-gold group-open:text-gold sm:px-8 sm:text-lg"
 					>
 						<span class="min-w-0 wrap-break-word font-serif">{item.pergunta}</span>
-						<!-- chevron: gold at rest, crimson-bright when open -->
-						<span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-mid-35 text-gold transition-all duration-300 group-open:rotate-180 group-open:border-crimson-mid-35 group-open:bg-crimson-tint-10 group-open:text-crimson-bright">
+						<!-- chevron: gold at rest, navy-on-gold when open -->
+						<span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-mid-35 text-gold transition-all duration-300 group-open:rotate-180 group-open:border-gold group-open:bg-gold-tint-10 group-open:text-gold-light">
 							<Icon name="chevron-down" size={18} strokeWidth={2.25} />
 						</span>
 					</summary>
-					<!-- left crimson accent bar when open -->
-					<div class="faq-answer wrap-break-word border-l-2 border-crimson-mid-35 px-6 pb-6 pl-8 text-sm leading-relaxed text-text-muted sm:px-8 sm:pl-10 sm:text-base">
+					<!-- left gold accent bar when open -->
+					<div class="faq-answer wrap-break-word border-l-2 border-gold-mid-35 px-6 pb-6 pl-8 text-sm leading-relaxed text-text-muted sm:px-8 sm:pl-10 sm:text-base">
 						{item.resposta}
 					</div>
 				</details>
@@ -67,7 +67,7 @@ const faqJsonLd = {
 
 <style>
 	/* Native <details> disclosure; animate only chevron (transform) + answer panel
-	   (opacity + translateY). Left border accent uses border-crimson-mid-35 token. */
+	   (opacity + translateY). Left border accent uses border-gold-mid-35 token. */
 	.faq-item summary::-webkit-details-marker {
 		display: none;
 	}

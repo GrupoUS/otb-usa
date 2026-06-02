@@ -35,21 +35,16 @@ const { modulos } = Astro.props;
 					data-reveal={idx % 2 === 0 ? "left" : "right"}
 					data-reveal-delay={String(Math.min((idx % 6) + 1, 6))}
 				>
-					<!-- Number badge: crimson accent on even modules, gold on odd -->
+					<!-- Number badge: gold accent -->
 					<div
-						class:list={[
-							"flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border font-serif text-2xl font-bold leading-none tabular-nums transition-colors duration-300",
-							idx % 2 === 0
-								? "border-crimson-mid-35 bg-crimson-tint-10 text-gradient-crimson group-hover:border-crimson-mid-45"
-								: "border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-gold-tint-10 text-gradient-gold group-hover:border-gold-mid-35",
-						]}
+						class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border font-serif text-2xl font-bold leading-none tabular-nums transition-colors duration-300 border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-gold-tint-10 text-gradient-gold group-hover:border-gold-mid-35"
 					>
 						{m.numero}
 					</div>
-					<!-- Vertical crimson filete on hover -->
+					<!-- Vertical gold filete on hover -->
 					<div class="relative flex-1 pl-0">
 						<span
-							class="absolute -left-5 top-1 h-full w-[2px] scale-y-0 rounded-full bg-crimson-bright/50 transition-transform duration-300 origin-top group-hover:scale-y-100"
+							class="absolute -left-5 top-1 h-full w-[2px] scale-y-0 rounded-full bg-gold/50 transition-transform duration-300 origin-top group-hover:scale-y-100"
 							aria-hidden="true"
 						></span>
 						<h3 class="font-serif text-lg font-semibold leading-tight text-text-primary transition-colors group-hover:text-gold">

@@ -27,11 +27,11 @@ const { audience } = Astro.props;
 	>
 	</div>
 
-	{/* Decorative crimson glow — bottom-left, sóbrio */}
+	{/* Decorative gold glow — bottom-left, sóbrio */}
 	<div
 		class="pointer-events-none absolute bottom-0 left-0 -z-10 h-[360px] w-[360px] opacity-[0.10]"
 		aria-hidden="true"
-		style="background: radial-gradient(circle, var(--color-crimson-bright) 0%, transparent 70%);"
+		style="background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);"
 	></div>
 
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -60,30 +60,21 @@ const { audience } = Astro.props;
 			{/* Right column: category chips + persona bullets */}
 			<div class="lg:col-span-7">
 
-				{/* 6 category chips — alternating gold/crimson border accent */}
+				{/* 6 category chips — gold border accent */}
 				<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					{audience.categorias.map((c, idx) => {
-						// Alternate: even = gold accent, odd = crimson accent
-						const isCrimson = idx % 2 !== 0;
 						return (
 							<li
 								class={[
 									"card-glow-hover group flex items-center gap-4 rounded-2xl p-5 transition-all duration-300",
 									"bg-navy-soft-70 backdrop-blur",
-									isCrimson
-										? "border border-crimson-mid-35 hover:border-crimson-mid-45 card-glow-hover-crimson"
-										: "border border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)]",
+									"border border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)]",
 								].join(" ")}
 								data-reveal="up"
 								data-reveal-delay={String(((idx % 6) + 1))}
 							>
 								<span
-									class={[
-										"inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors",
-										isCrimson
-											? "bg-crimson-tint-10 text-crimson-bright group-hover:bg-crimson-tint-16"
-											: "bg-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] text-gold group-hover:bg-[color-mix(in_srgb,var(--color-gold)_25%,transparent)]",
-									].join(" ")}
+									class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors bg-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] text-gold group-hover:bg-[color-mix(in_srgb,var(--color-gold)_25%,transparent)]"
 								>
 									<Icon name={c.icone as IconName} size={20} />
 								</span>

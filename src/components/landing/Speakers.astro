@@ -34,7 +34,7 @@ const { speakers } = Astro.props;
 		<ul class="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6">
 			{speakers.lista.map((s, idx) => (
 				<li
-					class="group flex flex-col items-center rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_55%,transparent)] px-5 pb-8 pt-8 text-center card-glow-hover-crimson"
+					class="group flex flex-col items-center rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_55%,transparent)] px-5 pb-8 pt-8 text-center card-glow-hover"
 					data-reveal="up"
 					data-reveal-delay={String(Math.min(idx + 1, 6))}
 				>
@@ -45,10 +45,10 @@ const { speakers } = Astro.props;
 						class="relative mb-6 inline-block transition-transform duration-300 group-hover:scale-[1.05] focus-visible:scale-[1.05]"
 						aria-label={`Perfil do Instagram de ${s.nome}`}
 					>
-						<!-- crimson ring on hover, gold ring at rest -->
+						<!-- gold ring on hover -->
 						<span
 							class="absolute -inset-1.5 rounded-full opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-100"
-							style="background: conic-gradient(from 180deg at 50% 50%, var(--color-crimson-bright) 0deg, var(--color-gold-light) 120deg, var(--color-crimson) 240deg, var(--color-crimson-bright) 360deg);"
+							style="background: conic-gradient(from 180deg at 50% 50%, var(--color-gold-light) 0deg, var(--color-gold) 120deg, var(--color-gold-dark) 240deg, var(--color-gold-light) 360deg);"
 							aria-hidden="true"
 						></span>
 						<span
@@ -56,7 +56,7 @@ const { speakers } = Astro.props;
 							style="background: conic-gradient(from 180deg at 50% 50%, var(--color-gold) 0deg, var(--color-gold-light) 120deg, var(--color-gold-dark) 240deg, var(--color-gold) 360deg);"
 							aria-hidden="true"
 						></span>
-						<span class="relative block h-32 w-32 overflow-hidden rounded-full border-2 border-[color-mix(in_srgb,var(--color-crimson-bright)_45%,transparent)] bg-navy-light transition-[border-color] duration-300 group-hover:border-crimson-mid-45">
+						<span class="relative block h-32 w-32 overflow-hidden rounded-full border-2 border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] bg-navy-light transition-[border-color] duration-300 group-hover:border-[color-mix(in_srgb,var(--color-gold)_65%,transparent)]">
 							<img
 								src={s.foto}
 								alt={`Retrato profissional de ${s.nome}.`}
@@ -68,9 +68,9 @@ const { speakers } = Astro.props;
 								class="h-full w-full object-cover"
 							/>
 						</span>
-						<!-- instagram badge — crimson accent -->
+						<!-- instagram badge — gold accent -->
 						<span
-							class="absolute -bottom-2 right-0 inline-flex h-7 w-7 items-center justify-center rounded-full border border-crimson-mid-35 bg-navy text-crimson-bright shadow-md transition-colors duration-300 group-hover:border-crimson-mid-45 group-hover:bg-crimson-tint-10"
+							class="absolute -bottom-2 right-0 inline-flex h-7 w-7 items-center justify-center rounded-full border border-gold-mid-35 bg-navy text-gold shadow-md transition-colors duration-300 group-hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] group-hover:bg-gold-tint-10"
 							aria-hidden="true"
 						>
 							<Icon name="instagram" size={14} />
@@ -79,8 +79,8 @@ const { speakers } = Astro.props;
 
 					<h3 class="wrap-break-word font-serif text-lg font-semibold text-text-primary">{s.nome}</h3>
 
-					<!-- area badge — crimson pill -->
-					<span class="mt-2 inline-flex items-center rounded-full border border-crimson-mid-35 bg-crimson-tint-10 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-crimson-bright">
+					<!-- area badge — gold pill -->
+					<span class="mt-2 inline-flex items-center rounded-full border border-gold-mid-35 bg-gold-tint-10 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-gold">
 						{s.area}
 					</span>
 
