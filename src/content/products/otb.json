@@ -27,8 +27,8 @@
 			"checkoutUrl": null
 		},
 		"background": {
-			"image": "/images/otb/boston-skyline-hero.jpg",
-			"alt": "Vista aérea da cidade de Boston, Estados Unidos, ao entardecer."
+			"image": "/images/otb/gallery/pratica-3.jpg",
+			"alt": "Turma do OTB reunida no campus em Boston, Estados Unidos, durante a imersão internacional."
 		}
 	},
 
@@ -73,8 +73,8 @@
 		],
 		"legenda": "Profissionais habilitados conforme regulamentação do respectivo conselho de classe.",
 		"background": {
-			"image": "/images/otb/cambridge-academic.jpg",
-			"alt": "Rua de Cambridge, Massachusetts, próxima ao ecossistema acadêmico de Harvard."
+			"image": "/images/otb/gallery/aula-1.jpg",
+			"alt": "Profissionais de Saúde Estética assistindo a sessão executiva em auditório acadêmico em Boston, Estados Unidos."
 		}
 	},
 
@@ -101,16 +101,44 @@
 	},
 
 	"turmas": {
-		"headline": "Já formamos turmas internacionais.",
-		"descricao": "Esta é a próxima fronteira.",
+		"headline": "Duas turmas. Um legado em Boston.",
+		"descricao": "Veja como foi. Imagine onde você estará. Edições anteriores levaram empreendedores de Saúde Estética Avançada ao coração acadêmico de Boston — sessões executivas, networking de alto padrão e prática anatômica em Fresh Specimens.",
 		"fotos": [
 			{
-				"src": "/images/otb/turma-grupo-1.jpg",
-				"alt": "Turma do OTB reunida durante imersão internacional anterior."
+				"src": "/images/otb/gallery/aula-2.jpg",
+				"alt": "Turma completa do OTB reunida no campus em Boston, Estados Unidos, durante a imersão internacional."
 			},
 			{
-				"src": "/images/otb/turma-grupo-2.jpg",
-				"alt": "Segunda turma do OTB em encontro presencial."
+				"src": "/images/otb/gallery/turma-evento-1.jpg",
+				"alt": "Duas profissionais do OTB diante do painel Out of the Box em auditório acadêmico em Boston."
+			},
+			{
+				"src": "/images/otb/gallery/turma-evento-3.jpg",
+				"alt": "Alunos do OTB celebrando juntos em recepção de networking durante a imersão em Boston."
+			},
+			{
+				"src": "/images/otb/gallery/networking-1.jpg",
+				"alt": "Grupo de alunas do OTB em jalecos, prontas para a sessão de prática anatômica em Boston."
+			},
+			{
+				"src": "/images/otb/gallery/pratica-1.jpg",
+				"alt": "Turma do OTB em sessão demonstrativa de anatomia aplicada em ambiente acadêmico em Boston."
+			},
+			{
+				"src": "/images/otb/gallery/aula-1.jpg",
+				"alt": "Profissionais de Saúde Estética assistindo a sessão executiva em auditório acadêmico em Boston."
+			},
+			{
+				"src": "/images/otb/gallery/networking-3.jpg",
+				"alt": "Alunos do OTB reunidos em momento de confraternização durante a imersão internacional."
+			},
+			{
+				"src": "/images/otb/gallery/pratica-2.jpg",
+				"alt": "Turma do OTB reunida ao ar livre no campus em Boston, com a paisagem acadêmica ao fundo."
+			},
+			{
+				"src": "/images/otb/gallery/turma-evento-2.jpg",
+				"alt": "Participantes do OTB durante atividade da imersão internacional em Boston."
 			}
 		]
 	},
@@ -198,8 +226,8 @@
 			{ "valor": "ASA", "rotulo": "Anatomy Society of America" }
 		],
 		"background": {
-			"image": "/images/otb/boston-networking-premium.jpg",
-			"alt": "Profissionais em sessão de networking executivo em Boston, Estados Unidos."
+			"image": "/images/otb/gallery/pratica-2.jpg",
+			"alt": "Turma do OTB reunida no campus em Boston, Estados Unidos, durante a imersão internacional."
 		}
 	},
 
@@ -220,7 +248,7 @@
 				"area": "Empreendedorismo, Cultura e Business",
 				"bio": "Especialista em empreendedorismo, cultura organizacional e modelos de negócio para o ecossistema de Saúde Estética.",
 				"instagram": "https://www.instagram.com/carolteixeira_br",
-				"foto": "/images/otb/speakers/speaker-ana.jpg"
+				"foto": "/images/otb/speakers/speaker-carol.jpg"
 			},
 			{
 				"nome": "Dieick de Sá",
@@ -418,6 +446,6 @@
 
 	"legal": {
 		"disclaimer": "Harvard é marca registrada de Harvard University. Esta experiência não implica vínculo, patrocínio, endosso ou certificação oficial por Harvard University. Referências a Harvard, Cambridge, Boston e ao ecossistema acadêmico da região têm fins exclusivamente descritivos do contexto da imersão internacional do programa OTB. O 'Anatomy Review com Mike' é conduzido por correspondente americano — a referência descreve o perfil profissional do palestrante, sem vínculo institucional com Harvard University. A visita guiada ao campus tem fim descritivo, sem atividade acadêmica oficial dentro de Harvard. Certificações: MBA emitido em parceria com o Instituto IESA / Grupo US; certificado de prática anatômica Fresh Specimens pela Anatomy Society of America (ASA). Programa oferecido por Grupo US.",
-		"creditosImagens": "Imagens: licenciamento conforme acervo Grupo US e bancos de imagens autorizados."
+		"creditosImagens": "Imagens: acervo OTB / Grupo US (edições anteriores em Boston) e bancos de imagens autorizados."
 	}
 }

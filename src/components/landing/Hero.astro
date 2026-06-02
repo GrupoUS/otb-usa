@@ -13,36 +13,93 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 
 <section
 	id="topo"
-	class="relative isolate overflow-hidden landing-mesh-bg"
+	class="relative isolate overflow-hidden landing-mesh-usa"
 	aria-labelledby="hero-heading"
 >
+	{/* Background: real photo with layered scrims for WCAG contrast */}
 	<div
-		class="absolute inset-0 -z-10 opacity-30"
+		class="absolute inset-0 -z-20"
 		aria-hidden="true"
-		style={`background-image: linear-gradient(180deg, color-mix(in srgb, var(--color-navy) 80%, transparent) 0%, var(--color-navy) 85%), url('${hero.background.image}'); background-size: cover; background-position: center;`}
+		style={`background-image: url('${hero.background.image}'); background-size: cover; background-position: center 30%; background-repeat: no-repeat;`}
 	>
 	</div>
 
-	<div class="mx-auto grid min-h-[92vh] max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 lg:grid-cols-12 lg:gap-16 lg:px-8">
+	{/* Primary scrim: deep navy gradient — guarantees body text ≥4.5:1, titles ≥3:1 */}
+	<div
+		class="absolute inset-0 -z-10"
+		aria-hidden="true"
+		style="background: linear-gradient(105deg, color-mix(in srgb, var(--color-navy) 94%, transparent) 0%, color-mix(in srgb, var(--color-navy) 85%, transparent) 55%, color-mix(in srgb, var(--color-navy) 72%, transparent) 100%);"
+	>
+	</div>
+
+	{/* Decorative USA accent layer: crimson glow bottom-right, gold top-left */}
+	<div
+		class="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+		aria-hidden="true"
+	>
+		{/* Gold radial — upper left */}
+		<div
+			class="absolute -top-32 -left-32 h-[520px] w-[520px] rounded-full opacity-[0.12]"
+			style="background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);"
+		></div>
+		{/* Crimson radial — lower right, sóbrio */}
+		<div
+			class="absolute -bottom-24 -right-24 h-[480px] w-[480px] rounded-full opacity-[0.14]"
+			style="background: radial-gradient(circle, var(--color-crimson-bright) 0%, transparent 68%);"
+		></div>
+		{/* Crimson glow top-right — micro accent */}
+		<div
+			class="absolute top-0 right-0 h-[220px] w-[220px] opacity-[0.08]"
+			style="background: radial-gradient(circle, var(--color-crimson) 0%, transparent 72%);"
+		></div>
+	</div>
+
+	<div class="mx-auto grid min-h-[94vh] max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 lg:grid-cols-12 lg:gap-16 lg:px-8">
 		<div class="lg:col-span-8" data-reveal="up">
+
+			{/* Eyebrow — gold/muted, tracks edition + date */}
 			{hero.eyebrow && (
-				<p class="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold/80 tabular-nums">
+				<p class="mb-5 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold/80 tabular-nums">
 					{hero.eyebrow}
 				</p>
 			)}
 
-			<div class="mb-8 flex flex-wrap items-center gap-3">
+			{/* Boston badge with crimson accent filete — "3ª Edição · Boston" */}
+			<div class="mb-7 flex flex-wrap items-center gap-3">
 				<span
-					class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)] px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.22em] text-gold backdrop-blur"
+					class="inline-flex items-center gap-2 rounded-full border border-crimson-mid-45 bg-crimson-tint-10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-text-primary backdrop-blur"
 				>
-					<Icon name="map-pin" size={14} strokeWidth={2} />
-					Boston • Estados Unidos
+					<span
+						class="h-1.5 w-1.5 rounded-full crimson-pulse-glow"
+						style="background-color: var(--color-crimson-bright);"
+						aria-hidden="true"
+					></span>
+					<Icon name="map-pin" size={13} strokeWidth={2} class="text-crimson-bright" aria-hidden="true" />
+					Boston &bull; Estados Unidos
+				</span>
+
+				{/* USA sóbrio: 5 micro-stars, aria-hidden, gold+crimson */}
+				<span class="inline-flex items-center gap-0.5 opacity-60" aria-hidden="true">
+					{[0,1,2,3,4].map((i) => (
+						<svg
+							width="8"
+							height="8"
+							viewBox="0 0 10 10"
+							fill="none"
+							aria-hidden="true"
+							class={i % 2 === 0 ? "text-gold" : "text-crimson-bright"}
+							style="fill: currentColor;"
+						>
+							<path d="M5 0.5l1.12 2.27 2.5.36-1.81 1.76.43 2.49L5 6.27 2.76 7.38l.43-2.49L1.38 3.13l2.5-.36L5 .5z"/>
+						</svg>
+					))}
 				</span>
 			</div>
 
+			{/* Main heading — bold hierarchy, Playfair serif */}
 			<h1
 				id="hero-heading"
-				class="font-serif text-4xl font-bold leading-[1.05] tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-[4.25rem]"
+				class="font-serif text-4xl font-bold leading-[1.02] tracking-tight text-balance sm:text-5xl md:text-[3.75rem] lg:text-[4.5rem]"
 			>
 				<span class="block text-text-primary">{hero.headline}</span>
 				{hero.highlight && (
@@ -50,16 +107,18 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 				)}
 			</h1>
 
+			{/* Subheadline — body, text-muted, strong contrast over scrim */}
 			<p
-				class="mt-8 max-w-2xl text-lg leading-relaxed text-text-muted sm:text-xl"
+				class="mt-7 max-w-2xl text-lg leading-relaxed text-text-muted sm:text-xl"
 				data-reveal="up"
 				data-reveal-delay="2"
 			>
 				{hero.subheadline}
 			</p>
 
+			{/* Differentiator badge row */}
 			<ul
-				class="mt-10 flex flex-wrap gap-2.5"
+				class="mt-9 flex flex-wrap gap-2.5"
 				data-reveal="up"
 				data-reveal-delay="3"
 				aria-label="Diferenciais do programa"
@@ -74,12 +133,13 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 				))}
 			</ul>
 
-			<div class="mt-12 flex flex-wrap items-center gap-4" data-reveal="up" data-reveal-delay="4">
+			{/* CTA row — gold primary (cardinal: never crimson on CTA) */}
+			<div class="mt-11 flex flex-wrap items-center gap-4" data-reveal="up" data-reveal-delay="4">
 				<a
 					href={ctaHref}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="group inline-flex items-center gap-3 rounded-full bg-gold px-7 py-4 font-semibold text-navy shadow-[0_18px_45px_-12px_color-mix(in_srgb,var(--color-gold)_55%,transparent)] transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+					class="group inline-flex items-center gap-3 rounded-full bg-gold px-7 py-4 font-semibold text-navy shadow-[0_18px_45px_-12px_color-mix(in_srgb,var(--color-gold)_55%,transparent)] transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
 					aria-label="Falar com Laura no WhatsApp"
 				>
 					<Icon name="message-circle" size={20} strokeWidth={2.25} />
@@ -93,22 +153,23 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 					Conhecer o programa
 				</a>
 			</div>
+
+			{/* Crimson/gold filete decorativo abaixo do CTA — motif USA sóbrio */}
+			<div
+				class="mt-10 flex items-center gap-0 overflow-hidden rounded-full"
+				aria-hidden="true"
+				data-reveal="up"
+				data-reveal-delay="5"
+			>
+				<span class="h-[3px] w-16 rounded-l-full bg-gold/70"></span>
+				<span class="h-[3px] w-8 bg-crimson-bright/60"></span>
+				<span class="h-[3px] w-4 bg-gold/40"></span>
+				<span class="h-[3px] w-4 bg-crimson/30"></span>
+				<span class="h-[3px] w-2 rounded-r-full bg-transparent"></span>
+			</div>
 		</div>
 
-		<a
-			href="#programa"
-			aria-label="Rolar para o programa"
-			class="pointer-events-auto absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.32em] text-text-muted/70 transition-colors hover:text-gold focus-visible:text-gold md:flex"
-		>
-			<span aria-hidden="true">Role para descobrir</span>
-			<Icon
-				name="chevron-down"
-				size={18}
-				strokeWidth={2}
-				class="scroll-hint-bounce text-gold"
-			/>
-		</a>
-
+		{/* Floating info card — right column */}
 		<div class="lg:col-span-4" data-reveal="scale" data-reveal-delay="2">
 			<div class="glass-card-bright relative rounded-3xl p-8">
 				<div class="text-[11px] uppercase tracking-[0.32em] text-gold/80">
@@ -132,7 +193,32 @@ const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 						<span>Networking internacional premium</span>
 					</div>
 				</div>
+
+				{/* Card crimson accent filete bottom */}
+				<div
+					class="mt-7 flex items-center gap-0 overflow-hidden rounded-full"
+					aria-hidden="true"
+				>
+					<span class="h-[2px] w-6 rounded-l-full bg-crimson-bright/50"></span>
+					<span class="h-[2px] flex-1 bg-gold/30"></span>
+					<span class="h-[2px] w-6 rounded-r-full bg-crimson-bright/50"></span>
+				</div>
 			</div>
 		</div>
 	</div>
+
+	{/* Scroll hint */}
+	<a
+		href="#programa"
+		aria-label="Rolar para o programa"
+		class="pointer-events-auto absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.32em] text-text-muted/70 transition-colors hover:text-gold focus-visible:text-gold md:flex"
+	>
+		<span aria-hidden="true">Role para descobrir</span>
+		<Icon
+			name="chevron-down"
+			size={18}
+			strokeWidth={2}
+			class="scroll-hint-bounce text-gold"
+		/>
+	</a>
 </section>

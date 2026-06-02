@@ -17,7 +17,8 @@ export type IconName =
 	| "arrow-right"
 	| "map-pin"
 	| "calendar"
-	| "users";
+	| "users"
+	| "alert-circle";
 
 export const ICON_PATHS: Record<IconName, string[]> = {
 	check: ["M20 6 9 17l-5-5"],
@@ -100,5 +101,10 @@ export const ICON_PATHS: Record<IconName, string[]> = {
 		"M9 11 a 4 4 0 1 0 0 -8 4 4 0 0 0 0 8 z",
 		"M22 21v-2a4 4 0 0 0-3-3.87",
 		"M16 3.13a4 4 0 0 1 0 7.75",
+	],
+	"alert-circle": [
+		"M12 22 a 10 10 0 1 0 0 -20 10 10 0 0 0 0 20 z",
+		"M12 8v4",
+		"M12 16h.01",
 	],
 };

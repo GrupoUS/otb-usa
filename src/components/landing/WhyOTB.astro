@@ -8,11 +8,23 @@ export interface Props {
 
 const { why } = Astro.props;
 
+/**
+ * Card index 0 = Formação técnica (gold — default glass-card)
+ * Card index 1 = Branding internacional / Boston (crimson accent)
+ * Card index 2 = Networking global (gold — default glass-card)
+ *
+ * Icons follow same order.
+ */
 const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
+
+/** Returns true when the card should receive the crimson (Boston) accent. */
+const isCrimsonCard = (idx: number) => idx === 1;
 ---
 
 <section id="por-que-otb" class="relative py-28 sm:py-32" aria-labelledby="why-heading">
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+		{/* Section header */}
 		<div class="max-w-3xl" data-reveal="up">
 			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
 				<span class="h-px w-10 bg-gold/60"></span>
@@ -27,6 +39,7 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 					<span class="ml-3 text-gradient-gold">{why.highlight}</span>
 				)}
 			</h2>
+
 			{why.positioningQuote && (
 				<figure
 					class="mt-10 max-w-3xl"
@@ -48,26 +61,57 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 			)}
 		</div>
 
+		{/* 3-card grid — card[1] = Boston crimson accent */}
 		<div class="mt-16 grid grid-cols-1 gap-6 md:mt-20 md:grid-cols-3 md:gap-7">
 			{why.cards.map((card, idx) => (
 				<article
-					class="glass-card card-glow-hover relative flex flex-col gap-5 rounded-2xl p-7"
+					class={[
+						"relative flex flex-col gap-5 rounded-2xl p-7 card-hover-lift",
+						isCrimsonCard(idx)
+							? "glass-card-crimson card-glow-hover-crimson glow-crimson"
+							: "glass-card card-glow-hover",
+					].join(" ")}
 					data-reveal="up"
 					data-reveal-delay={String(idx + 2)}
 					data-glow-card
 				>
-					<div class="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-mid-35 bg-gold-tint-10 text-gold">
+					{/* Icon badge */}
+					<div
+						class={[
+							"inline-flex h-12 w-12 items-center justify-center rounded-xl",
+							isCrimsonCard(idx)
+								? "border border-crimson-mid-35 bg-crimson-tint-10 text-crimson-bright"
+								: "border border-gold-mid-35 bg-gold-tint-10 text-gold",
+						].join(" ")}
+					>
 						<Icon name={cardIcons[idx] ?? "sparkles"} size={22} strokeWidth={1.75} />
 					</div>
+
+					{/* Card title */}
 					<h3 class="font-serif text-xl font-semibold leading-tight text-text-primary">
 						{card.titulo}
 					</h3>
+
+					{/* Description — body text, always text-muted (never crimson on body) */}
 					<p class="text-sm leading-relaxed text-text-muted">{card.descricao}</p>
+
+					{/* Bottom accent filete — crimson card gets crimson filete, others gold */}
+					{isCrimsonCard(idx) && (
+						<div
+							class="mt-auto flex items-center gap-0 overflow-hidden rounded-full pt-2"
+							aria-hidden="true"
+						>
+							<span class="h-[2px] w-8 rounded-l-full bg-crimson-bright/50"></span>
+							<span class="h-[2px] flex-1 bg-crimson-mid-35"></span>
+							<span class="h-[2px] w-8 rounded-r-full bg-gold/40"></span>
+						</div>
+					)}
 				</article>
 			))}
 		</div>
 	</div>
 
+	{/* Pointer-glow JS: sets --mouse-x/y on [data-glow-card] for both gold and crimson variants */}
 	<script is:inline>
 		(() => {
 			try {

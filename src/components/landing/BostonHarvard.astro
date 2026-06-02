@@ -16,50 +16,74 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 
 <section
 	id="boston-harvard"
-	class="relative isolate overflow-hidden py-32 sm:py-36"
+	class="relative isolate overflow-hidden py-32 sm:py-40"
 	aria-labelledby="boston-heading"
 >
+	<!-- Real campus photo background with deep scrim for contrast -->
 	<div
-		class="absolute inset-0 -z-10 opacity-[0.15]"
+		class="absolute inset-0 -z-20"
 		aria-hidden="true"
-		style={`background-image: linear-gradient(180deg, color-mix(in srgb, var(--color-navy) 88%, transparent) 0%, var(--color-navy) 95%), url('${bostonHarvard.background.image}'); background-size: cover; background-position: center;`}
 	>
+		<img
+			src={bostonHarvard.background.image}
+			alt=""
+			width="1600"
+			height="900"
+			loading="lazy"
+			decoding="async"
+			fetchpriority="low"
+			class="h-full w-full object-cover object-center"
+		/>
 	</div>
+	<!-- Deep scrim: navy-dominant gradient ensures WCAG contrast on all text -->
+	<div
+		class="absolute inset-0 -z-10"
+		aria-hidden="true"
+		style="background: linear-gradient(170deg, color-mix(in srgb, var(--color-navy) 94%, transparent) 0%, color-mix(in srgb, var(--color-navy) 88%, transparent) 40%, color-mix(in srgb, var(--color-navy) 96%, transparent) 100%);"
+	></div>
+	<!-- USA mesh accent overlay -->
+	<div class="landing-mesh-usa absolute inset-0 -z-10 opacity-60" aria-hidden="true"></div>
 
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<!-- Section header -->
 		<div class="max-w-3xl" data-reveal="up">
-			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-				<span class="h-px w-10 bg-gold/60"></span>
-				Imersão internacional
+			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-crimson-bright">
+				<span class="h-px w-10 bg-crimson-bright/70"></span>
+				Imersão Internacional
 			</span>
 			<h2
 				id="boston-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
+				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl lg:text-6xl"
 			>
 				<span class="text-text-primary">{bostonHarvard.headline}</span>
 				{bostonHarvard.highlight && (
-					<span class="mt-2 block text-gradient-gold">{bostonHarvard.highlight}</span>
+					<span class="mt-2 block text-gradient-crimson">{bostonHarvard.highlight}</span>
 				)}
 			</h2>
 			<p class="mt-6 max-w-2xl text-base leading-relaxed text-text-muted sm:text-lg">
 				{bostonHarvard.descricao}
 			</p>
 
-			<div class="mt-8 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-navy-soft-70 px-4 py-2 text-xs uppercase tracking-[0.2em] text-text-primary/80">
-				<Icon name="calendar" size={14} strokeWidth={2} class="text-gold" />
+			<div class="mt-8 inline-flex items-center gap-2 rounded-full border border-crimson-mid-35 bg-crimson-tint-10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-text-primary/85">
+				<Icon name="calendar" size={14} strokeWidth={2} class="text-gold" aria-hidden="true" />
 				{bostonHarvard.datas}
 			</div>
 		</div>
 
+		<!-- 3 Cards — crimson glass accent -->
 		<div class="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-3">
 			{bostonHarvard.cards.map((card, idx) => (
 				<article
-					class="glass-card card-glow-hover relative rounded-2xl p-7"
+					class="glass-card-crimson card-glow-hover-crimson relative rounded-2xl p-7"
 					data-reveal="up"
 					data-reveal-delay={String(idx + 2)}
 				>
-					<div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-mid-35 bg-gold-tint-10 text-gold">
-						<Icon name={cardIcons[idx] ?? "sparkles"} size={22} strokeWidth={1.75} />
+					<!-- crimson-glow marker on first card -->
+					{idx === 0 && (
+						<div class="crimson-pulse-glow pointer-events-none absolute -inset-px rounded-2xl" aria-hidden="true"></div>
+					)}
+					<div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-crimson-mid-35 bg-crimson-tint-16 text-gold">
+						<Icon name={cardIcons[idx] ?? "sparkles"} size={22} strokeWidth={1.75} aria-hidden="true" />
 					</div>
 					<h3 class="font-serif text-lg font-semibold leading-tight text-text-primary">
 						{card.titulo}
@@ -69,9 +93,10 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 			))}
 		</div>
 
+		<!-- freshStats — crimson underline filete, bolder hierarchy -->
 		{bostonHarvard.freshStats && bostonHarvard.freshStats.length === 3 && (
 			<div
-				class="mt-20 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-x-10 sm:divide-x sm:divide-gold/20"
+				class="mt-24 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-x-10 sm:divide-x sm:divide-crimson-mid-35"
 				aria-label="Diferenciais de Fresh Specimens"
 			>
 				{bostonHarvard.freshStats.map((stat, idx) => (
@@ -80,7 +105,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 						data-reveal="up"
 						data-reveal-delay={String(idx + 2)}
 					>
-						<span class="block h-px w-12 bg-gold" aria-hidden="true"></span>
+						<span class="block h-[3px] w-14 rounded-full bg-crimson-bright" aria-hidden="true"></span>
 						<span class="font-serif text-6xl font-bold leading-[0.95] tracking-tight tabular-nums text-text-primary sm:text-7xl">
 							{stat.valor}
 						</span>
@@ -92,10 +117,11 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 			</div>
 		)}
 
+		<!-- Agenda 3 dias — crimson "Dia N" labels for Boston accent -->
 		{agenda && agenda.length > 0 && (
 			<div class="mt-24" aria-label="Agenda de 3 dias em Boston">
 				<div class="mb-8 flex items-center gap-3" data-reveal="up">
-					<Icon name="calendar" size={18} strokeWidth={2} class="text-gold" />
+					<Icon name="calendar" size={18} strokeWidth={2} class="text-gold" aria-hidden="true" />
 					<span class="text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
 						Agenda dos 3 dias
 					</span>
@@ -103,12 +129,12 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 				<ol class="grid grid-cols-1 gap-5 lg:grid-cols-3">
 					{agenda.map((d, idx) => (
 						<li
-							class="relative rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_55%,transparent)] p-6"
+							class="relative rounded-2xl border border-crimson-mid-35 bg-[color-mix(in_srgb,var(--color-navy-light)_55%,transparent)] p-6 transition-colors duration-300 hover:border-crimson-mid-45"
 							data-reveal="up"
 							data-reveal-delay={String(idx + 2)}
 						>
 							<div class="flex items-baseline justify-between gap-3">
-								<span class="font-serif text-3xl font-bold text-gradient-gold tabular-nums">
+								<span class="font-serif text-3xl font-bold text-gradient-crimson tabular-nums">
 									Dia {d.dia}
 								</span>
 								<span class="text-[11px] uppercase tracking-[0.22em] tabular-nums text-gold/80">
@@ -126,7 +152,7 @@ const cardIcons: IconName[] = ["microscope", "graduation-cap", "users"];
 											name="chevron-right"
 											size={14}
 											strokeWidth={2.25}
-											class="mt-1 shrink-0 text-gold/60"
+											class="mt-1 shrink-0 text-crimson-bright/70"
 											aria-hidden="true"
 										/>
 										<span>{a}</span>

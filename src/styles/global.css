@@ -17,6 +17,13 @@
 	--color-gold-light: #e8c96a;
 	--color-gold-dark: #b8960c;
 
+	/* Crimson / USA accent — Boston · Harvard positioning.
+	   Acento equilibrado: vermelho ganha presença ao lado do gold,
+	   navy continua base. Gold permanece primário de CTA/foco. */
+	--color-crimson: #a51c30; /* Harvard crimson — acento principal */
+	--color-crimson-bright: #c8102e; /* USA flag red — gradientes/realces */
+	--color-crimson-dark: #6e1423; /* profundidade/sombra */
+
 	/* Text */
 	--color-text-primary: #fafaf9;
 	--color-text-muted: #94a3b8;
@@ -60,6 +67,27 @@ body {
 
 @utility border-gold-mid-35 {
 	border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
+}
+
+/* Crimson accent tints — mirror the gold set (color-mix, zero inline hex). */
+@utility bg-crimson-tint-10 {
+	background-color: color-mix(in srgb, var(--color-crimson) 10%, transparent);
+}
+
+@utility bg-crimson-tint-16 {
+	background-color: color-mix(in srgb, var(--color-crimson) 16%, transparent);
+}
+
+@utility border-crimson-mid-35 {
+	border-color: color-mix(in srgb, var(--color-crimson) 35%, transparent);
+}
+
+@utility border-crimson-mid-45 {
+	border-color: color-mix(
+		in srgb,
+		var(--color-crimson-bright) 45%,
+		transparent
+	);
 }
 
 @utility glass-card {
@@ -231,10 +259,17 @@ body {
 		animation: none;
 		opacity: 0.7;
 	}
+	.crimson-pulse-glow::after {
+		animation: none;
+		opacity: 0.7;
+	}
 	.float-gentle {
 		animation: none;
 	}
 	.landing-mesh-bg {
+		animation: none;
+	}
+	.landing-mesh-usa {
 		animation: none;
 	}
 }
@@ -325,6 +360,26 @@ body {
 	pointer-events: none;
 }
 
+/* Crimson halo — reuses the color-agnostic gold-pulse (opacity) keyframe.
+   For Boston · Harvard accent surfaces. */
+@utility crimson-pulse-glow {
+	box-shadow: 0 0 30px
+		color-mix(in srgb, var(--color-crimson-bright) 32%, transparent);
+	position: relative;
+}
+
+.crimson-pulse-glow::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	box-shadow:
+		0 0 40px color-mix(in srgb, var(--color-crimson-bright) 45%, transparent),
+		0 0 64px color-mix(in srgb, var(--color-crimson) 22%, transparent);
+	animation: gold-pulse 3s ease-in-out infinite;
+	pointer-events: none;
+}
+
 @utility float-gentle {
 	animation: float 6s ease-in-out infinite;
 	will-change: transform;
@@ -372,6 +427,49 @@ body {
 		0 0 40px color-mix(in srgb, var(--color-gold) 15%, transparent),
 		0 24px 70px color-mix(in srgb, var(--color-navy) 45%, transparent),
 		inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
+}
+
+/* ===== Glass Card Crimson (Boston · Harvard accent) ===== */
+
+@utility glass-card-crimson {
+	background:
+		linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--color-navy-light) 88%, white 6%) 0%,
+			color-mix(in srgb, var(--color-navy) 90%, transparent) 100%
+		),
+		radial-gradient(
+			circle at top left,
+			color-mix(in srgb, var(--color-crimson-bright) 16%, transparent) 0%,
+			transparent 48%
+		);
+	border: 1px solid
+		color-mix(in srgb, var(--color-crimson-bright) 30%, transparent);
+	backdrop-filter: blur(20px) saturate(135%);
+	box-shadow:
+		0 0 32px color-mix(in srgb, var(--color-crimson) 14%, transparent),
+		0 24px 70px color-mix(in srgb, var(--color-navy) 45%, transparent),
+		inset 0 1px 0 color-mix(in srgb, white 9%, transparent);
+}
+
+/* Crimson hover-glow card — mirrors card-glow-hover with the USA accent. */
+@utility card-glow-hover-crimson {
+	transition:
+		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-glow-hover-crimson:hover {
+	border-color: color-mix(
+		in srgb,
+		var(--color-crimson-bright) 38%,
+		transparent
+	);
+	box-shadow:
+		0 10px 40px color-mix(in srgb, var(--color-crimson) 12%, transparent),
+		0 0 22px color-mix(in srgb, var(--color-crimson-bright) 8%, transparent);
+	transform: translateY(-4px);
 }
 
 /* ===== Mesh Gradient (Landing Hero) ===== */
@@ -422,6 +520,32 @@ body {
 	animation: mesh-drift 20s ease-in-out infinite;
 }
 
+/* USA-accent mesh — navy + gold + crimson radials. Hero / Boston sections.
+   Reuses the mesh-drift keyframe (3 layered positions). */
+@utility landing-mesh-usa {
+	background:
+		radial-gradient(
+			ellipse at 22% 28%,
+			color-mix(in srgb, var(--color-gold) 8%, transparent) 0%,
+			transparent 50%
+		),
+		radial-gradient(
+			ellipse at 78% 72%,
+			color-mix(in srgb, var(--color-crimson-bright) 9%, transparent) 0%,
+			transparent 52%
+		),
+		radial-gradient(
+			ellipse at 50% 50%,
+			color-mix(in srgb, var(--color-navy-lighter) 15%, transparent) 0%,
+			transparent 60%
+		);
+	background-size:
+		200% 200%,
+		200% 200%,
+		200% 200%;
+	animation: mesh-drift 22s ease-in-out infinite;
+}
+
 /* ===== Mousemove Glow Card ===== */
 
 [data-glow-card] {
@@ -444,6 +568,15 @@ body {
 	transition: opacity 0.3s ease;
 	pointer-events: none;
 	z-index: 1;
+}
+
+/* Crimson variant of the mousemove glow (same JS sets --mouse-x/y). */
+[data-glow-card].glow-crimson::before {
+	background: radial-gradient(
+		300px circle at var(--mouse-x) var(--mouse-y),
+		color-mix(in srgb, var(--color-crimson-bright) 14%, transparent),
+		transparent 60%
+	);
 }
 
 [data-glow-card]:hover::before {
@@ -482,6 +615,19 @@ body {
 		135deg,
 		var(--color-gold),
 		var(--color-gold-light)
+	);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+/* Crimson gradient text — large display / accents only (contrast on navy
+   is insufficient for body copy; keep body text in gold/text-primary). */
+@utility text-gradient-crimson {
+	background: linear-gradient(
+		135deg,
+		var(--color-crimson-bright),
+		var(--color-gold)
 	);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;

@@ -6,14 +6,40 @@ export interface Props {
 }
 
 const { turmas } = Astro.props;
+
+/**
+ * Photo aspect-ratio map (landscape/portrait) for correct width/height attrs.
+ * 16:9  → 1600 × 900
+ * 3:2   → 1600 × 1067
+ * Sizes determined by filename per brief spec.
+ */
+const photoMeta: Record<string, { w: number; h: number }> = {
+	"aula-2": { w: 1600, h: 900 },
+	"turma-evento-1": { w: 1600, h: 900 },
+	"turma-evento-3": { w: 1600, h: 1067 },
+	"networking-1": { w: 1600, h: 1067 },
+	"pratica-1": { w: 1600, h: 1067 },
+	"aula-1": { w: 1600, h: 900 },
+	"networking-3": { w: 1600, h: 1067 },
+	"pratica-2": { w: 1600, h: 1067 },
+	"turma-evento-2": { w: 1600, h: 900 },
+};
+
+function getMeta(src: string) {
+	const match = src.match(/\/([^/]+)\.\w+$/);
+	const key = match?.[1] ?? "";
+	return photoMeta[key] ?? { w: 1600, h: 1067 };
+}
 ---
 
 <section id="turmas" class="relative py-28 sm:py-32" aria-labelledby="turmas-heading">
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<!-- Header -->
 		<div class="mx-auto max-w-3xl text-center" data-reveal="up">
-			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-				<span class="h-px w-10 bg-gold/60"></span>
+			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-crimson-bright">
+				<span class="h-px w-10 bg-crimson-bright/60"></span>
 				Histórico
+				<span class="h-px w-10 bg-crimson-bright/60"></span>
 			</span>
 			<h2
 				id="turmas-heading"
@@ -21,39 +47,151 @@ const { turmas } = Astro.props;
 			>
 				{turmas.headline}
 			</h2>
-			<p class="mt-4 font-serif text-xl text-gradient-gold">{turmas.descricao}</p>
+			<p class="mt-4 font-serif text-xl text-gradient-crimson">{turmas.descricao}</p>
 		</div>
 
-		<div class="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
-			{turmas.fotos.map((foto, idx) => (
-				<figure
-					class="card-hover-lift group relative overflow-hidden rounded-3xl border border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)]"
-					data-reveal={idx === 0 ? "left" : "right"}
-					data-reveal-delay="2"
-				>
-					<img
-						src={foto.src}
-						alt={foto.alt}
-						width="900"
-						height="600"
-						loading="lazy"
-						fetchpriority="low"
-						decoding="async"
-						class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-					/>
-					<figcaption
-						class="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-linear-to-t from-navy via-navy/80 to-transparent p-6 pt-20"
+		<!--
+			Premium masonry-style gallery:
+			- Photo 0 (aula-2 16:9): hero span — full width on mobile, spans 2 cols on md+
+			- Photos 1–2: side-by-side row
+			- Photos 3–5: 3-col row
+			- Photos 6–8: final 3-col row
+		-->
+		<div class="mt-14 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+
+			{/* Hero photo — col-span-full on md, extra tall aspect */}
+			{turmas.fotos[0] && (() => {
+				const meta = getMeta(turmas.fotos[0].src);
+				return (
+					<figure
+						class="group relative col-span-1 overflow-hidden rounded-3xl border border-crimson-mid-35 sm:col-span-2 lg:col-span-3"
+						data-reveal="scale"
+						data-reveal-delay="1"
 					>
-						<span class="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">
-							<span class="h-px w-6 bg-gold/70"></span>
-							Edição {String(idx + 1).padStart(2, "0")}
-						</span>
-						<span class="font-serif text-base leading-snug text-text-primary">
+						<div class="aspect-[16/7] overflow-hidden">
+							<img
+								src={turmas.fotos[0].src}
+								alt={turmas.fotos[0].alt}
+								width={meta.w}
+								height={meta.h}
+								loading="lazy"
+								decoding="async"
+								fetchpriority="low"
+								class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
+							/>
+						</div>
+						<!-- Hover caption overlay -->
+						<figcaption
+							class="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-linear-to-t from-navy/90 via-navy/60 to-transparent p-6 pt-16 text-sm leading-snug text-text-primary transition-transform duration-500 group-hover:translate-y-0 group-focus-within:translate-y-0"
+						>
+							{turmas.fotos[0].alt}
+						</figcaption>
+						<!-- Crimson corner accent -->
+						<span class="absolute left-0 top-0 h-1 w-20 rounded-br-sm bg-crimson-bright" aria-hidden="true"></span>
+					</figure>
+				);
+			})()}
+
+			{/* Photos 1 & 2 — two-col row */}
+			{turmas.fotos.slice(1, 3).map((foto, i) => {
+				const meta = getMeta(foto.src);
+				const delay = String(i + 2);
+				const reveal = i === 0 ? "left" : "right";
+				return (
+					<figure
+						class="group relative col-span-1 overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] sm:col-span-1 lg:col-span-1"
+						data-reveal={reveal}
+						data-reveal-delay={delay}
+					>
+						<div class="aspect-[4/3] overflow-hidden">
+							<img
+								src={foto.src}
+								alt={foto.alt}
+								width={meta.w}
+								height={meta.h}
+								loading="lazy"
+								decoding="async"
+								fetchpriority="low"
+								class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.05]"
+							/>
+						</div>
+						<figcaption
+							class="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-linear-to-t from-navy/85 via-navy/50 to-transparent p-5 pt-12 text-xs leading-snug text-text-primary/90 transition-transform duration-500 group-hover:translate-y-0 group-focus-within:translate-y-0"
+						>
 							{foto.alt}
-						</span>
-					</figcaption>
-				</figure>
-			))}
+						</figcaption>
+					</figure>
+				);
+			})}
+
+			{/* Photos 3–5 — three-col row */}
+			{turmas.fotos.slice(3, 6).map((foto, i) => {
+				const meta = getMeta(foto.src);
+				const delay = String(Math.min(i + 2, 6));
+				return (
+					<figure
+						class="group relative col-span-1 overflow-hidden rounded-2xl border border-crimson-mid-35"
+						data-reveal="up"
+						data-reveal-delay={delay}
+					>
+						<div class="aspect-[4/3] overflow-hidden">
+							<img
+								src={foto.src}
+								alt={foto.alt}
+								width={meta.w}
+								height={meta.h}
+								loading="lazy"
+								decoding="async"
+								fetchpriority="low"
+								class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.05]"
+							/>
+						</div>
+						<figcaption
+							class="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-linear-to-t from-navy/85 via-navy/50 to-transparent p-5 pt-12 text-xs leading-snug text-text-primary/90 transition-transform duration-500 group-hover:translate-y-0 group-focus-within:translate-y-0"
+						>
+							{foto.alt}
+						</figcaption>
+					</figure>
+				);
+			})}
+
+			{/* Photos 6–8 — final three-col row */}
+			{turmas.fotos.slice(6, 9).map((foto, i) => {
+				const meta = getMeta(foto.src);
+				const delay = String(Math.min(i + 2, 6));
+				return (
+					<figure
+						class="group relative col-span-1 overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)]"
+						data-reveal="up"
+						data-reveal-delay={delay}
+					>
+						<div class="aspect-[4/3] overflow-hidden">
+							<img
+								src={foto.src}
+								alt={foto.alt}
+								width={meta.w}
+								height={meta.h}
+								loading="lazy"
+								decoding="async"
+								fetchpriority="low"
+								class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.05]"
+							/>
+						</div>
+						<figcaption
+							class="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-linear-to-t from-navy/85 via-navy/50 to-transparent p-5 pt-12 text-xs leading-snug text-text-primary/90 transition-transform duration-500 group-hover:translate-y-0 group-focus-within:translate-y-0"
+						>
+							{foto.alt}
+						</figcaption>
+					</figure>
+				);
+			})}
+		</div>
+
+		<!-- Gallery footer accent line -->
+		<div class="mt-8 flex items-center gap-4" aria-hidden="true">
+			<span class="h-px flex-1 bg-[color-mix(in_srgb,var(--color-crimson-bright)_20%,transparent)]"></span>
+			<span class="h-1.5 w-1.5 rounded-full bg-crimson-bright/50"></span>
+			<span class="h-px flex-1 bg-[color-mix(in_srgb,var(--color-gold)_20%,transparent)]"></span>
 		</div>
 	</div>
 </section>
