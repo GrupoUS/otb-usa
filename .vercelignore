@@ -1,17 +1,30 @@
+# Repo-root-only excludes are ANCHORED with a leading slash.
+#
+# An unanchored name matches at ANY depth, which is how `scripts` silently
+# stripped `src/scripts/` from the upload and broke the build with
+# "Could not resolve ../scripts/motion". Only `node_modules` and the dot-dirs
+# stay unanchored, because those are legitimately nested.
+
 node_modules
-.astro
-dist
-.cache
+
+/.astro
+/dist
+/.cache
+/.claude
+/.planning
+/.vercel
+
+# Dev-only tooling and workspace material — none of it is imported by src/.
+/docs
+/evals
+/scripts
+/.vscode
+/.idea
+
 .env
 .env.*
 !.env.example
-.claude
-.planning
-docs
-evals
-scripts
+
 *.log
 .DS_Store
 Thumbs.db
-.vscode
-.idea
