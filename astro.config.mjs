@@ -1,6 +1,5 @@
 // @ts-check
 
-import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
@@ -31,8 +30,11 @@ export default defineConfig({
 			styles: ["normal"],
 		},
 	],
+	// No React integration: this landing ships zero islands (no .tsx and no
+	// client:* directive anywhere in src). Keeping it only emitted an
+	// unreferenced 193KB client bundle and pulled react/react-dom into every
+	// install. Add it back together with the first real island.
 	integrations: [
-		react(),
 		sitemap({
 			filter: (page) => !/\/otb\/?$/.test(page),
 		}),

@@ -32,15 +32,18 @@ const zoomSrc = new Map<string, string>(
 );
 
 /** Crop rotation — portrait / landscape / portrait keeps the mosaic from
- *  collapsing into a uniform tile wall. One entry per tile (6 in a 3-col grid,
- *  so every row is full at both breakpoints). */
+ *  collapsing into a uniform tile wall. One entry per tile.
+ *
+ *  There are 5 tiles, which fills neither the 2-col nor the 3-col grid on its
+ *  own. The last one spans two columns instead of being left an orphan: mobile
+ *  closes on a full-width band, desktop closes on 1 + 2. Hence the wide crop on
+ *  the final entry. */
 const crops = [
 	"aspect-[4/5]",
 	"aspect-[3/2]",
 	"aspect-[4/5]",
 	"aspect-[3/2]",
-	"aspect-[4/5]",
-	"aspect-[3/2]",
+	"aspect-[16/9]",
 ];
 ---
 
@@ -119,8 +122,15 @@ const crops = [
 		class="mt-6 grid grid-cols-2 gap-3 px-3 sm:gap-4 sm:px-4 lg:grid-cols-3"
 	>
 		{rest.map((foto, i) => {
+			// Closing tile spans two columns at both breakpoints, so it is served
+			// a wider ladder than the ordinary tiles.
+			const isWide = i === rest.length - 1;
 			return (
-				<figure data-reveal="up" data-reveal-delay={String(Math.min(i + 1, 8))}>
+				<figure
+					class={isWide ? "col-span-2" : undefined}
+					data-reveal="up"
+					data-reveal-delay={String(Math.min(i + 1, 8))}
+				>
 					<div
 						class={`group relative ${crops[i] ?? "aspect-[3/2]"} overflow-hidden rounded-plate`}
 					>
@@ -129,9 +139,13 @@ const crops = [
 							alt={foto.alt}
 							formats={["avif", "webp"]}
 							fallbackFormat="jpeg"
-							widths={[400, 640, 900, 1280]}
+							widths={isWide ? [640, 1024, 1600] : [400, 640, 900, 1280]}
 							quality={62}
-							sizes="(min-width: 1024px) 33vw, 50vw"
+							sizes={
+								isWide
+									? "(min-width: 1024px) 66vw, 100vw"
+									: "(min-width: 1024px) 33vw, 50vw"
+							}
 							loading="lazy"
 							decoding="async"
 							fetchpriority="low"
