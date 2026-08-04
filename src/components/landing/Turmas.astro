@@ -13,14 +13,13 @@ const { turmas } = Astro.props;
 const [lead, ...rest] = turmas.fotos;
 
 /** Crop rotation — portrait / landscape / portrait keeps the mosaic from
- *  collapsing into a uniform tile wall. */
+ *  collapsing into a uniform tile wall. One entry per tile (6 in a 3-col grid,
+ *  so every row is full at both breakpoints). */
 const crops = [
 	"aspect-[4/5]",
 	"aspect-[3/2]",
-	"aspect-[3/2]",
 	"aspect-[4/5]",
 	"aspect-[3/2]",
-	"aspect-[4/5]",
 	"aspect-[4/5]",
 	"aspect-[3/2]",
 ];
@@ -52,12 +51,18 @@ const crops = [
 	{lead && (
 		<figure class="mt-block" data-reveal="up">
 			<div class="aspect-[21/9] overflow-hidden rounded-plate">
+				{/*
+					Full-bleed: `sizes="100vw"`, so the widths ladder has to reach the
+					widest viewport we serve — NOT the tile ladder below. Getting this
+					wrong starves the largest photograph on the page.
+				*/}
 				<Picture
 					src={resolveImage(lead.src)}
 					alt={lead.alt}
 					formats={["avif", "webp"]}
 					fallbackFormat="jpeg"
 					widths={[640, 1024, 1600]}
+					quality={60}
 					sizes="100vw"
 					loading="lazy"
 					decoding="async"
@@ -74,7 +79,7 @@ const crops = [
 	)}
 
 	<div
-		class="mt-6 grid grid-cols-2 gap-3 px-3 sm:gap-4 sm:px-4 lg:grid-cols-4"
+		class="mt-6 grid grid-cols-2 gap-3 px-3 sm:gap-4 sm:px-4 lg:grid-cols-3"
 	>
 		{rest.map((foto, i) => {
 			return (
@@ -85,8 +90,9 @@ const crops = [
 							alt={foto.alt}
 							formats={["avif", "webp"]}
 							fallbackFormat="jpeg"
-							widths={[320, 480, 800]}
-							sizes="(min-width: 1024px) 25vw, 50vw"
+							widths={[400, 640, 900, 1280]}
+							quality={62}
+							sizes="(min-width: 1024px) 33vw, 50vw"
 							loading="lazy"
 							decoding="async"
 							fetchpriority="low"

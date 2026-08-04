@@ -181,6 +181,22 @@ body {
 	backdrop-filter: blur(14px) saturate(130%);
 }
 
+/* One primary CTA per view: the header action stays hidden while the header
+   floats over the hero, otherwise two gold primaries share the first fold.
+   Gated on `.js` so a scripting failure leaves it visible rather than lost. */
+.js .site-header [data-header-cta] {
+	visibility: hidden;
+	opacity: 0;
+	transition:
+		opacity var(--duration-hover) ease,
+		visibility var(--duration-hover) ease;
+}
+
+.js .site-header.is-solid [data-header-cta] {
+	visibility: visible;
+	opacity: 1;
+}
+
 /* Space for the mobile bar, reserved from first paint — never injected on
    scroll, which would shift layout (CLS). */
 @media (max-width: 1023px) {
@@ -315,13 +331,6 @@ body {
 	to {
 		opacity: 1;
 		transform: scale(1);
-	}
-}
-
-/* Disable infinite animations on mobile to save GPU */
-@media (max-width: 768px) {
-	.landing-mesh-bg {
-		animation: none;
 	}
 }
 
@@ -462,30 +471,6 @@ body {
 		inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
 }
 
-/* ===== Mesh Gradient (Landing Hero) ===== */
-
-@keyframes mesh-drift {
-	0%,
-	100% {
-		background-position:
-			0% 50%,
-			100% 50%,
-			50% 0%;
-	}
-	33% {
-		background-position:
-			100% 50%,
-			0% 100%,
-			50% 100%;
-	}
-	66% {
-		background-position:
-			50% 100%,
-			50% 0%,
-			0% 50%;
-	}
-}
-
 @utility landing-mesh-bg {
 	background:
 		radial-gradient(
@@ -507,7 +492,10 @@ body {
 		200% 200%,
 		200% 200%,
 		200% 200%;
-	animation: mesh-drift 20s ease-in-out infinite;
+	background-position:
+		0% 50%,
+		100% 50%,
+		50% 0%;
 }
 
 /* ===== Mousemove Glow Card ===== */

@@ -1,0 +1,1 @@
+{"timestamp": "2026-08-04T20:03:47Z", "session_id": "586c86da-a8f1-406b-8f81-2fa1aba07b9f", "tool": "Bash", "error_head": "Exit code 1\n20 |     rows.push({ f: f.replace(/\\/g, \"/\"), w: m.width, h: m.height, fmt: m.format, kb: Math.round(statSync(f).size / 10\n                                          ^\nerror: Unterminated s"}

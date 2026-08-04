@@ -1,0 +1,22 @@
+{
+  "session_id": "b1291968-e380-438e-bb5d-80aec5b6890a",
+  "started_at": "2026-08-04T20:22:49.216904+00:00",
+  "branch": "main",
+  "head_sha": "a934318c3e58f5aab7382a8082942acd44c1af9c",
+  "preexisting_dirty": [
+    ".claude/logs/agent-orchestration-events.jsonl",
+    "src/assets/images/otb/gallery/aula-2.jpg",
+    "src/assets/images/otb/speakers/speaker-carol.jpg",
+    "src/assets/images/otb/speakers/speaker-dieick.jpg",
+    "src/assets/images/otb/speakers/speaker-rosana.jpg",
+    "src/assets/images/otb/speakers/speaker-sacha.jpg",
+    "src/components/landing/Boston.astro",
+    "src/components/landing/Header.astro",
+    "src/components/landing/Hero.astro",
+    "src/components/landing/Speakers.astro",
+    "src/components/landing/Turmas.astro",
+    "src/styles/global.css",
+    ".claude/logs/tool-failure-streak.json",
+    ".claude/logs/tool-failures.jsonl"
+  ]
+}

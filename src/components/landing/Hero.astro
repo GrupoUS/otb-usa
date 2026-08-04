@@ -23,13 +23,20 @@ const plate = resolveImage(hero.background.image);
 	{/*
 		Plate: a real <img>, not a CSS background — this is the LCP element and
 		needs eager loading, a priority hint and intrinsic dimensions (CLS 0).
+
+		`widths` must span the rendered box across DPRs: this is `sizes="100vw"`,
+		so a laptop at 1440 CSS px already needs the 1600 step. Sharp's AVIF
+		default is quality 50, which smears faces on a group photograph — hence
+		the explicit value. Keep it lower here than on the lazy plates: this file
+		is the LCP and pays its bytes on first paint.
 	*/}
 	<Picture
 		src={plate}
 		alt=""
 		formats={["avif", "webp"]}
 		fallbackFormat="jpeg"
-		widths={[640, 960, 1280, 1920]}
+		widths={[640, 960, 1280, 1600]}
+		quality={62}
 		sizes="100vw"
 		loading="eager"
 		fetchpriority="high"

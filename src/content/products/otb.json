@@ -138,8 +138,8 @@
 		"descricao": "Veja como foi. Imagine onde você estará. Edições anteriores levaram empreendedores de Saúde Estética Avançada ao coração acadêmico de Boston — sessões executivas, networking de alto padrão e prática anatômica em Fresh Specimens.",
 		"fotos": [
 			{
-				"src": "/images/otb/gallery/aula-2.jpg",
-				"alt": "Turma completa do OTB reunida em Boston, Estados Unidos, durante a imersão internacional."
+				"src": "/images/otb/gallery/networking-1.jpg",
+				"alt": "Grupo de alunas do OTB em jalecos, prontas para a sessão de prática anatômica em Boston."
 			},
 			{
 				"src": "/images/otb/gallery/turma-evento-1.jpg",
@@ -148,10 +148,6 @@
 			{
 				"src": "/images/otb/gallery/turma-evento-3.jpg",
 				"alt": "Alunos do OTB celebrando juntos em recepção de networking durante a imersão em Boston."
-			},
-			{
-				"src": "/images/otb/gallery/networking-1.jpg",
-				"alt": "Grupo de alunas do OTB em jalecos, prontas para a sessão de prática anatômica em Boston."
 			},
 			{
 				"src": "/images/otb/gallery/pratica-1.jpg",
@@ -163,11 +159,7 @@
 			},
 			{
 				"src": "/images/otb/gallery/networking-3.jpg",
-				"alt": "Alunos do OTB reunidos em momento de confraternização durante a imersão internacional."
-			},
-			{
-				"src": "/images/otb/gallery/pratica-2.jpg",
-				"alt": "Turma do OTB reunida ao ar livre em Boston, com a paisagem urbana ao fundo."
+				"alt": "Profissional do OTB paramentada durante a sessão de prática anatômica em Boston."
 			},
 			{
 				"src": "/images/otb/gallery/turma-evento-2.jpg",
@@ -259,8 +251,8 @@
 			{ "valor": "ASA", "rotulo": "Anatomy Society of America" }
 		],
 		"background": {
-			"image": "/images/otb/gallery/pratica-2.jpg",
-			"alt": "Turma do OTB reunida em Boston, Estados Unidos, durante a imersão internacional."
+			"image": "/images/otb/gallery/pratica-1.jpg",
+			"alt": "Turma do OTB em sessão demonstrativa de anatomia aplicada em ambiente acadêmico em Boston, Estados Unidos."
 		}
 	},
 
