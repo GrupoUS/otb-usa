@@ -1,7 +1,9 @@
 ---
+import { Picture } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
+import { resolveImage } from "../../lib/images";
 import { whatsappUrlWithText } from "../../lib/whatsapp";
-import Icon from "../icons/Icon.astro";
+import Icon, { type IconName } from "../icons/Icon.astro";
 
 export interface Props {
 	hero: CollectionEntry<"products">["data"]["hero"];
@@ -9,216 +11,199 @@ export interface Props {
 
 const { hero } = Astro.props;
 const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
+const hasCheckout = Boolean(hero.cta.checkoutUrl);
+const plate = resolveImage(hero.background.image);
 ---
 
 <section
 	id="topo"
-	class="relative isolate overflow-hidden landing-mesh-usa"
+	class="relative isolate flex min-h-[100svh] flex-col overflow-hidden"
 	aria-labelledby="hero-heading"
 >
-	{/* Background: real photo with layered scrims for WCAG contrast */}
-	<div
-		class="absolute inset-0 -z-20"
+	{/*
+		Plate: a real <img>, not a CSS background — this is the LCP element and
+		needs eager loading, a priority hint and intrinsic dimensions (CLS 0).
+	*/}
+	<Picture
+		src={plate}
+		alt=""
+		formats={["avif", "webp"]}
+		fallbackFormat="jpeg"
+		widths={[640, 960, 1280, 1920]}
+		sizes="100vw"
+		loading="eager"
+		fetchpriority="high"
+		decoding="sync"
 		aria-hidden="true"
-		style={`background-image: url('${hero.background.image}'); background-size: cover; background-position: center 30%; background-repeat: no-repeat;`}
-	>
-	</div>
+		class="absolute inset-0 -z-20 h-full w-full object-cover object-[center_30%]"
+	/>
 
-	{/* Primary scrim: deep navy gradient — guarantees body text ≥4.5:1, titles ≥3:1 */}
+	{/* Scrim: keeps body copy ≥4.5:1 and headings ≥3:1 over the photograph. */}
 	<div
 		class="absolute inset-0 -z-10"
 		aria-hidden="true"
-		style="background: linear-gradient(105deg, color-mix(in srgb, var(--color-navy) 94%, transparent) 0%, color-mix(in srgb, var(--color-navy) 85%, transparent) 55%, color-mix(in srgb, var(--color-navy) 72%, transparent) 100%);"
+		style="background: linear-gradient(105deg, color-mix(in srgb, var(--color-navy-deep) 95%, transparent) 0%, color-mix(in srgb, var(--color-navy) 88%, transparent) 52%, color-mix(in srgb, var(--color-navy) 74%, transparent) 100%);"
 	>
 	</div>
 
-	{/* Decorative USA accent layer: crimson glow bottom-right, gold top-left */}
-	<div
-		class="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-		aria-hidden="true"
-	>
-		{/* Gold radial — upper left */}
+	{/* Single restrained accent wash. Gold reads as the light source. */}
+	<div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
 		<div
-			class="absolute -top-32 -left-32 h-[520px] w-[520px] rounded-full opacity-[0.12]"
+			class="absolute -top-40 -left-32 h-[560px] w-[560px] rounded-full opacity-[0.12]"
 			style="background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);"
-		></div>
-		{/* Crimson radial — lower right, sóbrio */}
-		<div
-			class="absolute -bottom-24 -right-24 h-[480px] w-[480px] rounded-full opacity-[0.14]"
-			style="background: radial-gradient(circle, var(--color-crimson-bright) 0%, transparent 68%);"
-		></div>
-		{/* Crimson glow top-right — micro accent */}
-		<div
-			class="absolute top-0 right-0 h-[220px] w-[220px] opacity-[0.08]"
-			style="background: radial-gradient(circle, var(--color-crimson) 0%, transparent 72%);"
-		></div>
+		>
+		</div>
 	</div>
 
-	<div class="mx-auto grid min-h-[94vh] max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 lg:grid-cols-12 lg:gap-16 lg:px-8">
-		<div class="lg:col-span-8" data-reveal="up">
-
-			{/* Eyebrow — gold/muted, tracks edition + date */}
+	<div
+		class="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pt-24 pb-10 lg:px-8 lg:pt-28"
+	>
+		<div class="max-w-4xl">
 			{hero.eyebrow && (
-				<p class="mb-5 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold/80 tabular-nums">
+				<p
+					class="text-kicker font-semibold uppercase tracking-kicker text-gold tabular-nums"
+					data-reveal="up"
+				>
 					{hero.eyebrow}
 				</p>
 			)}
 
-			{/* Boston badge with crimson accent filete — "3ª Edição · Boston" */}
-			<div class="mb-7 flex flex-wrap items-center gap-3">
-				<span
-					class="inline-flex items-center gap-2 rounded-full border border-crimson-mid-45 bg-crimson-tint-10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-text-primary backdrop-blur"
-				>
-					<span
-						class="h-1.5 w-1.5 rounded-full crimson-pulse-glow"
-						style="background-color: var(--color-crimson-bright);"
-						aria-hidden="true"
-					></span>
-					<Icon name="map-pin" size={13} strokeWidth={2} class="text-crimson-bright" aria-hidden="true" />
-					Boston &bull; Estados Unidos
-				</span>
-
-				{/* USA sóbrio: 5 micro-stars, aria-hidden, gold+crimson */}
-				<span class="inline-flex items-center gap-0.5 opacity-60" aria-hidden="true">
-					{[0,1,2,3,4].map((i) => (
-						<svg
-							width="8"
-							height="8"
-							viewBox="0 0 10 10"
-							fill="none"
-							aria-hidden="true"
-							class={i % 2 === 0 ? "text-gold" : "text-crimson-bright"}
-							style="fill: currentColor;"
-						>
-							<path d="M5 0.5l1.12 2.27 2.5.36-1.81 1.76.43 2.49L5 6.27 2.76 7.38l.43-2.49L1.38 3.13l2.5-.36L5 .5z"/>
-						</svg>
-					))}
-				</span>
-			</div>
-
-			{/* Main heading — bold hierarchy, Playfair serif */}
 			<h1
 				id="hero-heading"
-				class="font-serif text-4xl font-bold leading-[1.02] tracking-tight text-balance sm:text-5xl md:text-[3.75rem] lg:text-[4.5rem]"
+				class="mt-6 font-serif text-display font-bold text-balance"
+				data-reveal="up"
+				data-reveal-delay="1"
 			>
 				<span class="block text-text-primary">{hero.headline}</span>
 				{hero.highlight && (
-					<span class="mt-2 block text-shimmer">{hero.highlight}</span>
+					<span class="mt-1 block text-shimmer">{hero.highlight}</span>
 				)}
 			</h1>
 
-			{/* Subheadline — body, text-muted, strong contrast over scrim */}
 			<p
-				class="mt-7 max-w-2xl text-lg leading-relaxed text-text-muted sm:text-xl"
+				class="mt-7 max-w-2xl text-lede font-light text-text-secondary"
 				data-reveal="up"
 				data-reveal-delay="2"
 			>
 				{hero.subheadline}
 			</p>
 
-			{/* Differentiator badge row */}
 			<ul
-				class="mt-9 flex flex-wrap gap-2.5"
+				class="mt-8 hidden flex-wrap gap-2.5 sm:flex"
 				data-reveal="up"
 				data-reveal-delay="3"
 				aria-label="Diferenciais do programa"
 			>
-				{hero.badges.slice(1).map((badge) => (
+				{hero.badges.map((badge) => (
 					<li
-						class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)] bg-navy-soft-70 px-3.5 py-1.5 text-xs font-medium text-text-primary/90"
+						class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)] bg-navy-soft-70 px-3.5 py-1.5 text-meta font-medium text-text-primary/90"
 					>
-						<span class="h-1.5 w-1.5 rounded-full bg-gold gold-pulse-glow" aria-hidden="true"></span>
+						<span class="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true"></span>
 						{badge}
 					</li>
 				))}
 			</ul>
 
-			{/* CTA row — gold primary (cardinal: never crimson on CTA) */}
-			<div class="mt-11 flex flex-wrap items-center gap-4" data-reveal="up" data-reveal-delay="4">
-				<a
-					href={ctaHref}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="group inline-flex items-center gap-3 rounded-full bg-gold px-7 py-4 font-semibold text-navy shadow-[0_18px_45px_-12px_color-mix(in_srgb,var(--color-gold)_55%,transparent)] transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
-					aria-label="Falar com Laura no WhatsApp"
-				>
-					<Icon name="message-circle" size={20} strokeWidth={2.25} />
-					<span>{hero.cta.label}</span>
-					<Icon name="arrow-right" size={18} strokeWidth={2.25} class="transition-transform duration-300 group-hover:translate-x-1" />
-				</a>
-				<a
-					href="#programa"
-					class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] px-6 py-3.5 text-sm font-medium text-text-primary/90 transition-colors hover:border-gold hover:text-gold"
-				>
-					Conhecer o programa
-				</a>
-			</div>
-
-			{/* Crimson/gold filete decorativo abaixo do CTA — motif USA sóbrio */}
+			{/* CTA duo. Gold stays on the single primary action; the checkout link
+			    takes the gold slot only once otb.json carries the official URL. */}
 			<div
-				class="mt-10 flex items-center gap-0 overflow-hidden rounded-full"
-				aria-hidden="true"
+				class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
 				data-reveal="up"
-				data-reveal-delay="5"
+				data-reveal-delay="4"
 			>
-				<span class="h-[3px] w-16 rounded-l-full bg-gold/70"></span>
-				<span class="h-[3px] w-8 bg-crimson-bright/60"></span>
-				<span class="h-[3px] w-4 bg-gold/40"></span>
-				<span class="h-[3px] w-4 bg-crimson/30"></span>
-				<span class="h-[3px] w-2 rounded-r-full bg-transparent"></span>
-			</div>
-		</div>
-
-		{/* Floating info card — right column */}
-		<div class="lg:col-span-4" data-reveal="scale" data-reveal-delay="2">
-			<div class="glass-card-bright relative rounded-3xl p-8">
-				<div class="text-[11px] uppercase tracking-[0.32em] text-gold/80">
-					Imersão internacional
-				</div>
-				<div class="mt-4 font-serif text-3xl leading-tight text-text-primary">
-					Boston &amp; ecossistema acadêmico de
-					<span class="text-gradient-gold">Harvard</span>
-				</div>
-				<div class="mt-6 space-y-3">
-					<div class="flex items-start gap-3 text-sm text-text-muted">
-						<Icon name="graduation-cap" size={18} class="mt-0.5 text-gold" />
-						<span><span class="tabular-nums text-text-primary/90">320</span> horas de formação executiva</span>
-					</div>
-					<div class="flex items-start gap-3 text-sm text-text-muted">
-						<Icon name="shield-check" size={18} class="mt-0.5 text-gold" />
-						<span>Certificação MEC</span>
-					</div>
-					<div class="flex items-start gap-3 text-sm text-text-muted">
-						<Icon name="users" size={18} class="mt-0.5 text-gold" />
-						<span>Networking internacional premium</span>
-					</div>
-				</div>
-
-				{/* Card crimson accent filete bottom */}
-				<div
-					class="mt-7 flex items-center gap-0 overflow-hidden rounded-full"
-					aria-hidden="true"
-				>
-					<span class="h-[2px] w-6 rounded-l-full bg-crimson-bright/50"></span>
-					<span class="h-[2px] flex-1 bg-gold/30"></span>
-					<span class="h-[2px] w-6 rounded-r-full bg-crimson-bright/50"></span>
-				</div>
+				{hasCheckout && hero.cta.checkoutUrl ? (
+					<>
+						<a
+							href={hero.cta.checkoutUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
+						>
+							<span>{hero.cta.secondaryLabel ?? "Garantir vaga"}</span>
+							<Icon
+								name="arrow-right"
+								size={18}
+								strokeWidth={2.25}
+								class="transition-transform duration-300 group-hover:translate-x-1"
+							/>
+						</a>
+						<a
+							href={ctaHref}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
+							aria-label={`${hero.cta.label} — atendimento consultivo`}
+						>
+							<Icon name="message-circle" size={18} strokeWidth={2.25} />
+							<span>{hero.cta.label}</span>
+						</a>
+					</>
+				) : (
+					<>
+						<a
+							href={ctaHref}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
+							aria-label={`${hero.cta.label} no WhatsApp`}
+						>
+							<Icon name="message-circle" size={20} strokeWidth={2.25} />
+							<span>{hero.cta.label}</span>
+							<Icon
+								name="arrow-right"
+								size={18}
+								strokeWidth={2.25}
+								class="transition-transform duration-300 group-hover:translate-x-1"
+							/>
+						</a>
+						<a
+							href="#programa"
+							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] px-6 text-sm font-medium text-text-primary/90 transition-colors hover:border-gold hover:text-gold"
+						>
+							Conhecer o programa
+						</a>
+					</>
+				)}
 			</div>
 		</div>
 	</div>
 
-	{/* Scroll hint */}
-	<a
-		href="#programa"
-		aria-label="Rolar para o programa"
-		class="pointer-events-auto absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.32em] text-text-muted/70 transition-colors hover:text-gold focus-visible:text-gold md:flex"
-	>
-		<span aria-hidden="true">Role para descobrir</span>
-		<Icon
-			name="chevron-down"
-			size={18}
-			strokeWidth={2}
-			class="scroll-hint-bounce text-gold"
-		/>
-	</a>
+	{/*
+		Fact rail — the objective block the brief asks for: date, place, duration
+		and format, sitting on the bottom edge of the fold, spanning the container.
+		Hairlines separate the cells; no card, no glass.
+	*/}
+	{hero.facts && (
+		<div
+			class="relative z-10 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_72%,transparent)] backdrop-blur-sm"
+			data-reveal="up"
+			data-reveal-delay="5"
+		>
+			<dl
+				class="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] px-6 lg:grid-cols-4 lg:px-8"
+			>
+				{hero.facts.map((fact) => (
+					<div
+						class="flex items-start gap-3 bg-[color-mix(in_srgb,var(--color-navy-deep)_92%,transparent)] px-4 py-5 lg:px-6 lg:py-6"
+					>
+						<Icon
+							name={fact.icone as IconName}
+							size={18}
+							strokeWidth={1.75}
+							class="mt-0.5 shrink-0 text-gold"
+							aria-hidden="true"
+						/>
+						<div class="min-w-0">
+							<dt class="text-kicker font-semibold uppercase tracking-kicker text-text-muted">
+								{fact.rotulo}
+							</dt>
+							<dd class="mt-1 text-sm font-medium tabular-nums text-text-primary">
+								{fact.valor}
+							</dd>
+						</div>
+					</div>
+				))}
+			</dl>
+		</div>
+	)}
 </section>

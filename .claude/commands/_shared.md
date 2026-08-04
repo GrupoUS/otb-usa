@@ -184,8 +184,11 @@ Before any task, load the right tier:
 | Domain | Command | Loads |
 |---|---|---|
 | Frontend | `/prime frontend` | DESIGN.md baseline (merged web-layer rule) + staged design refs on demand |
-| Backend / API / DB | `/prime backend` | backend.md + database.md + stability.md baseline + targeted refs |
-| Full-stack / multi-domain | `/prime` (auto) or `/prime fullstack` | Intent-based Tier 2 + exact Tier 3 only when justified |
+| Design chain (impeccable) | `/design`, `/design-improve`, `/design-fix` | DESIGN.md + impeccable 4.x references + uxmaster (design-fix only) |
+| Content / copy / oferta | `/prime` (auto) | `grupo-us` + `${content.productJson}` + `src/content.config.ts` |
+| Multi-domain | `/prime` (auto) | Intent-based Tier 2 + exact Tier 3 only when justified |
+
+> Este repo é **frontend estático puro**: não há backend, API, banco nem webhook. Não existem `backend.md`, `database.md` ou `integrations.md` — se um pedido exigir esse tipo de trabalho, ele está fora do escopo do projeto.
 | Continuing prior session | Read `${rulesDir}/docs/evolution/HANDOFF.md` first | — |
 
 **Tier 3 (read on demand only):**
@@ -334,11 +337,11 @@ Hard limit: 3 cycles. After 3 unresolved → flag to user as a research blocker.
 | Guardrail | Canonical location | Trigger |
 |---|---|---|
 | Stability checklist A-L | `.claude/rules/stability.md` | Any code change |
-| DB FK index requirement | `.claude/rules/database.md` | Schema changes |
-| Render mode + polling + mutations | `.claude/rules/DESIGN.md` | Page/route changes |
-| RLS / auth model | `.claude/rules/database.md` + `.claude/rules/backend.md` | Auth/data changes |
-| Webhook idempotency | `.claude/rules/integrations.md` | Webhook handlers |
-| Design tokens / no hex / mobile scroll owner | `.claude/rules/DESIGN.md` | Style changes |
+| Content Collection schema + JSON juntos | `.claude/rules/astro.md` § 3 | Mudança de campo de conteúdo |
+| Render mode estático / MPA | `.claude/rules/astro.md` § 1 | Page/route changes |
+| WhatsApp SSOT (sem `wa.me` inline) | `.claude/rules/astro.md` § 5 | CTA changes |
+| Design tokens / no hex / motion expressivo | `.claude/rules/DESIGN.md` + root `DESIGN.md` | Style changes |
+| Craft floor + refuse list | `Skill("impeccable")` → `reference/craft-floor.md` | Antes de editar UI |
 | Project-specific anti-patterns | `Skill("debugger")` → `references/anti-patterns.md` | Per-project bugs |
 | Pre-commit formatter/linter | `${tooling.linter}` per AGENTS.md | Every commit |
 

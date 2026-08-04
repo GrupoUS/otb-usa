@@ -29,13 +29,23 @@ A gate is passing only if it was run and exited successfully in this session.
 ## 2. ${project.displayName} invariant smoke checks
 
 ```bash
+# static-MPA contract
 rg -n "ClientRouter|prerender = false|prerender: false|output:.*server|output:.*hybrid" src astro.config.mjs
+# WhatsApp SSOT
 rg -n "wa\.me|api\.whatsapp\.com" src --glob "!src/lib/whatsapp.ts"
-rg -n "transition:\s*all" src
-# Legacy identity/product denylist: search active sources for any old project/product terms from the migration notes; exclude archives.
+# token canon (hex only inside @theme)
+rg -n "#[0-9a-fA-F]{3,8}" src --glob "!src/styles/global.css"
+# emoji-as-icon / production noise
+rg -n "console\.log|debugger" src
+# reduced-motion honored wherever motion was added
+rg -n "prefers-reduced-motion" src/styles/global.css
+# legacy identity denylist (this repo is OTB — no aula-trintae3 / TRINTAE3 surfaces)
+rg -n "aula-trintae3|RegistrationForm|MobileCTABar|FinalCTA|NextStep" src
 ```
 
-Expected result for smoke checks: no active-source matches except intentional rule text that forbids a pattern.
+Expected result: no active-source matches except intentional rule text that forbids a pattern. The `<meta theme-color>` literal mirroring `--color-navy` is the one documented hex exception.
+
+> **Não** rodar smoke check contra `transition: all`, animação de propriedade de layout, glow, glass ou 3D — cardinal rule 8 permite explicitamente. O único gate duro de motion é `prefers-reduced-motion`.
 
 ## 3. Review checklist
 
@@ -43,10 +53,11 @@ Expected result for smoke checks: no active-source matches except intentional ru
 - No dependency added without approval.
 - No protected file changed unintentionally.
 - Product copy remains in `${content.productJson}` when applicable.
-- LGPD consent + privacy link preserved on the registration form.
-- Lead destination + tracking IDs stay in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`), never committed.
-- WhatsApp message starts with `${lead.whatsappGreeting}`.
-- Canonical domain is `${project.productionUrl}`.
+- Conversion path intact: one primary CTA, WhatsApp-only, message starts with `${lead.whatsappGreeting}`.
+- No lead form / endpoint / database introduced without approval.
+- Tracking IDs stay in env (`${tracking.ga4Env}`, `${tracking.pixelEnv}`), never committed.
+- No fabricated product facts (dates, prices, credentials, partners) — everything factual traces to `${content.productJson}` or `PRODUCT.md`.
+- Canonical domain is `${project.productionUrl}`; `/otb` redirect stays excluded from the sitemap.
 
 ## 4. Verdict
 

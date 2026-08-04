@@ -36,8 +36,10 @@ import sys
 import typing
 from pathlib import Path
 
-TS_EXTENSIONS = {".ts", ".tsx", ".js", ".jsx", ".json"}
+TS_EXTENSIONS = {".ts", ".tsx", ".js", ".jsx", ".json", ".css"}
 LINT_EXTENSIONS = (".ts", ".tsx", ".js", ".jsx")
+# Only lint the project's own source; `bun run lint` uses the same scope.
+LINT_ROOTS = ("src/",)
 MAX_LINT_FILES = 20
 LINT_TIMEOUT_S = 30
 FORMAT_TIMEOUT_S = 30
@@ -89,7 +91,14 @@ def get_modified_files() -> list[str]:
             timeout=GIT_DIFF_TIMEOUT_S,
         )
         files = result.stdout.strip().splitlines()
-        return [f for f in files if f.endswith(LINT_EXTENSIONS)][:MAX_LINT_FILES]
+        # Scope to project source only — matches `bun run lint` (`oxlint src`).
+        # Vendored bundles under .claude/skills/**, tooling scripts, and other
+        # non-source JS are not this project's code and must never block a stop.
+        return [
+            f
+            for f in files
+            if f.endswith(LINT_EXTENSIONS) and f.replace("\\", "/").startswith(LINT_ROOTS)
+        ][:MAX_LINT_FILES]
     except Exception:
         return []
 

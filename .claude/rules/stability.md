@@ -170,7 +170,7 @@ ${tooling.packageManager} run ${tooling.buildTool}
 |---|---|
 | Section blank with JS off | `<noscript>` reveal fallback present? |
 | FAQ stutters on expand | Layout thrash on low-end device? Switch to grid `0fr/1fr` or `transform` if needed — any approach is allowed |
-| Hover/tilt "morto" após reveal | Reveal usa `animation: … forwards`? Trava o `transform` no fim do keyframe → mascara hover/3D. Remover `forwards`, fixar fim com `.revealed{opacity:1}` (gotcha #1, `docs/motion-depth-playbook.md`) |
+| Hover/tilt "morto" após reveal | Reveal usa `animation: … forwards`? Trava o `transform` no fim do keyframe → mascara hover/3D. Remover `forwards`, fixar fim com `.revealed{opacity:1}` |
 | Tilt e hover-lift se anulam | Dois `transform` na mesma regra brigam — em card com `[data-tilt]`, o tilt É o hover (remover `card-hover-lift`) |
 | Glow/`::before` tinge o texto | `[data-glow-card]::before` precisa de `z-index: -1` (pinta acima do fundo, atrás do conteúdo) |
 | Parallax salta | `data-parallax` em elemento que já usa `transform` p/ posicionar — só onde o transform está livre |

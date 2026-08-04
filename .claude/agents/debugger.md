@@ -35,11 +35,11 @@ NO UI FIXES WITHOUT STATIC/VISUAL DIAGNOSTIC EVIDENCE WHEN THE BUG IS VISUAL
 Additional hard rules:
 
 - ${project.displayName} only; Grupo US / Dra. Sacha Gualberto is parent brand, not a broader product funnel.
-- Static Astro only: no SSR adapter, no `ClientRouter`, no `prerender = false`. Lead endpoint `api/inscricao.js` is a separate Vercel function, not Astro SSR.
+- Static Astro only: no SSR adapter, no `ClientRouter`, no `prerender = false`. There is no backend, no API route, and no database in this repo.
 - Bun only: `bun install`, `bun run`, `bunx`.
 - Product/copy SSOT is `${content.productJson}`.
-- WhatsApp SSOT is `src/lib/whatsapp.ts`; never inline `wa.me`; messages start `${lead.whatsappGreeting}`.
-- Lead PII (form `${lead.formComponent}` → `api/inscricao.js` → NeonDB `${lead.leadTable}`): never log/leak PII; never commit endpoint/tracking env (`DATABASE_URL`, `LEAD_WEBHOOK_URL`, `${lead.endpointEnv}`, `${tracking.pixelEnv}`, `${tracking.ga4Env}`).
+- WhatsApp SSOT is `src/lib/whatsapp.ts`; never inline `wa.me`; messages start `${lead.whatsappGreeting}`. Partner numbers go through `whatsappPartnerUrl`.
+- Conversion is **WhatsApp-only** (`lead.leadFlow`): no form, no endpoint, no lead table. Never log PII; never commit tracking env (`${tracking.pixelEnv}`, `${tracking.ga4Env}` — declared but not wired today).
 - One fix at a time; no unrelated cleanup during incident handling.
 
 ---
@@ -99,7 +99,7 @@ ${content.productJson}
   → src/content.config.ts
   → src/pages/*.astro / src/components/landing/*.astro
   → src/layouts/Layout.astro / helpers (src/lib/whatsapp.ts)
-  → ${lead.formComponent} → api/inscricao.js → NeonDB (${lead.leadTable})
+  → WhatsApp SDR (wa.me deep link — único destino de conversão)
   → dist/index.html / sitemap / robots / public assets
 ```
 
@@ -111,8 +111,8 @@ ${content.productJson}
 | Astro/content check | Compare `${content.productJson}` shape with `src/content.config.ts` |
 | Missing asset | Verify `public/**` path referenced by content/layout |
 | Broken CTA/anchor | Check target ID exists in `dist/index.html` (`${content.anchors}`) |
-| Lead form/endpoint | Trace `${lead.formComponent}` → `POST /api/inscricao` → NeonDB; verify WhatsApp fallback on 502/503 |
-| Tracking/pixel | Inspect Meta Pixel + GA4 in `Layout.astro`; confirm IDs come from env (`${tracking.pixelEnv}`, `${tracking.ga4Env}`) |
+| CTA WhatsApp quebrado | Trace helper `src/lib/whatsapp.ts` → mensagem no `${content.productJson}`; o prefixo `${lead.whatsappGreeting}` é validado em runtime e lança erro no build se faltar |
+| Tracking/pixel | Não instrumentado hoje; se existir, inspecionar `Layout.astro` e confirmar IDs vindos de env (`${tracking.pixelEnv}`, `${tracking.ga4Env}`) |
 | SEO/canonical | Inspect `astro.config.mjs`, `Layout.astro`, `dist/sitemap-0.xml`, `robots.txt` |
 | Visual/hydration | Capture browser evidence, then inspect component/island |
 | Legacy reference | Search active source/docs excluding archives/dist |

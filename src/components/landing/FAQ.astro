@@ -1,12 +1,16 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Icon from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+type ProductData = CollectionEntry<"products">["data"];
 
 export interface Props {
-	faq: CollectionEntry<"products">["data"]["faq"];
+	faq: ProductData["faq"];
+	faqIntro?: ProductData["faqIntro"];
 }
 
-const { faq } = Astro.props;
+const { faq, faqIntro } = Astro.props;
 
 const faqJsonLd = {
 	"@context": "https://schema.org",
@@ -22,39 +26,49 @@ const faqJsonLd = {
 };
 ---
 
-<section id="faq" class="relative py-24 sm:py-28" aria-labelledby="faq-heading">
+{/*
+	Box removed: full-width rows on hairlines. Questions are set in Inter, not
+	Playfair — serif questions were competing with the section headings and
+	flattening the page's hierarchy. Rows are ≥56px for touch.
+*/}
+<section
+	id="faq"
+	class="band-base relative py-section-tight"
+	aria-labelledby="faq-heading"
+>
 	<div class="mx-auto max-w-4xl px-6 lg:px-8">
-		<div class="text-center" data-reveal="up">
-			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-				<span class="h-px w-10 bg-gold/60"></span>
-				Perguntas frequentes
-			</span>
-			<h2
-				id="faq-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance text-text-primary sm:text-4xl md:text-5xl"
-			>
-				Dúvidas comuns sobre o OTB
-			</h2>
-		</div>
+		{faqIntro && (
+			<SectionHeader
+				headingId="faq-heading"
+				numeral="10"
+				kicker={faqIntro.kicker}
+				headline={faqIntro.headline}
+			/>
+		)}
 
-		<div class="mt-14 divide-y divide-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-light)_60%,transparent)]">
+		<div
+			class="mt-block divide-y divide-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] border-y border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
+		>
 			{faq.map((item, idx) => (
 				<details
 					class="faq-item group"
 					data-reveal="up"
-					data-reveal-delay={String(Math.min(idx + 1, 6))}
+					data-reveal-delay={String(Math.min(idx + 1, 10))}
 				>
 					<summary
-						class="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 text-left text-base font-medium text-text-primary transition-colors hover:text-gold group-open:text-gold sm:px-8 sm:text-lg"
+						class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-left text-body font-medium text-text-primary transition-colors hover:text-gold group-open:text-gold"
 					>
-						<span class="min-w-0 wrap-break-word font-serif">{item.pergunta}</span>
-						<!-- chevron: gold at rest, navy-on-gold when open -->
-						<span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-mid-35 text-gold transition-all duration-300 group-open:rotate-180 group-open:border-gold group-open:bg-gold-tint-10 group-open:text-gold-light">
+						<span class="min-w-0 wrap-break-word">{item.pergunta}</span>
+						<span
+							class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-mid-35 text-gold transition-all duration-300 group-open:rotate-180 group-open:border-gold group-open:bg-gold-tint-10"
+							aria-hidden="true"
+						>
 							<Icon name="chevron-down" size={18} strokeWidth={2.25} />
 						</span>
 					</summary>
-					<!-- left gold accent bar when open -->
-					<div class="faq-answer wrap-break-word border-l-2 border-gold-mid-35 px-6 pb-6 pl-8 text-sm leading-relaxed text-text-muted sm:px-8 sm:pl-10 sm:text-base">
+					<div
+						class="faq-answer max-w-prose wrap-break-word pb-6 text-body text-text-secondary"
+					>
 						{item.resposta}
 					</div>
 				</details>
@@ -66,13 +80,12 @@ const faqJsonLd = {
 </section>
 
 <style>
-	/* Native <details> disclosure; animate only chevron (transform) + answer panel
-	   (opacity + translateY). Left border accent uses border-gold-mid-35 token. */
+	/* Native <details> disclosure; only the chevron (transform) and the answer
+	   panel (opacity + translateY) animate. */
 	.faq-item summary::-webkit-details-marker {
 		display: none;
 	}
 
-	/* Remove default marker in Firefox */
 	.faq-item summary {
 		list-style: none;
 	}
@@ -89,7 +102,7 @@ const faqJsonLd = {
 	}
 
 	.faq-item[open] > .faq-answer {
-		animation: faq-answer-in 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+		animation: faq-answer-in 280ms var(--ease-editorial) both;
 		will-change: transform, opacity;
 	}
 

@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { whatsappUrlWithText } from "../../lib/whatsapp";
+import Icon from "../icons/Icon.astro";
+
+type ProductData = CollectionEntry<"products">["data"];
+
+export interface Props {
+	finalCta: NonNullable<ProductData["finalCta"]>;
+}
+
+const { finalCta } = Astro.props;
+const whatsappHref = whatsappUrlWithText(finalCta.cta.whatsappMessage);
+const hasCheckout = Boolean(finalCta.cta.checkoutUrl);
+---
+
+{/*
+	Closing band. The page used to dead-end on the FAQ — the last thing a
+	visitor read was an objection, with no way forward but the floating button.
+*/}
+<section class="band-alt relative py-section-tight" aria-labelledby="final-cta-heading">
+	<div class="mx-auto max-w-5xl px-6 text-center lg:px-8">
+		<span
+			class="inline-flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+			data-reveal="up"
+		>
+			<span class="h-px w-8 bg-gold/70" aria-hidden="true"></span>
+			{finalCta.kicker}
+			<span class="h-px w-8 bg-gold/70" aria-hidden="true"></span>
+		</span>
+
+		<h2
+			id="final-cta-heading"
+			class="mt-5 font-serif text-h2 font-bold text-balance text-text-primary"
+			data-reveal="up"
+			data-reveal-delay="1"
+		>
+			{finalCta.headline}
+		</h2>
+
+		{finalCta.descricao && (
+			<p
+				class="mx-auto mt-5 max-w-2xl text-lede font-light text-text-secondary"
+				data-reveal="up"
+				data-reveal-delay="2"
+			>
+				{finalCta.descricao}
+			</p>
+		)}
+
+		<div
+			class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+			data-reveal="up"
+			data-reveal-delay="3"
+		>
+			{hasCheckout && finalCta.cta.checkoutUrl ? (
+				<>
+					<a
+						href={finalCta.cta.checkoutUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="group inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03] sm:w-auto"
+					>
+						<span>{finalCta.cta.secondaryLabel ?? "Garantir vaga"}</span>
+						<Icon
+							name="arrow-right"
+							size={18}
+							strokeWidth={2.25}
+							class="transition-transform duration-300 group-hover:translate-x-1"
+						/>
+					</a>
+					<a
+						href={whatsappHref}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold sm:w-auto"
+					>
+						<Icon name="message-circle" size={18} strokeWidth={2.25} />
+						<span>{finalCta.cta.label}</span>
+					</a>
+				</>
+			) : (
+				<a
+					href={whatsappHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="group inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03] sm:w-auto"
+					aria-label={`${finalCta.cta.label}`}
+				>
+					<Icon name="message-circle" size={20} strokeWidth={2.25} />
+					<span>{finalCta.cta.label}</span>
+					<Icon
+						name="arrow-right"
+						size={18}
+						strokeWidth={2.25}
+						class="transition-transform duration-300 group-hover:translate-x-1"
+					/>
+				</a>
+			)}
+		</div>
+	</div>
+</section>

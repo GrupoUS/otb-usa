@@ -1,25 +1,18 @@
-# Product — GPUS
+# Product — OTB Estados Unidos (Grupo US)
 
-> **Brief de produto, posicionamento e conversão da casa — Grupo US / Dra. Sacha Gualberto.** Genérico para **todos os produtos GPUS**, usável em qualquer projeto/landing.
+<!-- impeccable:product-schema 1 -->
+
+> Registro de produto desta landing. **Verdade de marca compartilhada GPUS** (público, voz, playbook de conversão, guardrails) permanece aqui porque vale para todo produto da casa; os blocos específicos do OTB estão marcados.
 >
 > **Load:** `Skill('grupo-us')` (voz, IDs de produto/pessoa, funil drasacha) + `Skill('gpus-theme')` (tokens Navy/Gold). Visual/interação em `DESIGN.md`. Este arquivo **aponta** para as skills — não duplica voz, IDs nem tokens.
 >
-> O **slot por projeto** fica em `## Register` + `## Por projeto`. As demais seções são **verdade GPUS compartilhada** (valem em todo projeto).
->
-> Síntese de pesquisa: `docs/logos/landing-pages-design-conversao-2026-06-01.md`.
+> **Modo desta superfície (impeccable 4.x): Persuade** — o visitante decide e age; o design é o produto.
 
 ---
 
-## Register
+## Platform
 
-> **Slot por projeto** — cada landing preenche este bloco. (Exemplo de campos; substituir pelos valores reais do projeto.)
-
-- **Product:** `<nome do produto>` (ex.: Aula Gratuita TRINTAE3, TRINTAE3, OTB, Comunidade US…).
-- **Canonical URL:** `<https://…>`.
-- **Estágio de funil:** `<entrada | aula gratuita | especialista | networking | escala | apex>`.
-- **Content SSOT:** `src/content/products/<slug>.json` (validado em `src/content.config.ts`).
-- **CTA primário:** `<texto do CTA>` (um por página, repetido com consistência).
-- **WhatsApp:** mensagem em `cta.whatsappMessage` (prefixo obrigatório `Olá, Laura!`), via helper `src/lib/whatsapp.ts`. Nunca inline `wa.me/...`.
+web
 
 ---
 
@@ -36,11 +29,74 @@ Público compartilhado GPUS: **profissionais habilitados de Saúde Estética Ava
 
 Chegam por tráfego pago, indicação, lista de relacionamento ou canais do Grupo US. A decisão costuma **começar no mobile** e aprofundar no desktop quando a compra está próxima.
 
-**Jornada do aluno (ecossistema):** entrada (Comunidade US / cursos curtos / **aula gratuita**) → **TRINTAE3** (especialista: técnica + base de negócio) → **Na Mesa Certa** (networking) → **Mentoria Black NEON** (escala) → **OTB** (apex internacional). IDs oficiais de produto/pessoa e a jornada completa vivem em `Skill('grupo-us')` — referenciar, não copiar. Cada landing **declara seu estágio** em `## Register`.
+**Público específico do OTB** (`otb.json § audience`): profissional com **carreira já estabelecida**, que domina a técnica e busca o próximo patamar — operação, posicionamento e alcance internacional. Não é público de entrada. Citação de posicionamento no produto: *"O OTB não é para quem está começando. É para quem já chegou longe e sabe que o próximo nível não está no Brasil."*
+
+**Jornada do aluno (ecossistema):** entrada (Comunidade US / cursos curtos / aula gratuita) → **TRINTAE3** (especialista) → **Na Mesa Certa** (networking) → **Mentoria Black NEON** (escala) → **OTB (apex internacional — este produto)**. IDs oficiais de produto/pessoa vivem em `Skill('grupo-us')` — referenciar, não copiar.
 
 ---
 
-## Brand Personality
+## Product Purpose
+
+Landing estática de **captação** para o **OTB — MBA em Business Aesthetic Health**, 3ª edição, com imersão internacional em **Boston, 19 a 21 de abril de 2027**.
+
+O produto é um programa executivo de **320 horas**: 10 módulos online de business, gestão clínica, marketing e vendas (MBA Business Online, plataforma por 12 meses, Instituto IESA / Grupo US) + 3 dias de imersão presencial em Boston com prática demonstrativa **Fresh Specimens ≤ 48h post-mortem** e **Anatomy Review** com correspondente americano.
+
+Sucesso da página = visitante qualificado inicia conversa no WhatsApp com a SDR Laura. **Não há formulário nem checkout** (`hero.cta.checkoutUrl` e `investimento.cta.checkoutUrl` são `null`): o WhatsApp é o único destino de conversão.
+
+---
+
+## Positioning
+
+**O primeiro MBA do mundo em Business Aesthetic Health.** O mecanismo que um concorrente não copia com honestidade é a combinação: *formação executiva de business (320h, certificação MBA Instituto IESA) + prática anatômica em Fresh Specimens ≤ 48h com certificado ASA + imersão no ecossistema acadêmico de Boston/Cambridge*, entregue a um público de Saúde Estética que já tem carreira feita.
+
+Três pilares declarados (`otb.json § why.cards`): **formação técnica avançada · branding internacional · networking global**.
+
+**Limite duro de posicionamento:** Boston/Cambridge/Harvard são **contexto geográfico e acadêmico**, nunca certificação, vínculo, patrocínio ou endosso. O disclaimer integral vive em `otb.json § legal.disclaimer` e deve permanecer acessível na página.
+
+---
+
+## Operating Context
+
+- **Decisão em duas telas:** descoberta e leitura no mobile (tráfego pago/indicação), aprofundamento e conversa no desktop ou no app do WhatsApp.
+- **Ticket alto em dólar** (US$ 3.500 no Lote 1) com **lotes escalonados** — o visitante compara preço, parcelamento e prazo antes de falar com a SDR.
+- **Compra internacional:** exige viagem, hospedagem e visto US. Dois parceiros operacionais atendem isso fora do escopo do Grupo US (Travel Legacy e assessoria de visto B1/B2), com contato próprio.
+- **Ciclo longo:** a edição ocorre em abril de 2027; a página vende decisão antecipada, não urgência artificial.
+- **Prova disponível:** duas edições anteriores já realizadas em Boston, com acervo fotográfico próprio.
+
+---
+
+## Capabilities and Constraints
+
+**Confirmado (fonte: `src/content/products/otb.json`, `astro.config.mjs`):**
+
+- Slug de conteúdo `otb`; SSOT em `src/content/products/otb.json`, validado por `src/content.config.ts`.
+- Canonical: `https://otb.drasacha.com.br`. Redirect `/otb` → `/` (excluído do sitemap).
+- Rota única `/` — **não existem** páginas legais (`/termos`, `/politica-de-privacidade`) nem `/404` neste repo.
+- CTA primário único: **"Falar com Laura no WhatsApp"** (hero e investimento). CTA secundário: "Conhecer o programa".
+- WhatsApp SSOT: `src/lib/whatsapp.ts` (`WHATSAPP_SDR_E164 = 556294705081`); toda mensagem começa com `Olá, Laura!` (validado em runtime).
+- Lotes: Lote 0 US$ 3.000 (encerrado 30 abr 2026) · **Lote 1 US$ 3.500 (ativo, desde 01 mai 2026)** · Lote 2 US$ 4.000 (liberação por volume ou data, ainda não ativado).
+- Parcelamento: cartão de crédito (parcelas conforme operadora) e boleto parcelado com taxa de 5% sobre o número de parcelas.
+- Certificações declaradas: MBA em parceria **Instituto IESA / Grupo US**; certificado de prática anatômica **Fresh Specimens pela Anatomy Society of America (ASA)**.
+- Agenda de 3 dias (19–21 abr 2027) descrita em `otb.json § agenda`; visita guiada ao campus tem caráter **descritivo**, sem atividade acadêmica oficial.
+- Corpo docente publicado: 4 nomes em `otb.json § speakers.lista`.
+- Parceiros operacionais: 2, com WhatsApp próprio (roteados por `whatsappPartnerUrl`).
+
+**Restrições técnicas:**
+
+- Astro estático MPA, zero ilha React hoje. Sem SSR, sem `ClientRouter`, sem `prerender = false`.
+- Sem backend, sem banco, sem endpoint de lead. Sem GA4/Pixel instrumentado (`import.meta.env` não é lido em `src/`).
+- Copy comercial nunca vive em `.astro` — campo novo = schema + JSON + leitor numa só mudança.
+
+**Explicitamente indefinido — não fabricar:**
+
+- Data/critério de ativação do Lote 2 ("liberação por volume ou data").
+- Número de vagas por turma.
+- Página de política de privacidade / termos (não existe rota).
+- Instrumentação de analytics (IDs em env, ainda não conectados).
+
+---
+
+## Brand Commitments
 
 Tom de voz: **premium, claro, consultivo e internacional**. Falar em **"nós"**.
 
@@ -50,7 +106,36 @@ Tom de voz: **premium, claro, consultivo e internacional**. Falar em **"nós"**.
 - Business e segurança clínica caminham juntos.
 - Grupo US é a marca-mãe; a narrativa principal é o produto da página.
 
-Voz canônica, valores (A.C.T.I.V.A.) e frases-guia vivem em `Skill('grupo-us')`.
+Voz canônica, valores (A.C.T.I.V.A.) e frases-guia vivem em `Skill('grupo-us')`. Tokens visuais (Navy/Gold + acento crimson Harvard/USA) em `DESIGN.md` + `src/styles/global.css @theme`.
+
+---
+
+## Evidence on Hand
+
+**Existe e pode ser usado:**
+
+- Acervo fotográfico próprio de duas edições anteriores em Boston: `public/images/otb/gallery/` (9 fotos — aula, prática, networking, turma).
+- Fotos de contexto: `boston-skyline-hero.jpg`, `cambridge-academic.jpg`, `boston-networking-premium.jpg`.
+- Retratos do corpo docente: `public/images/otb/speakers/`.
+- Marca: `public/images/otb/logo-otb.png`, `otb-logo-gold.png`; identidade Grupo US em `docs/logos/`.
+- Números verificáveis declarados no JSON: 320 horas, 10 módulos, 3 dias, 2 edições anteriores, Fresh Specimens ≤ 48h.
+
+**Ausências que trabalho futuro NÃO pode inventar:**
+
+- **Sem depoimentos de alunos** (nenhum campo de testimonial no JSON) — não fabricar prova social nominal.
+- **Sem números de resultado de aluno** (faturamento, ROI, casos).
+- Sem selo/documento público de MEC ou conselho anexado ao repo.
+- OG image (`public/og/otb-default.jpg`, 1200×630) é composição de marca — fundo navy do hero + logo gold + filete gold/crimson. **Não** é foto de Boston: `boston-skyline-hero.jpg` é arte abstrata, não fotografia.
+
+---
+
+## Product Principles
+
+1. **Apex, não entrada.** Cada seção fala com quem já chegou longe; nada de didatismo de topo de funil.
+2. **Um CTA, um destino.** WhatsApp com Laura é o único caminho de conversão — nenhuma seção inventa CTA próprio.
+3. **Contexto internacional, nunca credencial emprestada.** Harvard/Boston descrevem o cenário; certificação real é IESA + ASA e é dita com essas palavras.
+4. **Preço é argumento, não constrangimento.** Lotes e parcelamento aparecem com clareza; escassez só quando o JSON a confirma.
+5. **Prova é o acervo real.** Fotos das edições anteriores carregam a credibilidade que depoimento fabricado carregaria — e não temos depoimento.
 
 ---
 
@@ -61,28 +146,26 @@ Arquitetura ideal de landing high-ticket GPUS (ordem por jornada):
 1. **Hero** — promessa específica + público + mecanismo + CTA + microprova.
 2. **Barra de confiança/qualificação** — números, selos, horas, turmas; filtro de público explícito no topo ("para quem é").
 3. **Dor qualificada** — 3–4 dores específicas do profissional.
-4. **Mecanismo proprietário** — por que funciona e por que é diferente (fórmula simples por produto).
+4. **Mecanismo proprietário** — por que funciona e por que é diferente.
 5. **Jornada / como funciona** — timeline ou passos claros.
-6. **Prova** — depoimentos, fotos reais, bastidores, prints autorizados.
+6. **Prova** — fotos reais, bastidores, acervo autorizado.
 7. **Oferta** — o que recebe (essencial / acompanhamento / bônus).
 8. **Comparativo** — "sem método vs com método GPUS".
-9. **Autoridade** — Dra. Sacha, mentores, parceiros, credenciais.
+9. **Autoridade** — Dra. Sacha, corpo docente, parceiros, credenciais.
 10. **Investimento / condições** — com clareza e redução de risco.
 11. **FAQ por objeção** — preço, tempo, elegibilidade, prática, certificado, suporte.
 12. **CTA final + WhatsApp contextual.**
 
+**Ordem implementada hoje** (`src/pages/index.astro`): Hero → WhyOTB → TargetAudience → Programa → Turmas → Modulos → BostonHarvard → Speakers → Investimento → Parceiros → FAQ → Footer, com `WhatsAppFloatingButton` persistente.
+
 **Fórmula de hero** — todo hero responde, em ≤5s: *para quem é? · que transformação entrega? · qual mecanismo torna diferente? · qual próximo passo? · por que confiar agora?*
 
-**Mecanismo proprietário (padrão):** `Componente A + Componente B + Componente C = Resultado de autoridade`. Cada produto define a sua fórmula simples.
-
 **Disciplina de CTA:**
-- **um CTA primário por página**, repetido com consistência (não deixar cada seção inventar um CTA);
-- **WhatsApp = secundário/objeção**, com mensagens por intenção ("sou elegível?", "condições de pagamento", "próxima turma");
-- prova social **perto do CTA**: 3 estatísticas verificáveis + 1 depoimento curto (foto/profissão/cidade) + selos com nota.
+- **um CTA primário por página**, repetido com consistência;
+- **WhatsApp por intenção** — mensagens distintas por seção (saber mais · garantir vaga no lote), sempre com o prefixo obrigatório;
+- prova perto do CTA: números verificáveis + acervo fotográfico real.
 
-**Mobile-first:** sticky CTA bar (inscrever + WhatsApp), header compacto com logo legível, seções longas em tabs/accordion, formulário curto, **estado de sucesso rico** (confirmação + lembrete WhatsApp + add-to-calendar).
-
-> Como esses padrões se parecem e se movem → `DESIGN.md § Component catalog` + `§ Motion`.
+> Como esses padrões se parecem e se movem → `DESIGN.md § Components` + `§ Motion`.
 
 ---
 
@@ -90,12 +173,13 @@ Arquitetura ideal de landing high-ticket GPUS (ordem por jornada):
 
 Ofertas envolvem saúde estética, harmonização e formação profissional regulada → linguagem segura, sempre:
 
-- **Sem promessa clínica garantida.** Sem promessa financeira absoluta ("fature X em Y meses" como headline).
+- **Sem promessa clínica garantida.** Sem promessa financeira absoluta como headline.
 - **Público elegível claro** conforme legislação e conselho aplicável.
-- **Separar resultado de aluno de promessa universal** — depoimento ≠ garantia de reprodução.
-- **Prova social com contexto:** nome, profissão, cidade, situação inicial, evolução.
-- **Claims sensíveis** — "única", "reconhecida pelos Conselhos", "MEC", "Harvard", "ASA" — só com documentação / nota legal adequada. Referências internacionais (Harvard, Boston) como **contexto geográfico/acadêmico**, nunca como certificação oficial.
+- **Separar resultado de aluno de promessa universal.**
+- **Prova social com contexto:** nome, profissão, cidade, situação inicial, evolução — e só quando existir de fato.
+- **Claims sensíveis** — "única", "reconhecida pelos Conselhos", "MEC", "Harvard", "ASA" — só com documentação / nota legal adequada. Harvard e Boston são **contexto geográfico/acadêmico**, nunca certificação.
 - **Copy não confirmada = PROPOSTA.** Datas/valores não confirmados = placeholder explícito.
+- **Disclaimer legal** (`otb.json § legal.disclaimer`) permanece visível e não pode ser encurtado por motivo estético.
 
 ---
 
@@ -116,13 +200,13 @@ Evitar:
 
 ## CRO
 
-**Eventos de analytics (instrumentar por página):** `click_cta_hero`, `click_cta_sticky_mobile`, `click_whatsapp_hero`, `click_whatsapp_investimento`, `form_start`, `form_submit_success`, `form_submit_error`, `faq_open`, `section_view_*`, `scroll_25/50/75/90`.
+**Eventos de analytics a instrumentar** (nenhum implementado hoje): `click_cta_hero`, `click_whatsapp_hero`, `click_whatsapp_investimento`, `click_whatsapp_floating`, `faq_open`, `section_view_*`, `scroll_25/50/75/90`.
 
-**Prioridades de A/B:** CTA (consultivo vs direto) · hero visual (textual vs foto/vídeo vs card+depoimento) · formulário (campos curtos vs completos) · prova acima da dobra (com vs sem).
+**Prioridades de A/B:** CTA (consultivo vs direto) · hero visual (foto Boston vs editorial tipográfico) · posição da prova (galeria antes vs depois do programa) · framing do investimento (lote ativo vs benefício total).
 
-**Métricas por página:** CTR de CTA/WhatsApp, leads qualificados, custo por lead, scroll até investimento/FAQ, conversão pós-prova/garantia.
+**Métricas por página:** CTR de WhatsApp por seção, scroll até investimento/FAQ, conversas iniciadas com a SDR, qualificação da conversa.
 
-> IDs de tracking (GA4/Pixel) e endpoint vivem em **env**, nunca commitados — ver `.claude/rules/seo.md` + `.claude/config.json`. Mudá-los = aprovação.
+> IDs de tracking (GA4/Pixel) vivem em **env**, nunca commitados — ver `.claude/rules/seo.md` + `.claude/config.json`. Mudá-los = aprovação.
 
 ---
 
@@ -130,23 +214,11 @@ Evitar:
 
 - WCAG 2.2 AA em contrastes.
 - Foco visível em todo elemento interativo.
-- `prefers-reduced-motion` respeitado.
+- `prefers-reduced-motion` respeitado em toda animação (único requisito duro do motion).
 - Sem cor como único portador de significado.
 - Sem texto crítico apenas em ícone.
 - Alvos táteis ≥ 44 × 44px.
-
----
-
-## Por projeto
-
-> Checklist de fatos a confirmar antes de publicar (preencher no projeto):
-
-- [ ] Credenciais (MEC, conselho) verificadas ou marcadas como "a confirmar".
-- [ ] Duração / datas / valores com fonte; divergências entre manual e site sinalizadas.
-- [ ] Claims atribuídos a herança de marca, não a certificação fabricada.
-- [ ] Contato (SDR Laura / WhatsApp) bate com `.claude/config.json` + `Skill('grupo-us')`.
-- [ ] Oferta/inclusões com "confirmar oficialmente" onde não houver fonte.
-- [ ] CTA primário único definido; mensagens WhatsApp por intenção no JSON.
+- Conteúdo revelado por scroll permanece legível com JS desligado (`<noscript>` em `Layout.astro`).
 
 ---
 
@@ -155,10 +227,10 @@ Evitar:
 | Pergunta | Fonte |
 |---|---|
 | Copy, público, CTA, voz, funil, IDs | `Skill('grupo-us')` |
-| Tokens visuais Navy/Gold | `Skill('gpus-theme')` |
+| Tokens visuais Navy/Gold/Crimson | `Skill('gpus-theme')` + `src/styles/global.css @theme` |
 | Como parece / se move (visual, componentes, motion) | `DESIGN.md` |
 | Regras universais de design (qualquer stack) | `.claude/rules/DESIGN.md` |
 | Astro / Content Collections / static | `.claude/rules/astro.md` + `Skill('astro')` |
 | SEO / tracking / env | `.claude/rules/seo.md` + `.claude/config.json` |
-| Conteúdo/copy do produto | `src/content/products/<slug>.json` |
-| Pesquisa de conversão (fonte) | `docs/logos/landing-pages-design-conversao-2026-06-01.md` |
+| Conteúdo/copy do produto | `src/content/products/otb.json` |
+| Valores de instância (rotas, âncoras, componentes) | `.claude/config.json` |

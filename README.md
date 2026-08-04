@@ -42,8 +42,7 @@ Brief de produto → [`PRODUCT.md`](PRODUCT.md) · Design system → [`DESIGN.md
 otb-usa/
 ├── src/
 │   ├── pages/
-│   │   ├── index.astro        # entrada / fallback para OTB
-│   │   └── otb.astro          # landing OTB USA
+│   │   └── index.astro        # landing OTB USA (rota única)
 │   ├── components/
 │   │   ├── landing/           # seções da landing
 │   │   └── icons/             # wrapper Lucide
@@ -72,8 +71,8 @@ otb-usa/
 
 | Rota | Arquivo | Descrição |
 |---|---|---|
-| `/` | `src/pages/index.astro` | entrada do site OTB USA |
-| `/otb` | `src/pages/otb.astro` | landing principal |
+| `/` | `src/pages/index.astro` | landing OTB USA (rota única) |
+| `/otb` | — | redirect 301 → `/` (`astro.config.mjs`), excluído do sitemap |
 
 A copy de produto não deve ser hardcoded nos componentes. Edite `src/content/products/otb.json` e mantenha o schema em `src/content.config.ts` sincronizado quando necessário.
 

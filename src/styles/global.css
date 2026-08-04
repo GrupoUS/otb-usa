@@ -7,8 +7,12 @@
 /* ===== Design System (Navy/Gold) ===== */
 
 @theme {
-	/* Navy Palette */
+	/* Navy Palette.
+	   navy-deep e navy-band existem para BANDEAR a página: a troca de banda é
+	   o separador primário entre seções (no lugar de filetes decorativos). */
+	--color-navy-deep: #10101f;
 	--color-navy: #1a1a2e;
+	--color-navy-band: #24243a;
 	--color-navy-light: #2a2a40;
 	--color-navy-lighter: #3d3d5c;
 
@@ -17,20 +21,83 @@
 	--color-gold-light: #e8c96a;
 	--color-gold-dark: #b8960c;
 
-	/* Crimson / USA accent — Boston · Harvard positioning.
+	/* Crimson / USA accent — posicionamento Boston · Estados Unidos.
 	   Acento equilibrado: vermelho ganha presença ao lado do gold,
-	   navy continua base. Gold permanece primário de CTA/foco. */
-	--color-crimson: #a51c30; /* Harvard crimson — acento principal */
+	   navy continua base. Gold permanece primário de CTA/foco.
+	   Papéis permitidos (3, e só): marcador de data/local, espinha da
+	   timeline de Boston, badge do lote ativo. Nunca cor de CTA nem de erro. */
+	--color-crimson: #a51c30; /* acento principal */
 	--color-crimson-bright: #c8102e; /* USA flag red — gradientes/realces */
 	--color-crimson-dark: #6e1423; /* profundidade/sombra */
 
-	/* Text */
+	/* Text.
+	   text-secondary é o body sobre fundo escuro; text-muted desce para
+	   metadado (data, rótulo pequeno) — DESIGN.md § 2. */
 	--color-text-primary: #fafaf9;
+	--color-text-secondary: #b8c0d0;
 	--color-text-muted: #94a3b8;
 
 	/* Typography */
 	--font-serif: var(--font-playfair), Georgia, serif;
 	--font-sans: var(--font-inter), system-ui, sans-serif;
+
+	/* Escala fluida — substitui text-[3.75rem] / text-[4.5rem] / md:text-5xl
+	   lg:text-6xl espalhados inline e dá comportamento real em tablet. */
+	--text-display: clamp(2.125rem, 1.2rem + 4.2vw, 5.25rem);
+	--text-display--line-height: 1.02;
+	--text-display--letter-spacing: -0.02em;
+
+	--text-h1: clamp(2rem, 1.15rem + 3.6vw, 4.25rem);
+	--text-h1--line-height: 1.05;
+	--text-h1--letter-spacing: -0.02em;
+
+	--text-h2: clamp(1.75rem, 1.15rem + 2.4vw, 3.25rem);
+	--text-h2--line-height: 1.1;
+	--text-h2--letter-spacing: -0.015em;
+
+	--text-h3: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+	--text-h3--line-height: 1.25;
+
+	--text-lede: clamp(1.0625rem, 1rem + 0.45vw, 1.375rem);
+	--text-lede--line-height: 1.6;
+
+	--text-body: 1rem;
+	--text-body--line-height: 1.65;
+
+	--text-meta: 0.8125rem;
+	--text-meta--line-height: 1.5;
+
+	/* Kicker — mata a receita text-[11px] uppercase tracking-[0.32em]
+	   repetida 8× e respeita o piso de 12px do DESIGN.md § 4. */
+	--text-kicker: 0.75rem;
+	--text-kicker--line-height: 1.2;
+	--tracking-kicker: 0.28em;
+
+	/* Ritmo vertical — py-28 sm:py-32 / py-32 sm:py-40 / py-24 sm:py-28
+	   derivavam por arquivo. */
+	--spacing-section: clamp(4rem, 2rem + 7vw, 9rem);
+	--spacing-section-tight: clamp(3rem, 1.75rem + 4.5vw, 6rem);
+	--spacing-block: clamp(2rem, 1.25rem + 3vw, 4rem);
+
+	/* Motion */
+	--ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-exit: cubic-bezier(0.4, 0, 1, 1);
+	--duration-hover: 160ms;
+	--duration-reveal: 520ms;
+	--stagger-step: 70ms;
+
+	/* Profundidade — 3 tiers. shadow-halo-gold substitui a receita do CTA
+	   duplicada em Hero, Investimento e WhatsAppFloatingButton. */
+	--shadow-panel: 0 18px 48px -24px
+		color-mix(in srgb, var(--color-navy-deep) 85%, transparent);
+	--shadow-lift: 0 24px 60px -20px
+		color-mix(in srgb, var(--color-navy-deep) 90%, transparent);
+	--shadow-halo-gold: 0 18px 45px -12px
+		color-mix(in srgb, var(--color-gold) 55%, transparent);
+	--shadow-rim: inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
+
+	/* Forma — fotografia é retilínea; só o chrome interativo é redondo. */
+	--radius-plate: 2px;
 }
 
 /* ===== Base Styles ===== */
@@ -78,10 +145,6 @@ body {
 	background-color: color-mix(in srgb, var(--color-crimson) 16%, transparent);
 }
 
-@utility border-crimson-mid-35 {
-	border-color: color-mix(in srgb, var(--color-crimson) 35%, transparent);
-}
-
 @utility border-crimson-mid-45 {
 	border-color: color-mix(
 		in srgb,
@@ -90,24 +153,71 @@ body {
 	);
 }
 
-@utility glass-card {
-	background:
-		linear-gradient(
-			180deg,
-			color-mix(in srgb, var(--color-navy-light) 92%, white 4%) 0%,
-			color-mix(in srgb, var(--color-navy) 92%, transparent) 100%
-		),
-		radial-gradient(
-			circle at top left,
-			color-mix(in srgb, var(--color-gold) 14%, transparent) 0%,
-			transparent 44%
-		);
-	border: 1px solid color-mix(in srgb, var(--color-gold) 20%, transparent);
-	backdrop-filter: blur(18px) saturate(125%);
-	box-shadow:
-		0 0 20px color-mix(in srgb, var(--color-gold) 6%, transparent),
-		0 24px 70px color-mix(in srgb, var(--color-navy) 45%, transparent),
-		inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
+/* ===== Shell: header + sticky CTA bar ===== */
+
+/* Full-bleed escapes the container by cancelling max-width, never by 100vw
+   arithmetic (that is off by the scrollbar width and causes overflow). */
+html,
+body {
+	overflow-x: clip;
+}
+
+/* Anchors must clear the fixed header. */
+[id] {
+	scroll-margin-top: 5rem;
+}
+
+.site-header {
+	border-bottom: 1px solid transparent;
+	transition:
+		background-color var(--duration-hover) ease,
+		border-color var(--duration-hover) ease,
+		backdrop-filter var(--duration-hover) ease;
+}
+
+.site-header.is-solid {
+	background-color: color-mix(in srgb, var(--color-navy-deep) 92%, transparent);
+	border-bottom-color: color-mix(in srgb, var(--color-gold) 18%, transparent);
+	backdrop-filter: blur(14px) saturate(130%);
+}
+
+/* Space for the mobile bar, reserved from first paint — never injected on
+   scroll, which would shift layout (CLS). */
+@media (max-width: 1023px) {
+	body {
+		padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+	}
+}
+
+/* Hidden state gated on `.js`: with scripting off the bar simply stays put
+   instead of being permanently unreachable. `visibility` (not aria-hidden)
+   pulls the links out of both the tab order and the a11y tree. */
+.js .sticky-cta {
+	visibility: hidden;
+	transform: translateY(100%);
+	transition:
+		transform var(--duration-reveal) var(--ease-editorial),
+		visibility var(--duration-reveal) var(--ease-editorial);
+}
+
+.js .sticky-cta.is-visible {
+	visibility: visible;
+	transform: translateY(0);
+}
+
+/* ===== Section banding ===== */
+
+/* The tonal step between sections is the primary separator. */
+@utility band-base {
+	background-color: var(--color-navy);
+}
+
+@utility band-alt {
+	background-color: var(--color-navy-band);
+}
+
+@utility band-deep {
+	background-color: var(--color-navy-deep);
 }
 
 /* ===== Focus States (Accessibility) ===== */
@@ -208,68 +318,9 @@ body {
 	}
 }
 
-@keyframes float {
-	0%,
-	100% {
-		transform: translateY(0);
-	}
-	50% {
-		transform: translateY(-12px);
-	}
-}
-
-@keyframes gold-pulse {
-	0%,
-	100% {
-		opacity: 0.5;
-	}
-	50% {
-		opacity: 0.9;
-	}
-}
-
-/* Subtle scroll-hint bounce — transform/opacity only. */
-@keyframes scroll-hint {
-	0%,
-	100% {
-		transform: translateY(0);
-		opacity: 0.55;
-	}
-	50% {
-		transform: translateY(6px);
-		opacity: 0.95;
-	}
-}
-
-@utility scroll-hint-bounce {
-	animation: scroll-hint 2.4s ease-in-out infinite;
-	will-change: transform, opacity;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.scroll-hint-bounce {
-		animation: none !important;
-		opacity: 0.7;
-	}
-}
-
 /* Disable infinite animations on mobile to save GPU */
 @media (max-width: 768px) {
-	.gold-pulse-glow::after {
-		animation: none;
-		opacity: 0.7;
-	}
-	.crimson-pulse-glow::after {
-		animation: none;
-		opacity: 0.7;
-	}
-	.float-gentle {
-		animation: none;
-	}
 	.landing-mesh-bg {
-		animation: none;
-	}
-	.landing-mesh-usa {
 		animation: none;
 	}
 }
@@ -288,40 +339,70 @@ body {
    backdrop-filter sobre o mesh animado). O reveal é um one-shot curto;
    o navegador compõe bem sem o hint. Ver docs/motion-depth-playbook. */
 
+/* Propriedades longhand (não o shorthand `animation`) para que o
+   animation-delay do stagger não seja zerado — era isso que obrigava o
+   `!important` na versão anterior.
+
+   fill-mode: BACKWARDS, nunca `forwards`. `forwards` congela o transform do
+   último keyframe no elemento e mascara hover/lift/parallax depois do reveal
+   (.claude/rules/stability.md § Debug triage matrix). Com `backwards` o
+   estado inicial vale durante o delay e, ao terminar, o elemento volta às
+   próprias regras — o opacity final vem de `.revealed`. */
+.js [data-reveal].revealed {
+	opacity: 1;
+	animation-duration: var(--duration-reveal);
+	animation-timing-function: var(--ease-editorial);
+	animation-fill-mode: backwards;
+	animation-delay: calc(var(--reveal-index, 0) * var(--stagger-step));
+}
+
 .js [data-reveal="up"].revealed {
-	animation: reveal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation-name: reveal-up;
 }
 
 .js [data-reveal="left"].revealed {
-	animation: reveal-left 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation-name: reveal-left;
 }
 
 .js [data-reveal="right"].revealed {
-	animation: reveal-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation-name: reveal-right;
 }
 
 .js [data-reveal="scale"].revealed {
-	animation: reveal-scale 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation-name: reveal-scale;
 }
 
-/* Staggered children */
+/* Stagger: `data-reveal-delay="N"` apenas seta --reveal-index. Sem teto
+   rígido — para listas longas basta style="--reveal-index: N" inline. */
 [data-reveal-delay="1"] {
-	animation-delay: 0.06s !important;
+	--reveal-index: 1;
 }
 [data-reveal-delay="2"] {
-	animation-delay: 0.12s !important;
+	--reveal-index: 2;
 }
 [data-reveal-delay="3"] {
-	animation-delay: 0.18s !important;
+	--reveal-index: 3;
 }
 [data-reveal-delay="4"] {
-	animation-delay: 0.24s !important;
+	--reveal-index: 4;
 }
 [data-reveal-delay="5"] {
-	animation-delay: 0.3s !important;
+	--reveal-index: 5;
 }
 [data-reveal-delay="6"] {
-	animation-delay: 0.36s !important;
+	--reveal-index: 6;
+}
+[data-reveal-delay="7"] {
+	--reveal-index: 7;
+}
+[data-reveal-delay="8"] {
+	--reveal-index: 8;
+}
+[data-reveal-delay="9"] {
+	--reveal-index: 9;
+}
+[data-reveal-delay="10"] {
+	--reveal-index: 10;
 }
 
 /* Reveal: visible immediately when user prefers reduced motion */
@@ -333,20 +414,6 @@ body {
 		transform: none;
 		will-change: auto;
 	}
-}
-
-/* ===== Enhanced Hover Utilities ===== */
-
-@utility card-hover-lift {
-	transition:
-		transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-		border-color 0.3s ease,
-		box-shadow 0.3s ease;
-}
-
-@utility gold-pulse-glow {
-	box-shadow: 0 0 30px color-mix(in srgb, var(--color-gold) 35%, transparent);
-	position: relative;
 }
 
 .gold-pulse-glow::after {
@@ -361,14 +428,6 @@ body {
 	pointer-events: none;
 }
 
-/* Crimson halo — reuses the color-agnostic gold-pulse (opacity) keyframe.
-   For Boston · Harvard accent surfaces. */
-@utility crimson-pulse-glow {
-	box-shadow: 0 0 30px
-		color-mix(in srgb, var(--color-crimson-bright) 32%, transparent);
-	position: relative;
-}
-
 .crimson-pulse-glow::after {
 	content: "";
 	position: absolute;
@@ -379,33 +438,6 @@ body {
 		0 0 64px color-mix(in srgb, var(--color-crimson) 22%, transparent);
 	animation: gold-pulse 3s ease-in-out infinite;
 	pointer-events: none;
-}
-
-@utility float-gentle {
-	animation: float 6s ease-in-out infinite;
-	will-change: transform;
-}
-
-/* Card hover lift effect */
-.card-hover-lift:hover {
-	transform: translateY(-6px) scale(1.01);
-}
-
-/* ===== Enhanced Card Hover ===== */
-
-@utility card-glow-hover {
-	transition:
-		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-		border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-		box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.card-glow-hover:hover {
-	border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
-	box-shadow:
-		0 10px 40px color-mix(in srgb, var(--color-gold) 8%, transparent),
-		0 0 20px color-mix(in srgb, var(--color-gold) 5%, transparent);
-	transform: translateY(-4px);
 }
 
 /* ===== Glass Card Bright (CTA sections) ===== */
@@ -428,49 +460,6 @@ body {
 		0 0 40px color-mix(in srgb, var(--color-gold) 15%, transparent),
 		0 24px 70px color-mix(in srgb, var(--color-navy) 45%, transparent),
 		inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
-}
-
-/* ===== Glass Card Crimson (Boston · Harvard accent) ===== */
-
-@utility glass-card-crimson {
-	background:
-		linear-gradient(
-			180deg,
-			color-mix(in srgb, var(--color-navy-light) 88%, white 6%) 0%,
-			color-mix(in srgb, var(--color-navy) 90%, transparent) 100%
-		),
-		radial-gradient(
-			circle at top left,
-			color-mix(in srgb, var(--color-crimson-bright) 16%, transparent) 0%,
-			transparent 48%
-		);
-	border: 1px solid
-		color-mix(in srgb, var(--color-crimson-bright) 30%, transparent);
-	backdrop-filter: blur(20px) saturate(135%);
-	box-shadow:
-		0 0 32px color-mix(in srgb, var(--color-crimson) 14%, transparent),
-		0 24px 70px color-mix(in srgb, var(--color-navy) 45%, transparent),
-		inset 0 1px 0 color-mix(in srgb, white 9%, transparent);
-}
-
-/* Crimson hover-glow card — mirrors card-glow-hover with the USA accent. */
-@utility card-glow-hover-crimson {
-	transition:
-		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-		border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-		box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.card-glow-hover-crimson:hover {
-	border-color: color-mix(
-		in srgb,
-		var(--color-crimson-bright) 38%,
-		transparent
-	);
-	box-shadow:
-		0 10px 40px color-mix(in srgb, var(--color-crimson) 12%, transparent),
-		0 0 22px color-mix(in srgb, var(--color-crimson-bright) 8%, transparent);
-	transform: translateY(-4px);
 }
 
 /* ===== Mesh Gradient (Landing Hero) ===== */
@@ -521,32 +510,6 @@ body {
 	animation: mesh-drift 20s ease-in-out infinite;
 }
 
-/* USA-accent mesh — navy + gold + crimson radials. Hero / Boston sections.
-   Reuses the mesh-drift keyframe (3 layered positions). */
-@utility landing-mesh-usa {
-	background:
-		radial-gradient(
-			ellipse at 22% 28%,
-			color-mix(in srgb, var(--color-gold) 8%, transparent) 0%,
-			transparent 50%
-		),
-		radial-gradient(
-			ellipse at 78% 72%,
-			color-mix(in srgb, var(--color-crimson-bright) 9%, transparent) 0%,
-			transparent 52%
-		),
-		radial-gradient(
-			ellipse at 50% 50%,
-			color-mix(in srgb, var(--color-navy-lighter) 15%, transparent) 0%,
-			transparent 60%
-		);
-	background-size:
-		200% 200%,
-		200% 200%,
-		200% 200%;
-	animation: mesh-drift 22s ease-in-out infinite;
-}
-
 /* ===== Mousemove Glow Card ===== */
 
 [data-glow-card] {
@@ -569,15 +532,6 @@ body {
 	transition: opacity 0.3s ease;
 	pointer-events: none;
 	z-index: 1;
-}
-
-/* Crimson variant of the mousemove glow (same JS sets --mouse-x/y). */
-[data-glow-card].glow-crimson::before {
-	background: radial-gradient(
-		300px circle at var(--mouse-x) var(--mouse-y),
-		color-mix(in srgb, var(--color-crimson-bright) 14%, transparent),
-		transparent 60%
-	);
 }
 
 [data-glow-card]:hover::before {
@@ -616,19 +570,6 @@ body {
 		135deg,
 		var(--color-gold),
 		var(--color-gold-light)
-	);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
-}
-
-/* Crimson gradient text — large display / accents only (contrast on navy
-   is insufficient for body copy; keep body text in gold/text-primary). */
-@utility text-gradient-crimson {
-	background: linear-gradient(
-		135deg,
-		var(--color-crimson-bright),
-		var(--color-gold)
 	);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;

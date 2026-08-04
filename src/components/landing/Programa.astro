@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Icon, { type IconName } from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
 
 export interface Props {
 	programa: CollectionEntry<"products">["data"]["programa"];
@@ -11,47 +12,31 @@ const { programa } = Astro.props;
 const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 ---
 
-<section id="programa" class="relative py-28 sm:py-32" aria-labelledby="programa-heading">
+{/*
+	Syllabus, not a feature grid. The three cards became hairline spec rows:
+	numeral · icon · title · description. The 320h figure is this section's one
+	gold moment and is sized to be read from across the room.
+*/}
+<section
+	id="programa"
+	class="band-base relative py-section"
+	aria-labelledby="programa-heading"
+>
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
-		<div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-
-			<!-- Left column: heading + stats -->
+		<div class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-16">
 			<div class="lg:col-span-5" data-reveal="left">
-				<div class="flex items-baseline gap-5">
-					<span
-						class="font-sans text-7xl font-bold leading-none tracking-tight tabular-nums text-gold/70 sm:text-8xl"
-						aria-hidden="true"
-					>
-						01
-					</span>
-					<div class="flex flex-col gap-1">
-						<span class="h-px w-10 bg-gold/60"></span>
-						<span class="text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-							Programa completo
-						</span>
-					</div>
-				</div>
-
-				<h2
-					id="programa-heading"
-					class="mt-6 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
-				>
-					<span class="text-text-primary">{programa.headline}</span>
-					{programa.highlight && (
-						<span class="mt-2 block text-gradient-gold">{programa.highlight}</span>
-					)}
-				</h2>
-
-				<p class="mt-6 max-w-xl text-sm leading-relaxed text-text-muted/90 sm:text-base">
-					<span class="mr-2 align-middle text-[11px] font-semibold uppercase tracking-[0.28em] text-gold/90">
-						Visão geral
-					</span>
-					<span class="align-middle">{programa.descricao}</span>
-				</p>
+				<SectionHeader
+					headingId="programa-heading"
+					numeral="03"
+					kicker="Programa completo"
+					headline={programa.headline}
+					highlight={programa.highlight}
+					descricao={programa.descricao}
+				/>
 
 				{programa.narrativa && (
 					<blockquote
-						class="mt-8 max-w-xl border-l-[3px] border-gold pl-6 font-serif text-xl leading-snug tracking-tight text-text-primary sm:text-2xl"
+						class="mt-8 max-w-xl border-l-2 border-gold pl-6 font-serif text-h3 leading-snug text-text-primary"
 						data-reveal="up"
 						data-reveal-delay="1"
 					>
@@ -59,40 +44,61 @@ const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 					</blockquote>
 				)}
 
-				<!-- 320h badge — larger, bolder hierarchy -->
 				<div
-					class="mt-10 inline-flex items-baseline gap-3 rounded-2xl border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] bg-navy-soft-70 px-6 py-4 tabular-nums"
+					class="mt-10 flex items-baseline gap-3 tabular-nums"
 					data-reveal="up"
 					data-reveal-delay="2"
 				>
-					<span class="font-sans text-6xl font-bold tracking-tight text-gradient-gold sm:text-7xl">{programa.horas}</span>
+					<span
+						class="font-sans text-6xl font-bold tracking-tight text-gradient-gold sm:text-7xl"
+					>
+						{programa.horas}
+					</span>
 					<div class="flex flex-col gap-0.5">
-						<span class="text-sm uppercase tracking-[0.18em] text-text-muted">horas</span>
-						<span class="text-[10px] uppercase tracking-[0.22em] text-gold/60">de formação</span>
+						<span class="text-sm uppercase tracking-[0.18em] text-text-secondary">
+							horas
+						</span>
+						<span class="text-kicker uppercase tracking-kicker text-text-muted">
+							de formação executiva
+						</span>
 					</div>
 				</div>
 			</div>
 
-			<!-- Right column: 3 cards -->
 			<div class="lg:col-span-7">
-				<div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+				<dl
+					class="divide-y divide-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] border-y border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
+				>
 					{programa.cards.map((card, idx) => (
-						<article
-							class:list={[
-								"relative rounded-2xl p-7 glass-card card-glow-hover",
-								idx === 2 && "sm:col-span-2",
-							]}
+						<div
+							class="group grid grid-cols-[auto_1fr] gap-x-5 gap-y-2 py-7 transition-colors duration-200 sm:gap-x-7"
 							data-reveal="up"
 							data-reveal-delay={String(idx + 2)}
 						>
-							<div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold-mid-35 bg-gold-tint-10 text-gold">
-								<Icon name={cardIcons[idx] ?? "sparkles"} size={20} strokeWidth={1.75} aria-hidden="true" />
-							</div>
-							<h3 class="font-serif text-xl font-semibold text-text-primary">{card.titulo}</h3>
-							<p class="mt-3 text-sm leading-relaxed text-text-muted">{card.descricao}</p>
-						</article>
+							<span
+								class="font-sans text-2xl font-bold leading-none tabular-nums text-gold/45 transition-colors duration-200 group-hover:text-gold/80"
+								aria-hidden="true"
+							>
+								{String(idx + 1).padStart(2, "0")}
+							</span>
+							<dt
+								class="flex items-center gap-3 font-serif text-h3 font-semibold text-text-primary"
+							>
+								<Icon
+									name={cardIcons[idx] ?? "sparkles"}
+									size={18}
+									strokeWidth={1.75}
+									class="shrink-0 text-gold"
+									aria-hidden="true"
+								/>
+								{card.titulo}
+							</dt>
+							<dd class="col-start-2 text-body text-text-secondary">
+								{card.descricao}
+							</dd>
+						</div>
 					))}
-				</div>
+				</dl>
 			</div>
 		</div>
 	</div>

@@ -36,6 +36,7 @@ MONITORED_AGENTS = {
     "explorer-agent",
     "explorer",
     "librarian",
+    "ui-ux-designer",
 }
 
 FAIL_PATTERN = re.compile(r"\b(fail|failed|error|exception|traceback|panic)\b", re.IGNORECASE)

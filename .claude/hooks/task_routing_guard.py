@@ -21,9 +21,16 @@ KNOWN_AGENTS = frozenset(
         "frontend-specialist",
         "librarian",
         "mobile-developer",
+        "oracle",
         "orchestrator",
         "performance-optimizer",
         "project-planner",
+        "ui-ux-designer",
+        # Impeccable 4.x shipped subagents
+        "impeccable-asset-producer",
+        "impeccable-documenter",
+        "impeccable-finish-reviewer",
+        "impeccable-manual-edit-applier",
         # Built-in / generic task routes
         "general",
         "general-purpose",
@@ -41,9 +48,14 @@ KNOWN_AGENTS = frozenset(
     }
 )
 
-# Read-only agents that MUST run in background
+# Read-only agents that SHOULD run in background (advisory — see ENFORCE_BACKGROUND)
 # oracle removed — evaluator (Mode 3) handles architecture analysis and is NOT forced to background
 MUST_BACKGROUND = frozenset({"explore", "explorer-agent", "explorer", "librarian"})
+
+# Unattended mode: the background convention is a stderr note, never a deny.
+# Set to False to silence the note entirely; there is no blocking variant —
+# blocking a foreground spec-critique gate would stall an automated chain.
+ENFORCE_BACKGROUND = True
 
 VALID_LIST = ", ".join(sorted(KNOWN_AGENTS))
 
@@ -111,17 +123,21 @@ def main() -> None:
             deny(f"Unknown subagent_type '{subagent}'. Valid: {VALID_LIST}")
             return
 
-        # Tier 1: read-only agents MUST use run_in_background: true when the runtime exposes it.
-        if subagent in MUST_BACKGROUND and run_bg is not None and run_bg is not True:
-            deny(
-                f"Read-only agent '{subagent}' MUST use run_in_background: true. Background is correct for agents that never write files."
+        # Tier 1: read-only agents SHOULD use run_in_background: true. This is a
+        # convention, not a gate — a blocking design gate (spec critique) legitimately
+        # runs in the foreground, and denying it would stall an unattended chain.
+        # Advisory only: emit a stderr note, never block.
+        if (
+            ENFORCE_BACKGROUND
+            and subagent in MUST_BACKGROUND
+            and run_bg is not None
+            and run_bg is not True
+            and runtime != "kilo"
+        ):
+            print(
+                f"note: read-only agent '{subagent}' usually runs with run_in_background: true",
+                file=sys.stderr,
             )
-            return
-
-        # Kilo task bridge does not currently pass a background flag; validate the agent name only.
-        if subagent in MUST_BACKGROUND and runtime == "kilo":
-            allow()
-            return
 
         allow()
         return

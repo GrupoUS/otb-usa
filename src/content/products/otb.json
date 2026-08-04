@@ -9,13 +9,24 @@
 		"ogImage": "/og/otb-default.jpg"
 	},
 
+	"header": {
+		"marca": "OTB",
+		"edicaoChip": "19–21 abr 2027 · Boston",
+		"nav": [
+			{ "label": "Programa", "href": "#programa" },
+			{ "label": "Boston", "href": "#boston" },
+			{ "label": "Investimento", "href": "#investimento" },
+			{ "label": "FAQ", "href": "#faq" }
+		],
+		"ctaLabel": "Falar com Laura"
+	},
+
 	"hero": {
 		"eyebrow": "3ª Edição — Boston, 19 a 21 de abril de 2027",
 		"headline": "O primeiro MBA do mundo em",
 		"highlight": "Business Aesthetic Health",
 		"subheadline": "Imersão internacional em Boston, com prática anatômica Fresh Specimens e Anatomy Review com correspondente americano. Para profissionais de Saúde Estética Avançada que querem operar em outro patamar.",
 		"badges": [
-			"3ª Edição — Boston, abr 2027",
 			"MBA Instituto IESA + ASA Fresh Specimens",
 			"320 horas de programa",
 			"Fresh Specimens ≤ 48h",
@@ -28,8 +39,30 @@
 		},
 		"background": {
 			"image": "/images/otb/gallery/pratica-3.jpg",
-			"alt": "Turma do OTB reunida no campus em Boston, Estados Unidos, durante a imersão internacional."
-		}
+			"alt": "Turma do OTB reunida em Boston, Estados Unidos, durante a imersão internacional."
+		},
+		"facts": [
+			{
+				"rotulo": "Data",
+				"valor": "19–21 abr 2027",
+				"icone": "calendar"
+			},
+			{
+				"rotulo": "Local",
+				"valor": "Boston, Estados Unidos",
+				"icone": "map-pin"
+			},
+			{
+				"rotulo": "Duração",
+				"valor": "320 horas",
+				"icone": "graduation-cap"
+			},
+			{
+				"rotulo": "Formato",
+				"valor": "Online + 3 dias presenciais",
+				"icone": "users"
+			}
+		]
 	},
 
 	"why": {
@@ -82,7 +115,7 @@
 		"headline": "Seu programa —",
 		"highlight": "320 horas de formação executiva",
 		"descricao": "320 horas distribuídas entre 10 módulos online de business, gestão clínica, marketing, vendas, finanças, sistemas, IA e jurídico — somados a uma imersão presencial de 3 dias em Boston, com Anatomy Review e prática com Fresh Specimens.",
-		"narrativa": "Duas turmas já levaram empreendedores a Boston — palestras com experts globais, prática em Fresh Specimens e vivências reais em Cambridge. A 3ª Edição vai ainda mais longe.",
+		"narrativa": "Duas turmas já levaram empreendedores a Boston — palestras com experts globais, prática em Fresh Specimens e vivências reais na cidade. A 3ª Edição vai ainda mais longe.",
 		"horas": 320,
 		"cards": [
 			{
@@ -91,7 +124,7 @@
 			},
 			{
 				"titulo": "Imersão de 3 dias em Boston",
-				"descricao": "Visita guiada ao campus de Harvard, módulos executivos e Anatomy Review com correspondente americano. Networking premium em uma das praças acadêmicas mais densas do mundo."
+				"descricao": "Percurso guiado por Boston, módulos executivos e Anatomy Review com correspondente americano. Networking premium em uma das praças acadêmicas mais densas do mundo."
 			},
 			{
 				"titulo": "Fresh Specimens ≤ 48h",
@@ -106,7 +139,7 @@
 		"fotos": [
 			{
 				"src": "/images/otb/gallery/aula-2.jpg",
-				"alt": "Turma completa do OTB reunida no campus em Boston, Estados Unidos, durante a imersão internacional."
+				"alt": "Turma completa do OTB reunida em Boston, Estados Unidos, durante a imersão internacional."
 			},
 			{
 				"src": "/images/otb/gallery/turma-evento-1.jpg",
@@ -134,7 +167,7 @@
 			},
 			{
 				"src": "/images/otb/gallery/pratica-2.jpg",
-				"alt": "Turma do OTB reunida ao ar livre no campus em Boston, com a paisagem acadêmica ao fundo."
+				"alt": "Turma do OTB reunida ao ar livre em Boston, com a paisagem urbana ao fundo."
 			},
 			{
 				"src": "/images/otb/gallery/turma-evento-2.jpg",
@@ -201,15 +234,15 @@
 		]
 	},
 
-	"bostonHarvard": {
+	"boston": {
 		"headline": "Imersão internacional —",
-		"highlight": "Boston e o ecossistema acadêmico de Harvard",
-		"descricao": "Três dias entre Boston e o ecossistema acadêmico de Harvard. Visita guiada ao campus, sessões executivas, Anatomy Review com Mike — correspondente americano que aprofunda planos e variações anatômicas — e Fresh Specimens.",
+		"highlight": "Três dias no coração acadêmico de Boston",
+		"descricao": "Três dias em Boston: percurso guiado pela cidade, sessões executivas, Anatomy Review com Mike — correspondente americano que aprofunda planos e variações anatômicas — e prática com Fresh Specimens.",
 		"datas": "19 a 21 de abril de 2027 — Boston, Estados Unidos",
 		"cards": [
 			{
 				"titulo": "Anatomy Review com correspondente americano",
-				"descricao": "Mike conduz a revisão de planos e variações anatômicas em ambiente acadêmico em Boston. Caráter descritivo do perfil profissional, sem vínculo institucional com Harvard."
+				"descricao": "Mike conduz a revisão de planos e variações anatômicas em ambiente acadêmico em Boston. A menção a correspondente descreve o perfil profissional do palestrante."
 			},
 			{
 				"titulo": "Fresh Specimens (≤ 48h post-mortem)",
@@ -227,7 +260,7 @@
 		],
 		"background": {
 			"image": "/images/otb/gallery/pratica-2.jpg",
-			"alt": "Turma do OTB reunida no campus em Boston, Estados Unidos, durante a imersão internacional."
+			"alt": "Turma do OTB reunida em Boston, Estados Unidos, durante a imersão internacional."
 		}
 	},
 
@@ -298,10 +331,15 @@
 		}
 	},
 
+	"faqIntro": {
+		"kicker": "Perguntas frequentes",
+		"headline": "Dúvidas comuns sobre o OTB"
+	},
+
 	"faq": [
 		{
-			"pergunta": "Esta é uma certificação oficial Harvard?",
-			"resposta": "Não. O OTB é um programa do Grupo US. A imersão internacional acontece em Boston, no ecossistema acadêmico de Harvard, mas não há vínculo, patrocínio, endosso ou certificação oficial por Harvard University. A visita guiada ao campus de Harvard tem caráter descritivo, sem atividade acadêmica oficial dentro de Harvard."
+			"pergunta": "O OTB é vinculado a alguma universidade dos Estados Unidos?",
+			"resposta": "Não. O OTB é um programa do Grupo US. A imersão internacional acontece em Boston, em espaços contratados para o evento — não há vínculo, patrocínio, endosso ou certificação por instituições de ensino locais. As certificações do programa são o MBA emitido em parceria com o Instituto IESA / Grupo US e o certificado de prática anatômica Fresh Specimens pela Anatomy Society of America (ASA)."
 		},
 		{
 			"pergunta": "Quais são as certificações entregues?",
@@ -309,7 +347,7 @@
 		},
 		{
 			"pergunta": "Como é o Anatomy Review?",
-			"resposta": "Conduzido por Mike, correspondente americano, o Anatomy Review aprofunda planos e variações anatômicas em ambiente acadêmico em Boston. A menção a 'correspondente' descreve o perfil profissional do palestrante, sem vínculo institucional com Harvard."
+			"resposta": "Conduzido por Mike, correspondente americano, o Anatomy Review aprofunda planos e variações anatômicas em ambiente acadêmico em Boston. A menção a 'correspondente' descreve o perfil profissional do palestrante."
 		},
 		{
 			"pergunta": "Quem pode participar do OTB?",
@@ -325,7 +363,7 @@
 		},
 		{
 			"pergunta": "Quais as datas da próxima imersão em Boston?",
-			"resposta": "19 a 21 de abril de 2027, em Boston, Estados Unidos. Dia 1: visita guiada ao campus de Harvard. Dia 2: módulos executivos. Dia 3: cadáver lab com Fresh Specimens."
+			"resposta": "19 a 21 de abril de 2027, em Boston, Estados Unidos. Dia 1: recepção da turma e percurso guiado por Boston. Dia 2: módulos executivos. Dia 3: cadáver lab com Fresh Specimens."
 		},
 		{
 			"pergunta": "Como funcionam os lotes de investimento?",
@@ -382,11 +420,11 @@
 		{
 			"dia": 1,
 			"data": "19 abr 2027",
-			"titulo": "Imersão Boston e visita guiada ao campus de Harvard",
-			"descricao": "Abertura da imersão internacional com visita guiada ao campus de Harvard, em caráter descritivo.",
+			"titulo": "Chegada a Boston e abertura da imersão",
+			"descricao": "Abertura da imersão internacional com recepção da turma e percurso guiado por Boston.",
 			"atividades": [
 				"Recepção da turma em Boston",
-				"Visita guiada ao campus de Harvard (caráter descritivo)",
+				"Percurso guiado por Boston",
 				"Welcome dinner com networking executivo"
 			]
 		},
@@ -437,8 +475,41 @@
 		]
 	},
 
+	"finalCta": {
+		"kicker": "Próximo passo",
+		"headline": "A 3ª edição acontece em abril de 2027, em Boston.",
+		"descricao": "Fale com a Laura para entender condições, lotes e se o OTB é o próximo passo para o seu momento profissional.",
+		"cta": {
+			"label": "Falar com Laura no WhatsApp",
+			"whatsappMessage": "Olá, Laura! Quero conversar sobre a 3ª Edição do OTB Estados Unidos e entender as condições.",
+			"secondaryLabel": "Garantir vaga",
+			"checkoutUrl": null
+		}
+	},
+
+	"footer": {
+		"resumo": "O primeiro MBA do mundo em Business Aesthetic Health. Programa do Grupo US, com imersão internacional de três dias em Boston, Estados Unidos.",
+		"sede": "Sede Grupo US — Goiânia, GO",
+		"navTitulo": "Navegação",
+		"nav": [
+			{ "label": "Por que OTB", "href": "#por-que-otb" },
+			{ "label": "Para quem é", "href": "#publico" },
+			{ "label": "Programa", "href": "#programa" },
+			{ "label": "Turmas", "href": "#turmas" },
+			{ "label": "Módulos", "href": "#modulos" },
+			{ "label": "Boston", "href": "#boston" },
+			{ "label": "Especialistas", "href": "#speakers" },
+			{ "label": "Investimento", "href": "#investimento" },
+			{ "label": "Parceiros", "href": "#parceiros" },
+			{ "label": "FAQ", "href": "#faq" }
+		],
+		"contatoTitulo": "Contato",
+		"contatoTexto": "Fale com Laura, nossa SDR, para entender se o OTB Estados Unidos é o próximo passo para o seu momento profissional.",
+		"contatoLabel": "Falar no WhatsApp"
+	},
+
 	"legal": {
-		"disclaimer": "Harvard é marca registrada de Harvard University. Esta experiência não implica vínculo, patrocínio, endosso ou certificação oficial por Harvard University. Referências a Harvard, Cambridge, Boston e ao ecossistema acadêmico da região têm fins exclusivamente descritivos do contexto da imersão internacional do programa OTB. O 'Anatomy Review com Mike' é conduzido por correspondente americano — a referência descreve o perfil profissional do palestrante, sem vínculo institucional com Harvard University. A visita guiada ao campus tem fim descritivo, sem atividade acadêmica oficial dentro de Harvard. Certificações: MBA emitido em parceria com o Instituto IESA / Grupo US; certificado de prática anatômica Fresh Specimens pela Anatomy Society of America (ASA). Programa oferecido por Grupo US.",
+		"disclaimer": "Programa oferecido pelo Grupo US. A imersão internacional acontece em Boston, Estados Unidos, em espaços contratados para o evento — o OTB não possui vínculo, patrocínio, endosso ou certificação por instituições de ensino locais. Certificações: MBA emitido em parceria com o Instituto IESA / Grupo US; certificado de prática anatômica Fresh Specimens pela Anatomy Society of America (ASA). O 'Anatomy Review com Mike' é conduzido por correspondente americano — a referência descreve o perfil profissional do palestrante. Cada profissional deve respeitar a regulamentação do seu respectivo conselho de classe.",
 		"creditosImagens": "Imagens: acervo OTB / Grupo US (edições anteriores em Boston) e bancos de imagens autorizados."
 	}
 }

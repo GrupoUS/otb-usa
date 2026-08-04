@@ -1,0 +1,131 @@
+---
+import { whatsappUrlWithText } from "../../lib/whatsapp";
+import Icon from "../icons/Icon.astro";
+
+export interface Props {
+	/** Derived from the active lote — never hardcoded copy. */
+	info: string;
+	label: string;
+	whatsappMessage: string;
+	/** Null until the official enrolment link is registered (WS-73). */
+	checkoutUrl?: string | null;
+	checkoutLabel?: string;
+}
+
+const { info, label, whatsappMessage, checkoutUrl, checkoutLabel } =
+	Astro.props;
+
+const whatsappHref = whatsappUrlWithText(whatsappMessage);
+const hasCheckout = Boolean(checkoutUrl);
+---
+
+{/*
+	Mobile conversion bar. Owns the bottom edge below `lg`; the round floating
+	button is hidden there so the two never collide. Body padding-bottom is
+	reserved in global.css from first paint — never injected on scroll (CLS).
+	It only appears once the hero has scrolled away, so the fold's fact rail is
+	never covered.
+
+	Dual path: while `checkoutUrl` is null the WhatsApp action stays gold and
+	primary. The moment the official link lands in otb.json, checkout takes the
+	gold slot and WhatsApp demotes to the consultative outline action.
+*/}
+<div
+	class="sticky-cta fixed inset-x-0 bottom-0 z-50 lg:hidden"
+	data-sticky-cta
+>
+	<div
+		class="flex items-center justify-between gap-3 border-t border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_95%,transparent)] px-4 py-3 backdrop-blur-md"
+		style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));"
+	>
+		<span
+			class="min-w-0 shrink text-meta font-medium tabular-nums text-text-secondary"
+		>
+			{info}
+		</span>
+
+		{hasCheckout && checkoutUrl ? (
+			<span class="flex shrink-0 items-center gap-2">
+				<a
+					href={whatsappHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex min-h-11 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] px-4 text-sm font-medium text-text-primary"
+					aria-label={`${label} no WhatsApp`}
+				>
+					<Icon name="message-circle" size={18} strokeWidth={2.25} />
+				</a>
+				<a
+					href={checkoutUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex min-h-11 min-w-[9rem] items-center justify-center gap-2 rounded-full bg-gold px-5 text-sm font-semibold text-navy"
+				>
+					{checkoutLabel ?? "Garantir vaga"}
+					<Icon name="arrow-right" size={16} strokeWidth={2.25} />
+				</a>
+			</span>
+		) : (
+			<a
+				href={whatsappHref}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-flex min-h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 rounded-full bg-gold px-5 text-sm font-semibold text-navy"
+				aria-label={`${label} no WhatsApp`}
+			>
+				<Icon name="message-circle" size={18} strokeWidth={2.25} />
+				{label}
+			</a>
+		)}
+	</div>
+</div>
+
+<script>
+	// Reveals once the hero sentinel leaves the viewport, mirroring the header.
+	const initStickyCta = () => {
+		const bar = document.querySelector<HTMLElement>("[data-sticky-cta]");
+		// Watches the hero, not the header sentinel: the bar must not cover the
+		// hero fact rail, which sits on the bottom edge of the first fold.
+		const sentinel = document.getElementById("topo");
+		if (!bar) return;
+
+		// visibility (not aria-hidden) drives the hidden state, so the links
+		// leave the tab order and the a11y tree together.
+		const show = () => bar.classList.add("is-visible");
+
+		if (!sentinel || typeof IntersectionObserver === "undefined") {
+			show();
+			return;
+		}
+
+		try {
+			const observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (entry.isIntersecting) {
+							bar.classList.remove("is-visible");
+						} else {
+							show();
+						}
+					}
+				},
+				{ threshold: 0 },
+			);
+			observer.observe(sentinel);
+		} catch {
+			show();
+		}
+	};
+
+	try {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initStickyCta, {
+				once: true,
+			});
+		} else {
+			initStickyCta();
+		}
+	} catch {
+		// Bar stays hidden; the in-page CTAs remain reachable.
+	}
+</script>

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Icon, { type IconName } from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
 
 export interface Props {
 	why: CollectionEntry<"products">["data"]["why"];
@@ -11,94 +12,68 @@ const { why } = Astro.props;
 const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 ---
 
-<section id="por-que-otb" class="relative py-28 sm:py-32" aria-labelledby="why-heading">
+{/*
+	Hairline triptych. No card chrome: three columns divided by vertical gold
+	rules, each opened by an oversized serif numeral. The previous version was
+	three glass cards — the exact shape Programa, Boston and Parceiros were
+	also using, which is why nothing on the page read as distinct.
+*/}
+<section
+	id="por-que-otb"
+	class="band-base relative py-section"
+	aria-labelledby="why-heading"
+>
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<SectionHeader
+			headingId="why-heading"
+			numeral="01"
+			kicker="Diferenciais"
+			headline={why.headline}
+			highlight={why.highlight}
+		/>
 
-		{/* Section header */}
-		<div class="max-w-3xl" data-reveal="up">
-			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-				<span class="h-px w-10 bg-gold/60"></span>
-				Diferenciais
-			</span>
-			<h2
-				id="why-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
-			>
-				<span class="text-text-primary">{why.headline}</span>
-				{why.highlight && (
-					<span class="ml-3 text-gradient-gold">{why.highlight}</span>
-				)}
-			</h2>
-
-			{why.positioningQuote && (
-				<figure
-					class="mt-10 max-w-3xl"
-					data-reveal="up"
-					data-reveal-delay="1"
+		{why.positioningQuote && (
+			<figure class="mt-block max-w-4xl" data-reveal="up" data-reveal-delay="1">
+				<blockquote
+					class="border-l-2 border-gold/45 pl-6 font-serif text-h3 leading-snug text-text-primary sm:pl-8"
 				>
-					<span
-						aria-hidden="true"
-						class="block font-serif text-6xl leading-none text-gradient-gold sm:text-7xl"
-					>
-						&ldquo;
-					</span>
-					<blockquote
-						class="-mt-4 border-l-2 border-gold/45 pl-6 font-serif text-xl leading-[1.35] tracking-tight text-text-primary sm:text-2xl md:text-[1.75rem]"
-					>
-						{why.positioningQuote}
-					</blockquote>
-				</figure>
-			)}
-		</div>
+					{why.positioningQuote}
+				</blockquote>
+			</figure>
+		)}
 
-		{/* 3-card grid — gold canon */}
-		<div class="mt-16 grid grid-cols-1 gap-6 md:mt-20 md:grid-cols-3 md:gap-7">
+		<div
+			class="mt-block grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-[color-mix(in_srgb,var(--color-gold)_20%,transparent)]"
+		>
 			{why.cards.map((card, idx) => (
 				<article
-					class="relative flex flex-col gap-5 rounded-2xl p-7 card-hover-lift glass-card card-glow-hover"
+					class="md:px-8 md:first:pl-0 md:last:pr-0"
 					data-reveal="up"
 					data-reveal-delay={String(idx + 2)}
-					data-glow-card
 				>
-					{/* Icon badge */}
-					<div class="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-mid-35 bg-gold-tint-10 text-gold">
-						<Icon name={cardIcons[idx] ?? "sparkles"} size={22} strokeWidth={1.75} />
+					<div class="flex items-baseline gap-4">
+						<span
+							class="font-serif text-5xl font-bold leading-none tabular-nums text-gold/35"
+							aria-hidden="true"
+						>
+							{String(idx + 1).padStart(2, "0")}
+						</span>
+						<Icon
+							name={cardIcons[idx] ?? "sparkles"}
+							size={20}
+							strokeWidth={1.75}
+							class="text-gold"
+							aria-hidden="true"
+						/>
 					</div>
-
-					{/* Card title */}
-					<h3 class="font-serif text-xl font-semibold leading-tight text-text-primary">
+					<h3
+						class="mt-5 font-serif text-h3 font-semibold leading-tight text-text-primary"
+					>
 						{card.titulo}
 					</h3>
-
-					{/* Description */}
-					<p class="text-sm leading-relaxed text-text-muted">{card.descricao}</p>
+					<p class="mt-3 text-body text-text-secondary">{card.descricao}</p>
 				</article>
 			))}
 		</div>
 	</div>
-
-	{/* Pointer-glow JS: sets --mouse-x/y on [data-glow-card] */}
-	<script is:inline>
-		(() => {
-			try {
-				const cards = document.querySelectorAll("[data-glow-card]");
-				if (!cards.length) return;
-				// Respect motion preferences — pointer-glow is decorative.
-				const reduceMotion =
-					typeof window.matchMedia === "function" &&
-					window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-				if (reduceMotion) return;
-				cards.forEach((card) => {
-					if (!(card instanceof HTMLElement)) return;
-					card.addEventListener("pointermove", (e) => {
-						const rect = card.getBoundingClientRect();
-						card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-						card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-					});
-				});
-			} catch {
-				/* decorative; failure is acceptable */
-			}
-		})();
-	</script>
 </section>

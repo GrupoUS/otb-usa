@@ -1,49 +1,88 @@
 {
   "$schema": "./config.schema.json",
   "project": {
-    "name": "aula-trintae3",
-    "displayName": "Aula Gratuita TRINTAE3 — Grupo US",
+    "name": "otb-usa",
+    "displayName": "OTB Estados Unidos — Grupo US",
     "parentBrand": "Grupo US · Dra. Sacha Gualberto",
-    "purpose": "Landing estática de inscrição para uma aula gratuita ao vivo de saúde estética avançada.",
+    "purpose": "Landing estática de captação para o OTB — MBA em Business Aesthetic Health com imersão internacional em Boston (3ª edição, 19 a 21 de abril de 2027). Conversão via WhatsApp SDR, sem formulário.",
     "stack": "astro-static-tailwindv4",
     "stagingUrl": "http://localhost:4321",
-    "productionUrl": "https://aula33.gpus.com.br",
+    "productionUrl": "https://otb.drasacha.com.br",
     "locale": "pt-BR",
-    "designModelRepo": "../trintae3"
+    "designModelRepo": ""
   },
   "content": {
-    "productSlug": "aula-trintae3",
-    "productJson": "src/content/products/aula-trintae3.json",
-    "ogImage": "/og/trintae3.png",
-    "anchors": ["#aula", "#para-quem", "#autoridade", "#inscricao", "#faq"],
-    "legalRoutes": ["/termos", "/politica-de-privacidade"],
+    "productSlug": "otb",
+    "productJson": "src/content/products/otb.json",
+    "ogImage": "/og/otb-default.jpg",
+    "anchors": [
+      "#topo",
+      "#por-que-otb",
+      "#publico",
+      "#programa",
+      "#turmas",
+      "#modulos",
+      "#boston",
+      "#speakers",
+      "#investimento",
+      "#parceiros",
+      "#faq"
+    ],
+    "legalRoutes": [],
+    "redirects": {
+      "/otb": "/"
+    },
     "sections": {
-      "hero": "",
-      "audience": "#para-quem",
-      "learn": "#aula",
-      "authority": "#autoridade",
-      "form": "#inscricao",
+      "hero": "#topo",
+      "why": "#por-que-otb",
+      "audience": "#publico",
+      "programa": "#programa",
+      "turmas": "#turmas",
+      "modulos": "#modulos",
+      "boston": "#boston",
+      "speakers": "#speakers",
+      "investimento": "#investimento",
+      "parceiros": "#parceiros",
       "faq": "#faq"
+    },
+    "components": {
+      "hero": "src/components/landing/Hero.astro",
+      "why": "src/components/landing/WhyOTB.astro",
+      "audience": "src/components/landing/TargetAudience.astro",
+      "programa": "src/components/landing/Programa.astro",
+      "turmas": "src/components/landing/Turmas.astro",
+      "modulos": "src/components/landing/Modulos.astro",
+      "boston": "src/components/landing/Boston.astro",
+      "speakers": "src/components/landing/Speakers.astro",
+      "investimento": "src/components/landing/Investimento.astro",
+      "parceiros": "src/components/landing/Parceiros.astro",
+      "faq": "src/components/landing/FAQ.astro",
+      "footer": "src/components/landing/Footer.astro",
+      "whatsappFloating": "src/components/landing/WhatsAppFloatingButton.astro",
+      "layout": "src/layouts/Layout.astro"
     }
   },
   "lead": {
+    "leadFlow": "whatsapp-only",
     "sdrName": "Laura",
     "whatsappGreeting": "Olá, Laura!",
     "whatsappHelper": "src/lib/whatsapp.ts",
-    "formComponent": "src/components/landing/RegistrationForm.astro",
-    "endpointEnv": "PUBLIC_FORM_ENDPOINT",
-    "leadTable": "aula_trintae3_leads"
+    "formComponent": "",
+    "endpointEnv": "",
+    "leadTable": ""
   },
   "tracking": {
     "ga4Env": "PUBLIC_GA4_ID",
-    "pixelEnv": "PUBLIC_FB_PIXEL_ID"
+    "pixelEnv": "PUBLIC_FB_PIXEL_ID",
+    "wired": false
   },
   "paths": {
     "backendRoot": "",
     "frontendRoot": "src",
-    "schemaRoot": "",
+    "schemaRoot": "src/content.config.ts",
     "stylesRoot": "src/styles",
     "componentsRoot": "src/components",
+    "contentRoot": "src/content",
     "libRoot": "src/lib"
   },
   "tooling": {

@@ -41,11 +41,9 @@ focus-ring: "2px solid var(--color-gold), offset 2px"
 >
 > **Posicionamento, copy, funil, conversão e CRO** vivem em `PRODUCT.md`. **Voz/marca** em `Skill('grupo-us')`. Aqui é só o **como parece e se move**.
 >
-> Síntese de pesquisa: `docs/logos/landing-pages-design-conversao-2026-06-01.md` (7 landings GPUS + benchmarks).
-
 ---
 
-## 1. Creative north star
+## 1. Overview — creative north star
 
 **Autoridade premium com presença.** Todo produto GPUS deve parecer uma experiência sofisticada de saúde estética avançada — editorial, confiável, com peso de marca. Sofisticação **não** significa timidez: criatividade, drama visual e movimento são bem-vindos quando servem à hierarquia e à conversão.
 
@@ -63,11 +61,11 @@ Palavras-guia:
 - navy como base institucional, gold como decisão e impacto;
 - dark-first;
 - ousar é o default — se parecer template genérico, redesenhar;
-- **dinâmico forte:** profundidade em camadas, 3D, parallax, glow e motion orquestrado são encorajados (playbook completo: `docs/motion-depth-playbook.md`).
+- **dinâmico forte:** profundidade em camadas, 3D, parallax, glow e motion orquestrado são encorajados (ver `§ 9. Motion` + `§ 10. Depth & elevation`; gotchas de runtime em `.claude/rules/stability.md § Debug triage matrix`).
 
 ---
 
-## 2. Brand foundations
+## 2. Colors — palette de marca
 
 ### Palette (dark-first, escala expandida)
 
@@ -95,17 +93,34 @@ Canvas escuro navy, ênfase em gold. Light mode só quando um projeto exigir exp
 >
 > Os valores acima são a **referência de marca**. A SSOT técnica é o `@theme {}` de cada projeto. **Hex inline em componente é proibido** — cor nova = token novo no `@theme`. Nem todo projeto precisa dos 950/800/surface-2 de imediato; adotar conforme a página ganhe profundidade.
 
-### Typography
+### Tokens vivos deste projeto (OTB) — `src/styles/global.css @theme`
 
-- **Playfair Display** — hero, headlines, momentos de autoridade.
-- **Inter** — body, navegação, UI, captions.
-- Hierarquia por peso / tamanho / spacing. **Nunca** uma terceira família (monospace para código é exceção).
+SSOT técnica. Estes são os tokens que existem hoje; qualquer cor nova entra aqui antes de aparecer num componente.
 
-### Iconography
+| Role | Token | Valor |
+|---|---|---|
+| Canvas | `--color-navy` | `#1A1A2E` |
+| Surface (card) | `--color-navy-light` | `#2A2A40` |
+| Surface destacada / borda | `--color-navy-lighter` | `#3D3D5C` |
+| Primary / CTA / foco | `--color-gold` | `#D4AF37` |
+| Gold hover | `--color-gold-light` | `#E8C96A` |
+| Gold deep | `--color-gold-dark` | `#B8960C` |
+| Acento USA (principal) | `--color-crimson` | `#A51C30` |
+| Acento USA (realce/gradiente) | `--color-crimson-bright` | `#C8102E` |
+| Acento USA (profundidade) | `--color-crimson-dark` | `#6E1423` |
+| Text primary | `--color-text-primary` | `#FAFAF9` |
+| Text muted | `--color-text-muted` | `#94A3B8` |
+| Display font | `--font-serif` | Playfair Display → Georgia → serif |
+| Body font | `--font-sans` | Inter → system-ui → sans-serif |
 
-- **Lucide** (SVG inline) — uma única biblioteca por projeto.
-- Named imports (tree-shaking). Decorativo: `aria-hidden="true"`. Icon-only button: `aria-label`.
-- Cor via `currentColor`. **Nunca emoji como ícone.**
+**Crimson (Harvard / bandeira US) é acento de posicionamento desta landing, não substituto do gold.** Gold permanece primário de CTA e de anel de foco; crimson marca a narrativa Boston/Estados Unidos (badges, filetes, realces de seção, gradientes de profundidade). Nunca usar crimson como cor de CTA primário nem como cor de estado de erro.
+
+### Regras de cor
+
+- Tokens semânticos sempre; hex inline em componente é proibido (exceção documentada: `<meta theme-color>` espelhando `--color-navy`).
+- Validar todo par foreground/background contra WCAG AA antes de commit.
+- Gold é hierarquia focal, sem teto de cobertura — ver `§ 3. Color usage`.
+- Estado nunca é comunicado só por cor.
 
 ---
 
@@ -143,7 +158,19 @@ Gold é **hierarquia e impacto** — **sem teto fixo de cobertura**. A disciplin
 
 ---
 
-## 4. Typography rules
+## 4. Typography & Iconography
+
+### Famílias
+
+- **Playfair Display** (`--font-serif`) — hero, headlines, momentos de autoridade.
+- **Inter** (`--font-sans`) — body, navegação, UI, captions.
+- Hierarquia por peso / tamanho / spacing. **Nunca** uma terceira família (monospace para código é exceção).
+
+### Iconography
+
+- **Lucide** (SVG inline) — uma única biblioteca por projeto.
+- Named imports (tree-shaking). Decorativo: `aria-hidden="true"`. Icon-only button: `aria-label`.
+- Cor via `currentColor`. **Nunca emoji como ícone.**
 
 ### Do
 - Uma família display + uma body (máx. duas).
@@ -211,7 +238,7 @@ Gold é **hierarquia e impacto** — **sem teto fixo de cobertura**. A disciplin
 
 ---
 
-## 7. Border radius
+## 7. Shapes — border radius
 
 - Escala discreta (`sm` / `md` / `lg` / `xl` / `2xl` / `full`) — nunca `border-radius: <px>` inline.
 - Pills / avatars / icon buttons: `rounded-full`. Inputs / botões: `rounded-md`. Cards: `rounded-lg`/`rounded-xl`. Modais: `rounded-2xl`.
@@ -251,11 +278,12 @@ Padrões reutilizáveis para landings GPUS. Cada projeto implementa conforme nec
 
 ### Padrões "dinâmico forte" (encorajados)
 - **Cascade orquestrado no hero** no page-load: eyebrow → headline → sub → chips → CTAs, stagger (~60ms). Ritmo coeso > microinterações espalhadas.
-- **3D tilt** (`[data-tilt]`, só `pointer:fine`), **scroll parallax** (`[data-parallax]`), **mouse-glow** radial (`[data-glow-card]`), gradiente/shimmer animado nos 1–2 headlines hero-level.
-- Microinterações: hover-lift generoso, glow em card prioritário, accordion suave, tabs sem reload, counters quando visíveis.
+- **Mouse-glow** radial (`[data-glow-card]` — implementado), **hover-lift** (`card-hover-lift` — implementado), gradiente/shimmer animado nos 1–2 headlines hero-level.
+- **3D tilt** e **scroll parallax** são permitidos e encorajados, mas **ainda não existem** neste projeto: implementar = criar a utility no `@theme`/`global.css` + o script de gate (`pointer:fine`, `prefers-reduced-motion`), não assumir que já está lá.
+- Microinterações: hover-lift generoso, glow em card prioritário, accordion suave, counters quando visíveis.
 - **Evitar** só o que prejudica de fato: vídeo autoplay com som, popup agressivo, motion travado sem fallback de reduced-motion.
 
-> Tokens (sombra/glow/3D), o módulo `src/scripts/interactions.ts` e os 10 gotchas de engenharia (ex.: reveal com `animation: … forwards` mascara hover/tilt) vivem em `docs/motion-depth-playbook.md` — não duplicar aqui.
+> **Gotchas de runtime** (reveal com `animation: … forwards` mascara hover/tilt; dois `transform` na mesma regra brigam; `[data-glow-card]::before` precisa de `z-index: -1`) estão em `.claude/rules/stability.md § Debug triage matrix`.
 
 ### Nota de performance (advisory, não regra)
 - `transform` + `opacity` animam no compositor (sem layout/paint) — preferir quando o resultado visual for o *mesmo*, por INP mais suave. Não obrigatório; usar animação de layout/3D/parallax quando desbloquear o efeito. **CWV são advisory** (medir & anotar, não travar merge; INP ~200ms) — ver `.claude/rules/stability.md`. Piso duro único: a11y (`prefers-reduced-motion`).
@@ -300,7 +328,7 @@ Camadas com o que ler melhor — contraste tonal, sombra, glow, glass. **Profund
 
 Sombras e glows: suaves **ou** dramáticos — sua escolha. Glows coloridos grandes valem quando servem ao design.
 
-**Vocabulário de tokens** (definir no `@theme`, nunca inline): sombras em camadas `--shadow-soft/float/deep` (ambient + key), glow em tiers `--shadow-glow-accent-sm/md/lg`, rim 3D `--shadow-edge-light`, composto `--shadow-3d`, `--perspective-card` / `--tilt-max-deg`. CSS completo + utilities (`card-hover-lift-lg`, `[data-tilt]`, `[data-parallax]`, `[data-glow-card]`) no `docs/motion-depth-playbook.md`. "Premium **com** profundidade": evitar só o anel solitário sem camadas de apoio.
+**Vocabulário de profundidade.** Hoje o projeto entrega profundidade por utility em `src/styles/global.css` (`card-hover-lift`, `[data-glow-card]`, `[data-reveal]`, camadas de gradiente/mesh) — **não existem** tokens `--shadow-*`, `--perspective-card` nem `--tilt-max-deg`. Ao subir o nível de profundidade, criar a escala como token no `@theme` antes de usar: sombras em camadas (`--shadow-soft/float/deep`, ambient + key), glow em tiers (`--shadow-glow-accent-sm/md/lg`), rim 3D (`--shadow-edge-light`). Nunca sombra/glow inline no componente. "Premium **com** profundidade": evitar o anel solitário sem camadas de apoio.
 
 ---
 
@@ -340,7 +368,7 @@ Princípio: **restraint = premium**. "Sofisticação com presença" (escala, pes
 
 ---
 
-## 14. Do / Don't
+## 14. Do's and Don'ts
 
 | Do | Don't |
 |---|---|
@@ -386,6 +414,8 @@ Não importar rota, produto, credencial ou copy de um projeto para outro.
 | Frontend / hidratação / a11y | `.claude/rules/frontend.md` |
 | Stability / smoke / anti-patterns | `.claude/rules/stability.md` |
 | SEO / JSON-LD / CWV | `.claude/rules/seo.md` |
-| Pesquisa de conversão (fonte) | `docs/logos/landing-pages-design-conversao-2026-06-01.md` |
-| Motion/depth/3D: tokens, `interactions.ts`, gotchas | `docs/motion-depth-playbook.md` |
+| Pesquisa de conversão / UX comportamental | `Skill('uxmaster')` → `references/conversion-and-landing.md` |
+| Motion/depth: gotchas de runtime | `.claude/rules/stability.md § Debug triage matrix` |
+| Tokens vivos (valores reais) | `src/styles/global.css @theme` |
+| Metodologia de design (shape/new-work/craft floor) | `Skill('impeccable')` |
 | Stack patterns (Astro etc.) | matching tech-stack skill |

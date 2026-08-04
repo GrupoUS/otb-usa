@@ -283,7 +283,7 @@ Run: bun run build
 | Task Type                                        | Agent                   | Skills                                       |
 | ------------------------------------------------ | ----------------------- | -------------------------------------------- |
 | Astro components, layouts, pages                 | `frontend-specialist`   | frontend-design, gpus-theme, ui-ux-pro-max  |
-| React islands / lead form (RegistrationForm, FAQ) | `frontend-specialist`  | frontend-design, gpus-theme, ui-ux-pro-max  |
+| Design spec critique / UX-visual audit (read-only) | `ui-ux-designer`      | impeccable, gpus-theme                       |
 | Content Collections (JSON data)                  | `frontend-specialist`   | frontend-design                              |
 | Tailwind CSS, design tokens, GPUS theme          | `frontend-specialist`   | gpus-theme, ui-ux-pro-max                   |
 | Performance, accessibility, SEO, tracking        | `performance-optimizer` | performance-optimization                     |
@@ -313,15 +313,15 @@ This tells `/implement` which specialist to spawn.
 | External docs or libraries      | `librarian`             | Unfamiliar packages, quirks              |
 | Internal codebase structure     | `explorer`              | Find patterns, file locations            |
 | Astro pages, layouts, components | `frontend-specialist`  | .astro files, routing, slots             |
-| React islands (interactive UI)  | `frontend-specialist`   | FAQ, RegistrationForm, MobileCTABar       |
+| Design critique / visual audit  | `ui-ux-designer`        | Read-only spec critique or post-build audit |
 | Content Collections             | `frontend-specialist`   | JSON data, collection schemas            |
 | Tailwind CSS, design system     | `frontend-specialist`   | Styling, tokens, GPUS theme             |
 | Reveal/scroll motion            | `frontend-specialist`   | `[data-reveal]` + IntersectionObserver, transform/opacity |
 | Bug investigation               | `debugger`              | Root cause analysis                      |
-| Lead form / endpoint / tracking | `debugger`              | RegistrationForm → api/inscricao.js → NeonDB, Pixel/GA4 |
+| CTA WhatsApp / tracking         | `debugger`              | `src/lib/whatsapp.ts` helpers, mensagens no JSON, Pixel/GA4 |
 | Security concerns               | `performance-optimizer` | Headers, CSP, best practices             |
 | Performance, SEO, a11y          | `performance-optimizer` | Lighthouse, Core Web Vitals, WCAG        |
-| Deploy or infra                 | `debugger`              | Vercel static + serverless function, CI/CD      |
+| Deploy or infra                 | `debugger`              | Vercel static build, CI/CD                      |
 
 ---
 

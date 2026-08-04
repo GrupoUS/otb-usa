@@ -1,0 +1,193 @@
+---
+import { Picture } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { resolveImage } from "../../lib/images";
+import Icon from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+type ProductData = CollectionEntry<"products">["data"];
+
+export interface Props {
+	boston: ProductData["boston"];
+	agenda?: ProductData["agenda"];
+}
+
+const { boston, agenda } = Astro.props;
+---
+
+{/*
+	Boston. Crimson lives here — this is one of its three sanctioned roles
+	(date/place marker, timeline spine, active-lote badge).
+
+	The previous version stacked three consecutive grids (cards, stats, agenda).
+	Now: a photographic plate with the dates set over it, one timeline rail, and
+	a stat band. The three differentiators are a compact text row, not cards.
+*/}
+<section
+	id="boston"
+	class="band-alt relative py-section"
+	aria-labelledby="boston-heading"
+>
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<SectionHeader
+			headingId="boston-heading"
+			numeral="07"
+			kicker="Imersão internacional"
+			headline={boston.headline}
+			highlight={boston.highlight}
+			descricao={boston.descricao}
+			accent="crimson"
+		/>
+
+		<div
+			class="mt-block grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-3"
+			data-reveal="up"
+			data-reveal-delay="1"
+		>
+			{boston.cards.map((card) => (
+				<div>
+					<h3
+						class="text-kicker font-semibold uppercase tracking-kicker text-gold"
+					>
+						{card.titulo}
+					</h3>
+					<p class="mt-3 text-body text-text-secondary">{card.descricao}</p>
+				</div>
+			))}
+		</div>
+	</div>
+
+	{/* Plate: the dates set typographically over the photograph. */}
+	<figure class="relative mt-block" data-reveal="up" data-reveal-delay="2">
+		<div class="relative aspect-[16/9] overflow-hidden rounded-plate sm:aspect-[21/9]">
+			<Picture
+				src={resolveImage(boston.background.image)}
+				alt=""
+				formats={["avif", "webp"]}
+				fallbackFormat="jpeg"
+				widths={[640, 1024, 1600]}
+				sizes="100vw"
+				loading="lazy"
+				decoding="async"
+				fetchpriority="low"
+				aria-hidden="true"
+				class="h-full w-full object-cover object-center"
+			/>
+			<div
+				class="absolute inset-0"
+				aria-hidden="true"
+				style="background: linear-gradient(90deg, color-mix(in srgb, var(--color-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--color-navy-deep) 60%, transparent) 55%, color-mix(in srgb, var(--color-navy-deep) 32%, transparent) 100%);"
+			>
+			</div>
+
+			<div
+				class="absolute inset-0 mx-auto flex max-w-7xl flex-col justify-center px-6 lg:px-8"
+			>
+				<span
+					class="font-sans text-6xl font-bold leading-none tracking-tight tabular-nums text-text-primary sm:text-7xl lg:text-8xl"
+				>
+					19&ndash;21
+				</span>
+				<span
+					class="mt-3 text-kicker font-semibold uppercase tracking-kicker text-gold"
+				>
+					Abr 2027 &middot; Boston, EUA
+				</span>
+			</div>
+		</div>
+		<figcaption class="sr-only">{boston.datas}</figcaption>
+	</figure>
+
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		{/* Timeline rail — the section's structural signature. */}
+		{agenda && agenda.length > 0 && (
+			<div class="mt-block">
+				<h3
+					class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+					data-reveal="up"
+				>
+					Agenda dos 3 dias
+				</h3>
+
+				<ol
+					class="mt-8 grid grid-cols-1 gap-y-10 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-0"
+				>
+					{agenda.map((d, idx) => (
+						<li
+							class="relative border-t-2 border-crimson-mid-45 pt-6 lg:pt-8"
+							data-reveal="up"
+							data-reveal-delay={String(idx + 2)}
+						>
+							<span
+								class="absolute -top-[5px] left-0 h-2 w-2 rounded-full"
+								style="background-color: var(--color-crimson-bright);"
+								aria-hidden="true"></span>
+
+							<div class="flex items-baseline justify-between gap-3">
+								<span
+									class="font-sans text-2xl font-bold tracking-tight tabular-nums text-text-primary"
+								>
+									Dia {d.dia}
+								</span>
+								<span
+									class="text-kicker uppercase tracking-kicker tabular-nums text-text-muted"
+								>
+									{d.data}
+								</span>
+							</div>
+
+							<h4
+								class="mt-3 font-serif text-h3 font-semibold leading-snug text-text-primary"
+							>
+								{d.titulo}
+							</h4>
+							<p class="mt-2 text-body text-text-secondary">{d.descricao}</p>
+
+							<ul class="mt-5 space-y-2.5">
+								{d.atividades.map((a) => (
+									<li class="flex items-start gap-2.5 text-meta text-text-secondary">
+										<Icon
+											name="chevron-right"
+											size={14}
+											strokeWidth={2.25}
+											class="mt-1 shrink-0 text-gold/60"
+											aria-hidden="true"
+										/>
+										<span>{a}</span>
+									</li>
+								))}
+							</ul>
+						</li>
+					))}
+				</ol>
+			</div>
+		)}
+
+		{/* Stat band */}
+		{boston.freshStats && boston.freshStats.length === 3 && (
+			<div
+				class="mt-block grid grid-cols-1 gap-y-8 border-t border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] pt-block sm:grid-cols-3 sm:gap-x-10"
+				aria-label="Diferenciais de Fresh Specimens"
+			>
+				{boston.freshStats.map((stat, idx) => (
+					<div
+						class="flex flex-col items-start gap-2"
+						data-reveal="up"
+						data-reveal-delay={String(idx + 2)}
+					>
+						<span
+							class="font-sans text-5xl font-bold leading-none tracking-tight tabular-nums text-text-primary sm:text-6xl"
+						>
+							{stat.valor}
+						</span>
+						<span
+							class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+						>
+							{stat.rotulo}
+						</span>
+					</div>
+				))}
+			</div>
+		)}
+	</div>
+</section>

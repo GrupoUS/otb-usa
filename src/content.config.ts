@@ -25,6 +25,23 @@ const products = defineCollection({
 			canonical: z.url().optional(),
 		}),
 
+		header: z
+			.object({
+				marca: z.string(),
+				edicaoChip: z.string(),
+				nav: z
+					.array(
+						z.object({
+							label: z.string(),
+							href: z.string().startsWith("#"),
+						}),
+					)
+					.min(2)
+					.max(5),
+				ctaLabel: z.string(),
+			})
+			.optional(),
+
 		hero: z.object({
 			eyebrow: z.string().optional(),
 			headline: z.string(),
@@ -36,6 +53,17 @@ const products = defineCollection({
 				image: z.string(),
 				alt: z.string(),
 			}),
+			facts: z
+				.array(
+					z.object({
+						rotulo: z.string(),
+						valor: z.string(),
+						icone: z.string(),
+					}),
+				)
+				.min(3)
+				.max(4)
+				.optional(),
 		}),
 
 		why: z.object({
@@ -118,7 +146,7 @@ const products = defineCollection({
 				.length(10),
 		}),
 
-		bostonHarvard: z.object({
+		boston: z.object({
 			headline: z.string(),
 			highlight: z.string().optional(),
 			descricao: z.string(),
@@ -175,6 +203,13 @@ const products = defineCollection({
 			tagline: z.string(),
 			cta: ctaSchema,
 		}),
+
+		faqIntro: z
+			.object({
+				kicker: z.string(),
+				headline: z.string(),
+			})
+			.optional(),
 
 		faq: z
 			.array(
@@ -241,6 +276,34 @@ const products = defineCollection({
 						}),
 					)
 					.min(1),
+			})
+			.optional(),
+
+		finalCta: z
+			.object({
+				kicker: z.string(),
+				headline: z.string(),
+				descricao: z.string().optional(),
+				cta: ctaSchema,
+			})
+			.optional(),
+
+		footer: z
+			.object({
+				resumo: z.string().min(40),
+				sede: z.string(),
+				navTitulo: z.string(),
+				nav: z
+					.array(
+						z.object({
+							label: z.string(),
+							href: z.string().startsWith("#"),
+						}),
+					)
+					.min(4),
+				contatoTitulo: z.string(),
+				contatoTexto: z.string(),
+				contatoLabel: z.string(),
 			})
 			.optional(),
 

@@ -26,7 +26,7 @@ Skill("gpus-theme"); // if UI/styling is touched
 - Touch only files required by the plan.
 - Keep product copy in `${content.productJson}` unless it is UI chrome.
 - Keep WhatsApp behavior centralized in `src/lib/whatsapp.ts`; messages start with `${lead.whatsappGreeting}`.
-- Keep lead destination + tracking IDs in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`); never hardcode or commit them.
+- Conversão é WhatsApp-only (`lead.leadFlow`): introduzir form/endpoint/banco = aprovação. Tracking IDs (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) ficam em env; nunca hardcode nem commit.
 - Keep Astro static: no SSR adapter, no `ClientRouter`, no `prerender = false`.
 - Use Bun only.
 - Do not add dependencies without explicit approval.

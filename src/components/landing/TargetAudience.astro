@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Icon, { type IconName } from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
 
 export interface Props {
 	audience: CollectionEntry<"products">["data"]["audience"];
@@ -9,115 +10,92 @@ export interface Props {
 const { audience } = Astro.props;
 ---
 
-<section id="publico" class="relative isolate overflow-hidden py-28 sm:py-32" aria-labelledby="audience-heading">
+{/*
+	The quiet typographic section, on the alternate band.
 
-	{/* Background: real auditório photo */}
-	<div
-		class="absolute inset-0 -z-20"
-		aria-hidden="true"
-		style={`background-image: url('${audience.background.image}'); background-size: cover; background-position: center 40%; background-repeat: no-repeat;`}
-	>
-	</div>
-
-	{/* Overlay: deep navy gradient — ensures body text ≥4.5:1 contrast */}
-	<div
-		class="absolute inset-0 -z-10"
-		aria-hidden="true"
-		style="background: linear-gradient(115deg, color-mix(in srgb, var(--color-navy) 96%, transparent) 0%, color-mix(in srgb, var(--color-navy) 88%, transparent) 60%, color-mix(in srgb, var(--color-navy) 78%, transparent) 100%);"
-	>
-	</div>
-
-	{/* Decorative gold glow — bottom-left, sóbrio */}
-	<div
-		class="pointer-events-none absolute bottom-0 left-0 -z-10 h-[360px] w-[360px] opacity-[0.10]"
-		aria-hidden="true"
-		style="background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);"
-	></div>
-
+	The background photograph was removed on purpose: it repeated the hero
+	treatment two screens later and diluted the gallery, which is the page's
+	only real proof asset. Professions became an inline pill row instead of six
+	glass cards — they are a qualifier, not six features.
+*/}
+<section
+	id="publico"
+	class="band-alt relative py-section"
+	aria-labelledby="audience-heading"
+>
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
-		<div class="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-20">
-
-			{/* Left column: headline + quote */}
+		<div class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-20">
 			<div class="lg:col-span-5" data-reveal="left">
-				<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-					<span class="h-px w-10 bg-gold/60"></span>
-					Para quem é
-				</span>
-				<h2
-					id="audience-heading"
-					class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance text-text-primary sm:text-4xl md:text-5xl"
+				<SectionHeader
+					headingId="audience-heading"
+					numeral="02"
+					kicker="Para quem é"
+					headline={audience.headline}
+				/>
+
+				<blockquote
+					class="mt-8 border-l-2 border-gold/60 pl-5 font-serif text-h3 leading-snug text-text-primary italic"
 				>
-					{audience.headline}
-				</h2>
-				<blockquote class="mt-8 border-l-2 border-gold/60 pl-5 font-serif text-lg leading-relaxed text-text-primary/90 italic">
 					{audience.quote}
 				</blockquote>
-				<p class="mt-6 text-xs leading-relaxed text-text-muted/80">
-					{audience.legenda}
-				</p>
+
+				<p class="mt-6 text-meta text-text-muted">{audience.legenda}</p>
 			</div>
 
-			{/* Right column: category chips + persona bullets */}
 			<div class="lg:col-span-7">
-
-				{/* 6 category chips — gold border accent */}
-				<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					{audience.categorias.map((c, idx) => {
-						return (
-							<li
-								class={[
-									"card-glow-hover group flex items-center gap-4 rounded-2xl p-5 transition-all duration-300",
-									"bg-navy-soft-70 backdrop-blur",
-									"border border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] hover:border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)]",
-								].join(" ")}
-								data-reveal="up"
-								data-reveal-delay={String(((idx % 6) + 1))}
-							>
-								<span
-									class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors bg-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] text-gold group-hover:bg-[color-mix(in_srgb,var(--color-gold)_25%,transparent)]"
-								>
-									<Icon name={c.icone as IconName} size={20} />
-								</span>
-								<span class="font-medium text-text-primary">{c.nome}</span>
-							</li>
-						);
-					})}
+				<ul class="flex flex-wrap gap-2.5" aria-label="Profissões elegíveis">
+					{audience.categorias.map((c, idx) => (
+						<li
+							class="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] px-4 text-sm font-medium text-text-primary transition-colors duration-200 hover:border-[color-mix(in_srgb,var(--color-gold)_50%,transparent)]"
+							data-reveal="up"
+							data-reveal-delay={String((idx % 6) + 1)}
+						>
+							<Icon
+								name={c.icone as IconName}
+								size={16}
+								strokeWidth={1.75}
+								class="text-gold"
+								aria-hidden="true"
+							/>
+							{c.nome}
+						</li>
+					))}
 				</ul>
 
-				{/* Persona bullets */}
 				{audience.personaBullets && audience.personaBullets.length > 0 && (
-					<div class="mt-14" data-reveal="up" data-reveal-delay="2">
-						<div class="flex items-center gap-3">
-							<span class="h-px w-10 bg-gold/60"></span>
-							<span class="text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-								Perfil do aluno
-							</span>
-						</div>
+					<div class="mt-block" data-reveal="up" data-reveal-delay="2">
 						{audience.personaIntro && (
-							<p class="mt-5 max-w-2xl font-serif text-xl leading-snug tracking-tight text-text-primary sm:text-2xl">
+							<p
+								class="max-w-2xl font-serif text-h3 leading-snug text-text-primary"
+							>
 								{audience.personaIntro}
 							</p>
 						)}
-						<ol class="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
+
+						{/* Numbered ledger: hairline rows, gold numerals, no boxes. */}
+						<ol
+							class="mt-8 divide-y divide-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
+						>
 							{audience.personaBullets.map((bullet, idx) => (
 								<li
-									class="flex min-w-0 items-baseline gap-4 text-sm leading-relaxed text-text-primary/90 sm:text-base"
+									class="flex min-w-0 items-baseline gap-5 py-4"
 									data-reveal="up"
 									data-reveal-delay={String((idx % 4) + 3)}
 								>
 									<span
-										class="shrink-0 font-sans text-2xl font-bold leading-none tracking-tight tabular-nums text-gold/80 sm:text-3xl"
+										class="shrink-0 font-sans text-xl font-bold leading-none tabular-nums text-gold/70"
 										aria-hidden="true"
 									>
 										{String(idx + 1).padStart(2, "0")}
 									</span>
-									<span class="min-w-0 wrap-break-word border-l border-gold/20 pl-4">{bullet}</span>
+									<span class="min-w-0 wrap-break-word text-body text-text-secondary">
+										{bullet}
+									</span>
 								</li>
 							))}
 						</ol>
 					</div>
 				)}
-
 			</div>
 		</div>
 	</div>

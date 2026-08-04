@@ -1,15 +1,17 @@
 ---
 import { getEntry } from "astro:content";
-import BostonHarvard from "../components/landing/BostonHarvard.astro";
+import Boston from "../components/landing/Boston.astro";
 import FAQ from "../components/landing/FAQ.astro";
+import FinalCta from "../components/landing/FinalCta.astro";
 import Footer from "../components/landing/Footer.astro";
+import Header from "../components/landing/Header.astro";
 import Hero from "../components/landing/Hero.astro";
 import Investimento from "../components/landing/Investimento.astro";
 import Modulos from "../components/landing/Modulos.astro";
 import Parceiros from "../components/landing/Parceiros.astro";
 import Programa from "../components/landing/Programa.astro";
-import SectionDivider from "../components/landing/SectionDivider.astro";
 import Speakers from "../components/landing/Speakers.astro";
+import StickyCta from "../components/landing/StickyCta.astro";
 import TargetAudience from "../components/landing/TargetAudience.astro";
 import Turmas from "../components/landing/Turmas.astro";
 import WhatsAppFloatingButton from "../components/landing/WhatsAppFloatingButton.astro";
@@ -29,6 +31,11 @@ const canonicalUrl = new URL(
 	"/",
 	Astro.site ?? "https://otb.drasacha.com.br",
 ).toString();
+
+const loteAtivo = data.lotes?.find((lote) => lote.status === "ativo");
+const stickyInfo = loteAtivo
+	? `${loteAtivo.label.replace(/\s*—\s*Ativo$/i, "")} · ${loteAtivo.moeda} ${loteAtivo.preco}`
+	: `${data.investimento.moeda} ${data.investimento.preco}`;
 
 const breadcrumbJsonLd = {
 	"@context": "https://schema.org",
@@ -57,43 +64,42 @@ const breadcrumbJsonLd = {
 	canonical={canonicalUrl}
 	jsonLd={breadcrumbJsonLd}
 >
-	<Hero hero={data.hero} />
-
-	<SectionDivider class="my-0" />
-	<WhyOTB why={data.why} />
-
-	<SectionDivider class="my-0" />
-	<TargetAudience audience={data.audience} />
-
-	<SectionDivider class="my-0" />
-	<Programa programa={data.programa} />
-
-	<SectionDivider class="my-0" variant="dot" />
-	<Turmas turmas={data.turmas} />
-
-	<SectionDivider class="my-0" />
-	<Modulos modulos={data.modulos} />
-
-	<SectionDivider class="my-0" variant="dot" />
-	<BostonHarvard bostonHarvard={data.bostonHarvard} agenda={data.agenda} />
-
-	<SectionDivider class="my-0" />
-	<Speakers speakers={data.speakers} />
-
-	<SectionDivider class="my-0" variant="dot" />
-	<Investimento investimento={data.investimento} lotes={data.lotes} />
-
-	{data.parceiros && (
-		<>
-			<SectionDivider class="my-0" />
-			<Parceiros parceiros={data.parceiros} />
-		</>
+	{data.header && (
+		<Header
+			slot="header"
+			header={data.header}
+			whatsappMessage={data.hero.cta.whatsappMessage}
+		/>
 	)}
 
-	<SectionDivider class="my-0" />
-	<FAQ faq={data.faq} />
+	{/*
+		No dividers between sections: the tonal band change (band-base ↔
+		band-alt ↔ band-deep) is the separator now. A hairline between every
+		pair of sections just made a long dark page look striped.
+	*/}
+	<Hero hero={data.hero} />
+	<WhyOTB why={data.why} />
+	<TargetAudience audience={data.audience} />
+	<Programa programa={data.programa} />
+	<Turmas turmas={data.turmas} />
+	<Modulos modulos={data.modulos} />
+	<Boston boston={data.boston} agenda={data.agenda} />
+	<Speakers speakers={data.speakers} />
+	<Investimento investimento={data.investimento} lotes={data.lotes} />
+	{data.parceiros && <Parceiros parceiros={data.parceiros} />}
+	<FAQ faq={data.faq} faqIntro={data.faqIntro} />
+	{data.finalCta && <FinalCta finalCta={data.finalCta} />}
 
-	<Footer legal={data.legal} />
+	<Footer legal={data.legal} footer={data.footer} />
 
 	<WhatsAppFloatingButton slot="floating" message={data.hero.cta.whatsappMessage} />
+
+	<StickyCta
+		slot="floating"
+		info={stickyInfo}
+		label={data.header?.ctaLabel ?? "Falar com Laura"}
+		whatsappMessage={data.investimento.cta.whatsappMessage}
+		checkoutUrl={data.investimento.cta.checkoutUrl}
+		checkoutLabel={data.investimento.cta.secondaryLabel}
+	/>
 </Layout>

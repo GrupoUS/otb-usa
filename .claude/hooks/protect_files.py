@@ -62,9 +62,32 @@ def load_extra_protections() -> tuple[set[str], set[str], list[str]]:
 
 
 _extra_exact, _extra_segments, _extra_contains = load_extra_protections()
-PROTECTED_EXACT = PROTECTED_EXACT_DEFAULT | _extra_exact
-PROTECTED_SEGMENTS = PROTECTED_SEGMENTS_DEFAULT | _extra_segments
-PROTECTED_CONTAINS = PROTECTED_CONTAINS_DEFAULT + _extra_contains
+
+# Two tiers so the project runs unattended:
+#   HARD  — credentials, lockfiles, .git. Never editable, no exceptions.
+#   SOFT  — the project's own `config.json::protectedFiles` (astro.config.mjs,
+#           whatsapp.ts, content.config.ts, package.json, …). Editing these is a
+#           real decision, so the hook logs a stderr warning and lets it through
+#           instead of blocking an automated chain. Flip WARN_ONLY_PROJECT_FILES
+#           to False to restore hard blocking.
+WARN_ONLY_PROJECT_FILES = True
+
+PROTECTED_EXACT = set(PROTECTED_EXACT_DEFAULT)
+PROTECTED_SEGMENTS = set(PROTECTED_SEGMENTS_DEFAULT)
+PROTECTED_CONTAINS = list(PROTECTED_CONTAINS_DEFAULT)
+
+SOFT_EXACT: set[str] = set()
+SOFT_SEGMENTS: set[str] = set()
+SOFT_CONTAINS: list[str] = []
+
+if WARN_ONLY_PROJECT_FILES:
+    SOFT_EXACT = _extra_exact - PROTECTED_EXACT_DEFAULT
+    SOFT_SEGMENTS = _extra_segments - PROTECTED_SEGMENTS_DEFAULT
+    SOFT_CONTAINS = [p for p in _extra_contains if p not in PROTECTED_CONTAINS_DEFAULT]
+else:
+    PROTECTED_EXACT |= _extra_exact
+    PROTECTED_SEGMENTS |= _extra_segments
+    PROTECTED_CONTAINS += _extra_contains
 
 
 def read_input() -> dict[str, object]:
@@ -117,6 +140,26 @@ def main() -> None:
         if pattern in file_path:
             deny(f"BLOCKED: '{file_path}' matches protected pattern '{pattern}'")
             return
+
+    # Soft tier: project-declared protected files. Warn on stderr, never block.
+    # Entries may be bare filenames ("package.json") or repo-relative paths
+    # ("src/lib/whatsapp.ts"), so match both the basename and a path suffix.
+    name = PurePath(str(file_path)).name
+    normalized = str(file_path).replace("\\", "/")
+    if (
+        name in SOFT_EXACT
+        or any(
+            "/" in entry and normalized.endswith(entry.replace("\\", "/"))
+            for entry in SOFT_EXACT
+        )
+        or path_parts & SOFT_SEGMENTS
+        or any(pattern in file_path for pattern in SOFT_CONTAINS)
+    ):
+        print(
+            f"note: '{file_path}' is listed in config.json::protectedFiles — "
+            "edit it with an explicit reason and re-run the gates",
+            file=sys.stderr,
+        )
 
     allow()
 

@@ -14,15 +14,15 @@
       "additionalProperties": true,
       "required": ["name", "displayName", "stack", "stagingUrl", "productionUrl", "locale"],
       "properties": {
-        "name": { "type": "string", "description": "Machine-readable slug, e.g. 'aula-trintae3'." },
-        "displayName": { "type": "string", "description": "Human-readable name, e.g. 'Aula Gratuita TRINTAE3 — Grupo US'." },
+        "name": { "type": "string", "description": "Machine-readable slug, e.g. 'otb-usa'." },
+        "displayName": { "type": "string", "description": "Human-readable name, e.g. 'OTB Estados Unidos — Grupo US'." },
         "parentBrand": { "type": "string", "description": "Parent brand, e.g. 'Grupo US · Dra. Sacha Gualberto'." },
         "purpose": { "type": "string", "description": "One-line product purpose." },
         "stack": { "type": "string" },
         "stagingUrl": { "type": "string" },
         "productionUrl": { "type": "string" },
         "locale": { "type": "string" },
-        "designModelRepo": { "type": "string", "description": "Optional sibling repo used as the visual model, e.g. '../trintae3'." }
+        "designModelRepo": { "type": "string", "description": "Optional sibling repo used as the visual model. Empty when the project owns its visual world." }
       }
     },
     "content": {
@@ -30,7 +30,7 @@
       "additionalProperties": true,
       "description": "Content SSOT mapping for the landing.",
       "properties": {
-        "productSlug": { "type": "string", "description": "Content Collection slug, e.g. 'aula-trintae3'." },
+        "productSlug": { "type": "string", "description": "Content Collection slug, e.g. 'otb'." },
         "productJson": { "type": "string", "description": "Path to the copy SSOT JSON, e.g. 'src/content/products/<slug>.json'." },
         "ogImage": { "type": "string", "description": "Default OG image path under public/." },
         "anchors": { "type": "array", "items": { "type": "string" }, "description": "Internal section anchors." },

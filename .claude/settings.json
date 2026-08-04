@@ -26,9 +26,11 @@
       "Read(**/*.py)",
       "Read(**/*.md)",
       "Read(**/*.css)",
+      "Read(**/*.astro)",
       "Edit(**/*.js)",
       "Edit(**/*.ts)",
       "Edit(**/*.tsx)",
+      "Edit(**/*.astro)",
       "Edit(**/*.py)",
       "Edit(**/*.json)",
       "Edit(**/*.css)",
@@ -36,6 +38,8 @@
       "Write(**/*.js)",
       "Write(**/*.ts)",
       "Write(**/*.tsx)",
+      "Write(**/*.astro)",
+      "Write(**/*.css)",
       "Write(**/*.py)",
       "Write(**/*.md)"
     ],
@@ -44,6 +48,100 @@
       "Read(./secrets/**)",
       "Bash(rm -rf *)",
       "Bash(sudo *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session_context.py"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/smart_bash_approver.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect_files.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/task_routing_guard.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/ultracite.py"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "code-reviewer|debugger|evaluator|explorer-agent|explorer|frontend-specialist|impeccable-asset-producer|impeccable-documenter|impeccable-finish-reviewer|impeccable-manual-edit-applier|librarian|mobile-developer|oracle|performance-optimizer|project-planner|ui-ux-designer|verification",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/subagent_start.py"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/subagent_stop.py"
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/task_completed.py"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt|idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.py"
+          }
+        ]
+      }
     ]
   },
   "enableAllProjectMcpServers": true,

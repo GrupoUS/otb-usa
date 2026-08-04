@@ -52,7 +52,7 @@ Per `.claude/config.json::protectedFiles.exact`:
 - `biome.json`
 - `lefthook.yml`
 
-Editar com razão explícita + validar. O hook `protect_files.py` bloqueia Write/Edit nesses arquivos (lê a lista de `config.json`).
+Editar com razão explícita + validar. O hook `protect_files.py` lê essa lista de `config.json` e **avisa** (stderr) no Write/Edit, sem bloquear — o bloqueio duro vale só para credenciais, lockfiles e `.git/`. O aviso não substitui a regra: mudança nesses arquivos precisa de razão explícita e dos gates rodados.
 
 ## Env / secrets
 

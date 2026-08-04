@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { whatsappPartnerUrl } from "../../lib/whatsapp";
 import Icon, { type IconName } from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
 
 type ProductData = CollectionEntry<"products">["data"];
 type Partner = NonNullable<ProductData["parceiros"]>["lista"][number];
@@ -18,81 +19,77 @@ const partnerIcons: IconName[] = ["globe", "shield-check"];
 const PARTNER_OPENING = "Olá! Vim do OTB Estados Unidos.";
 ---
 
+{/*
+	Appendix. Deliberately demoted: no glass, no hover glow, deep band. These
+	links leave the funnel, so they must not compete with the primary CTA.
+*/}
 <section
 	id="parceiros"
-	class="relative isolate overflow-hidden py-24 sm:py-28"
+	class="band-deep relative py-section-tight"
 	aria-labelledby="parceiros-heading"
 >
 	<div class="mx-auto max-w-6xl px-6 lg:px-8">
-		<div class="max-w-3xl" data-reveal="up">
-			<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-				<span class="h-px w-10 bg-gold/60"></span>
-				Parceiros operacionais
-			</span>
-			<h2
-				id="parceiros-heading"
-				class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl"
-			>
-				<span class="text-text-primary">{parceiros.headline}</span>
-			</h2>
-			{parceiros.descricao && (
-				<p class="mt-6 max-w-2xl text-base leading-relaxed text-text-muted sm:text-lg">
-					{parceiros.descricao}
-				</p>
-			)}
-		</div>
+		<SectionHeader
+			headingId="parceiros-heading"
+			kicker="Apoio operacional"
+			headline={parceiros.headline}
+			descricao={parceiros.descricao}
+		/>
 
-		<ul class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
+		<ul
+			class="mt-block divide-y divide-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] border-y border-[color-mix(in_srgb,var(--color-gold)_14%,transparent)]"
+		>
 			{partnerList.map((p, idx) => (
 				<li
-					class="glass-card rounded-2xl p-7"
+					class="flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-8"
 					data-reveal="up"
-					data-reveal-delay={String(idx + 2)}
+					data-reveal-delay={String(idx + 1)}
 				>
-					<div class="flex items-start gap-4">
-						<div class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gold-mid-35 bg-gold-tint-10 text-gold">
-							<Icon name={partnerIcons[idx] ?? "users"} size={20} strokeWidth={1.75} />
-						</div>
+					<div class="flex min-w-0 items-start gap-4">
+						<Icon
+							name={partnerIcons[idx] ?? "users"}
+							size={18}
+							strokeWidth={1.75}
+							class="mt-1 shrink-0 text-gold/70"
+							aria-hidden="true"
+						/>
 						<div class="min-w-0">
-							<h3 class="font-serif text-lg font-semibold leading-tight text-text-primary">
-								{p.nome}
-							</h3>
-							<p class="mt-1 text-[11px] uppercase tracking-[0.22em] text-gold/80">
-								{p.papel}
-							</p>
+							<h3 class="text-body font-semibold text-text-primary">{p.nome}</h3>
+							<p class="mt-0.5 text-meta text-text-muted">{p.papel}</p>
+							{p.descricao && (
+								<p class="mt-2 max-w-xl text-meta text-text-secondary">
+									{p.descricao}
+								</p>
+							)}
 						</div>
 					</div>
-					{p.descricao && (
-						<p class="mt-4 text-sm leading-relaxed text-text-muted">{p.descricao}</p>
-					)}
-					{p.contato && (
-						<div class="mt-5 flex flex-wrap gap-3">
-							{p.contato.whatsapp && (
-								<a
-									href={whatsappPartnerUrl(p.contato.whatsapp, PARTNER_OPENING)}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] px-4 py-2 text-xs font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
-									aria-label={`Falar com ${p.nome} no WhatsApp`}
-								>
-									<Icon name="message-circle" size={14} strokeWidth={2.25} />
-									<span>{p.contato.whatsapp}</span>
-								</a>
-							)}
-							{p.contato.instagram && (
-								<a
-									href={p.contato.instagram}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] px-4 py-2 text-xs font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
-									aria-label={`Instagram de ${p.nome}`}
-								>
-									<Icon name="instagram" size={14} strokeWidth={2.25} />
-									<span>Instagram</span>
-								</a>
-							)}
-						</div>
-					)}
+
+					<div class="flex shrink-0 flex-wrap items-center gap-3">
+						{p.contato?.whatsapp && (
+							<a
+								href={whatsappPartnerUrl(p.contato.whatsapp, PARTNER_OPENING)}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] px-4 text-meta font-medium text-text-secondary transition-colors hover:border-gold hover:text-gold"
+								aria-label={`Falar com ${p.nome} no WhatsApp`}
+							>
+								<Icon name="message-circle" size={15} strokeWidth={2} aria-hidden="true" />
+								{p.contato.whatsapp}
+							</a>
+						)}
+						{p.contato?.instagram && (
+							<a
+								href={p.contato.instagram}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center gap-2 text-meta font-medium text-text-muted transition-colors hover:text-gold"
+								aria-label={`Instagram de ${p.nome}`}
+							>
+								<Icon name="instagram" size={15} strokeWidth={2} aria-hidden="true" />
+								Instagram
+							</a>
+						)}
+					</div>
 				</li>
 			))}
 		</ul>

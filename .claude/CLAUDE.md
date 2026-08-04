@@ -53,7 +53,7 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 7. **NEVER hardcode hex** fora do bloco `@theme` em `src/styles/global.css` (exceção documentada: `<meta theme-color>` literal espelhando `--color-navy`). Usar tokens semânticos.
 8. **Motion livre e expressivo.** Animar qualquer propriedade é permitido (incl. `width`/`height`/`top`/`left`/`padding`/`margin`) e `transition: all` é permitido. Profundidade marcante, sombras dramáticas, glow e glass liberados — sem teto de gold. Preferir `transform`/`opacity` quando o efeito for equivalente (anima sem jank), mas não obrigatório. Único requisito: honrar `prefers-reduced-motion` (a11y). Reveal via `[data-reveal]` + IntersectionObserver (gate `.js`).
 9. **MAIN-ONLY branch workflow.** Sempre editar em `main`. Sem feature branches, sem force-push, sem auto-merge. Deploy/push só quando pedido.
-10. **Lead/PII com cuidado.** Formulário capta nome/e-mail/telefone → exige `<label>` reais, validação, estados de erro/sucesso acessíveis, consent LGPD + link de privacidade, HTTPS. Destino do lead (`${lead.endpointEnv}`) e IDs de tracking (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) vivem em env, nunca commitados; mudá-los = aprovação.
+10. **Conversão WhatsApp-only + PII com cuidado.** Hoje não há formulário, endpoint nem banco (`lead.leadFlow: "whatsapp-only"`) — o único destino de conversão é o WhatsApp da SDR. Introduzir captura de lead = aprovação prévia e traz junto `<label>` reais, validação, estados de erro/sucesso acessíveis, consent LGPD + link de privacidade (rota inexistente hoje). IDs de tracking (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) vivem em env, nunca commitados; instrumentar = aprovação.
 
 ---
 
@@ -64,8 +64,9 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 | Copy, FAQ, datas, oferta, legal/disclaimer | `grupo-us` + `astro` | `${content.productJson}` |
 | WhatsApp CTA/message | `grupo-us` | `${content.productJson}` message; `${lead.whatsappHelper}` só para número/helper |
 | Seção da landing | `frontend.md` + `DESIGN.md` + `astro` + `gpus-theme` | `src/components/landing/*.astro` |
-| Formulário de inscrição | `frontend.md` + `astro` | `${lead.formComponent}` (+ env endpoint) |
-| Tracking GA4/Pixel/consent | `seo.md` + `performance-optimization` | `src/layouts/Layout.astro` + env |
+| Design de seção/página (chain completo) | `impeccable` (4.x) + `gpus-theme` + `ui-ux-pro-max` | `/design`, `/design-improve`, `/design-fix` |
+| UX de conversão / objeção / oferta | `uxmaster` + `grupo-us` | `${content.productJson}` + seção correspondente |
+| Tracking GA4/Pixel/consent (não instrumentado hoje) | `seo.md` + `performance-optimization` | `src/layouts/Layout.astro` + env (aprovação) |
 | React island / floating UI | `astro` + `frontend.md` | `.tsx`/`.astro` só quando interatividade provada; preferir Astro puro |
 | Content schema | `astro/references/content-collections.md` | `src/content.config.ts` + JSON em uma mudança |
 | SEO meta / JSON-LD / canonical | `seo.md` + `astro` | `src/layouts/Layout.astro`, `src/pages/index.astro`, `astro.config.mjs` |

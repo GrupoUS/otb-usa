@@ -91,7 +91,7 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 - Sempre usar timeout; comandos não-interativos.
 - Git read-only com `git --no-pager`; editor-risk com `GIT_EDITOR=true`.
 - Vercel: CLI autenticado (`vercel whoami`). Deploy/alias = sempre perguntar.
-- `rm -rf` em diretório pode ser bloqueado pelo `smart_bash_approver` hook — remover arquivos com `rm -f file...`.
+- `rm -rf` em diretório pode ser bloqueado (deny em `settings.json` + hook `smart_bash_approver`) — remover arquivos com `rm -f file...`.
 
 ### Branch workflow — main-only
 
@@ -144,4 +144,4 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 
 ## Recent learnings
 
-> Aprendizados específicos da instância vivem em `docs/<project>-changelog.md` (ex.: `docs/aula-trintae3-changelog.md`), não nesta governança portável. Capturar via `/evolve`.
+> Aprendizados específicos da instância vivem em `docs/learnings-log.md` (ou `docs/<project>-changelog.md`), não nesta governança portável. Capturar via `/evolve`.

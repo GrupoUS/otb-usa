@@ -38,8 +38,8 @@ If the project ships its own design-tokens skill (e.g., `gpus-theme`, `<project>
 
 Project-specific design-tokens skill triggers when:
 - A hardcoded hex (outside `src/styles/global.css @theme`), blue/teal primary, backdrop-blur, bento grid, or hero split layout appears
-- Any landing section (`src/components/landing/{Hero,Audience,Learn,Authority,NextStep,RegistrationForm,FAQ,FinalCTA,MobileCTABar}.astro`), shared primitive (`src/components/shared/*`), or layout part (`src/components/layout/{Header,Footer}.astro`) is being built
-- The design might fail the Template Test ("Could this be a Vercel/Stripe template?")
+- Any landing section (`src/components/landing/{Hero,WhyOTB,TargetAudience,Programa,Turmas,Modulos,BostonHarvard,Speakers,Investimento,Parceiros,FAQ,Footer,SectionDivider,WhatsAppFloatingButton}.astro`), the page shell (`src/layouts/Layout.astro`), or an icon primitive (`src/components/icons/*`) is being built
+- The design might fail the Template Test ("Could this be a generic infoproduct/Vercel template?")
 
 ---
 

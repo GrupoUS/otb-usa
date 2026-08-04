@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { whatsappUrlWithText } from "../../lib/whatsapp";
 import Icon from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
 
 type ProductData = CollectionEntry<"products">["data"];
 type Lote = NonNullable<ProductData["lotes"]>[number];
@@ -23,40 +24,45 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 };
 ---
 
+{/*
+	The page's climax and the ONLY pedestal: the single `glass-card-bright`
+	plus the gold halo (DESIGN.md § 10 — the brightest glass is reserved for
+	one moment per page). The pointer-glow lives here too, for the same reason.
+
+	Dual conversion path, gated on `checkoutUrl`: while it is null WhatsApp
+	holds the gold primary slot. When the official enrolment link is registered
+	in otb.json, checkout takes gold and WhatsApp becomes the consultative
+	outline action — no provisional URL is ever invented.
+*/}
 <section
 	id="investimento"
-	class="relative isolate overflow-hidden py-28 sm:py-32"
+	class="band-base relative isolate overflow-hidden py-section"
 	aria-labelledby="investimento-heading"
 >
-	<div class="absolute inset-0 -z-10 landing-mesh-bg opacity-50" aria-hidden="true"></div>
+	<div class="landing-mesh-bg absolute inset-0 -z-10 opacity-50" aria-hidden="true"></div>
 
 	<div class="mx-auto max-w-6xl px-6 lg:px-8">
 		<div class="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-16">
 			<div class="lg:col-span-6" data-reveal="left">
-				<span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-gold">
-					<span class="h-px w-10 bg-gold/60"></span>
-					Investimento
-				</span>
-				<h2
-					id="investimento-heading"
-					class="mt-5 font-serif text-3xl font-bold leading-[1.1] tracking-tight text-balance sm:text-4xl md:text-5xl"
-				>
-					<span class="text-text-primary">{investimento.headline}</span>
-					{investimento.highlight && (
-						<span class="mt-2 block text-gradient-gold">{investimento.highlight}</span>
-					)}
-				</h2>
-				<p class="mt-6 max-w-xl text-base leading-relaxed text-text-muted sm:text-lg">
-					{investimento.descricao}
-				</p>
+				<SectionHeader
+					headingId="investimento-heading"
+					numeral="09"
+					kicker="Investimento"
+					headline={investimento.headline}
+					highlight={investimento.highlight}
+					descricao={investimento.descricao}
+				/>
 
 				<ul
-					class="mt-8 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2"
+					class="mt-block grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2"
 					aria-label="O que está incluído"
 				>
 					{investimento.beneficios.map((b) => (
-						<li class="flex items-start gap-3 text-sm leading-relaxed text-text-primary/90">
-							<span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] text-gold">
+						<li class="flex items-start gap-3 text-meta text-text-secondary">
+							<span
+								class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold-tint-10 text-gold"
+								aria-hidden="true"
+							>
 								<Icon name="check" size={12} strokeWidth={2.5} />
 							</span>
 							<span>{b}</span>
@@ -64,44 +70,53 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 					))}
 				</ul>
 
-				<p class="mt-8 font-serif text-base italic leading-relaxed text-text-primary/80 sm:text-lg">
+				<p
+					class="mt-8 font-serif text-h3 italic leading-snug text-text-primary/85"
+				>
 					{investimento.tagline}
 				</p>
 
 				{loteList && loteList.length > 0 && (
 					<div class="mt-10" aria-label="Lotes de investimento">
-						<div class="text-xs uppercase tracking-[0.22em] text-gold/80">Lotes escalonados</div>
-						<ol class="mt-4 space-y-3">
+						<div class="text-kicker uppercase tracking-kicker text-text-muted">
+							Lotes escalonados
+						</div>
+						<ol
+							class="mt-4 divide-y divide-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] border-y border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
+						>
 							{loteList.map((l) => {
 								const isActive = l.status === "ativo";
 								const isPast = l.status === "encerrado";
-								const tone = isActive
-									? "border-crimson-mid-45 bg-crimson-tint-10"
-									: isPast
-									? "border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] opacity-60"
-									: "border-[color-mix(in_srgb,var(--color-gold)_28%,transparent)]";
 								return (
 									<li
-										class={`flex flex-col gap-2 rounded-xl border ${tone} px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4`}
+										class={`flex flex-col gap-2 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 ${isPast ? "opacity-55" : ""} ${isActive ? "pl-3.5 -ml-3.5 border-l-2 border-crimson-mid-45" : ""}`}
 										aria-current={isActive ? "true" : undefined}
 									>
 										<div class="flex flex-wrap items-center gap-x-3 gap-y-2">
 											<span
-												class={`inline-flex h-7 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-[10px] font-semibold uppercase tracking-[0.18em] ${isActive ? "border border-crimson-mid-45 bg-crimson-tint-16 text-crimson-bright" : isPast ? "bg-text-muted/20 text-text-muted" : "border border-gold/40 text-gold"}`}
+												class={`inline-flex h-6 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-kicker font-semibold uppercase tracking-kicker ${isActive ? "border border-crimson-mid-45 bg-crimson-tint-16 text-gold" : isPast ? "bg-text-muted/20 text-text-muted" : "border border-gold/40 text-gold"}`}
 											>
 												{statusLabel[l.status]}
 											</span>
-											<span class="whitespace-nowrap font-serif text-sm font-semibold text-text-primary sm:text-base">
+											<span
+												class="whitespace-nowrap font-serif text-body font-semibold text-text-primary"
+											>
 												{l.label}
 											</span>
 										</div>
-										<div class="flex flex-wrap items-baseline gap-x-2 gap-y-1 tabular-nums sm:justify-end sm:text-right">
-											<span class="text-xs text-text-muted">{l.moeda}</span>
-											<span class={`font-sans text-lg font-bold tracking-tight ${isActive ? "text-gradient-gold" : "text-text-primary/80"}`}>
+										<div
+											class="flex flex-wrap items-baseline gap-x-2 gap-y-1 tabular-nums sm:justify-end sm:text-right"
+										>
+											<span class="text-meta text-text-muted">{l.moeda}</span>
+											<span
+												class={`font-sans text-lg font-bold tracking-tight ${isActive ? "text-gradient-gold" : "text-text-secondary"}`}
+											>
 												{l.preco}
 											</span>
 											{l.validade && (
-												<span class="w-full text-[11px] uppercase tracking-[0.16em] text-text-muted sm:w-auto">
+												<span
+													class="w-full text-kicker uppercase tracking-kicker text-text-muted sm:w-auto"
+												>
 													{l.validade}
 												</span>
 											)}
@@ -115,29 +130,50 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 			</div>
 
 			<div class="lg:col-span-6" data-reveal="right" data-reveal-delay="2">
-				<div class="glass-card-bright rounded-3xl p-8 sm:p-10">
-					<div class="text-xs uppercase tracking-[0.28em] text-gold/80">Investimento à vista</div>
+				<div
+					class="glass-card-bright relative rounded-3xl p-8 shadow-(--shadow-halo-gold) sm:p-10"
+					data-glow-card
+				>
+					<div class="text-kicker uppercase tracking-kicker text-text-muted">
+						Investimento à vista
+					</div>
 					<div class="mt-3 flex items-baseline gap-2 tabular-nums">
-						<span class="font-sans text-xl font-medium text-text-muted">{investimento.moeda}</span>
-						<span class="font-sans text-6xl font-bold tracking-tight text-gradient-gold sm:text-7xl">{investimento.preco}</span>
+						<span class="font-sans text-xl font-medium text-text-secondary">
+							{investimento.moeda}
+						</span>
+						<span
+							class="font-sans text-6xl font-bold tracking-tight text-gradient-gold sm:text-7xl"
+						>
+							{investimento.preco}
+						</span>
 					</div>
 					{investimento.escassez && (
-						<p class="mt-4 flex items-start gap-2 text-xs leading-relaxed text-text-muted">
-							<Icon name="alert-circle" size={14} strokeWidth={2} class="mt-0.5 shrink-0 text-gold/60" aria-hidden="true" />
+						<p class="mt-4 flex items-start gap-2 text-meta text-text-secondary">
+							<Icon
+								name="alert-circle"
+								size={14}
+								strokeWidth={2}
+								class="mt-0.5 shrink-0 text-gold/60"
+								aria-hidden="true"
+							/>
 							<span>{investimento.escassez}</span>
 						</p>
 					)}
 
-					<div class="mt-8 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6">
-						<div class="text-xs uppercase tracking-[0.18em] text-text-muted">Parcelamento</div>
-						<ul class="mt-3 space-y-2 text-sm text-text-primary/90">
+					<div
+						class="mt-8 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6"
+					>
+						<div class="text-kicker uppercase tracking-kicker text-text-muted">
+							Parcelamento
+						</div>
+						<ul class="mt-3 space-y-2 text-meta text-text-secondary">
 							{investimento.parcelamento.map((p) => (
 								<li class="flex min-w-0 items-start gap-2.5">
 									<Icon
 										name="chevron-right"
 										size={14}
 										strokeWidth={2.25}
-										class="mt-1 shrink-0 text-gold/60"
+										class="mt-0.5 shrink-0 text-gold/60"
 										aria-hidden="true"
 									/>
 									<span class="min-w-0 wrap-break-word">{p}</span>
@@ -147,25 +183,49 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 					</div>
 
 					<div class="mt-10 space-y-3">
-						<a
-							href={ctaHref}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="group flex w-full items-center justify-center gap-3 rounded-full bg-gold px-6 py-4 font-semibold text-navy shadow-[0_18px_45px_-12px_color-mix(in_srgb,var(--color-gold)_55%,transparent)] transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
-							aria-label="Falar com Laura no WhatsApp"
-						>
-							<Icon name="message-circle" size={20} strokeWidth={2.25} />
-							<span>{investimento.cta.label}</span>
-							<Icon name="arrow-right" size={18} strokeWidth={2.25} class="transition-transform duration-300 group-hover:translate-x-1" />
-						</a>
-						{hasCheckout && investimento.cta.checkoutUrl && (
+						{hasCheckout && investimento.cta.checkoutUrl ? (
+							<>
+								<a
+									href={investimento.cta.checkoutUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+								>
+									<span>{investimento.cta.secondaryLabel ?? "Garantir vaga"}</span>
+									<Icon
+										name="arrow-right"
+										size={18}
+										strokeWidth={2.25}
+										class="transition-transform duration-300 group-hover:translate-x-1"
+									/>
+								</a>
+								<a
+									href={ctaHref}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
+									aria-label={`${investimento.cta.label} — atendimento consultivo`}
+								>
+									<Icon name="message-circle" size={18} strokeWidth={2.25} />
+									<span>{investimento.cta.label}</span>
+								</a>
+							</>
+						) : (
 							<a
-								href={investimento.cta.checkoutUrl}
+								href={ctaHref}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="flex w-full items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] px-6 py-3.5 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
+								class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+								aria-label={`${investimento.cta.label} no WhatsApp`}
 							>
-								{investimento.cta.secondaryLabel ?? "Garantir vaga"}
+								<Icon name="message-circle" size={20} strokeWidth={2.25} />
+								<span>{investimento.cta.label}</span>
+								<Icon
+									name="arrow-right"
+									size={18}
+									strokeWidth={2.25}
+									class="transition-transform duration-300 group-hover:translate-x-1"
+								/>
 							</a>
 						)}
 					</div>
@@ -173,4 +233,29 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 			</div>
 		</div>
 	</div>
+
+	{/* Pointer-glow: sets --mouse-x/y on the pedestal. Decorative, so it bails
+	    out entirely under prefers-reduced-motion. */}
+	<script is:inline>
+		(() => {
+			try {
+				const cards = document.querySelectorAll("[data-glow-card]");
+				if (!cards.length) return;
+				const reduceMotion =
+					typeof window.matchMedia === "function" &&
+					window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+				if (reduceMotion) return;
+				cards.forEach((card) => {
+					if (!(card instanceof HTMLElement)) return;
+					card.addEventListener("pointermove", (e) => {
+						const rect = card.getBoundingClientRect();
+						card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+						card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+					});
+				});
+			} catch {
+				/* decorative; failure is acceptable */
+			}
+		})();
+	</script>
 </section>

@@ -8,24 +8,38 @@ Project-specific values (project name, package manager, protected paths) come fr
 
 > **Note on `AGENTS.md` / `CLAUDE.md`.** These files are loaded by the runtime via the `claudeMd` mechanism (visible in any turn under the `# claudeMd` system reminder). The `SessionStart` hook intentionally does **NOT** re-emit them in `additionalContext` — duplicating that content into the system prompt every turn was costing tens of KB per session.
 
+## Unattended-mode policy
+
+Hooks são **conectados** em `.claude/settings.json` e rodam em modo desassistido: **nenhum hook pergunta nada**. Só o que é destrutivo é negado.
+
+| Ajuste | Onde | Efeito |
+|---|---|---|
+| `AUTO_ALLOW_UNKNOWN = True` | `smart_bash_approver.py` | Qualquer comando fora da lista DANGEROUS é auto-aprovado. Nunca devolve `ask`. Coloque em `False` para voltar à triagem allow/ask/deny original. |
+| `WARN_ONLY_PROJECT_FILES = True` | `protect_files.py` | Dois níveis: **hard deny** para `.env*`, `credentials/`, `secrets/`, `api-keys/`, `.git/`, lockfiles; **warn + allow** para os arquivos de `config.json::protectedFiles` (`astro.config.mjs`, `src/lib/whatsapp.ts`, `src/content.config.ts`, `package.json`, `tsconfig.json`, `biome.json`, `lefthook.yml`). Entradas com barra casam por sufixo de caminho. |
+| `ENFORCE_BACKGROUND = True` | `task_routing_guard.py` | A convenção "agente read-only roda em background" virou nota em stderr, não deny — um gate de crítica em foreground não pode travar a cadeia. `subagent_type` desconhecido continua sendo negado. |
+| `LINT_ROOTS = ("src/",)` | `ultracite.py` | O lint do Stop só olha o código do projeto. Bundles vendorados em `.claude/skills/**` nunca bloqueiam. |
+| Stop hook **não conectado** | `settings.json` | `ultracite.py` no evento Stop bloqueava o fim do turno com erro de oxlint. O lint roda no gate `/verify` / `bun run lint`. Para reativar, adicione o bloco `Stop` apontando para `ultracite.py`. |
+
+Rollback total: remova a seção `hooks` de `.claude/settings.json`.
+
 ## Configured hooks
 
 ### SessionStart
 - **`session_context.py`** — emits a short `additionalContext` tag (`[PROJECT] Bun | branch:<branch> | gates: lint+astro-check+build`). One line, ~80 chars. Source-aware: `startup` / `resume` / `compact`.
 
 ### PreToolUse
-- **`smart_bash_approver.py`** (matcher `Bash`) — auto-allows safe commands (read-only git/gh, Bun lint/build/predeploy commands, `bunx` tools, version checks, local read commands); blocks dangerous patterns (`rm -rf /`, `DROP DATABASE`, force-push, PR merge/approve, non-Bun package managers, `mkfs`, fork bomb, etc.); asks on cleanup, branch-changing, mutative git/gh, long-running dev server, and unknown commands. Main-only workflow: edits and pushes to `main` are allowed; force-push and PR auto-merge remain blocked.
-- **`protect_files.py`** (matcher `Edit|Write`) — blocks edits to sensitive files. Generic defaults: `.env*`, lockfiles (`bun.lockb`, `bun.lock`, `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`), `.git/`, `credentials/`, `secrets/`, `api-keys/`. Per-project additions read from `config.json::protectedFiles` + `${overlay}/protected-files.json`.
-- **`task_routing_guard.py`** (matcher `Agent`) — validates `subagent_type` against the known set, and enforces `run_in_background: true` for read-only research agents (`explore`, `explorer-agent`, `librarian`) when the runtime exposes the field.
+- **`smart_bash_approver.py`** (matcher `Bash`) — em modo desassistido (`AUTO_ALLOW_UNKNOWN = True`) aprova tudo, exceto a lista DANGEROUS: `rm -rf /`, `DROP DATABASE`, force-push, PR merge/approve, gerenciadores não-Bun (`npm`/`pnpm`/`yarn`), `mkfs`, fork bomb, comandos Bun perigosos. Main-only workflow: edits e push em `main` são permitidos; force-push e auto-merge de PR seguem bloqueados. Inclui allow explícito para os inspetores read-only do impeccable (`context`/`detect`/`detect-csp`/`doctor`/`surface-brief`/`context-signals`.mjs) — `live*.mjs` e `pin.mjs` ficam fora porque sobem servidor ou escrevem arquivos de harness.
+- **`protect_files.py`** (matcher `Edit|Write`) — dois níveis (ver tabela acima). **Deny:** `.env*`, lockfiles (`bun.lockb`, `bun.lock`, `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`), `.git/`, `credentials/`, `secrets/`, `api-keys/`. **Warn + allow:** entradas de `config.json::protectedFiles` + `${overlay}/protected-files.json`.
+- **`task_routing_guard.py`** (matcher `Agent|Task`) — valida `subagent_type` contra o conjunto conhecido (inclui `ui-ux-designer`, `oracle` e os quatro agentes `impeccable-*`); a preferência por background em agentes read-only é apenas uma nota em stderr.
 
 ### PostToolUse
-- **`ultracite.py`** (matcher `Write|Edit`) — branches on `hook_event_name`. In PostToolUse mode runs `bunx biome format --write <file>` on the single edited file (cosmetic only, never linter auto-fix). Skips non-TS/JS/JSON files. Lint auto-fix is intentionally NOT in PostToolUse: rules like `noUnusedImports` would delete imports added in step N before usage code is written in step N+1.
+- **`ultracite.py`** (matcher `Write|Edit`) — branches on `hook_event_name`. In PostToolUse mode runs `bunx biome format --write <file>` on the single edited file (cosmetic only, never linter auto-fix). Handles `.ts/.tsx/.js/.jsx/.json/.css`; skips everything else (incl. `.astro`, que o Biome não parseia). Lint auto-fix is intentionally NOT in PostToolUse: rules like `noUnusedImports` would delete imports added in step N before usage code is written in step N+1.
 
-### Stop
-- **`ultracite.py`** (same script, Stop branch) — runs `bunx oxlint <modified files>` over up to 20 git-modified TS/JS files; blocks the stop only if `error_count > 0`, with the last 30 output lines (truncated to 2KB) attached to the block reason. Honors `stop_hook_active` to avoid loops. No errors → silent exit.
+### Stop — **não conectado**
+- **`ultracite.py`** (Stop branch) roda `bunx oxlint` sobre até 20 arquivos `src/**` modificados e bloqueia o fim do turno se `error_count > 0`. Bloquear o Stop conflita com o modo desassistido, então o bloco `Stop` **não está** em `settings.json`. O lint equivalente roda em `bun run lint` / `/verify`.
 
 ### SubagentStart
-- **`subagent_start.py`** (matcher: `debugger|evaluator|explorer-agent|explorer|frontend-specialist|librarian|mobile-developer|performance-optimizer|project-planner|verification`) — injects a short per-agent reminder (~80–120 chars) into the subagent's system prompt. Agent keys MUST stay in sync with the matcher.
+- **`subagent_start.py`** (matcher: `code-reviewer|debugger|evaluator|explorer-agent|explorer|frontend-specialist|impeccable-asset-producer|impeccable-documenter|impeccable-finish-reviewer|impeccable-manual-edit-applier|librarian|mobile-developer|oracle|performance-optimizer|project-planner|ui-ux-designer|verification`) — injects a short per-agent reminder (~80–120 chars) into the subagent's system prompt. Agent keys MUST stay in sync with the matcher.
 
 ### SubagentStop
 - **`subagent_stop.py`** — consolidated handler. Reads the agent transcript at most once, then:

@@ -35,7 +35,7 @@ Add as needed:
 - Content source of truth: `${content.productJson}` + `src/content.config.ts`.
 - WhatsApp source of truth: `src/lib/whatsapp.ts`; messages start with `${lead.whatsappGreeting}`.
 - Package manager: Bun only (`bun`, `bunx`).
-- Lead/legal guardrail: LGPD consent + privacy link required on the form; lead destination + tracking IDs stay in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`), never committed.
+- Conversão/legal guardrail: fluxo é WhatsApp-only (`lead.leadFlow`) — sem form, endpoint ou banco. Disclaimer legal (`${content.productJson}` § `legal`) permanece visível. Tracking IDs (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) vivem em env, nunca commitados.
 
 ## 3. Common checks
 

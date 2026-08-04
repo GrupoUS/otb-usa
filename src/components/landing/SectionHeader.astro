@@ -1,0 +1,77 @@
+---
+/**
+ * Shared section spine: structural numeral + kicker + rule + heading.
+ *
+ * Replaces the recipe that was copy-pasted into 8 of 11 sections
+ * (`text-[11px] uppercase tracking-[0.32em] text-gold` + a gold hairline).
+ *
+ * Gold discipline (DESIGN.md § 3): the kicker is muted and only the rule and
+ * the numeral carry gold at low weight, so the ONE gold moment per section is
+ * the gradient on `highlight`. Never make the kicker gold again.
+ */
+export interface Props {
+	headingId: string;
+	kicker: string;
+	headline: string;
+	numeral?: string;
+	highlight?: string;
+	descricao?: string;
+	accent?: "gold" | "crimson";
+	align?: "start" | "center";
+	class?: string;
+}
+
+const {
+	headingId,
+	kicker,
+	headline,
+	numeral,
+	highlight,
+	descricao,
+	accent = "gold",
+	align = "start",
+	class: className = "",
+} = Astro.props;
+
+const ruleTone = accent === "crimson" ? "bg-crimson-bright/70" : "bg-gold/70";
+/* The heading gradient is ALWAYS gold. `--color-crimson-bright` as text
+   measures ~2.3:1 on navy — below AA even at large sizes — so the crimson
+   accent tints the structural rule only. */
+const highlightTone = "text-gradient-gold";
+const alignment =
+	align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl";
+const rowAlignment = align === "center" ? "justify-center" : "";
+---
+
+<div class={`${alignment} ${className}`} data-reveal="up">
+	<div class={`flex items-baseline gap-4 ${rowAlignment}`}>
+		{numeral && (
+			<span
+				class="font-sans text-h2 font-bold leading-none tabular-nums text-gold/40"
+				aria-hidden="true"
+			>
+				{numeral}
+			</span>
+		)}
+		<span
+			class="inline-flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+		>
+			<span class={`h-px w-8 ${ruleTone}`} aria-hidden="true"></span>
+			{kicker}
+		</span>
+	</div>
+
+	<h2
+		id={headingId}
+		class="mt-5 font-serif text-h2 font-bold text-balance text-text-primary"
+	>
+		{headline}
+		{highlight && (
+			<span class={`mt-2 block ${highlightTone}`}>{highlight}</span>
+		)}
+	</h2>
+
+	{descricao && (
+		<p class="mt-5 text-lede font-light text-text-secondary">{descricao}</p>
+	)}
+</div>

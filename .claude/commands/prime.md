@@ -30,9 +30,11 @@ Use when the task scope is unclear, cross-domain, or L3+.
 - ${project.displayName} (GPUS Astro landing, Dra. Sacha Gualberto); Grupo US is the parent brand.
 - Product copy source of truth: `${content.productJson}`.
 - WhatsApp source of truth: `src/lib/whatsapp.ts`; messages start with `${lead.whatsappGreeting}`.
-- Lead capture form (`${lead.formComponent}`) → Vercel function `api/inscricao.js` → NeonDB (`${lead.leadTable}`) with WhatsApp fallback; LGPD consent + privacy link required.
-- Lead destination + tracking IDs live in env (`DATABASE_URL`/`LEAD_WEBHOOK_URL`/`${lead.endpointEnv}`, `${tracking.ga4Env}`, `${tracking.pixelEnv}`), never committed.
-- Astro static MPA only; no SPA router or SSR.
+- Conversão é **WhatsApp-only** (`lead.leadFlow`): não há formulário, endpoint ou banco. CTA primário único = "Falar com Laura no WhatsApp".
+- Tracking IDs viveriam em env (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) — hoje **não instrumentados**; adicionar = aprovação.
+- Rota única `/` + redirect `/otb` → `/`. Não existem páginas legais nem `/404` neste repo.
+- Astro static MPA only; no SPA router or SSR; zero ilha React hoje.
+- Superfície = modo **Persuade** (impeccable 4.x).
 - Bun only.
 
 ## 3. Output

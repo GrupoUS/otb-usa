@@ -37,9 +37,9 @@ Check whether the diff touches:
 - `${content.productJson}` — product/copy/legal SSOT.
 - `src/content.config.ts` — schema contract.
 - `src/lib/whatsapp.ts` — CTA/WhatsApp SSOT.
-- `${lead.formComponent}` + `api/inscricao.js` — lead capture path (form → NeonDB → WhatsApp fallback).
-- `astro.config.mjs` / `vercel.json` — static/canonical/sitemap/deploy contract.
-- `src/layouts/Layout.astro` — SEO/meta/JSON-LD shell + Meta Pixel/GA4 tracking.
+- `src/components/landing/WhatsAppFloatingButton.astro` — CTA persistente (único caminho de conversão).
+- `astro.config.mjs` / `vercel.json` — static/canonical/sitemap/redirect/deploy contract.
+- `src/layouts/Layout.astro` — SEO/meta/JSON-LD shell (+ tracking, se algum dia instrumentado).
 - `src/styles/global.css` — token canon and motion utilities.
 - `public/robots.txt` — SEO sitemap/crawl contract.
 

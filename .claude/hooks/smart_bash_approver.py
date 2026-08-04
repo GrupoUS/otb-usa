@@ -116,6 +116,13 @@ SAFE_PATTERNS = [
     re.compile(r'^python(3)?( -X [^ ]+)? "?scripts/'),
     re.compile(r'^py -3 "?\.claude/'),
     re.compile(r'^py -3 "?scripts/'),
+    # Impeccable read-only inspectors (context / detector / doctor / brief).
+    # Deliberately NOT `live*.mjs` or `pin.mjs` — those start a server or write
+    # harness files and must keep asking.
+    re.compile(
+        r'^node "?[^"]*\.claude[/\\]skills[/\\]impeccable[/\\]scripts[/\\]'
+        r"(context|detect|detect-csp|doctor|surface-brief|context-signals)\.mjs(\s|$)"
+    ),
     # Optional local CLIs (read-only introspection)
     re.compile(r"^(psql|mysql|sqlite3) "),
     # Version checks (Bun-only for package managers)
@@ -158,6 +165,11 @@ ASK_PATTERNS = [
 
 DANGEROUS_BUN_PATTERN = re.compile(r"(rm -rf|cache clean|publish.*--force)")
 COMMAND_SEPARATOR_PATTERN = re.compile(r"\s*(?:&&|\|\||;)\s*")
+
+# Unattended mode: anything not on the DANGEROUS list is auto-allowed, so no
+# Bash command ever raises a permission prompt. Set to False to restore the
+# original allow / ask / deny triage (SAFE_PATTERNS + CLEANUP + ASK lists).
+AUTO_ALLOW_UNKNOWN = True
 
 
 def read_input() -> dict[str, object]:
@@ -214,30 +226,32 @@ def _matches(patterns: list[re.Pattern[str]], command: str) -> bool:
 
 
 def _classify(command: str) -> tuple[str, str | None]:
-    """Return (allow|ask|deny, optional reason) for one shell segment."""
+    """Return (allow|ask|deny, optional reason) for one shell segment.
+
+    Policy: **never `ask`** — the project runs unattended. Only genuinely
+    destructive / non-Bun / branch-protected commands are denied; everything
+    else is auto-allowed so design and build chains run without prompts.
+    Re-enable prompting by flipping AUTO_ALLOW_UNKNOWN to False.
+    """
     if _matches(DANGEROUS_PATTERNS, command):
         return (
             "deny",
             "BLOCKED: Dangerous, non-Bun, or branch-protected command detected",
         )
 
-    if _matches(CLEANUP_PATTERNS, command):
-        return "ask", "Cleanup operation - requires user approval"
+    if re.match(r"^(bun|bunx) ", command) and DANGEROUS_BUN_PATTERN.search(command):
+        return "deny", "BLOCKED: Dangerous Bun command"
 
-    if _matches(SAFE_PATTERNS, command):
-        if re.match(r"^(bun|bunx) ", command) and DANGEROUS_BUN_PATTERN.search(command):
-            return "deny", "BLOCKED: Dangerous Bun command"
-        return "allow", None
+    if not AUTO_ALLOW_UNKNOWN:
+        if _matches(CLEANUP_PATTERNS, command):
+            return "ask", "Cleanup operation - requires user approval"
+        if _matches(SAFE_PATTERNS, command) or re.match(r"^(bun|bunx) ", command):
+            return "allow", None
+        if _matches(ASK_PATTERNS, command):
+            return "ask", "State-changing or external command - requires user approval"
+        return "ask", None
 
-    if _matches(ASK_PATTERNS, command):
-        return "ask", "State-changing or external command - requires user approval"
-
-    if re.match(r"^(bun|bunx) ", command):
-        if DANGEROUS_BUN_PATTERN.search(command):
-            return "deny", "BLOCKED: Dangerous Bun command"
-        return "allow", None
-
-    return "ask", None
+    return "allow", None
 
 
 def main() -> None:

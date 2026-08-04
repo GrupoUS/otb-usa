@@ -31,12 +31,12 @@ Default = sem directive. Astro puro primeiro; **ilha React só quando a interati
 - Copy da landing vive em `${content.productJson}`.
 - Schema em `src/content.config.ts` (slug `${content.productSlug}`).
 - Página carrega via `getCollection("products")` + `find(slug === "${content.productSlug}")`.
-- Componentes recebem `.data` (sub-objetos: `hero`, `event`, `audience`, `learn`, `authority`, `nextStep`, `registration`, `faqs`, `finalCta`, `legal`), nunca a entry completa.
+- Componentes recebem `.data` (sub-objetos: `seo`, `hero`, `why`, `audience`, `programa`, `turmas`, `modulos`, `bostonHarvard`, `speakers`, `investimento`, `faq`, `edicao`, `lotes`, `agenda`, `parceiros`, `legal`), nunca a entry completa.
 - Adicionar campo = schema + JSON + leitor numa só mudança.
 
 ## 4. Rotas
 
-Rotas públicas: `/` (landing), `${content.legalRoutes}` (ex.: `/termos`, `/politica-de-privacidade`), `/404` (noindex). Âncoras internas: `${content.anchors}`. Não adicionar rotas/redirects de outros produtos. Mudança de rota/redirect = atualizar `astro.config.mjs` + sitemap + `robots.txt` numa só mudança.
+Rotas públicas hoje: **`/` apenas**, mais o redirect `/otb` → `/` (excluído do sitemap via `filter`). `${content.legalRoutes}` está vazio — não existem `/termos`, `/politica-de-privacidade` nem `/404` neste repo; criar qualquer uma delas = decisão de escopo, não efeito colateral. Âncoras internas: `${content.anchors}`. Não adicionar rotas/redirects de outros produtos. Mudança de rota/redirect = atualizar `astro.config.mjs` + sitemap + `robots.txt` numa só mudança.
 
 ## 5. WhatsApp SSOT
 
@@ -64,10 +64,11 @@ Páginas passam `title`, `description`, `ogImage`, `whatsappMessage`, `hasBottom
 - Sem hex hardcoded em `.astro`/`.tsx` (exceção: `<meta theme-color>` espelhando `--color-navy`).
 - Token canon: `Skill('gpus-theme')`.
 
-## 8. Formulário + tracking
+## 8. Conversão + tracking
 
-- `${lead.formComponent}`: form nativo acessível; submit POST a `import.meta.env.${lead.endpointEnv}` quando definido, senão fallback WhatsApp. PII → consent LGPD + link privacidade.
-- Tracking GA4/Meta Pixel via env (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) no `Layout.astro`; eventos sem duplicar. IDs/endpoint = aprovação.
+- **Fluxo atual: WhatsApp-only** (`lead.leadFlow`). Não existe formulário, endpoint nem banco. CTA primário único = "Falar com Laura no WhatsApp"; mensagens por intenção vivem no JSON (`hero.cta.whatsappMessage`, `investimento.cta.whatsappMessage`).
+- Introduzir formulário de lead = **aprovação prévia**: exige `<label>` reais, validação, estados de erro/sucesso acessíveis, consent LGPD + link de privacidade (que hoje não existe como rota) e endpoint em env.
+- Tracking GA4/Meta Pixel: nomes de env declarados (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) mas **não instrumentados** — `import.meta.env` não é lido em `src/`. Instrumentar = aprovação.
 
 ## Anti-patterns
 

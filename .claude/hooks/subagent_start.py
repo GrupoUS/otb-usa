@@ -23,6 +23,13 @@ AGENT_CONTEXT = {
     "evaluator":           "Adversarial | Mode1 plan / Mode2 sprint / Mode3 architecture | file:line evidence | end with ## Context Handoff",
     "librarian":           "External docs only | Tavily+Context7 | <2000 tokens | never touch FS | end with ## Context Handoff",
     "verification":        "Verify UI flows | Playwright MCP | screenshots+console+network evidence | end with ## Context Handoff",
+    "code-reviewer":       "Read-only | P1/P2/P3 with file:line | never apply patches | end with ## Context Handoff",
+    "oracle":              "Read-only consultant | tradeoffs + evidence | never edits files | end with ## Context Handoff",
+    "ui-ux-designer":      "Read-only critic | Persuade mode | motion is expressive (only prefers-reduced-motion is hard) | file:line evidence | end with ## Context Handoff",
+    "impeccable-asset-producer":     "Produce assets from the approved reference | never redesign the direction",
+    "impeccable-documenter":         "Record DESIGN.md from the shipped artifact | evidence over intentions",
+    "impeccable-finish-reviewer":    "Fresh eyes on a done build | ordered material fixes | never edit",
+    "impeccable-manual-edit-applier": "Apply the leased edit batch to source | return canonical Apply results",
 }
 
 

@@ -1,0 +1,125 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { whatsappUrlWithText } from "../../lib/whatsapp";
+import Icon from "../icons/Icon.astro";
+
+type ProductData = CollectionEntry<"products">["data"];
+
+export interface Props {
+	header: NonNullable<ProductData["header"]>;
+	whatsappMessage: string;
+}
+
+const { header, whatsappMessage } = Astro.props;
+const ctaHref = whatsappUrlWithText(whatsappMessage);
+---
+
+{/*
+	Fixed shell. Transparent over the hero; goes solid once #header-sentinel
+	leaves the viewport. No hamburger on mobile by design — the slot is spent
+	on the edition chip (date + place), which is the fold's job per the brief.
+*/}
+<header
+	id="site-header"
+	class="site-header fixed inset-x-0 top-0 z-40"
+	data-header
+>
+	<div
+		class="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-6 lg:h-[68px] lg:px-8"
+	>
+		<a
+			href="#topo"
+			class="inline-flex shrink-0 items-center gap-2.5"
+			aria-label={`${header.marca} — voltar ao topo`}
+		>
+			<img
+				src="/images/otb/otb-logo-gold.png"
+				alt=""
+				width="32"
+				height="32"
+				decoding="async"
+				class="h-8 w-8"
+				aria-hidden="true"
+			/>
+			<span class="font-serif text-xl font-semibold text-text-primary">
+				{header.marca}
+			</span>
+		</a>
+
+		<nav class="hidden lg:block" aria-label="Navegação principal">
+			<ul class="flex items-center gap-8 text-sm text-text-secondary">
+				{header.nav.map((item) => (
+					<li>
+						<a
+							class="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-gold focus-visible:text-gold"
+							href={item.href}
+						>
+							{item.label}
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+
+		{/* Edition chip — crimson is allowed here: it is the date/place marker. */}
+		<span
+			class="inline-flex shrink-0 items-center gap-2 rounded-full border border-crimson-mid-45 bg-crimson-tint-10 px-3 py-1.5 text-kicker font-semibold tracking-kicker text-text-primary tabular-nums lg:hidden"
+		>
+			<span
+				class="h-1.5 w-1.5 rounded-full"
+				style="background-color: var(--color-crimson-bright);"
+				aria-hidden="true"></span>
+			{header.edicaoChip}
+		</span>
+
+		<a
+			href={ctaHref}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="hidden shrink-0 items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-navy transition-transform duration-200 hover:scale-[1.03] focus-visible:scale-[1.03] lg:inline-flex"
+			aria-label={`${header.ctaLabel} no WhatsApp`}
+		>
+			<Icon name="message-circle" size={16} strokeWidth={2.25} />
+			{header.ctaLabel}
+		</a>
+	</div>
+</header>
+
+<script>
+	// Solid-state toggle. Degrades to the permanently transparent header when
+	// IntersectionObserver is unavailable or throws (hardened WebViews).
+	const initHeader = () => {
+		const header = document.querySelector<HTMLElement>("[data-header]");
+		const sentinel = document.getElementById("header-sentinel");
+		if (!header || !sentinel) return;
+
+		if (typeof IntersectionObserver === "undefined") {
+			header.classList.add("is-solid");
+			return;
+		}
+
+		try {
+			const observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						header.classList.toggle("is-solid", !entry.isIntersecting);
+					}
+				},
+				{ rootMargin: "-56px 0px 0px 0px", threshold: 0 },
+			);
+			observer.observe(sentinel);
+		} catch {
+			header.classList.add("is-solid");
+		}
+	};
+
+	try {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initHeader, { once: true });
+		} else {
+			initHeader();
+		}
+	} catch {
+		// Never leave the header in a broken state.
+	}
+</script>
