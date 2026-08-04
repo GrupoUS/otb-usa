@@ -203,12 +203,11 @@ function splitStat(valor: string) {
 						<span
 							class="font-display text-5xl font-extrabold leading-none tracking-tight tabular-nums text-text-primary sm:text-6xl"
 						>
+							{/* Single line on purpose: Astro templates are HTML-semantic, so
+							    breaking this fragment across lines injects a real space and
+							    renders "≤ 48 h" / "100 %" instead of "≤ 48h" / "100%". */}
 							{parts ? (
-								<>
-									{parts.prefix}
-									<span data-count={parts.numero}>{parts.numero}</span>
-									{parts.suffix}
-								</>
+								<>{parts.prefix}<span data-count={parts.numero}>{parts.numero}</span>{parts.suffix}</>
 							) : (
 								stat.valor
 							)}

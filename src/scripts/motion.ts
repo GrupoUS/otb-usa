@@ -62,6 +62,46 @@ function initParallax(): void {
 	);
 	if (!plates.length) return;
 
+	/** Offset currently written to each wrapper. getBoundingClientRect() reports
+	 *  the *transformed* box, so feeding it straight back in makes the mapping
+	 *  self-referential and the travel converges to speed/(1+speed) of what was
+	 *  asked for. Subtracting the applied offset restores the untransformed
+	 *  position and the requested speed. */
+	const applied = new WeakMap<HTMLElement, number>();
+
+	/** Per-element travel budget, recomputed on resize (offsetHeight and
+	 *  clientHeight force layout, so this must not run per frame). */
+	const budget = new WeakMap<HTMLElement, { slack: number; speed: number }>();
+
+	const measure = () => {
+		const viewport = window.innerHeight;
+
+		for (const el of plates) {
+			const host = el.parentElement;
+			// Half the overscan: how far the wrapper can slide before it stops
+			// covering the plate it fills.
+			const slack = host
+				? Math.max(0, (el.offsetHeight - host.clientHeight) / 2)
+				: 0;
+
+			const asked = Number(el.dataset.speed ?? "0.14");
+
+			// The overscan is a share of the PLATE height, but the travel scales
+			// with the VIEWPORT. A strip only becomes visible while the offending
+			// edge is on screen, which caps the demand at speed·(V − h)/2 — and
+			// only when the wrapper is shorter than the fold. On a phone the 16/9
+			// Boston plate is ~26% of the viewport, so the requested 0.12 needs
+			// ~35px of slack against the ~22px it actually has. Damping the speed
+			// (rather than clamping the offset) keeps the motion proportional
+			// instead of freezing it at the limit.
+			const demand = (Math.max(0, viewport - el.offsetHeight) / 2) * asked;
+			const speed =
+				demand > slack && demand > 0 ? asked * (slack / demand) : asked;
+
+			budget.set(el, { slack, speed });
+		}
+	};
+
 	let frame = 0;
 
 	const paint = () => {
@@ -70,9 +110,18 @@ function initParallax(): void {
 		for (const el of plates) {
 			const rect = el.getBoundingClientRect();
 			if (rect.bottom < -200 || rect.top > viewport + 200) continue;
-			const speed = Number(el.dataset.speed ?? "0.14");
-			const offset = (rect.top + rect.height / 2 - viewport / 2) * -speed;
+
+			const { slack, speed } = budget.get(el) ?? { slack: 0, speed: 0 };
+			const top = rect.top - (applied.get(el) ?? 0);
+			const raw = (top + rect.height / 2 - viewport / 2) * -speed;
+
+			// Belt and braces: the damped speed already keeps the wrapper inside
+			// its overscan for every on-screen position, but the clamp makes the
+			// invariant unconditional for any future plate or aspect ratio.
+			const offset = Math.max(-slack, Math.min(slack, raw));
+
 			el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+			applied.set(el, offset);
 		}
 	};
 
@@ -81,8 +130,14 @@ function initParallax(): void {
 		frame = requestAnimationFrame(paint);
 	};
 
+	const onResize = () => {
+		measure();
+		schedule();
+	};
+
 	window.addEventListener("scroll", schedule, { passive: true });
-	window.addEventListener("resize", schedule, { passive: true });
+	window.addEventListener("resize", onResize, { passive: true });
+	measure();
 	paint();
 }
 
