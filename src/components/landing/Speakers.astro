@@ -39,7 +39,11 @@ const { speakers } = Astro.props;
 			class="mt-block grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
 		>
 			{speakers.lista.map((s, idx) => (
-				<li data-reveal="up" data-reveal-delay={String(Math.min(idx + 1, 6))}>
+				<li
+					data-reveal="up"
+					data-reveal-delay={String(Math.min(idx + 1, 6))}
+					data-tilt
+				>
 					<div
 						class="aspect-[4/5] overflow-hidden rounded-plate border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)]"
 					>
@@ -61,7 +65,7 @@ const { speakers } = Astro.props;
 					<div
 						class="mt-4 border-t border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] pt-4"
 					>
-						<h3 class="font-serif text-h3 font-semibold text-text-primary">
+						<h3 class="font-display text-h3 font-semibold text-text-primary">
 							{s.nome}
 						</h3>
 						<p

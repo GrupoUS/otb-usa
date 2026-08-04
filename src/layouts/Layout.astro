@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import ScrollProgress from "../components/landing/ScrollProgress.astro";
 import "../styles/global.css";
 
 export interface Props {
@@ -70,9 +71,9 @@ const jsonLdPayload = jsonLd
 		<link rel="alternate icon" href="/favicon.ico" />
 
 		{/* Astro Fonts API — injects @font-face with font-display: swap.
-		    Playfair Display is the LCP font (h1 / display headings) → preload.
+		    Sora is the LCP font (h1 / display headings) → preload.
 		    Inter is body copy → swap-only is enough; no preload (saves bytes). */}
-		<Font cssVariable="--font-playfair" preload />
+		<Font cssVariable="--font-sora" preload />
 		<Font cssVariable="--font-inter" />
 
 		<meta property="og:type" content="website" />
@@ -93,6 +94,8 @@ const jsonLdPayload = jsonLd
 	<body>
 		<a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
 
+		<ScrollProgress />
+
 		<slot name="header" />
 
 		{/* Drives the header solid state. Positioned absolutely at the top of the
@@ -110,6 +113,8 @@ const jsonLdPayload = jsonLd
 		<slot name="floating" />
 
 		<script>
+			import { initMotion } from "../scripts/motion";
+
 			const revealAll = (items: NodeListOf<HTMLElement>) => {
 				items.forEach((el) => el.classList.add("revealed"));
 			};
@@ -144,11 +149,21 @@ const jsonLdPayload = jsonLd
 				}
 			};
 
+			const boot = () => {
+				initReveal();
+				try {
+					initMotion();
+				} catch {
+					// Count-up / parallax / tilt are enhancements on markup that is
+					// already complete — never let them take the reveal down with them.
+				}
+			};
+
 			try {
 				if (document.readyState === "loading") {
-					document.addEventListener("DOMContentLoaded", initReveal, { once: true });
+					document.addEventListener("DOMContentLoaded", boot, { once: true });
 				} else {
-					initReveal();
+					boot();
 				}
 			} catch {
 				// Last-resort guard: never leave content invisible.

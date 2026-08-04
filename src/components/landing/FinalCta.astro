@@ -18,20 +18,39 @@ const hasCheckout = Boolean(finalCta.cta.checkoutUrl);
 	Closing band. The page used to dead-end on the FAQ — the last thing a
 	visitor read was an objection, with no way forward but the floating button.
 */}
-<section class="band-alt relative py-section-tight" aria-labelledby="final-cta-heading">
-	<div class="mx-auto max-w-5xl px-6 text-center lg:px-8">
+<section
+	class="band-alt relative overflow-hidden py-section-tight"
+	aria-labelledby="final-cta-heading"
+>
+	{/* Crimson floor-glow: the closing band is the one place the USA accent is
+	    allowed to light the surface itself, and it pulls the eye down onto the
+	    CTA instead of letting the page fade out. */}
+	<div
+		class="pointer-events-none absolute inset-0"
+		aria-hidden="true"
+		style="background: radial-gradient(ellipse at 50% 120%, color-mix(in srgb, var(--color-crimson) 30%, transparent) 0%, transparent 60%);"
+	>
+	</div>
+
+	<div class="relative mx-auto max-w-5xl px-6 text-center lg:px-8">
 		<span
 			class="inline-flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-text-muted"
 			data-reveal="up"
 		>
-			<span class="h-px w-8 bg-gold/70" aria-hidden="true"></span>
+			<span
+				class="h-0.5 w-8"
+				style="background-color: var(--color-crimson-bright);"
+				aria-hidden="true"></span>
 			{finalCta.kicker}
-			<span class="h-px w-8 bg-gold/70" aria-hidden="true"></span>
+			<span
+				class="h-0.5 w-8"
+				style="background-color: var(--color-crimson-bright);"
+				aria-hidden="true"></span>
 		</span>
 
 		<h2
 			id="final-cta-heading"
-			class="mt-5 font-serif text-h2 font-bold text-balance text-text-primary"
+			class="mt-5 font-display text-h2 font-extrabold text-balance text-text-primary"
 			data-reveal="up"
 			data-reveal-delay="1"
 		>
@@ -97,6 +116,15 @@ const hasCheckout = Boolean(finalCta.cta.checkoutUrl);
 					/>
 				</a>
 			)}
+
+			{/* In-page escape hatch for the reader who is not ready to message yet:
+			    without it the closing band offered exactly one action. */}
+			<a
+				href="#investimento"
+				class="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-gold)_34%,transparent)] px-6 text-sm font-medium text-text-primary/90 transition-colors hover:border-gold hover:text-gold sm:w-auto"
+			>
+				Ver investimento
+			</a>
 		</div>
 	</div>
 </section>

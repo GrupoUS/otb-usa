@@ -1,0 +1,161 @@
+---
+import Icon from "../icons/Icon.astro";
+
+/**
+ * Gallery lightbox — native `<dialog>`, zero framework.
+ *
+ * `showModal()` gives focus trapping, `Escape` and the top-layer backdrop for
+ * free, which is exactly what a hand-rolled overlay gets wrong. Triggers are
+ * `[data-lightbox-trigger]` buttons carrying `data-src` / `data-alt`; the
+ * gallery stays fully usable without JS because each trigger wraps the image
+ * itself, so a scripting failure simply means the tile does not enlarge.
+ */
+---
+
+<dialog
+	class="lightbox"
+	data-lightbox
+	aria-label="Foto ampliada"
+>
+	<form method="dialog" class="lightbox-close-form">
+		<button type="submit" class="lightbox-close" aria-label="Fechar">
+			<Icon name="x" size={20} strokeWidth={2} />
+		</button>
+	</form>
+
+	<figure class="lightbox-figure">
+		{/* src/alt are filled by the trigger; empty until then. */}
+		<img data-lightbox-image src="" alt="" decoding="async" />
+		<figcaption data-lightbox-caption></figcaption>
+	</figure>
+</dialog>
+
+<style>
+	.lightbox {
+		max-width: min(1100px, 92vw);
+		max-height: 92vh;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--color-text-secondary);
+		overflow: visible;
+	}
+
+	.lightbox::backdrop {
+		background-color: color-mix(
+			in srgb,
+			var(--color-navy-deep) 94%,
+			transparent
+		);
+		backdrop-filter: blur(6px);
+	}
+
+	.lightbox-figure {
+		margin: 0;
+	}
+
+	.lightbox-figure img {
+		display: block;
+		width: 100%;
+		max-height: 78vh;
+		object-fit: contain;
+		border-radius: var(--radius-plate);
+	}
+
+	.lightbox-figure figcaption {
+		margin-top: 1rem;
+		text-align: center;
+		font-size: var(--text-meta);
+		line-height: var(--text-meta--line-height);
+		color: var(--color-text-secondary);
+	}
+
+	.lightbox-close-form {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 0.75rem;
+	}
+
+	.lightbox-close {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 2.75rem;
+		width: 2.75rem;
+		border-radius: 9999px;
+		border: 1px solid
+			color-mix(in srgb, var(--color-text-primary) 28%, transparent);
+		background-color: color-mix(
+			in srgb,
+			var(--color-navy-deep) 70%,
+			transparent
+		);
+		color: var(--color-text-primary);
+		cursor: pointer;
+		transition: border-color var(--duration-hover) ease;
+	}
+
+	.lightbox-close:hover {
+		border-color: var(--color-gold);
+	}
+</style>
+
+<script>
+	const initLightbox = () => {
+		const dialog = document.querySelector<HTMLDialogElement>("[data-lightbox]");
+		const image = dialog?.querySelector<HTMLImageElement>(
+			"[data-lightbox-image]",
+		);
+		const caption = dialog?.querySelector<HTMLElement>(
+			"[data-lightbox-caption]",
+		);
+		const triggers = document.querySelectorAll<HTMLButtonElement>(
+			"[data-lightbox-trigger]",
+		);
+		if (!dialog || !image || !caption || !triggers.length) return;
+
+		// `showModal` is the whole point — without it there is no focus trap and
+		// no Escape handling, so an unsupported browser keeps the inline tile.
+		if (typeof dialog.showModal !== "function") return;
+
+		triggers.forEach((trigger) => {
+			trigger.hidden = false;
+			trigger.addEventListener("click", () => {
+				const src = trigger.dataset.src ?? "";
+				const alt = trigger.dataset.alt ?? "";
+				if (!src) return;
+				image.src = src;
+				image.alt = alt;
+				caption.textContent = alt;
+				dialog.showModal();
+			});
+		});
+
+		// Click on the backdrop (i.e. on the dialog box itself, outside the
+		// figure) closes. Clicks inside the figure must not.
+		dialog.addEventListener("click", (event) => {
+			if (event.target === dialog) dialog.close();
+		});
+
+		// Release the decoded bitmap once closed so a long gallery session does
+		// not hold every full-size image in memory.
+		dialog.addEventListener("close", () => {
+			image.removeAttribute("src");
+			image.alt = "";
+			caption.textContent = "";
+		});
+	};
+
+	try {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initLightbox, {
+				once: true,
+			});
+		} else {
+			initLightbox();
+		}
+	} catch {
+		// Gallery stays inline-only.
+	}
+</script>

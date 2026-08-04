@@ -37,26 +37,33 @@
 	--color-text-secondary: #b8c0d0;
 	--color-text-muted: #94a3b8;
 
-	/* Typography */
-	--font-serif: var(--font-playfair), Georgia, serif;
+	/* Typography.
+	   `--font-display` is the heading face (Sora, geometric grotesk). There is
+	   no serif in the system any more — headings and body are both sans, split
+	   by face and weight rather than by classification. */
+	--font-display: var(--font-sora), system-ui, sans-serif;
 	--font-sans: var(--font-inter), system-ui, sans-serif;
 
 	/* Escala fluida — substitui text-[3.75rem] / text-[4.5rem] / md:text-5xl
 	   lg:text-6xl espalhados inline e dá comportamento real em tablet. */
+	/* Tracking is tighter than the Playfair-era scale: Sora is a geometric
+	   grotesk set at 800 for display, and it needs negative letter-spacing to
+	   avoid reading as loose at 5rem+. */
 	--text-display: clamp(2.125rem, 1.2rem + 4.2vw, 5.25rem);
-	--text-display--line-height: 1.02;
-	--text-display--letter-spacing: -0.02em;
+	--text-display--line-height: 1;
+	--text-display--letter-spacing: -0.035em;
 
 	--text-h1: clamp(2rem, 1.15rem + 3.6vw, 4.25rem);
-	--text-h1--line-height: 1.05;
-	--text-h1--letter-spacing: -0.02em;
+	--text-h1--line-height: 1.04;
+	--text-h1--letter-spacing: -0.03em;
 
 	--text-h2: clamp(1.75rem, 1.15rem + 2.4vw, 3.25rem);
-	--text-h2--line-height: 1.1;
-	--text-h2--letter-spacing: -0.015em;
+	--text-h2--line-height: 1.06;
+	--text-h2--letter-spacing: -0.03em;
 
 	--text-h3: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
 	--text-h3--line-height: 1.25;
+	--text-h3--letter-spacing: -0.02em;
 
 	--text-lede: clamp(1.0625rem, 1rem + 0.45vw, 1.375rem);
 	--text-lede--line-height: 1.6;
@@ -425,6 +432,19 @@ body {
 	}
 }
 
+/* The halo both pulse utilities reference. It was missing, which silently
+   disabled `.gold-pulse-glow` / `.crimson-pulse-glow` (an undefined
+   animation-name is dropped, not inherited). */
+@keyframes gold-pulse {
+	0%,
+	100% {
+		opacity: 0.55;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
 .gold-pulse-glow::after {
 	content: "";
 	position: absolute;
@@ -504,6 +524,9 @@ body {
 	--mouse-x: 50%;
 	--mouse-y: 50%;
 	position: relative;
+	/* Contains the negative-z pseudo-element below, so it cannot escape into an
+	   ancestor stacking context and disappear behind the section background. */
+	isolation: isolate;
 }
 
 [data-glow-card]::before {
@@ -519,7 +542,10 @@ body {
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
-	z-index: 1;
+	/* Negative z paints above the card's own background but below its content —
+	   at z-index 1 the wash sat over the price and tinted it
+	   (.claude/rules/stability.md § Debug triage matrix). */
+	z-index: -1;
 }
 
 [data-glow-card]:hover::before {
@@ -570,5 +596,89 @@ body {
 	.text-shimmer {
 		animation: none;
 		-webkit-text-fill-color: var(--color-gold);
+	}
+}
+
+/* ===== Scroll progress ===== */
+
+/* Reading indicator on the top edge. Crimson→gold is the page's positioning
+   gradient (USA accent → brand primary). Width is driven from JS; the element
+   is inert and invisible until the script sets a value, so a scripting failure
+   leaves a zero-width bar rather than a stuck full one. */
+.scroll-progress {
+	position: fixed;
+	inset: 0 auto auto 0;
+	z-index: 60;
+	height: 3px;
+	width: 0;
+	pointer-events: none;
+	transform-origin: left center;
+	background: linear-gradient(
+		90deg,
+		var(--color-crimson-bright) 0%,
+		var(--color-crimson) 45%,
+		var(--color-gold) 100%
+	);
+}
+
+/* ===== Credential ribbon ===== */
+
+/* Diagonal hatch over the crimson band. Decorative texture only — it never
+   carries information, so it is safe under forced-colors. */
+@utility ribbon-hatch {
+	background-image: repeating-linear-gradient(
+		115deg,
+		color-mix(in srgb, white 6%, transparent) 0 2px,
+		transparent 2px 13px
+	);
+}
+
+@utility ribbon-fade {
+	background-image: linear-gradient(
+		90deg,
+		color-mix(in srgb, var(--color-crimson-dark) 85%, transparent) 0%,
+		transparent 42%,
+		color-mix(in srgb, var(--color-crimson-bright) 40%, transparent) 100%
+	);
+}
+
+/* ===== Pointer tilt (3D) ===== */
+
+/* JS writes `--tilt-x` / `--tilt-y` / `--tilt-lift` on pointermove and clears
+   them on leave. Keeping the transform in CSS (rather than assigning
+   element.style.transform) means hover-lift and tilt never fight over the same
+   property — the documented failure mode in stability.md § Debug triage. */
+[data-tilt] {
+	--tilt-x: 0deg;
+	--tilt-y: 0deg;
+	--tilt-lift: 0px;
+	transform: perspective(1000px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y))
+		translateY(var(--tilt-lift));
+	transform-style: preserve-3d;
+	transition: transform 420ms var(--ease-editorial);
+}
+
+[data-tilt][data-tilt-active] {
+	transition-duration: 80ms;
+	transition-timing-function: linear;
+}
+
+/* ===== Parallax plates ===== */
+
+/* The moving layer is always an absolutely-positioned wrapper whose transform
+   is otherwise unused, per stability.md ("parallax salta" triage row). */
+[data-parallax] {
+	will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-tilt] {
+		transform: none;
+		transition: none;
+	}
+
+	[data-parallax] {
+		transform: none !important;
+		will-change: auto;
 	}
 }

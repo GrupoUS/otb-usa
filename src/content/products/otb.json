@@ -65,6 +65,13 @@
 		]
 	},
 
+	"certificacoes": [
+		"MBA Instituto IESA + Grupo US",
+		"ASA Fresh Specimens Certificate",
+		"10 módulos · 320 horas",
+		"Imersão internacional em Boston"
+	],
+
 	"why": {
 		"positioningQuote": "O OTB não é para quem está começando. É para quem já chegou longe e sabe que o próximo nível exige uma visão diferente de tudo.",
 		"headline": "Os três pilares do",
@@ -117,6 +124,12 @@
 		"descricao": "320 horas distribuídas entre 10 módulos online de business, gestão clínica, marketing, vendas, finanças, sistemas, IA e jurídico — somados a uma imersão presencial de 3 dias em Boston, com Anatomy Review e prática com Fresh Specimens.",
 		"narrativa": "Duas turmas já levaram empreendedores a Boston — palestras com experts globais, prática em Fresh Specimens e vivências reais na cidade. A 3ª Edição vai ainda mais longe.",
 		"horas": 320,
+		"kpis": [
+			{ "valor": 10, "rotulo": "Módulos online" },
+			{ "valor": 3, "rotulo": "Dias em Boston" },
+			{ "valor": 2, "rotulo": "Certificações" },
+			{ "valor": 12, "rotulo": "Meses de plataforma" }
+		],
 		"cards": [
 			{
 				"titulo": "Conteúdo online",

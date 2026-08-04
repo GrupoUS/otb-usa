@@ -17,6 +17,11 @@ const loteList = lotes as Lote[] | undefined;
 const ctaHref = whatsappUrlWithText(investimento.cta.whatsappMessage);
 const hasCheckout = Boolean(investimento.cta.checkoutUrl);
 
+/** `preco` is pt-BR formatted ("3.500"); the count-up needs the integer and
+ *  re-localises on every frame. Falls back to no animation when the price is
+ *  not a plain number (e.g. a future "sob consulta"). */
+const precoNumero = Number(investimento.preco.replace(/\D/g, "")) || null;
+
 const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 	encerrado: "Encerrado",
 	ativo: "Ativo",
@@ -71,7 +76,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 				</ul>
 
 				<p
-					class="mt-8 font-serif text-h3 italic leading-snug text-text-primary/85"
+					class="mt-8 font-display text-h3 italic leading-snug text-text-primary/85"
 				>
 					{investimento.tagline}
 				</p>
@@ -99,7 +104,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 												{statusLabel[l.status]}
 											</span>
 											<span
-												class="whitespace-nowrap font-serif text-body font-semibold text-text-primary"
+												class="whitespace-nowrap font-display text-body font-semibold text-text-primary"
 											>
 												{l.label}
 											</span>
@@ -131,8 +136,9 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 
 			<div class="lg:col-span-6" data-reveal="right" data-reveal-delay="2">
 				<div
-					class="glass-card-bright relative rounded-3xl p-8 shadow-(--shadow-halo-gold) sm:p-10"
+					class="glass-card-bright gold-pulse-glow relative rounded-3xl p-8 shadow-(--shadow-halo-gold) sm:p-10"
 					data-glow-card
+					data-tilt
 				>
 					<div class="text-kicker uppercase tracking-kicker text-text-muted">
 						Investimento à vista
@@ -142,7 +148,9 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 							{investimento.moeda}
 						</span>
 						<span
-							class="font-sans text-6xl font-bold tracking-tight text-gradient-gold sm:text-7xl"
+							class="font-display text-6xl font-extrabold tracking-tight text-gradient-gold sm:text-7xl"
+							data-count={precoNumero ?? undefined}
+							data-count-format={precoNumero ? "pt" : undefined}
 						>
 							{investimento.preco}
 						</span>

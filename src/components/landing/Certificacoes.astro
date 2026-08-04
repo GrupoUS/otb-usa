@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+	certificacoes: NonNullable<
+		CollectionEntry<"products">["data"]["certificacoes"]
+	>;
+}
+
+const { certificacoes } = Astro.props;
+---
+
+{/*
+	Credential ribbon. The one full-crimson surface on the page: it sits
+	immediately under the hero so the two certifications land before the first
+	scroll, and the saturated band doubles as the hardest tonal break in the
+	stack (DESIGN.md § Depth — banding is the separator).
+
+	Crimson-as-background is admissible here precisely because it carries no
+	interactive element: text-primary on --color-crimson measures 7.3:1, while
+	crimson-as-text on navy sits near 2.3:1 — which is why the accent tints
+	rules and plates but never becomes a CTA or a text colour.
+*/}
+<section
+	class="relative overflow-hidden"
+	style="background-color: var(--color-crimson);"
+	aria-label="Certificações do programa"
+>
+	<div class="ribbon-hatch absolute inset-0" aria-hidden="true"></div>
+	<div class="ribbon-fade absolute inset-0" aria-hidden="true"></div>
+
+	<ul
+		class="relative mx-auto grid max-w-7xl grid-cols-1 gap-x-10 gap-y-5 px-6 py-7 sm:grid-cols-2 lg:grid-cols-4 lg:px-8"
+	>
+		{certificacoes.map((item, idx) => (
+			<li
+				class="flex items-baseline gap-3 text-kicker font-semibold uppercase leading-snug tracking-[0.16em] text-text-primary"
+				data-reveal="up"
+				data-reveal-delay={String(idx + 1)}
+			>
+				<span
+					class="shrink-0 font-display text-kicker font-bold tabular-nums text-text-primary/55"
+					aria-hidden="true"
+				>
+					{String(idx + 1).padStart(2, "0")}
+				</span>
+				{item}
+			</li>
+		))}
+	</ul>
+</section>

@@ -18,7 +18,9 @@ export type IconName =
 	| "map-pin"
 	| "calendar"
 	| "users"
-	| "alert-circle";
+	| "alert-circle"
+	| "expand"
+	| "x";
 
 export const ICON_PATHS: Record<IconName, string[]> = {
 	check: ["M20 6 9 17l-5-5"],
@@ -107,4 +109,13 @@ export const ICON_PATHS: Record<IconName, string[]> = {
 		"M12 8v4",
 		"M12 16h.01",
 	],
+	// lucide/expand — gallery zoom affordance
+	expand: [
+		"m21 21-6-6m6 6v-4.8m0 4.8h-4.8",
+		"M3 16.2V21m0 0h4.8M3 21l6-6",
+		"M21 7.8V3m0 0h-4.8M21 3l-6 6",
+		"M3 7.8V3m0 0h4.8M3 3l6 6",
+	],
+	// lucide/x — dialog dismiss
+	x: ["M18 6 6 18", "m6 6 12 12"],
 };

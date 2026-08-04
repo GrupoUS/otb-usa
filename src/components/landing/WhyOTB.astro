@@ -35,13 +35,16 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 		{why.positioningQuote && (
 			<figure class="mt-block max-w-4xl" data-reveal="up" data-reveal-delay="1">
 				<blockquote
-					class="border-l-2 border-gold/45 pl-6 font-serif text-h3 leading-snug text-text-primary sm:pl-8"
+					class="border-l-2 border-gold/45 pl-6 font-display text-h3 leading-snug text-text-primary sm:pl-8"
 				>
 					{why.positioningQuote}
 				</blockquote>
 			</figure>
 		)}
 
+		{/* `data-tilt` is the whole hover treatment on these columns — no
+		    hover-lift on top of it, because two rules writing the same
+		    `transform` cancel each other (stability.md § Debug triage). */}
 		<div
 			class="mt-block grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-[color-mix(in_srgb,var(--color-gold)_20%,transparent)]"
 		>
@@ -50,10 +53,11 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 					class="md:px-8 md:first:pl-0 md:last:pr-0"
 					data-reveal="up"
 					data-reveal-delay={String(idx + 2)}
+					data-tilt
 				>
 					<div class="flex items-baseline gap-4">
 						<span
-							class="font-serif text-5xl font-bold leading-none tabular-nums text-gold/35"
+							class="font-display text-5xl font-extrabold leading-none tabular-nums text-gold/35"
 							aria-hidden="true"
 						>
 							{String(idx + 1).padStart(2, "0")}
@@ -67,7 +71,7 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 						/>
 					</div>
 					<h3
-						class="mt-5 font-serif text-h3 font-semibold leading-tight text-text-primary"
+						class="mt-5 font-display text-h3 font-semibold leading-tight text-text-primary"
 					>
 						{card.titulo}
 					</h3>

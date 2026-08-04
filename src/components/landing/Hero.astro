@@ -5,11 +5,22 @@ import { resolveImage } from "../../lib/images";
 import { whatsappUrlWithText } from "../../lib/whatsapp";
 import Icon, { type IconName } from "../icons/Icon.astro";
 
-export interface Props {
-	hero: CollectionEntry<"products">["data"]["hero"];
+/** Edition spec rail. Derived in `index.astro` from `edicao`,
+ *  `programa.horas` and the active lote — never duplicated in the JSON, so it
+ *  can never drift from the lote table rendered in Investimento. */
+export interface FichaRow {
+	rotulo: string;
+	valor: string;
+	prefixo?: string;
+	destaque?: boolean;
 }
 
-const { hero } = Astro.props;
+export interface Props {
+	hero: CollectionEntry<"products">["data"]["hero"];
+	ficha?: FichaRow[];
+}
+
+const { hero, ficha } = Astro.props;
 const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 const hasCheckout = Boolean(hero.cta.checkoutUrl);
 const plate = resolveImage(hero.background.image);
@@ -30,20 +41,33 @@ const plate = resolveImage(hero.background.image);
 		the explicit value. Keep it lower here than on the lazy plates: this file
 		is the LCP and pays its bytes on first paint.
 	*/}
-	<Picture
-		src={plate}
-		alt=""
-		formats={["avif", "webp"]}
-		fallbackFormat="jpeg"
-		widths={[640, 960, 1280, 1600]}
-		quality={62}
-		sizes="100vw"
-		loading="eager"
-		fetchpriority="high"
-		decoding="sync"
+	{/*
+		The parallax wrapper is overscanned by 12% on the block axis so the plate
+		still covers the frame at either end of the travel. Its `transform` is
+		reserved for the scroll offset — the image inside never transforms, which
+		is what keeps the plate from jumping (stability.md § Debug triage).
+	*/}
+	<div
+		class="absolute inset-x-0 -inset-y-[12%] -z-20"
+		data-parallax
+		data-speed="0.16"
 		aria-hidden="true"
-		class="absolute inset-0 -z-20 h-full w-full object-cover object-[center_30%]"
-	/>
+	>
+		<Picture
+			src={plate}
+			alt=""
+			formats={["avif", "webp"]}
+			fallbackFormat="jpeg"
+			widths={[640, 960, 1280, 1600]}
+			quality={62}
+			sizes="100vw"
+			loading="eager"
+			fetchpriority="high"
+			decoding="sync"
+			aria-hidden="true"
+			class="h-full w-full object-cover object-[center_32%]"
+		/>
+	</div>
 
 	{/* Scrim: keeps body copy ≥4.5:1 and headings ≥3:1 over the photograph. */}
 	<div
@@ -63,21 +87,30 @@ const plate = resolveImage(hero.background.image);
 	</div>
 
 	<div
-		class="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-6 pt-24 pb-10 lg:px-8 lg:pt-28"
+		class="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pt-24 pb-10 lg:px-8 lg:pt-28"
 	>
-		<div class="max-w-4xl">
+		<div
+			class="flex w-full flex-wrap items-end gap-x-[clamp(2rem,5vw,4.5rem)] gap-y-12"
+		>
+		<div class="min-w-0 flex-[1_1_38rem]">
 			{hero.eyebrow && (
 				<p
-					class="text-kicker font-semibold uppercase tracking-kicker text-gold tabular-nums"
+					class="flex items-center gap-3.5 text-kicker font-semibold uppercase tracking-kicker text-gold tabular-nums"
 					data-reveal="up"
 				>
+					{/* Crimson rule — the sanctioned date/place marker role, and the
+					    first thing that ties the fold to "Estados Unidos". */}
+					<span
+						class="h-0.5 w-11 shrink-0"
+						style="background-color: var(--color-crimson-bright);"
+						aria-hidden="true"></span>
 					{hero.eyebrow}
 				</p>
 			)}
 
 			<h1
 				id="hero-heading"
-				class="mt-6 font-serif text-display font-bold text-balance"
+				class="mt-6 font-display text-display font-bold text-balance"
 				data-reveal="up"
 				data-reveal-delay="1"
 			>
@@ -172,6 +205,58 @@ const plate = resolveImage(hero.background.image);
 					</>
 				)}
 			</div>
+		</div>
+
+		{/*
+			Edition spec rail. The asymmetric second column the fold was missing:
+			it used to be a single 4xl text block with dead space to its right at
+			≥1280px. Hairlines and numerals only — the glass pedestal stays
+			reserved for Investimento (DESIGN.md § Depth).
+		*/}
+		{ficha && ficha.length > 0 && (
+			<aside
+				class="w-full min-w-0 flex-[0_1_20rem] border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6 lg:w-auto lg:border-t-0 lg:border-l lg:pt-0 lg:pl-[clamp(1.25rem,2vw,2rem)]"
+				aria-labelledby="hero-ficha-label"
+				data-reveal="up"
+				data-reveal-delay="3"
+			>
+				<p
+					id="hero-ficha-label"
+					class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+				>
+					Ficha da edição
+				</p>
+				<dl
+					class="mt-5 divide-y divide-[color-mix(in_srgb,var(--color-gold)_14%,transparent)]"
+				>
+					{ficha.map((row) => (
+						<div class="grid gap-1.5 py-4 first:pt-0 last:pb-0">
+							<dt
+								class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+							>
+								{row.rotulo}
+							</dt>
+							<dd class="m-0 flex items-baseline gap-2 tabular-nums">
+								{row.prefixo && (
+									<span class="text-sm font-medium text-text-secondary">
+										{row.prefixo}
+									</span>
+								)}
+								<span
+									class={
+										row.destaque
+											? "font-display text-3xl font-extrabold tracking-tight text-gradient-gold"
+											: "font-display text-xl font-bold tracking-tight text-text-primary"
+									}
+								>
+									{row.valor}
+								</span>
+							</dd>
+						</div>
+					))}
+				</dl>
+			</aside>
+		)}
 		</div>
 	</div>
 

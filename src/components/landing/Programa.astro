@@ -36,7 +36,7 @@ const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 
 				{programa.narrativa && (
 					<blockquote
-						class="mt-8 max-w-xl border-l-2 border-gold pl-6 font-serif text-h3 leading-snug text-text-primary"
+						class="mt-8 max-w-xl border-l-2 border-gold pl-6 font-display text-h3 leading-snug text-text-primary"
 						data-reveal="up"
 						data-reveal-delay="1"
 					>
@@ -49,8 +49,12 @@ const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 					data-reveal="up"
 					data-reveal-delay="2"
 				>
+					{/* Server-rendered at its final value; `data-count` only replays
+					    it as a count-up once scrolled into view (and never under
+					    prefers-reduced-motion). */}
 					<span
-						class="font-sans text-6xl font-bold tracking-tight text-gradient-gold sm:text-7xl"
+						class="font-display text-6xl font-extrabold tracking-tight text-gradient-gold sm:text-7xl"
+						data-count={programa.horas}
 					>
 						{programa.horas}
 					</span>
@@ -63,6 +67,31 @@ const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 						</span>
 					</div>
 				</div>
+
+				{/* Scale rail. Four figures that answer "how much of what" before the
+				    reader reaches the syllabus column. */}
+				{programa.kpis && programa.kpis.length > 0 && (
+					<dl
+						class="mt-9 grid grid-cols-2 gap-6 border-t border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] pt-7 tabular-nums sm:grid-cols-4"
+						data-reveal="up"
+						data-reveal-delay="3"
+					>
+						{programa.kpis.map((kpi) => (
+							<div>
+								<dd
+									class="m-0 font-display text-3xl font-extrabold tracking-tight text-text-primary"
+								>
+									<span data-count={kpi.valor}>{kpi.valor}</span>{kpi.sufixo}
+								</dd>
+								<dt
+									class="mt-2 text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+								>
+									{kpi.rotulo}
+								</dt>
+							</div>
+						))}
+					</dl>
+				)}
 			</div>
 
 			<div class="lg:col-span-7">
@@ -82,7 +111,7 @@ const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 								{String(idx + 1).padStart(2, "0")}
 							</span>
 							<dt
-								class="flex items-center gap-3 font-serif text-h3 font-semibold text-text-primary"
+								class="flex items-center gap-3 font-display text-h3 font-semibold text-text-primary"
 							>
 								<Icon
 									name={cardIcons[idx] ?? "sparkles"}

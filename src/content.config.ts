@@ -66,6 +66,10 @@ const products = defineCollection({
 				.optional(),
 		}),
 
+		/** Crimson credential ribbon between hero and why. Claims only —
+		 *  never marketing copy; each entry is verifiable in legal.disclaimer. */
+		certificacoes: z.array(z.string().min(8).max(60)).length(4).optional(),
+
 		why: z.object({
 			positioningQuote: z.string().min(60).max(220).optional(),
 			headline: z.string(),
@@ -98,10 +102,6 @@ const products = defineCollection({
 				)
 				.min(4),
 			legenda: z.string(),
-			background: z.object({
-				image: z.string(),
-				alt: z.string(),
-			}),
 		}),
 
 		programa: z.object({
@@ -110,6 +110,17 @@ const products = defineCollection({
 			descricao: z.string(),
 			narrativa: z.string().min(80).max(320).optional(),
 			horas: z.number().int().positive(),
+			kpis: z
+				.array(
+					z.object({
+						valor: z.number().int().positive(),
+						sufixo: z.string().max(4).optional(),
+						rotulo: z.string().min(4).max(40),
+					}),
+				)
+				.min(3)
+				.max(4)
+				.optional(),
 			cards: z
 				.array(
 					z.object({

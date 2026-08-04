@@ -13,6 +13,19 @@ export interface Props {
 }
 
 const { boston, agenda } = Astro.props;
+
+/** Splits a stat like "≤ 48h" into the parts around its first integer so the
+ *  number can count up while the qualifier ("≤", "h", "%") stays put. Returns
+ *  null for non-numeric stats such as "ASA", which simply do not animate. */
+function splitStat(valor: string) {
+	const match = valor.match(/\d+/);
+	if (!match || match.index === undefined) return null;
+	return {
+		prefix: valor.slice(0, match.index),
+		numero: Number(match[0]),
+		suffix: valor.slice(match.index + match[0].length),
+	};
+}
 ---
 
 {/*
@@ -60,20 +73,29 @@ const { boston, agenda } = Astro.props;
 	{/* Plate: the dates set typographically over the photograph. */}
 	<figure class="relative mt-block" data-reveal="up" data-reveal-delay="2">
 		<div class="relative aspect-[16/9] overflow-hidden rounded-plate sm:aspect-[21/9]">
-			<Picture
-				src={resolveImage(boston.background.image)}
-				alt=""
-				formats={["avif", "webp"]}
-				fallbackFormat="jpeg"
-				widths={[640, 1024, 1600]}
-				quality={56}
-				sizes="100vw"
-				loading="lazy"
-				decoding="async"
-				fetchpriority="low"
+			{/* Overscanned wrapper owns the parallax transform; the image itself
+			    never transforms, so the plate cannot jump at the travel limits. */}
+			<div
+				class="absolute inset-x-0 -inset-y-[10%]"
+				data-parallax
+				data-speed="0.12"
 				aria-hidden="true"
-				class="h-full w-full object-cover object-center"
-			/>
+			>
+				<Picture
+					src={resolveImage(boston.background.image)}
+					alt=""
+					formats={["avif", "webp"]}
+					fallbackFormat="jpeg"
+					widths={[640, 1024, 1600]}
+					quality={56}
+					sizes="100vw"
+					loading="lazy"
+					decoding="async"
+					fetchpriority="low"
+					aria-hidden="true"
+					class="h-full w-full object-cover object-center"
+				/>
+			</div>
 			<div
 				class="absolute inset-0"
 				aria-hidden="true"
@@ -138,7 +160,7 @@ const { boston, agenda } = Astro.props;
 							</div>
 
 							<h4
-								class="mt-3 font-serif text-h3 font-semibold leading-snug text-text-primary"
+								class="mt-3 font-display text-h3 font-semibold leading-snug text-text-primary"
 							>
 								{d.titulo}
 							</h4>
@@ -170,16 +192,26 @@ const { boston, agenda } = Astro.props;
 				class="mt-block grid grid-cols-1 gap-y-8 border-t border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] pt-block sm:grid-cols-3 sm:gap-x-10"
 				aria-label="Diferenciais de Fresh Specimens"
 			>
-				{boston.freshStats.map((stat, idx) => (
+				{boston.freshStats.map((stat, idx) => {
+					const parts = splitStat(stat.valor);
+					return (
 					<div
 						class="flex flex-col items-start gap-2"
 						data-reveal="up"
 						data-reveal-delay={String(idx + 2)}
 					>
 						<span
-							class="font-sans text-5xl font-bold leading-none tracking-tight tabular-nums text-text-primary sm:text-6xl"
+							class="font-display text-5xl font-extrabold leading-none tracking-tight tabular-nums text-text-primary sm:text-6xl"
 						>
-							{stat.valor}
+							{parts ? (
+								<>
+									{parts.prefix}
+									<span data-count={parts.numero}>{parts.numero}</span>
+									{parts.suffix}
+								</>
+							) : (
+								stat.valor
+							)}
 						</span>
 						<span
 							class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
@@ -187,7 +219,8 @@ const { boston, agenda } = Astro.props;
 							{stat.rotulo}
 						</span>
 					</div>
-				))}
+					);
+				})}
 			</div>
 		)}
 	</div>

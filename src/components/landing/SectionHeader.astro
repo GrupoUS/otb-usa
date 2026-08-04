@@ -44,10 +44,18 @@ const rowAlignment = align === "center" ? "justify-center" : "";
 ---
 
 <div class={`${alignment} ${className}`} data-reveal="up">
-	<div class={`flex items-baseline gap-4 ${rowAlignment}`}>
+	<div class={`flex items-center gap-4 ${rowAlignment}`}>
+		{/*
+			Crimson plate. This is the page's numbering system: a solid, squared
+			chip rather than the previous ghost-gold numeral, which disappeared
+			against the band at anything below a 1440px viewport. Text-primary on
+			--color-crimson measures 7.3:1, so the plate is legible even though it
+			is decorative (aria-hidden — the heading already carries the meaning).
+		*/}
 		{numeral && (
 			<span
-				class="font-sans text-h2 font-bold leading-none tabular-nums text-gold/40"
+				class="inline-flex h-[42px] min-w-[42px] shrink-0 items-center justify-center rounded-plate px-2.5 font-display text-sm font-bold leading-none tracking-[0.06em] tabular-nums text-text-primary"
+				style="background-color: var(--color-crimson);"
 				aria-hidden="true"
 			>
 				{numeral}
@@ -63,7 +71,7 @@ const rowAlignment = align === "center" ? "justify-center" : "";
 
 	<h2
 		id={headingId}
-		class="mt-5 font-serif text-h2 font-bold text-balance text-text-primary"
+		class="mt-6 font-display text-h2 font-extrabold text-balance text-text-primary"
 	>
 		{headline}
 		{highlight && (

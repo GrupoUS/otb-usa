@@ -114,10 +114,11 @@ Voz canônica, valores (A.C.T.I.V.A.) e frases-guia vivem em `Skill('grupo-us')`
 
 **Existe e pode ser usado:**
 
-- Acervo fotográfico próprio de duas edições anteriores em Boston: `public/images/otb/gallery/` (9 fotos — aula, prática, networking, turma).
-- Fotos de contexto: `boston-skyline-hero.jpg`, `cambridge-academic.jpg`, `boston-networking-premium.jpg`.
-- Retratos do corpo docente: `public/images/otb/speakers/`.
-- Marca: `public/images/otb/logo-otb.png`, `otb-logo-gold.png`; identidade Grupo US em `docs/logos/`.
+- Acervo fotográfico próprio de duas edições anteriores em Boston: `src/assets/images/otb/gallery/` (8 fotos — aula, prática, networking, turma). Consumido por `astro:assets` via `src/lib/images.ts`; o JSON guarda o caminho `/images/otb/**` e o resolver mapeia para o asset.
+- Retratos do corpo docente: `src/assets/images/otb/speakers/` (4).
+- `src/assets/images/_retired/` — fora do glob do resolver, logo **não** vai para o build. Fotos aposentadas por trazerem wordmark de instituição legível; ver o `README.md` da pasta.
+- Teto de resolução do acervo: **1600px**. Não existe original maior no repo nem no histórico do git — plate full-bleed em tela grande exige pedir os arquivos ao fotógrafo.
+- Marca: `public/images/otb/otb-logo-gold.png`. Identidade Grupo US (logos + PDFs de identidade, ~43MB) vive **fora do repositório**, em `otb-usa-brand-assets/` ao lado dele.
 - Números verificáveis declarados no JSON: 320 horas, 10 módulos, 3 dias, 2 edições anteriores, Fresh Specimens ≤ 48h.
 
 **Ausências que trabalho futuro NÃO pode inventar:**
