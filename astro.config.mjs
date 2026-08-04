@@ -7,7 +7,7 @@ import { defineConfig, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://otb.drasacha.com.br",
+	site: "https://otb.gpus.com.br",
 	redirects: {
 		"/otb": "/",
 	},

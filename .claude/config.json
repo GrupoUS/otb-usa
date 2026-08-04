@@ -7,7 +7,7 @@
     "purpose": "Landing estática de captação para o OTB — MBA em Business Aesthetic Health com imersão internacional em Boston (3ª edição, 19 a 21 de abril de 2027). Conversão via WhatsApp SDR, sem formulário.",
     "stack": "astro-static-tailwindv4",
     "stagingUrl": "http://localhost:4321",
-    "productionUrl": "https://otb.drasacha.com.br",
+    "productionUrl": "https://otb.gpus.com.br",
     "locale": "pt-BR",
     "designModelRepo": ""
   },

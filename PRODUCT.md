@@ -70,7 +70,7 @@ Três pilares declarados (`otb.json § why.cards`): **formação técnica avanç
 **Confirmado (fonte: `src/content/products/otb.json`, `astro.config.mjs`):**
 
 - Slug de conteúdo `otb`; SSOT em `src/content/products/otb.json`, validado por `src/content.config.ts`.
-- Canonical: `https://otb.drasacha.com.br`. Redirect `/otb` → `/` (excluído do sitemap).
+- Canonical: `https://otb.gpus.com.br`. Redirect `/otb` → `/` (excluído do sitemap).
 - Rota única `/` — **não existem** páginas legais (`/termos`, `/politica-de-privacidade`) nem `/404` neste repo.
 - CTA primário único: **"Falar com Laura no WhatsApp"** (hero e investimento). CTA secundário: "Conhecer o programa".
 - WhatsApp SSOT: `src/lib/whatsapp.ts` (`WHATSAPP_SDR_E164 = 556294705081`); toda mensagem começa com `Olá, Laura!` (validado em runtime).

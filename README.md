@@ -2,7 +2,7 @@
 
 > Landing estática do **OTB Estados Unidos**, MBA em Business Aesthetic Health do Grupo US, com imersão internacional em Boston/EUA.
 >
-> **URL canônica:** [`https://otb.drasacha.com.br`](https://otb.drasacha.com.br)
+> **URL canônica:** [`https://otb.gpus.com.br`](https://otb.gpus.com.br)
 
 Brief de produto → [`PRODUCT.md`](PRODUCT.md) · Design system → [`DESIGN.md`](DESIGN.md) · Regras para agentes → [`AGENTS.md`](AGENTS.md)
 

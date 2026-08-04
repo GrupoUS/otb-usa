@@ -10,7 +10,7 @@ This repository is now scoped to **OTB USA — Grupo US**. Agent configuration m
 - Project skills renamed to `otb-usa` and `otb-theme`.
 - Astro project overlay renamed to `references/otb-usa-overlay.md`.
 - Evolution profile renamed to `references/otb-profile.md`.
-- `.claude/config.json` now identifies `otb-usa` and the canonical URL `https://otb.drasacha.com.br`.
+- `.claude/config.json` now identifies `otb-usa` and the canonical URL `https://otb.gpus.com.br`.
 
 ## Validation target
 

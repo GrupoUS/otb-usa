@@ -24,7 +24,7 @@ const pageUrl =
 	canonical ??
 	new URL(
 		Astro.url.pathname,
-		Astro.site ?? "https://otb.drasacha.com.br",
+		Astro.site ?? "https://otb.gpus.com.br",
 	).toString();
 const absoluteOgImage = ogImage.startsWith("http")
 	? ogImage
@@ -34,7 +34,7 @@ const organizationJsonLd = {
 	"@context": "https://schema.org",
 	"@type": "Organization",
 	name: "Grupo US",
-	url: site || "https://otb.drasacha.com.br",
+	url: site || "https://otb.gpus.com.br",
 	logo: `${site}/images/otb/otb-logo-gold.png`,
 	sameAs: [] as string[],
 	contactPoint: {

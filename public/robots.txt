@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /404
 
-Sitemap: https://otb.drasacha.com.br/sitemap-index.xml
+Sitemap: https://otb.gpus.com.br/sitemap-index.xml

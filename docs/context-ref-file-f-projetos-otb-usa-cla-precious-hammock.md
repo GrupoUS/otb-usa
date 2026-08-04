@@ -1,14 +1,14 @@
-# Plan — Visual + Copy + CTA uplift for `otb.drasacha.com.br/`
+# Plan — Visual + Copy + CTA uplift for `otb.gpus.com.br/`
 
-> Scope: aprimorar visual, copy e CTAs da landing pública servida no host canônico `otb.drasacha.com.br/`, seguindo `.claude/rules/DESIGN.md` + `Skill('otb-theme')` + `Skill('otb-usa')` + `Skill('astro')`.
+> Scope: aprimorar visual, copy e CTAs da landing pública servida no host canônico `otb.gpus.com.br/`, seguindo `.claude/rules/DESIGN.md` + `Skill('otb-theme')` + `Skill('otb-usa')` + `Skill('astro')`.
 
 ---
 
 ## Context
 
-**Host canônico do repo:** `https://otb.drasacha.com.br/`, alinhado com `.claude/config.json`, `README.md`, `PRODUCT.md`, `robots.txt` e `astro.config.mjs`.
+**Host canônico do repo:** `https://otb.gpus.com.br/`, alinhado com `.claude/config.json`, `README.md`, `PRODUCT.md`, `robots.txt` e `astro.config.mjs`.
 
-Se algum alias legado ainda receber tráfego em produção, ele deve redirecionar com 301 para `otb.drasacha.com.br` na plataforma de hospedagem, sem voltar a ser fonte canônica no repo.
+Se algum alias legado ainda receber tráfego em produção, ele deve redirecionar com 301 para `otb.gpus.com.br` na plataforma de hospedagem, sem voltar a ser fonte canônica no repo.
 
 Antes da auditoria residual, `src/pages/index.astro` renderizava apenas **4 seções**:
 
@@ -50,7 +50,7 @@ Tornar `src/pages/index.astro` espelho do funil completo de `src/pages/otb.astro
 1. Mover o corpo do `<Layout>` de `src/pages/otb.astro` para `src/pages/index.astro` (incluindo breadcrumb JSON-LD). Ajustar item 2 do breadcrumb para `name: "MBA em Business Aesthetic Health"` apontando para a própria URL (auto-canônica via `Astro.site`).
 2. Configurar redirecionamento de `/otb` para `/` via `astro.config.mjs` e manter `src/pages/otb.astro` como fallback estático `noindex` com meta refresh para `/` enquanto não houver autorização explícita para deletar arquivo.
 3. Adicionar `/otb` ao filtro de `@astrojs/sitemap` em `astro.config.mjs` (`filter: (page) => !/\/otb\/?$/.test(page)`) — evita split index.
-4. Garantir `<link rel="canonical">` aponta sempre para `https://otb.drasacha.com.br` (já é o comportamento padrão de `Layout.astro` + `astro.config.mjs`).
+4. Garantir `<link rel="canonical">` aponta sempre para `https://otb.gpus.com.br` (já é o comportamento padrão de `Layout.astro` + `astro.config.mjs`).
 
 ### Pilar 2 — Hero: amarrar autoridade + remover dead anchor
 
