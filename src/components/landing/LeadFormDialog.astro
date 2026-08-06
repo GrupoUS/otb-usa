@@ -435,6 +435,12 @@ const { leadForm } = Astro.props;
 	} from "../../lib/lead-client";
 	import { LEAD_CANONICAL_PAGE } from "../../lib/leads";
 
+	declare global {
+		interface Window {
+			dataLayer?: unknown[];
+		}
+	}
+
 	const DRAFT_KEY = "otb-lead-draft-v1";
 	const CLIENT_TIMEOUT_MS = 25_000;
 	const UUID_V4_PATTERN =
@@ -695,6 +701,8 @@ const { leadForm } = Astro.props;
 				) {
 					throw new Error("invalid_acknowledgement");
 				}
+				window.dataLayer = window.dataLayer || [];
+				window.dataLayer.push({ event: "lead_submit" });
 				clearDraft();
 				consentInput.checked = false;
 				window.location.assign(destinationUrl);
