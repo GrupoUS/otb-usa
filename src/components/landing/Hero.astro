@@ -167,25 +167,25 @@ const plate = resolveImage(hero.background.image);
 								class="transition-transform duration-300 group-hover:translate-x-1"
 							/>
 						</a>
-						<a
-							href={ctaHref}
-							target="_blank"
-							rel="noopener noreferrer"
+						<button
+							type="button"
+							data-lead-cta="hero"
+							data-whatsapp-url={ctaHref}
 							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
 							aria-label={`${hero.cta.label} — atendimento consultivo`}
 						>
 							<Icon name="message-circle" size={18} strokeWidth={2.25} />
 							<span>{hero.cta.label}</span>
-						</a>
+						</button>
 					</>
 				) : (
 					<>
-						<a
-							href={ctaHref}
-							target="_blank"
-							rel="noopener noreferrer"
+						<button
+							type="button"
+							data-lead-cta="hero"
+							data-whatsapp-url={ctaHref}
 							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
-							aria-label={`${hero.cta.label} no WhatsApp`}
+							aria-label={hero.cta.label}
 						>
 							<Icon name="message-circle" size={20} strokeWidth={2.25} />
 							<span>{hero.cta.label}</span>
@@ -195,7 +195,7 @@ const plate = resolveImage(hero.background.image);
 								strokeWidth={2.25}
 								class="transition-transform duration-300 group-hover:translate-x-1"
 							/>
-						</a>
+						</button>
 						<a
 							href="#programa"
 							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] px-6 text-sm font-medium text-text-primary/90 transition-colors hover:border-gold hover:text-gold"

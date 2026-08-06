@@ -17,14 +17,14 @@ const {
 const href = whatsappUrlWithText(message);
 ---
 
-<a
-	href={href}
-	target="_blank"
-	rel="noopener noreferrer"
+<button
+	type="button"
+	data-lead-cta="flutuante_desktop"
+	data-whatsapp-url={href}
 	aria-label={label}
 	class="fixed z-50 hidden items-center gap-3 rounded-full bg-gold px-5 py-3.5 font-semibold text-navy shadow-(--shadow-halo-gold) ring-0 transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_18px_55px_-10px_color-mix(in_srgb,var(--color-gold)_65%,transparent),0_0_0_3px_color-mix(in_srgb,var(--color-gold)_30%,transparent)] focus-visible:scale-[1.04] focus-visible:shadow-[0_18px_55px_-10px_color-mix(in_srgb,var(--color-gold)_65%,transparent),0_0_0_3px_color-mix(in_srgb,var(--color-gold)_30%,transparent)] lg:inline-flex"
 	style="bottom: max(1.25rem, env(safe-area-inset-bottom, 0px) + 0.75rem); right: max(1.25rem, env(safe-area-inset-right, 0px) + 0.75rem);"
 >
 	<Icon name="message-circle" size={20} strokeWidth={2.25} />
 	<span class="hidden text-sm sm:inline">Falar com Laura</span>
-</a>
+</button>

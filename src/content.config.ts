@@ -318,6 +318,42 @@ const products = defineCollection({
 			})
 			.optional(),
 
+		leadForm: z.object({
+			eyebrow: z.string(),
+			title: z.string(),
+			description: z.string(),
+			closeLabel: z.string(),
+			requiredHint: z.string(),
+			fields: z.object({
+				name: z.object({
+					label: z.string(),
+					placeholder: z.string(),
+					help: z.string(),
+				}),
+				email: z.object({
+					label: z.string(),
+					placeholder: z.string(),
+					help: z.string(),
+				}),
+				whatsapp: z.object({
+					label: z.string(),
+					placeholder: z.string(),
+					help: z.string(),
+				}),
+			}),
+			consent: z.object({
+				prefix: z.string(),
+				linkLabel: z.string(),
+				suffix: z.string(),
+				privacyUrl: z.url(),
+			}),
+			submitLabel: z.string(),
+			pendingLabel: z.string(),
+			validationError: z.string(),
+			genericError: z.string(),
+			version: z.literal("otb-lead-v1"),
+		}),
+
 		legal: z.object({
 			disclaimer: z.string().min(80),
 			creditosImagens: z.string().optional(),

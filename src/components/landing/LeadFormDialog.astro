@@ -1,0 +1,703 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon from "../icons/Icon.astro";
+
+export interface Props {
+	leadForm: CollectionEntry<"products">["data"]["leadForm"];
+}
+
+const { leadForm } = Astro.props;
+---
+
+<dialog
+	class="lead-dialog"
+	data-lead-dialog
+	data-submit-label={leadForm.submitLabel}
+	data-pending-label={leadForm.pendingLabel}
+	data-validation-error={leadForm.validationError}
+	data-generic-error={leadForm.genericError}
+	aria-labelledby="lead-dialog-title"
+	aria-describedby="lead-dialog-description"
+>
+	<div class="lead-dialog-panel">
+		<div class="lead-dialog-accent" aria-hidden="true"></div>
+		<header class="lead-dialog-header">
+			<div>
+				<p class="lead-dialog-eyebrow">{leadForm.eyebrow}</p>
+				<h2 id="lead-dialog-title">{leadForm.title}</h2>
+				<p id="lead-dialog-description">{leadForm.description}</p>
+			</div>
+			<button
+				type="button"
+				class="lead-dialog-close"
+				data-lead-close
+				aria-label={leadForm.closeLabel}
+			>
+				<Icon name="x" size={20} strokeWidth={2} aria-hidden="true" />
+			</button>
+		</header>
+
+		<form
+			class="lead-form"
+			data-lead-form
+			data-consent-version={leadForm.version}
+		>
+			<p class="lead-required-hint">{leadForm.requiredHint}</p>
+
+			<div class="lead-field">
+				<label for="lead-name">{leadForm.fields.name.label}</label>
+				<input
+					id="lead-name"
+					name="nome_completo"
+					type="text"
+					autocomplete="name"
+					placeholder={leadForm.fields.name.placeholder}
+					minlength="3"
+					maxlength="120"
+					required
+					aria-required="true"
+					aria-describedby="lead-name-help"
+				/>
+				<p id="lead-name-help" class="lead-field-help">{leadForm.fields.name.help}</p>
+			</div>
+
+			<div class="lead-field">
+				<label for="lead-email">{leadForm.fields.email.label}</label>
+				<input
+					id="lead-email"
+					name="email"
+					type="email"
+					autocomplete="email"
+					inputmode="email"
+					placeholder={leadForm.fields.email.placeholder}
+					maxlength="254"
+					required
+					aria-required="true"
+					aria-describedby="lead-email-help"
+				/>
+				<p id="lead-email-help" class="lead-field-help">{leadForm.fields.email.help}</p>
+			</div>
+
+			<div class="lead-field">
+				<label for="lead-whatsapp">{leadForm.fields.whatsapp.label}</label>
+				<input
+					id="lead-whatsapp"
+					name="whatsapp"
+					type="tel"
+					autocomplete="tel"
+					inputmode="tel"
+					placeholder={leadForm.fields.whatsapp.placeholder}
+					minlength="10"
+					maxlength="32"
+					required
+					aria-required="true"
+					aria-describedby="lead-whatsapp-help"
+				/>
+				<p id="lead-whatsapp-help" class="lead-field-help">{leadForm.fields.whatsapp.help}</p>
+			</div>
+
+			<div class="lead-honeypot" aria-hidden="true">
+				<label for="lead-company">Empresa</label>
+				<input
+					id="lead-company"
+					name="empresa"
+					type="text"
+					tabindex="-1"
+					autocomplete="off"
+				/>
+			</div>
+
+			<label class="lead-consent" for="lead-consent">
+				<input
+					id="lead-consent"
+					name="consentimento"
+					type="checkbox"
+					required
+					aria-required="true"
+				/>
+				<span>
+					{leadForm.consent.prefix}<a
+						href={leadForm.consent.privacyUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+					>{leadForm.consent.linkLabel}</a>{leadForm.consent.suffix}
+				</span>
+			</label>
+
+			<div
+				class="lead-status"
+				data-lead-status
+				role="status"
+				aria-live="polite"
+				aria-atomic="true"
+				hidden
+			>
+				<Icon name="alert-circle" size={18} strokeWidth={2} aria-hidden="true" />
+				<span data-lead-status-text></span>
+			</div>
+
+			<button type="submit" class="lead-submit" data-lead-submit>
+				<span data-lead-submit-text>{leadForm.submitLabel}</span>
+				<Icon
+					name="arrow-right"
+					size={18}
+					strokeWidth={2.25}
+					aria-hidden="true"
+				/>
+			</button>
+		</form>
+	</div>
+</dialog>
+
+<style>
+	.lead-dialog {
+		width: min(44rem, calc(100vw - 2rem));
+		max-width: none;
+		max-height: min(90svh, 52rem);
+		padding: 0;
+		border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+		border-radius: 1.5rem;
+		background: var(--color-navy-deep);
+		color: var(--color-text-primary);
+		overflow: auto;
+		box-shadow: var(--shadow-lift);
+	}
+
+	.lead-dialog::backdrop {
+		background: color-mix(in srgb, var(--color-navy-deep) 88%, transparent);
+		backdrop-filter: blur(8px);
+	}
+
+	.lead-dialog[open] {
+		animation: lead-dialog-enter 220ms ease-out;
+	}
+
+	.lead-dialog-panel {
+		position: relative;
+		padding: clamp(1.25rem, 4vw, 2.5rem);
+		overflow: hidden;
+	}
+
+	.lead-dialog-accent {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 0.25rem;
+		background: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-light));
+	}
+
+	.lead-dialog-header {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 1rem;
+		align-items: start;
+	}
+
+	.lead-dialog-eyebrow {
+		margin: 0;
+		font-size: var(--text-kicker);
+		font-weight: 600;
+		letter-spacing: var(--tracking-kicker);
+		text-transform: uppercase;
+		color: var(--color-gold);
+	}
+
+	.lead-dialog h2 {
+		margin: 0.5rem 0 0;
+		font-family: var(--font-display);
+		font-size: clamp(1.75rem, 5vw, 2.5rem);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lead-dialog-header p:last-child {
+		max-width: 34rem;
+		margin: 0.75rem 0 0;
+		font-size: var(--text-body);
+		line-height: 1.6;
+		color: var(--color-text-secondary);
+	}
+
+	.lead-dialog-close {
+		display: inline-flex;
+		width: 2.75rem;
+		height: 2.75rem;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid color-mix(in srgb, var(--color-text-primary) 24%, transparent);
+		border-radius: 9999px;
+		background: color-mix(in srgb, var(--color-navy-light) 80%, transparent);
+		color: var(--color-text-primary);
+		cursor: pointer;
+		transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+	}
+
+	.lead-dialog-close:hover {
+		border-color: var(--color-gold);
+		color: var(--color-gold);
+		transform: scale(1.04);
+	}
+
+	.lead-form {
+		display: grid;
+		gap: 1rem;
+		margin-top: 1.75rem;
+	}
+
+	.lead-required-hint {
+		margin: 0;
+		font-size: var(--text-meta);
+		color: var(--color-text-muted);
+	}
+
+	.lead-field {
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.lead-field label {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--color-text-primary);
+	}
+
+	.lead-field input {
+		width: 100%;
+		min-height: 3rem;
+		padding: 0.75rem 1rem;
+		border: 1px solid color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+		border-radius: 0.75rem;
+		background: color-mix(in srgb, var(--color-navy-light) 78%, transparent);
+		color: var(--color-text-primary);
+		font: inherit;
+		transition: border-color 160ms ease, box-shadow 160ms ease;
+	}
+
+	.lead-field input::placeholder {
+		color: color-mix(in srgb, var(--color-text-muted) 72%, transparent);
+	}
+
+	.lead-field input:focus-visible {
+		border-color: var(--color-gold);
+		outline: 2px solid var(--color-gold);
+		outline-offset: 2px;
+		box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-gold) 12%, transparent);
+	}
+
+	.lead-field input[aria-invalid="true"] {
+		border-color: var(--color-gold-light);
+	}
+
+	.lead-field-help {
+		margin: 0;
+		font-size: var(--text-meta);
+		line-height: 1.45;
+		color: var(--color-text-muted);
+	}
+
+	.lead-consent {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 0.75rem;
+		align-items: start;
+		margin-top: 0.25rem;
+		font-size: var(--text-meta);
+		line-height: 1.55;
+		color: var(--color-text-secondary);
+		cursor: pointer;
+	}
+
+	.lead-consent input {
+		width: 1.25rem;
+		height: 1.25rem;
+		margin: 0.1rem 0 0;
+		accent-color: var(--color-gold);
+	}
+
+	.lead-consent a {
+		color: var(--color-gold-light);
+		text-decoration: underline;
+		text-underline-offset: 0.18em;
+	}
+
+	.lead-status {
+		display: flex;
+		gap: 0.625rem;
+		align-items: flex-start;
+		padding: 0.75rem 0.875rem;
+		border: 1px solid color-mix(in srgb, var(--color-gold) 42%, transparent);
+		border-radius: 0.75rem;
+		background: color-mix(in srgb, var(--color-gold) 8%, transparent);
+		font-size: var(--text-meta);
+		line-height: 1.5;
+		color: var(--color-text-primary);
+	}
+
+	.lead-status[hidden] {
+		display: none;
+	}
+
+	.lead-status :global(svg) {
+		flex: none;
+		margin-top: 0.1rem;
+		color: var(--color-gold-light);
+	}
+
+	.lead-submit {
+		display: inline-flex;
+		width: 100%;
+		min-height: 3.25rem;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		margin-top: 0.25rem;
+		padding: 0.75rem 1.5rem;
+		border: 0;
+		border-radius: 9999px;
+		background: var(--color-gold);
+		color: var(--color-navy);
+		font: inherit;
+		font-weight: 700;
+		cursor: pointer;
+		box-shadow: var(--shadow-halo-gold);
+		transition: background-color 160ms ease, transform 160ms ease, opacity 160ms ease;
+	}
+
+	.lead-submit:hover:not(:disabled) {
+		background: var(--color-gold-light);
+		transform: scale(1.01);
+	}
+
+	.lead-submit:disabled {
+		cursor: not-allowed;
+		opacity: 0.58;
+	}
+
+	.lead-honeypot {
+		position: absolute;
+		left: -10000px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	:global(html.lead-dialog-open) {
+		overflow: hidden;
+	}
+
+	@keyframes lead-dialog-enter {
+		from {
+			opacity: 0;
+			transform: translateY(1rem) scale(0.98);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	@media (max-width: 30rem) {
+		.lead-dialog {
+			width: calc(100vw - 1rem);
+			max-height: calc(100svh - 1rem);
+			border-radius: 1.25rem;
+		}
+
+		.lead-dialog-panel {
+			padding: 1.25rem;
+		}
+
+		.lead-dialog h2 {
+			font-size: 1.75rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.lead-dialog[open] {
+			animation: none;
+		}
+
+		.lead-dialog-close,
+		.lead-field input,
+		.lead-submit {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	import { createSubmissionGate } from "../../lib/lead-client";
+	import { LEAD_CANONICAL_PAGE } from "../../lib/leads";
+
+	const DRAFT_KEY = "otb-lead-draft-v1";
+	const CLIENT_TIMEOUT_MS = 25_000;
+	const UUID_V4_PATTERN =
+		/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+	interface LeadDraft {
+		leadId: string;
+		startedAt: number;
+		name: string;
+		email: string;
+		whatsapp: string;
+	}
+
+	const createUuid = () => {
+		if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+		const bytes = crypto.getRandomValues(new Uint8Array(16));
+		bytes[6] = (bytes[6] & 0x0f) | 0x40;
+		bytes[8] = (bytes[8] & 0x3f) | 0x80;
+		const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
+		return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex.slice(6, 8).join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
+	};
+
+	const readDraft = (): LeadDraft | null => {
+		try {
+			const raw = sessionStorage.getItem(DRAFT_KEY);
+			if (!raw) return null;
+			const value = JSON.parse(raw) as Partial<LeadDraft>;
+			if (
+				typeof value.leadId !== "string" ||
+				!UUID_V4_PATTERN.test(value.leadId) ||
+				typeof value.startedAt !== "number" ||
+				!Number.isInteger(value.startedAt) ||
+				typeof value.name !== "string" ||
+				typeof value.email !== "string" ||
+				typeof value.whatsapp !== "string"
+			) {
+				return null;
+			}
+			return value as LeadDraft;
+		} catch {
+			return null;
+		}
+	};
+
+	const writeDraft = (draft: LeadDraft) => {
+		try {
+			sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+		} catch {
+			// A blocked storage API must not break the form.
+		}
+	};
+
+	const clearDraft = () => {
+		try {
+			sessionStorage.removeItem(DRAFT_KEY);
+		} catch {
+			// Success is already acknowledged; navigation may proceed.
+		}
+	};
+
+	const initLeadForm = () => {
+		const dialog = document.querySelector<HTMLDialogElement>("[data-lead-dialog]");
+		const form = dialog?.querySelector<HTMLFormElement>("[data-lead-form]");
+		const nameInput = form?.elements.namedItem("nome_completo");
+		const emailInput = form?.elements.namedItem("email");
+		const whatsappInput = form?.elements.namedItem("whatsapp");
+		const honeypotInput = form?.elements.namedItem("empresa");
+		const consentInput = form?.elements.namedItem("consentimento");
+		const submitButton = form?.querySelector<HTMLButtonElement>("[data-lead-submit]");
+		const submitText = submitButton?.querySelector<HTMLElement>("[data-lead-submit-text]");
+		const closeButton = dialog?.querySelector<HTMLButtonElement>("[data-lead-close]");
+		const status = dialog?.querySelector<HTMLElement>("[data-lead-status]");
+		const statusText = status?.querySelector<HTMLElement>("[data-lead-status-text]");
+		const triggers = document.querySelectorAll<HTMLButtonElement>("[data-lead-cta]");
+
+		if (
+			!dialog ||
+			!form ||
+			!(nameInput instanceof HTMLInputElement) ||
+			!(emailInput instanceof HTMLInputElement) ||
+			!(whatsappInput instanceof HTMLInputElement) ||
+			!(honeypotInput instanceof HTMLInputElement) ||
+			!(consentInput instanceof HTMLInputElement) ||
+			!submitButton ||
+			!submitText ||
+			!closeButton ||
+			!status ||
+			!statusText ||
+			!triggers.length ||
+			typeof dialog.showModal !== "function"
+		) {
+			return;
+		}
+
+		const gate = createSubmissionGate();
+		let draft = readDraft();
+		let destinationUrl = "";
+		let ctaOrigin = "";
+		let lastTrigger: HTMLButtonElement | null = null;
+		let activeController: AbortController | null = null;
+		const submitLabel = dialog.dataset.submitLabel ?? "";
+		const pendingLabel = dialog.dataset.pendingLabel ?? "";
+		const validationError = dialog.dataset.validationError ?? "";
+		const genericError = dialog.dataset.genericError ?? "";
+
+		const ensureDraft = () => {
+			if (!draft) {
+				draft = {
+					leadId: createUuid(),
+					startedAt: Date.now(),
+					name: "",
+					email: "",
+					whatsapp: "",
+				};
+			}
+			return draft;
+		};
+
+		const persistInputs = () => {
+			const current = ensureDraft();
+			current.name = nameInput.value;
+			current.email = emailInput.value;
+			current.whatsapp = whatsappInput.value;
+			writeDraft(current);
+		};
+
+		const setPending = (pending: boolean) => {
+			submitButton.disabled = pending;
+			form.setAttribute("aria-busy", String(pending));
+			submitText.textContent = pending ? pendingLabel : submitLabel;
+		};
+
+		const hideStatus = () => {
+			status.hidden = true;
+			statusText.textContent = "";
+		};
+
+		const showStatus = (message: string) => {
+			statusText.textContent = message;
+			status.hidden = false;
+		};
+
+		const openForm = (trigger: HTMLButtonElement) => {
+			const nextDestination = trigger.dataset.whatsappUrl ?? "";
+			const nextOrigin = trigger.dataset.leadCta ?? "";
+			if (!nextDestination || !nextOrigin) return;
+
+			const current = ensureDraft();
+			nameInput.value = current.name;
+			emailInput.value = current.email;
+			whatsappInput.value = current.whatsapp;
+			consentInput.checked = false;
+			honeypotInput.value = "";
+			destinationUrl = nextDestination;
+			ctaOrigin = nextOrigin;
+			lastTrigger = trigger;
+			hideStatus();
+			dialog.showModal();
+			document.documentElement.classList.add("lead-dialog-open");
+			requestAnimationFrame(() => nameInput.focus());
+		};
+
+		triggers.forEach((trigger) => {
+			trigger.addEventListener("click", () => openForm(trigger));
+		});
+
+		[nameInput, emailInput, whatsappInput].forEach((input) => {
+			input.addEventListener("input", () => {
+				input.removeAttribute("aria-invalid");
+				persistInputs();
+			});
+			input.addEventListener("invalid", () => {
+				input.setAttribute("aria-invalid", "true");
+			});
+		});
+
+		closeButton.addEventListener("click", () => dialog.close());
+		dialog.addEventListener("click", (event) => {
+			if (event.target === dialog) dialog.close();
+		});
+		dialog.addEventListener("close", () => {
+			activeController?.abort();
+			activeController = null;
+			gate.finish();
+			setPending(false);
+			consentInput.checked = false;
+			document.documentElement.classList.remove("lead-dialog-open");
+			lastTrigger?.focus();
+		});
+
+		form.addEventListener("submit", async (event) => {
+			event.preventDefault();
+			hideStatus();
+			if (!form.checkValidity()) {
+				showStatus(validationError);
+				form.reportValidity();
+				return;
+			}
+			if (!gate.tryStart()) return;
+
+			persistInputs();
+			const current = ensureDraft();
+			const query = new URLSearchParams(window.location.search);
+			const utm = (key: string) => (query.get(key) ?? "").slice(0, 100);
+			activeController = new AbortController();
+			const timeout = window.setTimeout(
+				() => activeController?.abort(),
+				CLIENT_TIMEOUT_MS,
+			);
+			setPending(true);
+
+			try {
+				const response = await fetch("/api/leads", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					credentials: "same-origin",
+					signal: activeController.signal,
+					body: JSON.stringify({
+						lead_id: current.leadId,
+						nome_completo: nameInput.value,
+						email: emailInput.value,
+						whatsapp: whatsappInput.value,
+						cta_origem: ctaOrigin,
+						pagina: LEAD_CANONICAL_PAGE,
+						utm_source: utm("utm_source"),
+						utm_medium: utm("utm_medium"),
+						utm_campaign: utm("utm_campaign"),
+						utm_content: utm("utm_content"),
+						utm_term: utm("utm_term"),
+						consentimento: consentInput.checked,
+						consentimento_versao: form.dataset.consentVersion ?? "",
+						empresa: honeypotInput.value,
+						form_started_at: current.startedAt,
+					}),
+				});
+				const acknowledgement = (await response.json()) as {
+					ok?: unknown;
+					leadId?: unknown;
+				};
+				if (
+					!response.ok ||
+					acknowledgement.ok !== true ||
+					acknowledgement.leadId !== current.leadId ||
+					!destinationUrl
+				) {
+					throw new Error("invalid_acknowledgement");
+				}
+				clearDraft();
+				consentInput.checked = false;
+				window.location.assign(destinationUrl);
+			} catch {
+				if (dialog.open) showStatus(genericError);
+			} finally {
+				window.clearTimeout(timeout);
+				activeController = null;
+				gate.finish();
+				setPending(false);
+			}
+		});
+	};
+
+	try {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initLeadForm, { once: true });
+		} else {
+			initLeadForm();
+		}
+	} catch {
+		// The seven CTA buttons fail closed and never bypass lead capture.
+	}
+</script>

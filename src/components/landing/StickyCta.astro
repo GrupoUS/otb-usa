@@ -46,15 +46,15 @@ const hasCheckout = Boolean(checkoutUrl);
 
 		{hasCheckout && checkoutUrl ? (
 			<span class="flex shrink-0 items-center gap-2">
-				<a
-					href={whatsappHref}
-					target="_blank"
-					rel="noopener noreferrer"
+				<button
+					type="button"
+					data-lead-cta="sticky_mobile"
+					data-whatsapp-url={whatsappHref}
 					class="inline-flex min-h-11 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] px-4 text-sm font-medium text-text-primary"
 					aria-label={`${label} no WhatsApp`}
 				>
 					<Icon name="message-circle" size={18} strokeWidth={2.25} />
-				</a>
+				</button>
 				<a
 					href={checkoutUrl}
 					target="_blank"
@@ -66,16 +66,16 @@ const hasCheckout = Boolean(checkoutUrl);
 				</a>
 			</span>
 		) : (
-			<a
-				href={whatsappHref}
-				target="_blank"
-				rel="noopener noreferrer"
+			<button
+				type="button"
+				data-lead-cta="sticky_mobile"
+				data-whatsapp-url={whatsappHref}
 				class="inline-flex min-h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 rounded-full bg-gold px-5 text-sm font-semibold text-navy"
 				aria-label={`${label} no WhatsApp`}
 			>
 				<Icon name="message-circle" size={18} strokeWidth={2.25} />
 				{label}
-			</a>
+			</button>
 		)}
 	</div>
 </div>

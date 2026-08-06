@@ -509,6 +509,42 @@
 		"contatoLabel": "Falar no WhatsApp"
 	},
 
+	"leadForm": {
+		"eyebrow": "Atendimento personalizado",
+		"title": "Antes de falar com a Laura",
+		"description": "Preencha seus dados para que a Laura continue seu atendimento sobre o OTB.",
+		"closeLabel": "Fechar formulário",
+		"requiredHint": "Todos os campos são obrigatórios.",
+		"fields": {
+			"name": {
+				"label": "Nome completo",
+				"placeholder": "Seu nome completo",
+				"help": "Informe nome e sobrenome."
+			},
+			"email": {
+				"label": "E-mail",
+				"placeholder": "voce@exemplo.com",
+				"help": "Use um endereço de e-mail válido."
+			},
+			"whatsapp": {
+				"label": "WhatsApp",
+				"placeholder": "+55 (62) 99999-9999",
+				"help": "Inclua DDD e, se estiver fora do Brasil, o código do país."
+			}
+		},
+		"consent": {
+			"prefix": "Autorizo o Grupo US a usar meus dados para responder sobre o OTB, conforme a ",
+			"linkLabel": "Política de Privacidade",
+			"suffix": ".",
+			"privacyUrl": "https://www.gpus.com.br/politica-de-privacidade"
+		},
+		"submitLabel": "Continuar para o WhatsApp",
+		"pendingLabel": "Registrando seus dados...",
+		"validationError": "Revise os campos obrigatórios antes de continuar.",
+		"genericError": "Não foi possível registrar seus dados agora. Revise as informações e tente novamente.",
+		"version": "otb-lead-v1"
+	},
+
 	"legal": {
 		"disclaimer": "Programa oferecido pelo Grupo US. A imersão internacional acontece em Boston, Estados Unidos, em espaços contratados para o evento — o OTB não possui vínculo, patrocínio, endosso ou certificação por instituições de ensino locais. Certificações: MBA emitido em parceria com o Instituto IESA / Grupo US; certificado de prática anatômica Fresh Specimens pela Anatomy Society of America (ASA). O 'Anatomy Review com Mike' é conduzido por correspondente americano — a referência descreve o perfil profissional do palestrante. Cada profissional deve respeitar a regulamentação do seu respectivo conselho de classe.",
 		"creditosImagens": "Imagens: acervo OTB / Grupo US (edições anteriores em Boston) e bancos de imagens autorizados."

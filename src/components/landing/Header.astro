@@ -77,17 +77,17 @@ const ctaHref = whatsappUrlWithText(whatsappMessage);
 			second gold primary next to the hero CTA — one primary per view.
 			`visibility` keeps it out of the tab order while hidden.
 		*/}
-		<a
-			href={ctaHref}
-			target="_blank"
-			rel="noopener noreferrer"
+		<button
+			type="button"
+			data-lead-cta="header_desktop"
+			data-whatsapp-url={ctaHref}
 			data-header-cta
 			class="hidden shrink-0 items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-navy transition-transform duration-200 hover:scale-[1.03] focus-visible:scale-[1.03] lg:inline-flex"
 			aria-label={`${header.ctaLabel} no WhatsApp`}
 		>
 			<Icon name="message-circle" size={16} strokeWidth={2.25} />
 			{header.ctaLabel}
-		</a>
+		</button>
 	</div>
 </header>
 

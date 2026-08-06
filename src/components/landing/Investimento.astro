@@ -207,22 +207,22 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 										class="transition-transform duration-300 group-hover:translate-x-1"
 									/>
 								</a>
-								<a
-									href={ctaHref}
-									target="_blank"
-									rel="noopener noreferrer"
+								<button
+									type="button"
+									data-lead-cta="investimento"
+									data-whatsapp-url={ctaHref}
 									class="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_45%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
 									aria-label={`${investimento.cta.label} — atendimento consultivo`}
 								>
 									<Icon name="message-circle" size={18} strokeWidth={2.25} />
 									<span>{investimento.cta.label}</span>
-								</a>
+								</button>
 							</>
 						) : (
-							<a
-								href={ctaHref}
-								target="_blank"
-								rel="noopener noreferrer"
+							<button
+								type="button"
+								data-lead-cta="investimento"
+								data-whatsapp-url={ctaHref}
 								class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
 								aria-label={`${investimento.cta.label} no WhatsApp`}
 							>
@@ -234,7 +234,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 									strokeWidth={2.25}
 									class="transition-transform duration-300 group-hover:translate-x-1"
 								/>
-							</a>
+							</button>
 						)}
 					</div>
 				</div>

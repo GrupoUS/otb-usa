@@ -66,16 +66,16 @@ const currentYear = new Date().getFullYear();
 					<p class="mt-5 text-meta text-text-secondary">
 						{footer.contatoTexto}
 					</p>
-					<a
-						href={whatsappHref}
-						target="_blank"
-						rel="noopener noreferrer"
+					<button
+						type="button"
+						data-lead-cta="footer"
+						data-whatsapp-url={whatsappHref}
 						class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
 						aria-label={`${footer.contatoLabel} com Laura`}
 					>
 						<Icon name="message-circle" size={14} strokeWidth={2.25} />
 						{footer.contatoLabel}
-					</a>
+					</button>
 				</div>
 			)}
 		</div>

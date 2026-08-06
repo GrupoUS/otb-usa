@@ -88,21 +88,21 @@ const hasCheckout = Boolean(finalCta.cta.checkoutUrl);
 							class="transition-transform duration-300 group-hover:translate-x-1"
 						/>
 					</a>
-					<a
-						href={whatsappHref}
-						target="_blank"
-						rel="noopener noreferrer"
+					<button
+						type="button"
+						data-lead-cta="cta_final"
+						data-whatsapp-url={whatsappHref}
 						class="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold sm:w-auto"
 					>
 						<Icon name="message-circle" size={18} strokeWidth={2.25} />
 						<span>{finalCta.cta.label}</span>
-					</a>
+					</button>
 				</>
 			) : (
-				<a
-					href={whatsappHref}
-					target="_blank"
-					rel="noopener noreferrer"
+				<button
+					type="button"
+					data-lead-cta="cta_final"
+					data-whatsapp-url={whatsappHref}
 					class="group inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03] sm:w-auto"
 					aria-label={`${finalCta.cta.label}`}
 				>
@@ -114,7 +114,7 @@ const hasCheckout = Boolean(finalCta.cta.checkoutUrl);
 						strokeWidth={2.25}
 						class="transition-transform duration-300 group-hover:translate-x-1"
 					/>
-				</a>
+				</button>
 			)}
 
 			{/* In-page escape hatch for the reader who is not ready to message yet:

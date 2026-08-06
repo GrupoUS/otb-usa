@@ -8,6 +8,7 @@ import Footer from "../components/landing/Footer.astro";
 import Header from "../components/landing/Header.astro";
 import Hero from "../components/landing/Hero.astro";
 import Investimento from "../components/landing/Investimento.astro";
+import LeadFormDialog from "../components/landing/LeadFormDialog.astro";
 import Modulos from "../components/landing/Modulos.astro";
 import Parceiros from "../components/landing/Parceiros.astro";
 import Programa from "../components/landing/Programa.astro";
@@ -119,6 +120,7 @@ const breadcrumbJsonLd = {
 	{data.finalCta && <FinalCta finalCta={data.finalCta} />}
 
 	<Footer legal={data.legal} footer={data.footer} />
+	<LeadFormDialog leadForm={data.leadForm} />
 
 	<WhatsAppFloatingButton slot="floating" message={data.hero.cta.whatsappMessage} />
 
