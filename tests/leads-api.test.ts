@@ -5,7 +5,10 @@ import {
 	LEAD_CONSENT_VERSION,
 	LEAD_MIN_FILL_MS,
 } from "../src/lib/leads";
-import { createSubmissionGate } from "../src/lib/lead-client";
+import {
+	createSubmissionGate,
+	isCompleteLeadName,
+} from "../src/lib/lead-client";
 
 const NOW = Date.parse("2026-08-06T15:00:00.000Z");
 const SECRET = "local-test-secret-that-is-longer-than-thirty-two-characters";
@@ -284,6 +287,15 @@ describe("POST /api/leads", () => {
 			await createHandler({ fetchImpl, timeoutMs: 5 })(makeRequest()),
 			504,
 		);
+	});
+});
+
+describe("client full-name validation", () => {
+	it("uses the same normalized name-and-surname rule as the server", () => {
+		expect(isCompleteLeadName("Teste")).toBe(false);
+		expect(isCompleteLeadName("   Teste   ")).toBe(false);
+		expect(isCompleteLeadName("Teste Pessoa")).toBe(true);
+		expect(isCompleteLeadName("  Teste   Pessoa  ")).toBe(true);
 	});
 });
 

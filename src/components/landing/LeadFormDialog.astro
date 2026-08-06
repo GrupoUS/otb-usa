@@ -15,6 +15,7 @@ const { leadForm } = Astro.props;
 	data-submit-label={leadForm.submitLabel}
 	data-pending-label={leadForm.pendingLabel}
 	data-validation-error={leadForm.validationError}
+	data-name-error={leadForm.fields.name.help}
 	data-generic-error={leadForm.genericError}
 	aria-labelledby="lead-dialog-title"
 	aria-describedby="lead-dialog-description"
@@ -154,6 +155,7 @@ const { leadForm } = Astro.props;
 		width: min(44rem, calc(100vw - 2rem));
 		max-width: none;
 		max-height: min(90svh, 52rem);
+		margin: auto;
 		padding: 0;
 		border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
 		border-radius: 1.5rem;
@@ -427,7 +429,10 @@ const { leadForm } = Astro.props;
 </style>
 
 <script>
-	import { createSubmissionGate } from "../../lib/lead-client";
+	import {
+		createSubmissionGate,
+		isCompleteLeadName,
+	} from "../../lib/lead-client";
 	import { LEAD_CANONICAL_PAGE } from "../../lib/leads";
 
 	const DRAFT_KEY = "otb-lead-draft-v1";
@@ -533,6 +538,7 @@ const { leadForm } = Astro.props;
 		const submitLabel = dialog.dataset.submitLabel ?? "";
 		const pendingLabel = dialog.dataset.pendingLabel ?? "";
 		const validationError = dialog.dataset.validationError ?? "";
+		const nameValidationError = dialog.dataset.nameError ?? validationError;
 		const genericError = dialog.dataset.genericError ?? "";
 
 		const ensureDraft = () => {
@@ -579,6 +585,8 @@ const { leadForm } = Astro.props;
 
 			const current = ensureDraft();
 			nameInput.value = current.name;
+			nameInput.setCustomValidity("");
+			nameInput.removeAttribute("aria-invalid");
 			emailInput.value = current.email;
 			whatsappInput.value = current.whatsapp;
 			consentInput.checked = false;
@@ -598,6 +606,7 @@ const { leadForm } = Astro.props;
 
 		[nameInput, emailInput, whatsappInput].forEach((input) => {
 			input.addEventListener("input", () => {
+				if (input === nameInput) input.setCustomValidity("");
 				input.removeAttribute("aria-invalid");
 				persistInputs();
 			});
@@ -623,6 +632,15 @@ const { leadForm } = Astro.props;
 		form.addEventListener("submit", async (event) => {
 			event.preventDefault();
 			hideStatus();
+			if (!isCompleteLeadName(nameInput.value)) {
+				nameInput.setCustomValidity(nameValidationError);
+				nameInput.setAttribute("aria-invalid", "true");
+				showStatus(nameValidationError);
+				nameInput.focus();
+				nameInput.reportValidity();
+				return;
+			}
+			nameInput.setCustomValidity("");
 			if (!form.checkValidity()) {
 				showStatus(validationError);
 				form.reportValidity();

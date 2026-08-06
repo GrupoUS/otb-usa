@@ -111,7 +111,7 @@ function normalizedString(value: unknown, maxLength: number): string | null {
 	return normalized;
 }
 
-function normalizeName(value: unknown): string | null {
+export function normalizeLeadName(value: unknown): string | null {
 	const name = normalizedString(value, 120);
 	if (!name || name.length < 3 || name.split(" ").length < 2) return null;
 	return name;
@@ -150,7 +150,7 @@ export function validateLeadSubmission(
 	if (!Number.isFinite(nowMs)) return { ok: false };
 
 	const leadId = typeof value.lead_id === "string" ? value.lead_id : "";
-	const name = normalizeName(value.nome_completo);
+	const name = normalizeLeadName(value.nome_completo);
 	const email = normalizeEmail(value.email);
 	const whatsapp = normalizeLeadPhone(value.whatsapp);
 	const ctaOrigin =

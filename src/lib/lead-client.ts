@@ -1,3 +1,9 @@
+import { normalizeLeadName } from "./leads";
+
+export function isCompleteLeadName(value: string): boolean {
+	return normalizeLeadName(value) !== null;
+}
+
 export interface SubmissionGate {
 	tryStart(): boolean;
 	finish(): void;
