@@ -702,7 +702,13 @@ const { leadForm } = Astro.props;
 					throw new Error("invalid_acknowledgement");
 				}
 				window.dataLayer = window.dataLayer || [];
-				window.dataLayer.push({ event: "lead_submit" });
+				window.dataLayer.push({
+					event: "lead_submit",
+					lead_id: current.leadId,
+					lead_name: nameInput.value,
+					lead_email: emailInput.value,
+					lead_phone: whatsappInput.value,
+				});
 				clearDraft();
 				consentInput.checked = false;
 				window.location.assign(destinationUrl);
