@@ -1,0 +1,217 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+	title="Cadastro recebido | OTB Estados Unidos"
+	description="Seu cadastro foi recebido. Você será redirecionado para continuar o atendimento pelo WhatsApp."
+>
+	<section class="redirect-page" aria-labelledby="redirect-title">
+		<div class="redirect-card">
+			<div class="redirect-status" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="32" height="32" fill="none">
+					<path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</div>
+			<p class="redirect-eyebrow">OTB Estados Unidos</p>
+			<h1 id="redirect-title">Cadastro recebido!</h1>
+			<p class="redirect-message">Redirecionando para o WhatsApp…</p>
+			<a id="wa-fallback" class="wa-fallback" href="/" hidden>
+				Ir para o WhatsApp agora
+			</a>
+			<p class="redirect-help">Se preferir, use o botão acima para continuar imediatamente.</p>
+		</div>
+	</section>
+
+	<script is:inline>
+		(() => {
+			const storageKey = "otb_lead";
+			const uuidV4Pattern =
+				/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+			const returnHome = () => window.location.replace("/");
+			const hasText = (value) => typeof value === "string" && value.trim().length > 0;
+			let raw;
+
+			try {
+				raw = sessionStorage.getItem(storageKey);
+			} catch {
+				returnHome();
+				return;
+			}
+
+			if (!raw) {
+				returnHome();
+				return;
+			}
+
+			let lead;
+			try {
+				lead = JSON.parse(raw);
+			} catch {
+				try {
+					sessionStorage.removeItem(storageKey);
+				} catch {}
+				returnHome();
+				return;
+			}
+
+			let whatsappUrl;
+			try {
+				const parsedWhatsappUrl = new URL(lead?.wa_url);
+				if (
+					parsedWhatsappUrl.protocol !== "https:" ||
+					!["wa.me", "api.whatsapp.com"].includes(parsedWhatsappUrl.hostname)
+				) {
+					throw new Error("invalid_whatsapp_url");
+				}
+				whatsappUrl = lead.wa_url;
+			} catch {
+				try {
+					sessionStorage.removeItem(storageKey);
+				} catch {}
+				returnHome();
+				return;
+			}
+
+			if (
+				!uuidV4Pattern.test(lead.lead_id) ||
+				!hasText(lead.lead_name) ||
+				!hasText(lead.lead_email) ||
+				!hasText(lead.lead_phone)
+			) {
+				try {
+					sessionStorage.removeItem(storageKey);
+				} catch {}
+				returnHome();
+				return;
+			}
+
+			try {
+				sessionStorage.removeItem(storageKey);
+			} catch {
+				returnHome();
+				return;
+			}
+
+			const fallback = document.querySelector("#wa-fallback");
+			if (!(fallback instanceof HTMLAnchorElement)) {
+				returnHome();
+				return;
+			}
+			fallback.href = whatsappUrl;
+			fallback.hidden = false;
+
+			window.dataLayer = window.dataLayer || [];
+			window.dataLayer.push({
+				event: "lead_submit",
+				lead_id: lead.lead_id,
+				lead_name: lead.lead_name,
+				lead_email: lead.lead_email,
+				lead_phone: lead.lead_phone,
+			});
+
+			setTimeout(() => window.location.assign(whatsappUrl), 2000);
+		})();
+	</script>
+</Layout>
+
+<style>
+	.redirect-page {
+		display: grid;
+		min-height: 100svh;
+		place-items: center;
+		padding: clamp(2rem, 8vw, 6rem) 1rem;
+		background:
+			radial-gradient(circle at top, color-mix(in srgb, var(--color-gold) 12%, transparent), transparent 44%),
+			var(--color-navy);
+	}
+
+	.redirect-card {
+		width: min(100%, 38rem);
+		padding: clamp(2rem, 7vw, 4rem);
+		border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+		border-radius: 1.5rem;
+		background: color-mix(in srgb, var(--color-navy-deep) 92%, transparent);
+		box-shadow: var(--shadow-lift);
+		text-align: center;
+	}
+
+	.redirect-status {
+		display: inline-grid;
+		width: 4.5rem;
+		height: 4.5rem;
+		place-items: center;
+		border: 1px solid color-mix(in srgb, var(--color-gold) 55%, transparent);
+		border-radius: 9999px;
+		background: color-mix(in srgb, var(--color-gold) 12%, transparent);
+		color: var(--color-gold-light);
+		box-shadow: var(--shadow-halo-gold);
+	}
+
+	.redirect-eyebrow {
+		margin: 1.5rem 0 0;
+		font-size: var(--text-kicker);
+		font-weight: 600;
+		letter-spacing: var(--tracking-kicker);
+		text-transform: uppercase;
+		color: var(--color-gold);
+	}
+
+	.redirect-card h1 {
+		margin: 0.75rem 0 0;
+		font-family: var(--font-display);
+		font-size: clamp(2rem, 8vw, 3.5rem);
+		line-height: 1.05;
+		letter-spacing: -0.04em;
+	}
+
+	.redirect-message {
+		margin: 1rem auto 0;
+		font-size: var(--text-body);
+		line-height: 1.6;
+		color: var(--color-text-secondary);
+	}
+
+	.wa-fallback {
+		display: inline-flex;
+		min-height: 3.25rem;
+		align-items: center;
+		justify-content: center;
+		margin-top: 1.75rem;
+		padding: 0.75rem 1.5rem;
+		border-radius: 9999px;
+		background: var(--color-gold);
+		color: var(--color-navy);
+		font-weight: 700;
+		text-decoration: none;
+		box-shadow: var(--shadow-halo-gold);
+		transition: background-color 160ms ease, transform 160ms ease;
+	}
+
+	.wa-fallback[hidden] {
+		display: none;
+	}
+
+	.wa-fallback:hover {
+		background: var(--color-gold-light);
+		transform: scale(1.02);
+	}
+
+	.wa-fallback:focus-visible {
+		outline: 2px solid var(--color-text-primary);
+		outline-offset: 4px;
+	}
+
+	.redirect-help {
+		margin: 1rem 0 0;
+		font-size: var(--text-meta);
+		line-height: 1.5;
+		color: var(--color-text-muted);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wa-fallback {
+			transition: none;
+		}
+	}
+</style>

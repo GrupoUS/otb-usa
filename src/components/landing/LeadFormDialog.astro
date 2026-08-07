@@ -435,13 +435,9 @@ const { leadForm } = Astro.props;
 	} from "../../lib/lead-client";
 	import { LEAD_CANONICAL_PAGE } from "../../lib/leads";
 
-	declare global {
-		interface Window {
-			dataLayer?: unknown[];
-		}
-	}
-
 	const DRAFT_KEY = "otb-lead-draft-v1";
+	// Hand-off payload read (and immediately erased) by /redirecionando.
+	const HANDOFF_KEY = "otb_lead";
 	const CLIENT_TIMEOUT_MS = 25_000;
 	const UUID_V4_PATTERN =
 		/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -701,24 +697,27 @@ const { leadForm } = Astro.props;
 				) {
 					throw new Error("invalid_acknowledgement");
 				}
-				let hasRedirected = false;
-				const redirectToWhatsApp = () => {
-					if (hasRedirected) return;
-					hasRedirected = true;
+				try {
+					sessionStorage.setItem(
+						HANDOFF_KEY,
+						JSON.stringify({
+							lead_id: current.leadId,
+							lead_name: nameInput.value,
+							lead_email: emailInput.value,
+							lead_phone: whatsappInput.value,
+							wa_url: destinationUrl,
+						}),
+					);
+				} catch {
+					// Lead already accepted: skip the hand-off page instead of failing.
+					clearDraft();
+					consentInput.checked = false;
 					window.location.assign(destinationUrl);
-				};
-				window.dataLayer = window.dataLayer || [];
-				window.dataLayer.push({
-					event: "lead_submit",
-					lead_id: current.leadId,
-					lead_name: nameInput.value,
-					lead_email: emailInput.value,
-					lead_phone: whatsappInput.value,
-					eventCallback: redirectToWhatsApp,
-					eventTimeout: 2000,
-				});
+					return;
+				}
 				clearDraft();
 				consentInput.checked = false;
+				window.location.assign("/redirecionando");
 			} catch {
 				if (dialog.open) showStatus(genericError);
 			} finally {
