@@ -701,6 +701,12 @@ const { leadForm } = Astro.props;
 				) {
 					throw new Error("invalid_acknowledgement");
 				}
+				let hasRedirected = false;
+				const redirectToWhatsApp = () => {
+					if (hasRedirected) return;
+					hasRedirected = true;
+					window.location.assign(destinationUrl);
+				};
 				window.dataLayer = window.dataLayer || [];
 				window.dataLayer.push({
 					event: "lead_submit",
@@ -708,10 +714,11 @@ const { leadForm } = Astro.props;
 					lead_name: nameInput.value,
 					lead_email: emailInput.value,
 					lead_phone: whatsappInput.value,
+					eventCallback: redirectToWhatsApp,
+					eventTimeout: 2000,
 				});
 				clearDraft();
 				consentInput.checked = false;
-				window.location.assign(destinationUrl);
 			} catch {
 				if (dialog.open) showStatus(genericError);
 			} finally {
