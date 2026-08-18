@@ -290,12 +290,19 @@ o seu próprio listener de scroll.
 | `data-count` (+ `data-count-format="pt"`) | count-up ao entrar em viewport | Programa, Boston |
 | `data-parallax` + `data-speed` (+ `data-parallax-slack="<px>"`) | translada o wrapper contra o scroll; `slack` declara a folga quando a camada é decorativa e não tem overscan | Hero, Virada, Boston, Investimento, Aplicação |
 | `data-tilt` | escreve `--tilt-x/--tilt-y/--tilt-lift`; o `transform` vive no CSS | cards |
-| `data-marquee` + `data-marquee-dur` | duplica os filhos e roda `otb-marquee` infinito, pausa no hover | Certificações |
+| `data-marquee` + `data-marquee-dur` | duplica os filhos e roda `otb-marquee` infinito | Certificações |
+| `data-marquee-toggle` (+ `data-label-pause` / `data-label-resume`) | botão de pausa do marquee — **sem ele o runtime não anima** (WCAG 2.2.2: hover não é mecanismo para teclado nem toque) | Certificações |
 | `data-shine` | injeta `.cta-shine` sobre o CTA (nunca no markup — não entra na a11y tree) | CTAs primários |
 | `data-hpin` / `-vp` / `-track` / `-rail` / `-bar` | trilho horizontal fixado ≥900px; abaixo disso é carrossel `scroll-snap` | Boston |
 | `data-cd-target` + `data-cd="d\|h\|m\|s"` / `data-cd-mini` | contagem regressiva de 1s | Hero, Investimento, StickyCta |
+| `data-cd-wrap` | gate `.js` do bloco de contagem — o HTML estático traz `000`/`00`, que sem JS anunciaria um evento de 2027 como encerrado | Hero, Investimento, StickyCta |
 | `data-hero-fade` | opacidade/translate do conteúdo do hero conforme a dobra sai | Hero |
 | `data-scroll-progress`, `data-header`, `data-sticky-cta`, `data-float-wa` | chrome de leitura e de conversão | Layout, Header, StickyCta, WhatsApp |
+
+**Superfícies que só funcionam com JS não são renderizadas sem JS.** O formulário de `#inscricao` e os
+blocos de contagem existem apenas sob `html.js`; sem script o leitor recebe o link do WhatsApp no
+`<noscript>` em vez de um formulário que faria um GET nativo com nome, telefone e e-mail na barra de
+endereços.
 
 **Informação não é enfeite.** Sob `prefers-reduced-motion: reduce` o runtime desliga tudo que é
 decorativo (parallax, tilt, cascata, marquee, shine, fade, trilho fixado) e **mantém** o que carrega
