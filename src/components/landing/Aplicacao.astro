@@ -347,11 +347,17 @@ const labelClass =
 	const DRAFT_KEY = "otb-apply-draft-v1";
 	const CTA_ORIGIN = "aplicacao";
 
-	/** Progressive Brazilian mobile mask. Applied on input rather than on blur so
-	 *  the field reads as formatted while it is being typed; the server
-	 *  normalises to E.164 anyway, so the mask is presentation only. */
+	/** Progressive Brazilian mobile mask, applied while typing — the server
+	 *  normalises to E.164 anyway, so this is presentation only.
+	 *
+	 *  It deliberately gets out of the way for anything that is not a plain
+	 *  national number: the field's own help text invites a country code, and
+	 *  masking "+1 617 555 0134" into "(1) 61755-50134" would corrupt a valid
+	 *  number on its way to the SDR. */
 	const maskPhone = (value: string): string => {
-		const digits = value.replace(/\D/g, "").slice(0, 11);
+		if (value.trim().startsWith("+")) return value;
+		const digits = value.replace(/\D/g, "");
+		if (digits.length > 11) return value;
 		if (digits.length <= 2) return digits;
 		if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
 		if (digits.length <= 10)
