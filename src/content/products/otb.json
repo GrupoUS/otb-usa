@@ -16,6 +16,7 @@
 			{ "label": "Programa", "href": "#programa" },
 			{ "label": "Boston", "href": "#boston" },
 			{ "label": "Investimento", "href": "#investimento" },
+			{ "label": "Aplicação", "href": "#inscricao" },
 			{ "label": "FAQ", "href": "#faq" }
 		],
 		"ctaLabel": "Falar com Laura"
@@ -262,6 +263,14 @@
 		"background": {
 			"image": "/images/otb/gallery/pratica-1.jpg",
 			"alt": "Turma do OTB em sessão demonstrativa de anatomia aplicada em ambiente acadêmico em Boston, Estados Unidos."
+		},
+		"ctaCard": {
+			"kicker": "Depois dos três dias",
+			"texto": "Você volta com outra régua de decisão — e com um repertório internacional que o mercado brasileiro lê na hora.",
+			"cta": {
+				"label": "Quero os detalhes da imersão",
+				"whatsappMessage": "Olá, Laura! Quero entender a imersão de 3 dias em Boston do OTB."
+			}
 		}
 	},
 
@@ -502,6 +511,7 @@
 			{ "label": "Especialistas", "href": "#speakers" },
 			{ "label": "Investimento", "href": "#investimento" },
 			{ "label": "Parceiros", "href": "#parceiros" },
+			{ "label": "Aplicação", "href": "#inscricao" },
 			{ "label": "FAQ", "href": "#faq" }
 		],
 		"contatoTitulo": "Contato",
@@ -543,6 +553,109 @@
 		"validationError": "Revise os campos obrigatórios antes de continuar.",
 		"genericError": "Não foi possível registrar seus dados agora. Revise as informações e tente novamente.",
 		"version": "otb-lead-v1"
+	},
+
+	"virada": {
+		"kicker": "O ponto de virada",
+		"headline": "A técnica levou você até aqui.",
+		"highlight": "Ela não leva você além.",
+		"paragrafo": "Mais um curso técnico, mais uma agenda cheia — e a mesma sensação de teto. Em algum ponto o limite deixa de ser clínico e passa a ser de negócio, de posicionamento e de contexto.",
+		"quote": "O próximo salto não está em outra técnica. Está em ver o seu negócio de fora — em outro país, com outro padrão, ao lado de quem já opera nesse nível.",
+		"listaTitulo": "O que trava o próximo nível",
+		"lista": [
+			{
+				"titulo": "Agenda cheia, margem apertada",
+				"descricao": "Cresce o volume de atendimento, não o lucro da operação."
+			},
+			{
+				"titulo": "Autoridade que para na fronteira",
+				"descricao": "Reconhecida na cidade, invisível no mercado internacional."
+			},
+			{
+				"titulo": "Decisão por intuição",
+				"descricao": "Sem indicadores e sem método, cada escolha vira aposta."
+			},
+			{
+				"titulo": "Networking em círculo",
+				"descricao": "As mesmas conversas, os mesmos referenciais, o mesmo teto."
+			}
+		],
+		"background": {
+			"image": "/images/otb/gallery/aula-1.jpg",
+			"alt": "Turma do OTB em sessão executiva durante a imersão internacional."
+		}
+	},
+
+	"aplicacao": {
+		"kicker": "Aplicação",
+		"headline": "Dois minutos agora —",
+		"highlight": "uma conversa consultiva depois",
+		"descricao": "Preencha os campos e a Laura retoma no WhatsApp com as condições do lote ativo e a disponibilidade da turma.",
+		"passos": [
+			"Você envia — a mensagem abre pronta no seu WhatsApp.",
+			"Conversa consultiva de 15 minutos sobre o seu momento.",
+			"Confirmação de lote, condições de pagamento e vaga."
+		],
+		"formTitulo": "Formulário de aplicação",
+		"profissaoLabel": "Profissão",
+		"profissaoPlaceholder": "Selecione a sua profissão",
+		"profissoes": [
+			"Médico(a)",
+			"Odontólogo(a)",
+			"Biomédico(a)",
+			"Enfermeiro(a)",
+			"Fisioterapeuta",
+			"Farmacêutico(a)"
+		],
+		"momentoLabel": "Seu momento",
+		"momentoPlaceholder": "Selecione o seu momento",
+		"momentos": [
+			"Atendo em consultório próprio",
+			"Tenho clínica com equipe",
+			"Estou escalando a operação",
+			"Quero atuar no mercado internacional"
+		],
+		"submitLabel": "Enviar e falar com a Laura",
+		"microcopy": "Ao enviar, o WhatsApp abre com a sua mensagem pronta para a Laura.",
+		"whatsappPrefacio": "Olá, Laura! Quero aplicar para a 3ª Edição do OTB Estados Unidos (19–21 abr 2027, Boston).",
+		"sucesso": {
+			"titulo": "Sua mensagem está pronta",
+			"texto": "Abrimos o WhatsApp com os seus dados preenchidos para a Laura. Se a janela não abriu, use o botão abaixo.",
+			"ctaLabel": "Abrir conversa com a Laura",
+			"resetLabel": "Enviar outra aplicação"
+		}
+	},
+
+	"transparencia": [
+		{
+			"icone": "shield-check",
+			"titulo": "Programa do Grupo US",
+			"texto": "Sem vínculo, patrocínio ou endosso de instituições de ensino locais — a imersão acontece em espaços contratados para o evento."
+		},
+		{
+			"icone": "graduation-cap",
+			"titulo": "Duas certificações declaradas",
+			"texto": "MBA em parceria com o Instituto IESA / Grupo US e certificado ASA de prática em Fresh Specimens."
+		},
+		{
+			"icone": "message-circle",
+			"titulo": "Atendimento consultivo",
+			"texto": "A Laura avalia o seu momento antes de qualquer proposta — se não for a hora, ela diz."
+		}
+	],
+
+	"countdown": {
+		"target": "2027-04-19T09:00:00-04:00",
+		"heroKicker": "Contagem para Boston",
+		"investimentoKicker": "Faltam para a imersão",
+		"stickyPrefixo": "19–21 abr 2027 · Boston · faltam",
+		"unidades": {
+			"dias": "dias",
+			"horas": "horas",
+			"minutos": "min",
+			"segundos": "seg"
+		},
+		"ariaLabel": "Tempo restante para a imersão em Boston"
 	},
 
 	"legal": {

@@ -183,6 +183,16 @@ const products = defineCollection({
 				image: z.string(),
 				alt: z.string(),
 			}),
+			/** Fourth panel of the pinned rail: what the three days leave behind,
+			 *  plus the consultative CTA. Optional so the rail degrades to the
+			 *  three agenda days when it is absent. */
+			ctaCard: z
+				.object({
+					kicker: z.string(),
+					texto: z.string().min(40),
+					cta: ctaSchema,
+				})
+				.optional(),
 		}),
 
 		speakers: z.object({
@@ -353,6 +363,99 @@ const products = defineCollection({
 			genericError: z.string(),
 			version: z.literal("otb-lead-v1"),
 		}),
+
+		/** Section 01 — the tension that precedes the offer. Narrative only:
+		 *  no claim, no number, nothing that needs verification. */
+		virada: z
+			.object({
+				kicker: z.string(),
+				headline: z.string(),
+				highlight: z.string(),
+				paragrafo: z.string().min(80),
+				quote: z.string().min(60),
+				listaTitulo: z.string(),
+				lista: z
+					.array(
+						z.object({
+							titulo: z.string(),
+							descricao: z.string(),
+						}),
+					)
+					.length(4),
+				background: z.object({
+					image: z.string(),
+					alt: z.string(),
+				}),
+			})
+			.optional(),
+
+		/** Inline application section. Reuses `leadForm` for the field copy the
+		 *  two surfaces share; only what is specific to this section lives here.
+		 *  `profissoes` / `momentos` are qualification answers: they travel in the
+		 *  WhatsApp message, never in the lead payload. */
+		aplicacao: z
+			.object({
+				kicker: z.string(),
+				headline: z.string(),
+				highlight: z.string(),
+				descricao: z.string().min(60),
+				passos: z.array(z.string().min(20)).length(3),
+				formTitulo: z.string(),
+				profissaoLabel: z.string(),
+				profissaoPlaceholder: z.string(),
+				profissoes: z.array(z.string()).min(3).max(10),
+				momentoLabel: z.string(),
+				momentoPlaceholder: z.string(),
+				momentos: z.array(z.string()).min(3).max(6),
+				submitLabel: z.string(),
+				microcopy: z.string().min(40),
+				whatsappPrefacio: z
+					.string()
+					.refine((m) => m.startsWith("Olá, Laura!"), {
+						message:
+							"WhatsApp message must start with 'Olá, Laura!' (SDR SSOT).",
+					}),
+				sucesso: z.object({
+					titulo: z.string(),
+					texto: z.string().min(40),
+					ctaLabel: z.string(),
+					resetLabel: z.string(),
+				}),
+			})
+			.optional(),
+
+		/** Disclosure bar. Every line here is a compliance statement — edit it
+		 *  with the same care as `legal.disclaimer`. */
+		transparencia: z
+			.array(
+				z.object({
+					icone: z.string(),
+					titulo: z.string(),
+					texto: z.string().min(40),
+				}),
+			)
+			.length(3)
+			.optional(),
+
+		/** Live countdown to the immersion. `target` is an ISO instant WITH the
+		 *  Boston offset — the page is read from Brazil, so a bare date would be
+		 *  off by an hour twice a year. The only sanctioned urgency device
+		 *  alongside the active lote (PRODUCT.md § urgency). */
+		countdown: z
+			.object({
+				target: z.iso.datetime({ offset: true }),
+				heroKicker: z.string(),
+				investimentoKicker: z.string(),
+				stickyPrefixo: z.string(),
+				unidades: z.object({
+					dias: z.string(),
+					horas: z.string(),
+					minutos: z.string(),
+					segundos: z.string(),
+				}),
+				ariaLabel: z.string(),
+			})
+			.optional(),
 
 		legal: z.object({
 			disclaimer: z.string().min(80),
