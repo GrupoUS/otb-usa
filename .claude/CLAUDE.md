@@ -53,7 +53,7 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 7. **NEVER hardcode hex** fora do bloco `@theme` em `src/styles/global.css` (exceção documentada: `<meta theme-color>` literal espelhando `--color-navy`). Usar tokens semânticos.
 8. **Motion livre e expressivo.** Animar qualquer propriedade é permitido (incl. `width`/`height`/`top`/`left`/`padding`/`margin`) e `transition: all` é permitido. Profundidade marcante, sombras dramáticas, glow e glass liberados — sem teto de gold. Preferir `transform`/`opacity` quando o efeito for equivalente (anima sem jank), mas não obrigatório. Único requisito: honrar `prefers-reduced-motion` (a11y). Reveal via `[data-reveal]` + IntersectionObserver (gate `.js`).
 9. **MAIN-ONLY branch workflow.** Sempre editar em `main`. Sem feature branches, sem force-push, sem auto-merge. Deploy/push só quando pedido.
-10. **Conversão WhatsApp-only + PII com cuidado.** Hoje não há formulário, endpoint nem banco (`lead.leadFlow: "whatsapp-only"`) — o único destino de conversão é o WhatsApp da SDR. Introduzir captura de lead = aprovação prévia e traz junto `<label>` reais, validação, estados de erro/sucesso acessíveis, consent LGPD + link de privacidade (rota inexistente hoje). IDs de tracking (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) vivem em env, nunca commitados; instrumentar = aprovação.
+10. **Conversão form → WhatsApp; PII com cuidado.** O fluxo é `lead.leadFlow: "form-then-whatsapp"`: as duas superfícies de captura (`LeadFormDialog.astro` modal + `Aplicacao.astro` inline) fazem `POST /api/leads` → Apps Script → planilha, gravam o hand-off em `sessionStorage` e passam por `/redirecionando`, que dispara `lead_submit` no GTM antes de abrir o WhatsApp da SDR. **Mudar o payload do lead** (campo novo, campo opcional) = mexer em `src/lib/leads.ts` + `api/leads.ts` + `integrations/google-apps-script/otb-leads/Code.js` + `tests/` na mesma mudança; se mexer em `LEAD_SHEET_HEADERS`, a planilha existente também precisa migrar. Todo campo novo carrega `<label>` real, validação, erro acessível e consent LGPD. Segredos e IDs de tracking vivem em env; instrumentar tracking novo = aprovação.
 
 ---
 
@@ -66,7 +66,9 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 | Seção da landing | `frontend.md` + `DESIGN.md` + `astro` + `gpus-theme` | `src/components/landing/*.astro` |
 | Design de seção/página (chain completo) | `impeccable` (4.x) + `gpus-theme` + `ui-ux-pro-max` | `/design`, `/design-improve`, `/design-fix` |
 | UX de conversão / objeção / oferta | `uxmaster` + `grupo-us` | `${content.productJson}` + seção correspondente |
-| Tracking GA4/Pixel/consent (não instrumentado hoje) | `seo.md` + `performance-optimization` | `src/layouts/Layout.astro` + env (aprovação) |
+| Tracking GA4/Pixel/GTM/consent | `seo.md` + `performance-optimization` | GTM inline em `src/layouts/Layout.astro`; evento de conversão em `src/pages/redirecionando.astro` (mudança = aprovação) |
+| Captura de lead / payload / planilha | `frontend.md` + `stability.md` | `src/lib/leads.ts` + `src/lib/lead-client.ts` + `api/leads.ts` + Apps Script + `tests/` numa só mudança |
+| Motion (reveal, parallax, marquee, countdown, trilho fixado) | `DESIGN.md § 9` | `src/scripts/motion.ts` (runtime único) + `global.css`; nunca um listener de scroll novo num componente |
 | React island / floating UI | `astro` + `frontend.md` | `.tsx`/`.astro` só quando interatividade provada; preferir Astro puro |
 | Content schema | `astro/references/content-collections.md` | `src/content.config.ts` + JSON em uma mudança |
 | SEO meta / JSON-LD / canonical | `seo.md` + `astro` | `src/layouts/Layout.astro`, `src/pages/index.astro`, `astro.config.mjs` |

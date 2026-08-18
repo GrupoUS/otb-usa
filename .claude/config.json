@@ -4,7 +4,7 @@
     "name": "otb-usa",
     "displayName": "OTB Estados Unidos — Grupo US",
     "parentBrand": "Grupo US · Dra. Sacha Gualberto",
-    "purpose": "Landing estática de captação para o OTB — MBA em Business Aesthetic Health com imersão internacional em Boston (3ª edição, 19 a 21 de abril de 2027). Conversão via WhatsApp SDR, sem formulário.",
+    "purpose": "Landing estática de captação para o OTB — MBA em Business Aesthetic Health com imersão internacional em Boston (3ª edição, 19 a 21 de abril de 2027). Captura de lead (modal + seção de aplicação) → /api/leads → evento lead_submit → WhatsApp da SDR.",
     "stack": "astro-static-tailwindv4",
     "stagingUrl": "http://localhost:4321",
     "productionUrl": "https://otb.gpus.com.br",
@@ -17,6 +17,7 @@
     "ogImage": "/og/otb-default.jpg",
     "anchors": [
       "#topo",
+      "#virada",
       "#por-que-otb",
       "#publico",
       "#programa",
@@ -25,6 +26,7 @@
       "#boston",
       "#speakers",
       "#investimento",
+      "#inscricao",
       "#parceiros",
       "#faq"
     ],
@@ -34,6 +36,7 @@
     },
     "sections": {
       "hero": "#topo",
+      "virada": "#virada",
       "why": "#por-que-otb",
       "audience": "#publico",
       "programa": "#programa",
@@ -42,11 +45,13 @@
       "boston": "#boston",
       "speakers": "#speakers",
       "investimento": "#investimento",
+      "aplicacao": "#inscricao",
       "parceiros": "#parceiros",
       "faq": "#faq"
     },
     "components": {
       "hero": "src/components/landing/Hero.astro",
+      "virada": "src/components/landing/Virada.astro",
       "why": "src/components/landing/WhyOTB.astro",
       "audience": "src/components/landing/TargetAudience.astro",
       "programa": "src/components/landing/Programa.astro",
@@ -55,26 +60,32 @@
       "boston": "src/components/landing/Boston.astro",
       "speakers": "src/components/landing/Speakers.astro",
       "investimento": "src/components/landing/Investimento.astro",
+      "aplicacao": "src/components/landing/Aplicacao.astro",
+      "transparencia": "src/components/landing/Transparencia.astro",
       "parceiros": "src/components/landing/Parceiros.astro",
       "faq": "src/components/landing/FAQ.astro",
       "footer": "src/components/landing/Footer.astro",
       "whatsappFloating": "src/components/landing/WhatsAppFloatingButton.astro",
+      "stickyCta": "src/components/landing/StickyCta.astro",
+      "motionRuntime": "src/scripts/motion.ts",
       "layout": "src/layouts/Layout.astro"
     }
   },
   "lead": {
-    "leadFlow": "whatsapp-only",
+    "leadFlow": "form-then-whatsapp",
     "sdrName": "Laura",
     "whatsappGreeting": "Olá, Laura!",
     "whatsappHelper": "src/lib/whatsapp.ts",
-    "formComponent": "",
-    "endpointEnv": "",
-    "leadTable": ""
+    "formComponent": "src/components/landing/LeadFormDialog.astro, src/components/landing/Aplicacao.astro",
+    "endpointEnv": "LEADS_WEBAPP_URL, LEADS_WEBAPP_SECRET (Vercel)",
+    "leadTable": "Google Sheets via integrations/google-apps-script/otb-leads"
   },
   "tracking": {
     "ga4Env": "PUBLIC_GA4_ID",
     "pixelEnv": "PUBLIC_FB_PIXEL_ID",
-    "wired": false
+    "gtmContainer": "GTM-MVQW6VLD (inline em src/layouts/Layout.astro)",
+    "conversionEvent": "lead_submit (src/pages/redirecionando.astro)",
+    "wired": true
   },
   "paths": {
     "backendRoot": "",

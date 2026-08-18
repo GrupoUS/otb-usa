@@ -157,7 +157,24 @@ Arquitetura ideal de landing high-ticket GPUS (ordem por jornada):
 11. **FAQ por objeção** — preço, tempo, elegibilidade, prática, certificado, suporte.
 12. **CTA final + WhatsApp contextual.**
 
-**Ordem implementada hoje** (`src/pages/index.astro`): Hero → WhyOTB → TargetAudience → Programa → Turmas → Modulos → BostonHarvard → Speakers → Investimento → Parceiros → FAQ → Footer, com `WhatsAppFloatingButton` persistente.
+**Ordem implementada hoje** (`src/pages/index.astro`), com as plaquetas numeradas em `SectionHeader`:
+
+Hero → Certificações → **01 Virada** → 02 WhyOTB → 03 TargetAudience → 04 Programa → 05 Turmas →
+06 Modulos → 07 Boston → 08 Speakers → 09 Investimento → **10 Aplicação** → Parceiros → 11 FAQ →
+**Transparência** → FinalCta → Footer, com `StickyCta` + `WhatsAppFloatingButton` persistentes.
+
+A numeração é **contígua**: quando uma seção numerada entra ou sai, renumerar as demais na mesma mudança
+(a plaqueta vem da prop `numeral` de `SectionHeader.astro`, não do conteúdo).
+
+**A seção 01 (Virada)** é a única que não fala do produto: nomeia o teto que o leitor já sente, para que
+tudo depois dela seja lido como resposta e não como pitch.
+
+**Urgência permitida** — só três dispositivos, nesta ordem de força:
+1. contagem regressiva para a data real da imersão (19 abr 2027, `countdown.target` no JSON);
+2. lote ativo e seu preço, vindos de `lotes[]`;
+3. "Lote 2 liberado por volume ou data" — a regra tal como está no JSON.
+
+Nunca inventar número de vagas, "últimas unidades" ou prazo que o JSON não confirme.
 
 **Fórmula de hero** — todo hero responde, em ≤5s: *para quem é? · que transformação entrega? · qual mecanismo torna diferente? · qual próximo passo? · por que confiar agora?*
 

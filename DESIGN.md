@@ -276,14 +276,45 @@ Padrões reutilizáveis para landings GPUS. Cada projeto implementa conforme nec
 - `transition: all` permitido.
 - Accordion / disclosure: `height`, CSS grid `0fr ↔ 1fr` ou `<details>` nativo — escolha do autor.
 
+### Contrato de atributos (implementado)
+
+Todo o movimento da landing é declarado em markup e executado por **um único runtime**,
+`src/scripts/motion.ts`, importado uma vez em `Layout.astro`. Ele registra **um** listener de `scroll`
+(`{passive:true}`) e drena as tarefas dentro de um `requestAnimationFrame`. Nenhum componente deve abrir
+o seu próprio listener de scroll.
+
+| Atributo | O que faz | Onde |
+|---|---|---|
+| `data-reveal="up\|left\|right\|scale\|mask\|wipe"` + `data-reveal-delay="1..10"` | reveal na entrada em viewport; `mask`/`wipe` usam `clip-path` (não movem o elemento) | CSS + IntersectionObserver em `Layout.astro` |
+| `data-enter="1..8"` | cascata no load, 700ms, delay `n × 0.06s`; pré-estado em CSS sob `.js`, classe `entered` aplicada **antes** de animar | Hero |
+| `data-count` (+ `data-count-format="pt"`) | count-up ao entrar em viewport | Programa, Boston |
+| `data-parallax` + `data-speed` (+ `data-parallax-slack="<px>"`) | translada o wrapper contra o scroll; `slack` declara a folga quando a camada é decorativa e não tem overscan | Hero, Virada, Boston, Investimento, Aplicação |
+| `data-tilt` | escreve `--tilt-x/--tilt-y/--tilt-lift`; o `transform` vive no CSS | cards |
+| `data-marquee` + `data-marquee-dur` | duplica os filhos e roda `otb-marquee` infinito, pausa no hover | Certificações |
+| `data-shine` | injeta `.cta-shine` sobre o CTA (nunca no markup — não entra na a11y tree) | CTAs primários |
+| `data-hpin` / `-vp` / `-track` / `-rail` / `-bar` | trilho horizontal fixado ≥900px; abaixo disso é carrossel `scroll-snap` | Boston |
+| `data-cd-target` + `data-cd="d\|h\|m\|s"` / `data-cd-mini` | contagem regressiva de 1s | Hero, Investimento, StickyCta |
+| `data-hero-fade` | opacidade/translate do conteúdo do hero conforme a dobra sai | Hero |
+| `data-scroll-progress`, `data-header`, `data-sticky-cta`, `data-float-wa` | chrome de leitura e de conversão | Layout, Header, StickyCta, WhatsApp |
+
+**Informação não é enfeite.** Sob `prefers-reduced-motion: reduce` o runtime desliga tudo que é
+decorativo (parallax, tilt, cascata, marquee, shine, fade, trilho fixado) e **mantém** o que carrega
+informação: barra de progresso, barra sticky e contagem regressiva. Cada fallback é o estado estático
+correto — marquee volta a ser linha que quebra, trilho volta a ser carrossel, reveals ficam visíveis.
+
 ### Padrões "dinâmico forte" (encorajados)
 - **Cascade orquestrado no hero** no page-load: eyebrow → headline → sub → chips → CTAs, stagger (~60ms). Ritmo coeso > microinterações espalhadas.
-- **Mouse-glow** radial (`[data-glow-card]` — implementado), **hover-lift** (`card-hover-lift` — implementado), gradiente/shimmer animado nos 1–2 headlines hero-level.
-- **3D tilt** e **scroll parallax** são permitidos e encorajados, mas **ainda não existem** neste projeto: implementar = criar a utility no `@theme`/`global.css` + o script de gate (`pointer:fine`, `prefers-reduced-motion`), não assumir que já está lá.
+- **Mouse-glow** radial (`[data-glow-card]`), **hover-lift** (`card-hover-lift`), gradiente/shimmer animado nos 1–2 headlines hero-level.
+- **3D tilt** (`[data-tilt]`) e **scroll parallax** (`[data-parallax]`) estão implementados e com gate de `pointer:fine` / `prefers-reduced-motion`. Reusar o atributo, não reimplementar.
 - Microinterações: hover-lift generoso, glow em card prioritário, accordion suave, counters quando visíveis.
 - **Evitar** só o que prejudica de fato: vídeo autoplay com som, popup agressivo, motion travado sem fallback de reduced-motion.
 
 > **Gotchas de runtime** (reveal com `animation: … forwards` mascara hover/tilt; dois `transform` na mesma regra brigam; `[data-glow-card]::before` precisa de `z-index: -1`) estão em `.claude/rules/stability.md § Debug triage matrix`.
+
+> **Altura da dobra e CLS.** O hero é mais alto que a viewport no telefone, então a altura dele vem do
+> conteúdo — e qualquer reflow tardio arrasta a foto full-bleed atrás dele. Por isso as duas famílias têm
+> `preload` em `Layout.astro` e a linha da contagem é `flex-nowrap` com célula numérica em `ch`. Ao
+> acrescentar texto ao hero, medir CLS antes de commitar.
 
 ### Nota de performance (advisory, não regra)
 - `transform` + `opacity` animam no compositor (sem layout/paint) — preferir quando o resultado visual for o *mesmo*, por INP mais suave. Não obrigatório; usar animação de layout/3D/parallax quando desbloquear o efeito. **CWV são advisory** (medir & anotar, não travar merge; INP ~200ms) — ver `.claude/rules/stability.md`. Piso duro único: a11y (`prefers-reduced-motion`).
@@ -328,7 +359,7 @@ Camadas com o que ler melhor — contraste tonal, sombra, glow, glass. **Profund
 
 Sombras e glows: suaves **ou** dramáticos — sua escolha. Glows coloridos grandes valem quando servem ao design.
 
-**Vocabulário de profundidade.** Hoje o projeto entrega profundidade por utility em `src/styles/global.css` (`card-hover-lift`, `[data-glow-card]`, `[data-reveal]`, camadas de gradiente/mesh) — **não existem** tokens `--shadow-*`, `--perspective-card` nem `--tilt-max-deg`. Ao subir o nível de profundidade, criar a escala como token no `@theme` antes de usar: sombras em camadas (`--shadow-soft/float/deep`, ambient + key), glow em tiers (`--shadow-glow-accent-sm/md/lg`), rim 3D (`--shadow-edge-light`). Nunca sombra/glow inline no componente. "Premium **com** profundidade": evitar o anel solitário sem camadas de apoio.
+**Vocabulário de profundidade.** O `@theme` de `src/styles/global.css` já carrega quatro tokens de sombra — `--shadow-panel`, `--shadow-lift`, `--shadow-halo-gold`, `--shadow-rim` — e o resto da profundidade vem por utility (`card-hover-lift`, `[data-glow-card]`, `glass-card-bright`, `landing-mesh-bg`). **Não existem** `--perspective-card` nem `--tilt-max-deg`: o tilt fixa ±5deg no runtime. Ao subir o nível de profundidade, criar a escala como token no `@theme` antes de usar (glow em tiers, rim 3D). Nunca sombra/glow inline no componente. "Premium **com** profundidade": evitar o anel solitário sem camadas de apoio.
 
 ---
 

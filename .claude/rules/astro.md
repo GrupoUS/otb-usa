@@ -66,9 +66,16 @@ Páginas passam `title`, `description`, `ogImage`, `whatsappMessage`, `hasBottom
 
 ## 8. Conversão + tracking
 
-- **Fluxo atual: WhatsApp-only** (`lead.leadFlow`). Não existe formulário, endpoint nem banco. CTA primário único = "Falar com Laura no WhatsApp"; mensagens por intenção vivem no JSON (`hero.cta.whatsappMessage`, `investimento.cta.whatsappMessage`).
-- Introduzir formulário de lead = **aprovação prévia**: exige `<label>` reais, validação, estados de erro/sucesso acessíveis, consent LGPD + link de privacidade (que hoje não existe como rota) e endpoint em env.
-- Tracking GA4/Meta Pixel: nomes de env declarados (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) mas **não instrumentados** — `import.meta.env` não é lido em `src/`. Instrumentar = aprovação.
+- **Fluxo atual: form → WhatsApp** (`lead.leadFlow: "form-then-whatsapp"`). Duas superfícies de captura: o modal `LeadFormDialog.astro` (aberto por qualquer `[data-lead-cta]`) e a seção inline `Aplicacao.astro` (`#inscricao`). Ambas usam os helpers de `src/lib/lead-client.ts`, fazem `POST /api/leads` e passam por `/redirecionando`.
+- Mensagens de WhatsApp por intenção continuam no JSON (`hero.cta.whatsappMessage`, `investimento.cta.whatsappMessage`, `boston.ctaCard.cta.whatsappMessage`, `aplicacao.whatsappPrefacio`), sempre com o prefixo obrigatório.
+- Campo novo no lead = `src/lib/leads.ts` (`CLIENT_KEYS`, validação) + `api/leads.ts` + `Code.js` do Apps Script + `tests/` na mesma mudança. Mexer em `LEAD_SHEET_HEADERS` exige migrar a planilha e redeploy do Apps Script — evitar: dado de qualificação que só a SDR lê pode viajar na mensagem do WhatsApp.
+- Origens de CTA (`LEAD_CTA_ORIGINS`) existem em **dois** lugares e precisam ficar iguais: `src/lib/leads.ts` e `integrations/google-apps-script/otb-leads/Code.js`.
+- Tracking: container GTM inline em `Layout.astro`; o evento de conversão `lead_submit` é disparado em `src/pages/redirecionando.astro` antes do redirect. Instrumentar evento novo = aprovação.
+
+## 9. Motion
+
+- Um runtime só: `src/scripts/motion.ts`, importado uma vez em `Layout.astro`, com **um** listener de `scroll`. Componente não abre listener de scroll próprio — declara atributo.
+- Contrato de atributos e regra de `prefers-reduced-motion`: root `DESIGN.md § 9`.
 
 ## Anti-patterns
 
