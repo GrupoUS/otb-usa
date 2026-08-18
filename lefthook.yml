@@ -4,3 +4,11 @@ pre-commit:
     lint:
       run: bun run lint
       glob: "{src/**,astro.config.mjs}"
+
+# Vercel deploys from origin/main, so a commit that never gets pushed publishes
+# nothing while looking finished. This does not block the commit — it makes the
+# gap visible in the terminal and on the desktop.
+post-commit:
+  commands:
+    push-reminder:
+      run: sh scripts/push-reminder.sh

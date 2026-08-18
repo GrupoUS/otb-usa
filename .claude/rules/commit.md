@@ -88,6 +88,13 @@ bun run deploy:verify              # https://otb.gpus.com.br, espera até 240s
 bun run deploy:verify -- <url> --wait=60
 ```
 
+O hook `post-commit` (lefthook → `scripts/push-reminder.sh`) avisa sempre que o commit
+fica só local: imprime no terminal e dispara uma notificação de desktop com o número de
+commits à frente do upstream. Ele **não bloqueia** — a IDE engole a saída do hook, por
+isso a notificação. Foi essa a falha de 18/08/2026: a IDE rodou `git add` e `git commit`
+e nunca rodou `git push` (o trace só tem `add` 18:46:40 e `commit` 18:46:55), e a
+produção seguiu no build anterior sem erro em lugar nenhum.
+
 `scripts/deploy-check.mjs` falha com mensagem acionável em três pontos: HEAD fora do
 `origin/main` (o caso acima), `dist/` ausente, e produção servindo bytes diferentes dos
 de `dist/`. A comparação é o digest de **cada rota** construída (`/`, `/otb`,
