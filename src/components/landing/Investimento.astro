@@ -42,7 +42,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 */}
 <section
 	id="investimento"
-	class="band-base relative isolate overflow-hidden py-section"
+	class="band-deep relative isolate overflow-hidden py-section"
 	aria-labelledby="investimento-heading"
 >
 	{/* The mesh drifts slower than the page. `inset: -8% 0` gives it the vertical
@@ -242,7 +242,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 									target="_blank"
 									rel="noopener noreferrer"
 									data-shine
-									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
 								>
 									<span>{investimento.cta.secondaryLabel ?? "Garantir vaga"}</span>
 									<Icon
@@ -269,7 +269,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 								data-lead-cta="investimento"
 								data-whatsapp-url={ctaHref}
 								data-shine
-									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
 								aria-label={`${investimento.cta.label} no WhatsApp`}
 							>
 								<Icon name="message-circle" size={20} strokeWidth={2.25} />

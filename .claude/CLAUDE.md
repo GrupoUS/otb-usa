@@ -13,9 +13,9 @@
 **Parent brand:** Grupo US · Dra. Sacha Gualberto
 **Purpose:** `${project.purpose}` — landing estática premium (config: `project.purpose`).
 
-Stack: Astro 6 static-only · Bun · Tailwind CSS v4 · React 19 (islands mínimas — preferir zero ilha) · Lucide / SVG inline · Playfair Display + Inter · `${project.locale}` · deploy Vercel static em `${project.productionUrl}`.
+Stack: Astro 6 static-only · Bun · Tailwind CSS v4 · React 19 (islands mínimas — preferir zero ilha) · Lucide / SVG inline · Sora + Inter · `${project.locale}` · deploy Vercel static em `${project.productionUrl}`.
 
-Project metadata: `.claude/config.json`. Product/copy SSOT: `${content.productJson}`. Schema: `src/content.config.ts`. Brand skills: `gpus-theme` (Navy/Gold) + `grupo-us` (copy/funil drasacha). Sistema de design: root `DESIGN.md`; posicionamento/conversão: root `PRODUCT.md`.
+Project metadata: `.claude/config.json`. Product/copy SSOT: `${content.productJson}`. Schema: `src/content.config.ts`. Brand skills: `gpus-theme` (Navy/Gold — **esta landing diverge: escala `ink` preta, ver root `DESIGN.md § 2`**) + `grupo-us` (copy/funil drasacha). Sistema de design: root `DESIGN.md`; posicionamento/conversão: root `PRODUCT.md`.
 
 ---
 

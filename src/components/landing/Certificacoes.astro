@@ -22,7 +22,7 @@ const { certificacoes, controles } = Astro.props;
 
 	Crimson-as-background is admissible here precisely because it carries no
 	interactive element: text-primary on --color-crimson measures 7.3:1, while
-	crimson-as-text on navy sits near 2.3:1 — which is why the accent tints
+	crimson-as-text on ink sits near 2.6:1 — which is why the accent tints
 	rules and plates but never becomes a CTA or a text colour.
 */}
 <section
@@ -41,8 +41,6 @@ const { certificacoes, controles } = Astro.props;
 		class="relative"
 		data-marquee
 		data-marquee-dur="30"
-		data-marquee-pause={controles?.pausar}
-		data-marquee-resume={controles?.retomar}
 	>
 		{certificacoes.map((item, idx) => (
 			<li

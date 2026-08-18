@@ -58,7 +58,7 @@ Palavras-guia:
 
 - Grupo US / Dra. Sacha — autoridade clínica e de negócio;
 - premium, editorial, estratégico;
-- navy como base institucional, gold como decisão e impacto;
+- base escura institucional (navy na casa; **escala `ink` preta nesta landing**), gold como decisão e impacto;
 - dark-first;
 - ousar é o default — se parecer template genérico, redesenhar;
 - **dinâmico forte:** profundidade em camadas, 3D, parallax, glow e motion orquestrado são encorajados (ver `§ 9. Motion` + `§ 10. Depth & elevation`; gotchas de runtime em `.claude/rules/stability.md § Debug triage matrix`).
@@ -97,11 +97,20 @@ Canvas escuro navy, ênfase em gold. Light mode só quando um projeto exigir exp
 
 SSOT técnica. Estes são os tokens que existem hoje; qualquer cor nova entra aqui antes de aparecer num componente.
 
+> **Esta landing roda em preto, não em navy.** A escala `ink` vem do protótipo v2
+> aprovado no Claude Design (`OTB USA Landing v2.dc.html`), que trocou o navy pelo
+> preto depois que o prompt de implementação foi escrito. É uma **divergência
+> deliberada do canon Navy/Gold** da tabela de marca acima e da skill `gpus-theme`:
+> gold e crimson precisam do piso mais escuro possível para ler como metal e como
+> bandeira. Não "corrigir" de volta para navy sem decisão de produto.
+
 | Role | Token | Valor |
 |---|---|---|
-| Canvas | `--color-navy` | `#1A1A2E` |
-| Surface (card) | `--color-navy-light` | `#2A2A40` |
-| Surface destacada / borda | `--color-navy-lighter` | `#3D3D5C` |
+| Piso / faixa profunda (`band-deep`) | `--color-ink-deep` | `#000000` |
+| Canvas / faixa base (`band-base`, `body`) | `--color-ink` | `#080808` |
+| Faixa alternada (`band-alt`) | `--color-ink-band` | `#111111` |
+| Surface (card / glass) | `--color-ink-raised` | `#141414` |
+| Surface destacada / mesh | `--color-ink-edge` | `#1C1C1C` |
 | Primary / CTA / foco | `--color-gold` | `#D4AF37` |
 | Gold hover | `--color-gold-light` | `#E8C96A` |
 | Gold deep | `--color-gold-dark` | `#B8960C` |
@@ -109,15 +118,25 @@ SSOT técnica. Estes são os tokens que existem hoje; qualquer cor nova entra aq
 | Acento USA (realce/gradiente) | `--color-crimson-bright` | `#C8102E` |
 | Acento USA (profundidade) | `--color-crimson-dark` | `#6E1423` |
 | Text primary | `--color-text-primary` | `#FAFAF9` |
-| Text muted | `--color-text-muted` | `#94A3B8` |
-| Display font | `--font-serif` | Playfair Display → Georgia → serif |
+| Text secondary (body) | `--color-text-secondary` | `#B8C0D0` |
+| Text muted (metadado) | `--color-text-muted` | `#94A3B8` |
+| Display font | `--font-display` | Sora → system-ui → sans-serif |
 | Body font | `--font-sans` | Inter → system-ui → sans-serif |
+
+**Contraste medido na escala ink** (AA em todos os pares em uso): `text-secondary`
+10.1–11.5:1 · `text-muted` 7.2–8.2:1 · `gold` 8.8–10:1 · texto do botão
+(`--color-ink-deep`) sobre gold 10:1 · `text-primary` sobre a faixa crimson 7.2:1.
+`--color-crimson-bright` como **texto** fica em ~3.4:1 — só display grande, nunca body.
+
+**Rotação de faixas.** A troca de banda é o separador entre seções e **nunca se
+repete em sequência**: `deep → base → alt → base → deep → base → alt → base →
+deep → alt → deep → base → deep → alt → deep`.
 
 **Crimson (Harvard / bandeira US) é acento de posicionamento desta landing, não substituto do gold.** Gold permanece primário de CTA e de anel de foco; crimson marca a narrativa Boston/Estados Unidos (badges, filetes, realces de seção, gradientes de profundidade). Nunca usar crimson como cor de CTA primário nem como cor de estado de erro.
 
 ### Regras de cor
 
-- Tokens semânticos sempre; hex inline em componente é proibido (exceção documentada: `<meta theme-color>` espelhando `--color-navy`).
+- Tokens semânticos sempre; hex inline em componente é proibido (exceção documentada: `<meta theme-color>` espelhando `--color-ink`).
 - Validar todo par foreground/background contra WCAG AA antes de commit.
 - Gold é hierarquia focal, sem teto de cobertura — ver `§ 3. Color usage`.
 - Estado nunca é comunicado só por cor.
@@ -285,7 +304,7 @@ o seu próprio listener de scroll.
 
 | Atributo | O que faz | Onde |
 |---|---|---|
-| `data-reveal="up\|left\|right\|scale\|mask\|wipe"` + `data-reveal-delay="1..10"` | reveal na entrada em viewport; `mask`/`wipe` usam `clip-path` (não movem o elemento) | CSS + IntersectionObserver em `Layout.astro` |
+| `data-reveal="up\|left\|right\|mask\|wipe"` + `data-reveal-delay="1..10"` | reveal na entrada em viewport; `mask`/`wipe` usam `clip-path` (não movem o elemento) | CSS + IntersectionObserver em `Layout.astro` |
 | `data-enter="1..8"` | cascata no load, 700ms, delay `n × 0.06s`; **só `transform`** — sem opacity, para não segurar o LCP nem deixar a dobra em branco se o script falhar | Hero |
 | `data-count` (+ `data-count-format="pt"`) | count-up ao entrar em viewport | Programa, Boston |
 | `data-parallax` + `data-speed` (+ `data-parallax-slack="<px>"`) | translada o wrapper contra o scroll; `slack` declara a folga quando a camada é decorativa e não tem overscan | Hero, Virada, Boston, Investimento, Aplicação |
@@ -308,6 +327,13 @@ endereços.
 decorativo (parallax, tilt, cascata, marquee, shine, fade, trilho fixado) e **mantém** o que carrega
 informação: barra de progresso, barra sticky e contagem regressiva. Cada fallback é o estado estático
 correto — marquee volta a ser linha que quebra, trilho volta a ser carrossel, reveals ficam visíveis.
+
+**A preferência é lida ao vivo, não no boot.** O decorativo é uma sessão que abre e
+fecha: o runtime assina `change` da media query e, ao ligar `reduce`, aborta os
+listeners, descarta as tasks de scroll, remove os clones do marquee e os spans de
+shine e limpa os `transform` inline — sem reload. Ao desligar, reabre. Comportamento
+que roda **uma vez por página** (a cascata do hero, cada contador) não repete no
+religar.
 
 ### Padrões "dinâmico forte" (encorajados)
 - **Cascade orquestrado no hero** no page-load: eyebrow → headline → sub → chips → CTAs, stagger (~60ms). Ritmo coeso > microinterações espalhadas.

@@ -22,7 +22,7 @@ const { aplicacao, leadForm } = Astro.props;
 const fallbackHref = whatsappUrlWithText(aplicacao.whatsappPrefacio);
 
 const fieldClass =
-	"min-h-[52px] w-full rounded-plate border border-[color-mix(in_srgb,var(--color-gold)_24%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_66%,transparent)] px-4 text-body text-text-primary transition-colors duration-200 placeholder:text-text-muted/60 focus:border-gold";
+	"min-h-[52px] w-full rounded-plate border border-[color-mix(in_srgb,var(--color-gold)_24%,transparent)] bg-[color-mix(in_srgb,var(--color-ink-deep)_66%,transparent)] px-4 text-body text-text-primary transition-colors duration-200 placeholder:text-text-muted/60 focus:border-gold";
 const labelClass =
 	"text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted";
 ---
@@ -273,7 +273,7 @@ const labelClass =
 							type="submit"
 							data-apply-submit
 							data-shine
-							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							<span data-apply-submit-text>{aplicacao.submitLabel}</span>
 							<Icon name="arrow-right" size={18} strokeWidth={2.25} />
@@ -290,7 +290,7 @@ const labelClass =
 							href={fallbackHref}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="mt-5 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-navy"
+							class="mt-5 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-ink-deep"
 						>
 							{aplicacao.sucesso.ctaLabel}
 							<Icon name="arrow-right" size={18} strokeWidth={2.25} />
@@ -320,7 +320,7 @@ const labelClass =
 							data-apply-success-link
 							target="_blank"
 							rel="noopener noreferrer"
-							class="mt-6 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-navy"
+							class="mt-6 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-ink-deep"
 						>
 							{aplicacao.sucesso.ctaLabel}
 							<Icon name="arrow-right" size={18} strokeWidth={2.25} />

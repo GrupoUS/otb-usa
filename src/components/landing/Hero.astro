@@ -70,11 +70,14 @@ const plate = resolveImage(hero.background.image);
 		/>
 	</div>
 
-	{/* Scrim: keeps body copy ≥4.5:1 and headings ≥3:1 over the photograph. */}
+	{/* Scrim: keeps body copy ≥4.5:1 and headings ≥3:1 over the photograph.
+	    Two layers — a black ramp that never drops below 78% under the ficha
+	    column, and the crimson tail of the approved v2 comp riding on top of
+	    it, so the fold ends on the flag accent instead of on flat black. */}
 	<div
 		class="absolute inset-0 -z-10"
 		aria-hidden="true"
-		style="background: linear-gradient(105deg, color-mix(in srgb, var(--color-navy-deep) 95%, transparent) 0%, color-mix(in srgb, var(--color-navy) 88%, transparent) 52%, color-mix(in srgb, var(--color-navy) 74%, transparent) 100%);"
+		style="background: linear-gradient(102deg, transparent 55%, color-mix(in srgb, var(--color-crimson) 24%, transparent) 100%), linear-gradient(102deg, color-mix(in srgb, var(--color-ink-deep) 97%, transparent) 0%, color-mix(in srgb, var(--color-ink-deep) 90%, transparent) 46%, color-mix(in srgb, var(--color-ink-deep) 78%, transparent) 100%);"
 	>
 	</div>
 
@@ -151,7 +154,7 @@ const plate = resolveImage(hero.background.image);
 			>
 				{hero.badges.map((badge) => (
 					<li
-						class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)] bg-navy-soft-70 px-3.5 py-1.5 text-meta font-medium text-text-primary/90"
+						class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)] bg-ink-soft-70 px-3.5 py-1.5 text-meta font-medium text-text-primary/90"
 					>
 						<span class="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true"></span>
 						{badge}
@@ -172,7 +175,7 @@ const plate = resolveImage(hero.background.image);
 							target="_blank"
 							rel="noopener noreferrer"
 							data-shine
-							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
+							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
 						>
 							<span>{hero.cta.secondaryLabel ?? "Garantir vaga"}</span>
 							<Icon
@@ -200,7 +203,7 @@ const plate = resolveImage(hero.background.image);
 							data-lead-cta="hero"
 							data-whatsapp-url={ctaHref}
 							data-shine
-							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
+							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
 							aria-label={hero.cta.label}
 						>
 							<Icon name="message-circle" size={20} strokeWidth={2.25} />
@@ -354,7 +357,7 @@ const plate = resolveImage(hero.background.image);
 	*/}
 	{hero.facts && (
 		<div
-			class="relative z-10 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_72%,transparent)] backdrop-blur-sm"
+			class="relative z-10 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-ink-deep)_72%,transparent)] backdrop-blur-sm"
 			data-enter="8"
 		>
 			<dl
@@ -364,7 +367,7 @@ const plate = resolveImage(hero.background.image);
 				    the term, not beside the group (axe: definition-list/dlitem). */}
 				{hero.facts.map((fact) => (
 					<div
-						class="min-w-0 bg-[color-mix(in_srgb,var(--color-navy-deep)_92%,transparent)] px-4 py-5 lg:px-6 lg:py-6"
+						class="min-w-0 bg-[color-mix(in_srgb,var(--color-ink-deep)_92%,transparent)] px-4 py-5 lg:px-6 lg:py-6"
 					>
 						<dt
 							class="flex items-center gap-2.5 text-kicker font-semibold uppercase tracking-kicker text-text-muted"

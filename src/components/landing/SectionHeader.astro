@@ -39,8 +39,8 @@ const {
 
 const ruleTone = accent === "crimson" ? "bg-crimson-bright/70" : "bg-gold/70";
 /* The heading gradient is ALWAYS gold. `--color-crimson-bright` as text
-   measures ~2.3:1 on navy — below AA even at large sizes — so the crimson
-   accent tints the structural rule only. */
+   measures ~3.4:1 on the ink scale — large-text only, never body — so the
+   crimson accent keeps tinting the structural rule and nothing else. */
 const highlightTone = "text-gradient-gold";
 const alignment =
 	align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl";

@@ -34,14 +34,7 @@
       "Edit(**/*.py)",
       "Edit(**/*.json)",
       "Edit(**/*.css)",
-      "Edit(**/*.md)",
-      "Write(**/*.js)",
-      "Write(**/*.ts)",
-      "Write(**/*.tsx)",
-      "Write(**/*.astro)",
-      "Write(**/*.css)",
-      "Write(**/*.py)",
-      "Write(**/*.md)"
+      "Edit(**/*.md)"
     ],
     "deny": [
       "Read(./.env*)",

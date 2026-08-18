@@ -4,6 +4,52 @@
 
 ---
 
+### [2026-08-18] O protótipo renderizado ganha do prompt que o descreve
+
+**Problem:** A v2 tinha dois artefatos no mesmo projeto do Claude Design: o spec escrito
+(`PROMPT-claude-code-v2.md`), que fixa a paleta em navy (`#10101f · #1a1a2e · #24243a`), e o protótipo
+(`OTB USA Landing v2.dc.html`), que roda em preto (`#000000 · #080808 · #111111`). A implementação
+seguiu o texto — corretamente, à época — e a landing ficou azul-escura onde a referência aprovada é
+preta. O relato do cliente foi "as cores não vieram", e a leitura errada seria procurar componente por
+componente.
+
+**Solution:** A escala virou `ink` no `@theme` (`--color-ink-deep/-ink/-ink-band/-ink-raised/-ink-edge`),
+com renomeação dos ~55 call sites de `navy`. Renomear em vez de só trocar valores: um token chamado
+`navy` guardando `#000000` engana toda mudança futura, e a divergência em relação ao canon Navy/Gold da
+skill `gpus-theme` ficou registrada em `DESIGN.md` para não ser "corrigida" de volta.
+
+**Pattern:** Quando o spec escrito e o artefato renderizado divergem, o artefato ganha — ele é o que foi
+aprovado olhando. E paleta é mudança de `@theme`: se a troca exigir editar componente, o componente
+tinha cor hardcoded. Renomeação de token é mecânica e verificável (`grep -rn "navy" src` volta vazio).
+
+**Validation:** `bun run lint && bunx astro check && bun run build && bun test`; contraste recalculado
+(body 10,1–11,5:1, muted 7,2–8,2:1, gold 8,8–10:1, texto do botão sobre gold 10:1); rotação de faixas
+conferida no HTML construído, sem duas faixas iguais em sequência.
+
+---
+
+### [2026-08-18] Reduced motion é uma sessão, não uma leitura de boot
+
+**Problem:** O runtime lia `prefers-reduced-motion` uma vez no boot. Quem ligasse a preferência no
+sistema no meio da leitura continuava com parallax, marquee e trilho fixado até recarregar a página —
+exatamente o momento em que a preferência mais importa.
+
+**Solution:** O decorativo virou uma sessão com `AbortController` + lista de undos. `initMotion` assina
+`change` da media query: ao ligar `reduce`, aborta todos os listeners decorativos, esvazia o canal
+decorativo de tasks de scroll/resize, remove clones do marquee e spans de shine e limpa os `transform`
+inline; ao desligar, reabre a sessão. As tasks de chrome (progresso, header, barra sticky, contagem)
+vivem num canal separado e nunca são desmontadas. O que roda uma vez por página — a cascata do hero,
+cada contador — é marcado e não repete no religar.
+
+**Pattern:** Todo efeito decorativo precisa saber se desfazer. Se um init só sabe ligar, a preferência
+de acessibilidade vira dependente de reload. Registrar o undo junto com o efeito, não depois.
+
+**Validation:** Probe CDP sobre o build: `Emulation.setEmulatedMedia` com `reduce` sem reload derruba
+`is-marquee` (8 filhos → 4), `is-pinned`, os 6 `.cta-shine` e os `transform` de parallax, mantendo a
+contagem viva; desligar restaura os três. Zero erro de console em 1440×900 e 390×844.
+
+---
+
 ### [2026-08-18] Uma cascata com fade segura o LCP da página inteira
 
 **Problem:** Depois da v2 o Lighthouse mobile marcava performance 75 e LCP 6,7s. Medindo o elemento de

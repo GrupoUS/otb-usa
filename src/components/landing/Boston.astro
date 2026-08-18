@@ -104,7 +104,7 @@ function splitStat(valor: string) {
 			<div
 				class="absolute inset-0"
 				aria-hidden="true"
-				style="background: linear-gradient(90deg, color-mix(in srgb, var(--color-navy-deep) 92%, transparent) 0%, color-mix(in srgb, var(--color-navy-deep) 60%, transparent) 55%, color-mix(in srgb, var(--color-navy-deep) 32%, transparent) 100%);"
+				style="background: linear-gradient(90deg, transparent 58%, color-mix(in srgb, var(--color-crimson-dark) 34%, transparent) 100%), linear-gradient(90deg, color-mix(in srgb, var(--color-ink-deep) 94%, transparent) 0%, color-mix(in srgb, var(--color-ink-deep) 60%, transparent) 52%, color-mix(in srgb, var(--color-ink-deep) 32%, transparent) 100%);"
 			>
 			</div>
 
@@ -154,7 +154,7 @@ function splitStat(valor: string) {
 						<ol data-hpin-track>
 							{agenda.map((d) => (
 								<li
-									class="relative flex flex-col border-t-2 border-crimson-mid-45 bg-[color-mix(in_srgb,var(--color-navy-light)_55%,transparent)] p-6 pt-7 lg:p-8 lg:pt-9"
+									class="relative flex flex-col border-t-2 border-crimson-mid-45 bg-[color-mix(in_srgb,var(--color-ink-raised)_55%,transparent)] p-6 pt-7 lg:p-8 lg:pt-9"
 								>
 									<span
 										class="absolute -top-[5px] left-0 h-2 w-2 rounded-full"
@@ -201,7 +201,7 @@ function splitStat(valor: string) {
 							{boston.ctaCard && ctaCardHref && (
 								<li
 									class="relative flex flex-col justify-center border border-[color-mix(in_srgb,var(--color-gold)_34%,transparent)] p-6 lg:p-8"
-									style="background: linear-gradient(180deg, color-mix(in srgb, var(--color-navy-light) 94%, transparent), color-mix(in srgb, var(--color-navy) 92%, transparent));"
+									style="background: linear-gradient(180deg, color-mix(in srgb, var(--color-ink-raised) 94%, transparent), color-mix(in srgb, var(--color-ink) 92%, transparent));"
 								>
 									<div
 										class="pointer-events-none absolute inset-0 opacity-40"
@@ -225,7 +225,7 @@ function splitStat(valor: string) {
 											data-lead-cta="boston"
 											data-whatsapp-url={ctaCardHref}
 											data-shine
-											class="group mt-7 inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+											class="group mt-7 inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
 										>
 											<span>{boston.ctaCard.cta.label}</span>
 											<Icon

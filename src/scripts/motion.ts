@@ -39,8 +39,28 @@ interface ScrollState {
 
 type ScrollTask = (state: ScrollState) => void;
 
-const scrollTasks: ScrollTask[] = [];
-const resizeTasks: Array<() => void> = [];
+/** Chrome tasks (progress bar, header, bottom bar) live for the page. */
+const chromeScrollTasks: ScrollTask[] = [];
+const chromeResizeTasks: Array<() => void> = [];
+
+/** Decorative tasks are torn down and rebuilt whenever the user flips
+ *  `prefers-reduced-motion` mid-session, so they register on their own channel:
+ *  the tasks are dropped, the listeners aborted and the inline styles undone. */
+const decorScrollTasks: ScrollTask[] = [];
+const decorResizeTasks: Array<() => void> = [];
+
+let decorController: AbortController | null = null;
+const decorCleanups: Array<() => void> = [];
+
+/** Every listener a decorative behaviour opens carries this signal, so a single
+ *  `abort()` removes all of them at once. */
+function decorSignal(): AbortSignal | undefined {
+	return decorController?.signal;
+}
+
+function onDecorCleanup(undo: () => void): void {
+	decorCleanups.push(undo);
+}
 
 let scrollFrame = 0;
 
@@ -56,7 +76,7 @@ function readState(): ScrollState {
 function runScrollTasks(): void {
 	scrollFrame = 0;
 	const state = readState();
-	for (const task of scrollTasks) {
+	for (const task of [...chromeScrollTasks, ...decorScrollTasks]) {
 		try {
 			task(state);
 		} catch {
@@ -70,12 +90,18 @@ function scheduleScroll(): void {
 	scrollFrame = requestAnimationFrame(runScrollTasks);
 }
 
-function onScroll(task: ScrollTask): void {
-	scrollTasks.push(task);
+function onScroll(
+	task: ScrollTask,
+	channel: "chrome" | "decor" = "decor",
+): void {
+	(channel === "chrome" ? chromeScrollTasks : decorScrollTasks).push(task);
 }
 
-function onResize(task: () => void): void {
-	resizeTasks.push(task);
+function onResize(
+	task: () => void,
+	channel: "chrome" | "decor" = "decor",
+): void {
+	(channel === "chrome" ? chromeResizeTasks : decorResizeTasks).push(task);
 }
 
 const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
@@ -90,7 +116,7 @@ function initScrollProgress(): void {
 
 	onScroll(({ y, max }) => {
 		bar.style.width = `${max > 0 ? Math.min(100, (y / max) * 100) : 0}%`;
-	});
+	}, "chrome");
 }
 
 /** Header shell. Transparent over the hero, solid once the reader has moved.
@@ -111,7 +137,7 @@ function initHeader(): void {
 		if (next === solid) return;
 		solid = next;
 		header.classList.toggle("is-solid", next);
-	});
+	}, "chrome");
 }
 
 /** Bottom conversion chrome. The sticky bar and the floating WhatsApp button
@@ -132,7 +158,7 @@ function initBottomChrome(): void {
 		visible = next;
 		bar?.classList.toggle("is-visible", next);
 		float?.classList.toggle("is-retracted", next);
-	});
+	}, "chrome");
 }
 
 /* --------------------------------------------------------------- countdown */
@@ -144,29 +170,45 @@ const pad = (value: number, size: number): string =>
  *  reduced motion too. No `aria-live` — announcing a new value every second is
  *  noise; the `<dl>` carries an `aria-label` and is read on demand. */
 function initCountdown(): void {
-	const host = document.querySelector<HTMLElement>("[data-cd-target]");
-	if (!host) return;
+	const hosts = Array.from(
+		document.querySelectorAll<HTMLElement>("[data-cd-target]"),
+	);
+	if (!hosts.length) return;
 
-	const target = Date.parse(host.dataset.cdTarget ?? "");
-	if (!Number.isFinite(target)) return;
+	/* The target is read per wrapper, not once for the page: the hero, the price
+	   card and the sticky bar each declare their own `data-cd-target`, and today
+	   they happen to agree. Resolving through `closest()` means a second date
+	   (a lote deadline, say) is a markup change and not a silent bug where every
+	   digit on the page counts to the first date found. */
+	const resolve = (el: HTMLElement): number => {
+		const host = el.closest<HTMLElement>("[data-cd-target]") ?? hosts[0];
+		const parsed = Date.parse(host?.dataset.cdTarget ?? "");
+		return Number.isFinite(parsed) ? parsed : Number.NaN;
+	};
 
-	const units = Array.from(
-		document.querySelectorAll<HTMLElement>("[data-cd]"),
-	).map((el) => ({ el, key: el.dataset.cd ?? "" }));
+	const units = Array.from(document.querySelectorAll<HTMLElement>("[data-cd]"))
+		.map((el) => ({ el, key: el.dataset.cd ?? "", target: resolve(el) }))
+		.filter((unit) => Number.isFinite(unit.target));
 	const minis = Array.from(
 		document.querySelectorAll<HTMLElement>("[data-cd-mini]"),
-	);
+	)
+		.map((el) => ({ el, target: resolve(el) }))
+		.filter((unit) => Number.isFinite(unit.target));
 	if (!units.length && !minis.length) return;
 
-	const tick = () => {
-		const remaining = Math.max(0, target - Date.now());
-		const totalSeconds = Math.floor(remaining / 1000);
-		const days = Math.floor(totalSeconds / 86_400);
-		const hours = Math.floor((totalSeconds % 86_400) / 3600);
-		const minutes = Math.floor((totalSeconds % 3600) / 60);
-		const seconds = totalSeconds % 60;
+	const split = (target: number) => {
+		const totalSeconds = Math.floor(Math.max(0, target - Date.now()) / 1000);
+		return {
+			days: Math.floor(totalSeconds / 86_400),
+			hours: Math.floor((totalSeconds % 86_400) / 3600),
+			minutes: Math.floor((totalSeconds % 3600) / 60),
+			seconds: totalSeconds % 60,
+		};
+	};
 
-		for (const { el, key } of units) {
+	const tick = () => {
+		for (const { el, key, target } of units) {
+			const { days, hours, minutes, seconds } = split(target);
 			const next =
 				key === "d"
 					? pad(days, 3)
@@ -180,14 +222,19 @@ function initCountdown(): void {
 			if (next !== null && el.textContent !== next) el.textContent = next;
 		}
 
-		const mini = `${pad(days, 3)}d ${pad(hours, 2)}h ${pad(minutes, 2)}m`;
-		for (const el of minis) {
+		for (const { el, target } of minis) {
+			const { days, hours, minutes } = split(target);
+			const mini = `${pad(days, 3)}d ${pad(hours, 2)}h ${pad(minutes, 2)}m`;
 			if (el.textContent !== mini) el.textContent = mini;
 		}
 	};
 
 	tick();
-	window.setInterval(tick, 1000);
+	const timer = window.setInterval(tick, 1000);
+	// A page kept alive in the back/forward cache would otherwise go on ticking.
+	window.addEventListener("pagehide", () => window.clearInterval(timer), {
+		once: true,
+	});
 }
 
 /* ------------------------------------------------------------------ counts */
@@ -211,8 +258,14 @@ function runCount(el: HTMLElement): void {
 	requestAnimationFrame(tick);
 }
 
+/** A figure counts up once per page life. Without this a reduced-motion toggle
+ *  would replay every counter that is on screen at that moment. */
+const counted = new WeakSet<HTMLElement>();
+
 function initCounters(): void {
-	const counters = document.querySelectorAll<HTMLElement>("[data-count]");
+	const counters = Array.from(
+		document.querySelectorAll<HTMLElement>("[data-count]"),
+	).filter((el) => !counted.has(el));
 	if (!counters.length || typeof IntersectionObserver === "undefined") return;
 
 	try {
@@ -221,12 +274,15 @@ function initCounters(): void {
 				for (const entry of entries) {
 					if (!entry.isIntersecting) continue;
 					obs.unobserve(entry.target);
-					runCount(entry.target as HTMLElement);
+					const el = entry.target as HTMLElement;
+					counted.add(el);
+					runCount(el);
 				}
 			},
 			{ rootMargin: "0px 0px -8% 0px", threshold: 0.2 },
 		);
 		for (const el of counters) observer.observe(el);
+		onDecorCleanup(() => observer.disconnect());
 	} catch {
 		// Figures stay at their server-rendered value.
 	}
@@ -310,6 +366,13 @@ function initParallax(): void {
 
 	onResize(measure);
 	measure();
+
+	onDecorCleanup(() => {
+		for (const el of plates) {
+			el.style.removeProperty("transform");
+			applied.delete(el);
+		}
+	});
 }
 
 /* -------------------------------------------------------------------- tilt */
@@ -320,24 +383,71 @@ function initTilt(): void {
 		window.matchMedia("(pointer: fine)").matches;
 	if (!finePointer) return;
 
-	for (const el of document.querySelectorAll<HTMLElement>("[data-tilt]")) {
-		el.addEventListener("pointermove", (event) => {
-			const rect = el.getBoundingClientRect();
-			const px = (event.clientX - rect.left) / rect.width - 0.5;
-			const py = (event.clientY - rect.top) / rect.height - 0.5;
-			el.dataset.tiltActive = "";
-			el.style.setProperty("--tilt-y", `${(px * 5).toFixed(2)}deg`);
-			el.style.setProperty("--tilt-x", `${(-py * 5).toFixed(2)}deg`);
-			el.style.setProperty("--tilt-lift", "-4px");
-		});
+	const signal = decorSignal();
+	const cards = Array.from(
+		document.querySelectorAll<HTMLElement>("[data-tilt]"),
+	);
+	if (!cards.length) return;
 
-		el.addEventListener("pointerleave", () => {
-			el.removeAttribute("data-tilt-active");
-			el.style.removeProperty("--tilt-x");
-			el.style.removeProperty("--tilt-y");
-			el.style.removeProperty("--tilt-lift");
-		});
+	const rest = (el: HTMLElement) => {
+		el.removeAttribute("data-tilt-active");
+		el.style.removeProperty("--tilt-x");
+		el.style.removeProperty("--tilt-y");
+		el.style.removeProperty("--tilt-lift");
+	};
+
+	for (const el of cards) {
+		// `pointermove` fires far more often than the screen refreshes. Keeping
+		// only the latest position and writing it inside one frame turns a burst
+		// of style invalidations into a single one.
+		let pending: { x: number; y: number } | null = null;
+		let frame = 0;
+
+		const write = () => {
+			frame = 0;
+			if (!pending) return;
+			const { x, y } = pending;
+			pending = null;
+			el.dataset.tiltActive = "";
+			el.style.setProperty("--tilt-y", `${(x * 5).toFixed(2)}deg`);
+			el.style.setProperty("--tilt-x", `${(-y * 5).toFixed(2)}deg`);
+			el.style.setProperty("--tilt-lift", "-4px");
+		};
+
+		el.addEventListener(
+			"pointermove",
+			(event) => {
+				const rect = el.getBoundingClientRect();
+				pending = {
+					x: (event.clientX - rect.left) / rect.width - 0.5,
+					y: (event.clientY - rect.top) / rect.height - 0.5,
+				};
+				if (!frame) frame = requestAnimationFrame(write);
+			},
+			{ signal },
+		);
+
+		// `pointerleave` alone leaves the card stuck when the pointer is captured
+		// elsewhere, the gesture is cancelled or the window loses focus.
+		for (const event of ["pointerleave", "pointercancel", "blur"] as const) {
+			el.addEventListener(
+				event,
+				() => {
+					pending = null;
+					if (frame) {
+						cancelAnimationFrame(frame);
+						frame = 0;
+					}
+					rest(el);
+				},
+				{ signal },
+			);
+		}
 	}
+
+	onDecorCleanup(() => {
+		for (const el of cards) rest(el);
+	});
 }
 
 /* ------------------------------------------------------------ load cascade */
@@ -352,9 +462,16 @@ function initTilt(): void {
  *
  *  It also means there is no pre-state to undo: if this module never runs, the
  *  fold is already in its final position. */
+let enterPlayed = false;
+
 function initEnter(): void {
+	// The cascade belongs to the page load. Re-running it because the reader
+	// turned motion back on halfway down would animate a fold nobody is looking
+	// at.
+	if (enterPlayed) return;
 	const items = document.querySelectorAll<HTMLElement>("[data-enter]");
 	if (!items.length || typeof Element.prototype.animate !== "function") return;
+	enterPlayed = true;
 
 	for (const el of items) {
 		const index = Number(el.dataset.enter ?? "0");
@@ -420,6 +537,16 @@ function initMarquee(): void {
 		track.style.animationDuration = `${Number.isFinite(duration) ? duration : 30}s`;
 		track.classList.add("is-marquee");
 
+		const clones = Array.from(track.children).slice(originals.length);
+		onDecorCleanup(() => {
+			for (const clone of clones) clone.remove();
+			track.classList.remove("is-marquee");
+			track.style.removeProperty("animation-duration");
+			track.style.removeProperty("animation-play-state");
+			// No animation left to stop: the control would be a dead button.
+			control.hidden = true;
+		});
+
 		let paused = false;
 		const setPlayState = () => {
 			track.style.animationPlayState = paused ? "paused" : "running";
@@ -429,22 +556,32 @@ function initMarquee(): void {
 		const playIcon = control.querySelector<HTMLElement>("[data-icon-play]");
 
 		control.hidden = false;
-		control.addEventListener("click", () => {
-			paused = !paused;
-			control.setAttribute("aria-pressed", String(paused));
-			control.setAttribute("aria-label", paused ? resumeLabel : pauseLabel);
-			pauseIcon?.classList.toggle("hidden", paused);
-			pauseIcon?.classList.toggle("inline-flex", !paused);
-			playIcon?.classList.toggle("hidden", !paused);
-			playIcon?.classList.toggle("inline-flex", paused);
-			setPlayState();
-		});
+		control.addEventListener(
+			"click",
+			() => {
+				paused = !paused;
+				control.setAttribute("aria-pressed", String(paused));
+				control.setAttribute("aria-label", paused ? resumeLabel : pauseLabel);
+				pauseIcon?.classList.toggle("hidden", paused);
+				pauseIcon?.classList.toggle("inline-flex", !paused);
+				playIcon?.classList.toggle("hidden", !paused);
+				playIcon?.classList.toggle("inline-flex", paused);
+				setPlayState();
+			},
+			{ signal: decorSignal() },
+		);
 
 		// Hover is a convenience on top of the control, never the mechanism.
-		track.addEventListener("pointerenter", () => {
-			if (!paused) track.style.animationPlayState = "paused";
+		track.addEventListener(
+			"pointerenter",
+			() => {
+				if (!paused) track.style.animationPlayState = "paused";
+			},
+			{ signal: decorSignal() },
+		);
+		track.addEventListener("pointerleave", setPlayState, {
+			signal: decorSignal(),
 		});
-		track.addEventListener("pointerleave", setPlayState);
 	}
 }
 
@@ -453,6 +590,8 @@ function initMarquee(): void {
 /** Sweep over a primary CTA. Injected rather than authored in markup so the
  *  span never reaches the accessibility tree of a button that has none. */
 function initShine(): void {
+	const sweeps: Array<{ host: HTMLElement; sweep: HTMLElement }> = [];
+
 	for (const el of document.querySelectorAll<HTMLElement>("[data-shine]")) {
 		if (el.querySelector(":scope > .cta-shine")) continue;
 		const sweep = document.createElement("span");
@@ -460,7 +599,15 @@ function initShine(): void {
 		sweep.setAttribute("aria-hidden", "true");
 		el.appendChild(sweep);
 		el.classList.add("has-shine");
+		sweeps.push({ host: el, sweep });
 	}
+
+	onDecorCleanup(() => {
+		for (const { host, sweep } of sweeps) {
+			sweep.remove();
+			host.classList.remove("has-shine");
+		}
+	});
 }
 
 /* --------------------------------------------------------------- hero fade */
@@ -473,6 +620,11 @@ function initHeroFade(): void {
 		const progress = clamp01(y / (vh * 0.9));
 		hero.style.opacity = String(1 - progress * 0.9);
 		hero.style.transform = `translate3d(0, ${(progress * 46).toFixed(1)}px, 0)`;
+	});
+
+	onDecorCleanup(() => {
+		hero.style.removeProperty("opacity");
+		hero.style.removeProperty("transform");
 	});
 }
 
@@ -578,6 +730,8 @@ function initHorizontalPin(): void {
 	   converted into the equivalent page scroll and the box is put back to zero,
 	   so the rail keeps a single source of truth and the focused panel still
 	   ends up on screen. */
+	const signal = decorSignal();
+
 	for (const pin of entries) {
 		pin.viewport.addEventListener(
 			"scroll",
@@ -595,9 +749,12 @@ function initHorizontalPin(): void {
 					0,
 					Math.round(rootTop - pin.stickyTop + next * pin.overflow),
 				);
-				runScrollTasks();
+				// Through the rAF gate, like every other scroll-driven write —
+				// calling the tasks straight from the event runs them outside the
+				// frame the browser was going to paint anyway.
+				scheduleScroll();
 			},
-			{ passive: true },
+			{ passive: true, signal },
 		);
 
 		/* Chrome does not always scroll the clipped box: when the rail is still
@@ -605,41 +762,105 @@ function initHorizontalPin(): void {
 		   which lands on progress 0 with the focused panel still clipped. So the
 		   intent is read directly — move the page to the progress that reveals
 		   the panel the focus landed in. */
-		pin.viewport.addEventListener("focusin", (event) => {
-			if (!pin.active || !pin.overflow) return;
+		pin.viewport.addEventListener(
+			"focusin",
+			(event) => {
+				if (!pin.active || !pin.overflow) return;
 
-			const target = event.target as HTMLElement | null;
-			const panel = target?.closest<HTMLElement>("[data-hpin-track] > *");
-			if (!panel) return;
+				const target = event.target as HTMLElement | null;
+				const panel = target?.closest<HTMLElement>("[data-hpin-track] > *");
+				if (!panel) return;
 
-			requestAnimationFrame(() => {
-				if (pin.viewport.scrollLeft) pin.viewport.scrollLeft = 0;
+				requestAnimationFrame(() => {
+					if (pin.viewport.scrollLeft) pin.viewport.scrollLeft = 0;
 
-				const reveal = clamp01(
-					(panel.offsetLeft + panel.offsetWidth - pin.viewport.clientWidth) /
-						pin.overflow,
-				);
-				const rect = pin.root.getBoundingClientRect();
-				const rootTop = rect.top + window.scrollY;
-				window.scrollTo(
-					0,
-					Math.round(rootTop - pin.stickyTop + reveal * pin.overflow),
-				);
-				runScrollTasks();
-			});
-		});
+					const reveal = clamp01(
+						(panel.offsetLeft + panel.offsetWidth - pin.viewport.clientWidth) /
+							pin.overflow,
+					);
+					const rect = pin.root.getBoundingClientRect();
+					const rootTop = rect.top + window.scrollY;
+					window.scrollTo(
+						0,
+						Math.round(rootTop - pin.stickyTop + reveal * pin.overflow),
+					);
+					scheduleScroll();
+				});
+			},
+			{ signal },
+		);
 	}
 
 	onResize(layout);
 	layout();
+
+	onDecorCleanup(() => {
+		for (const pin of entries) {
+			pin.active = false;
+			pin.root.classList.remove("is-pinned");
+			pin.root.style.removeProperty("height");
+			pin.track.style.removeProperty("transform");
+			// The rail is now a carousel: its progress bar has nothing left to
+			// report, so it reads as complete rather than as stuck at zero.
+			if (pin.bar) pin.bar.style.width = "100%";
+		}
+	});
 }
 
 /* -------------------------------------------------------------------- boot */
 
+/** Decorative behaviours, as one session that can be opened and closed. */
+function startDecorative(): void {
+	if (decorController) return;
+	decorController = new AbortController();
+
+	// The cascade runs FIRST: `[data-enter]` sits at opacity 0 under the `.js`
+	// flag, so a throw in anything registered before it would leave the whole
+	// fold invisible.
+	for (const init of [
+		initEnter,
+		initCounters,
+		initParallax,
+		initTilt,
+		initMarquee,
+		initShine,
+		initHeroFade,
+		initHorizontalPin,
+	]) {
+		try {
+			init();
+		} catch {
+			// Never take the page down for an effect.
+		}
+	}
+
+	scheduleScroll();
+}
+
+/** Closing the session drops the decorative tasks, aborts every listener they
+ *  opened and undoes the inline styles they wrote, so what remains is the
+ *  static page: a wrapped ribbon, a snap carousel, plates at rest. */
+function stopDecorative(): void {
+	if (!decorController) return;
+	decorController.abort();
+	decorController = null;
+	decorScrollTasks.length = 0;
+	decorResizeTasks.length = 0;
+
+	for (const undo of decorCleanups.splice(0)) {
+		try {
+			undo();
+		} catch {
+			// A failed undo must not block the rest of the teardown.
+		}
+	}
+}
+
 export function initMotion(): void {
-	const reduceMotion =
-		typeof window.matchMedia === "function" &&
-		window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const query =
+		typeof window.matchMedia === "function"
+			? window.matchMedia("(prefers-reduced-motion: reduce)")
+			: null;
 
 	// Chrome that carries information runs in every mode. Each behaviour is
 	// isolated: one of them failing must not silence the rest.
@@ -656,30 +877,21 @@ export function initMotion(): void {
 		}
 	}
 
-	if (!reduceMotion) {
-		// The cascade runs FIRST: `[data-enter]` sits at opacity 0 under the `.js`
-		// flag, so a throw in anything registered before it would leave the whole
-		// fold invisible.
-		for (const init of [
-			initEnter,
-			initCounters,
-			initParallax,
-			initTilt,
-			initMarquee,
-			initShine,
-			initHeroFade,
-			initHorizontalPin,
-		]) {
-			try {
-				init();
-			} catch {
-				// Same contract: never take the page down for an effect.
-			}
-		}
-	}
+	if (!query?.matches) startDecorative();
 
+	/* The preference is not a boot-time constant. Reading it once meant a reader
+	   who turns motion off (or back on) from the OS kept the old behaviour until
+	   a reload — which is exactly the moment the setting matters most. */
+	const sync = () => {
+		if (query?.matches) stopDecorative();
+		else startDecorative();
+	};
+	query?.addEventListener("change", sync);
+
+	let resizeFrame = 0;
 	const remeasure = () => {
-		for (const task of resizeTasks) {
+		resizeFrame = 0;
+		for (const task of [...chromeResizeTasks, ...decorResizeTasks]) {
 			try {
 				task();
 			} catch {
@@ -688,12 +900,18 @@ export function initMotion(): void {
 		}
 		scheduleScroll();
 	};
+	// `resize` fires in bursts while a window is dragged, and every task in here
+	// forces layout. One remeasure per frame is all the screen can show.
+	const scheduleResize = () => {
+		if (resizeFrame) return;
+		resizeFrame = requestAnimationFrame(remeasure);
+	};
 
 	window.addEventListener("scroll", scheduleScroll, { passive: true });
-	window.addEventListener("resize", remeasure, { passive: true });
+	window.addEventListener("resize", scheduleResize, { passive: true });
 	// Late-loading images and webfonts change the measurements the parallax
 	// budget and the pinned rail were computed from.
-	window.addEventListener("load", remeasure, { once: true });
+	window.addEventListener("load", scheduleResize, { once: true });
 
 	runScrollTasks();
 }

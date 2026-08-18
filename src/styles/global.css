@@ -4,17 +4,20 @@
 @source not "../../docs";
 @source not "../../evals";
 
-/* ===== Design System (Navy/Gold) ===== */
+/* ===== Design System (Ink/Gold) ===== */
 
 @theme {
-	/* Navy Palette.
-	   navy-deep e navy-band existem para BANDEAR a página: a troca de banda é
+	/* Ink Palette — a escala de preto do protótipo v2 aprovado (Claude Design,
+	   `OTB USA Landing v2.dc.html`). Esta landing **diverge do canon Navy/Gold**
+	   da skill `gpus-theme` por decisão de produto: o gold e o crimson precisam
+	   do piso mais escuro possível para ler como metal e como bandeira.
+	   ink-deep e ink-band existem para BANDEAR a página: a troca de banda é
 	   o separador primário entre seções (no lugar de filetes decorativos). */
-	--color-navy-deep: #10101f;
-	--color-navy: #1a1a2e;
-	--color-navy-band: #24243a;
-	--color-navy-light: #2a2a40;
-	--color-navy-lighter: #3d3d5c;
+	--color-ink-deep: #000000;
+	--color-ink: #080808;
+	--color-ink-band: #111111;
+	--color-ink-raised: #141414;
+	--color-ink-edge: #1c1c1c;
 
 	/* Gold Palette */
 	--color-gold: #d4af37;
@@ -23,7 +26,7 @@
 
 	/* Crimson / USA accent — posicionamento Boston · Estados Unidos.
 	   Acento equilibrado: vermelho ganha presença ao lado do gold,
-	   navy continua base. Gold permanece primário de CTA/foco.
+	   a escala ink continua base. Gold permanece primário de CTA/foco.
 	   Papéis permitidos (3, e só): marcador de data/local, espinha da
 	   timeline de Boston, badge do lote ativo. Nunca cor de CTA nem de erro. */
 	--color-crimson: #a51c30; /* acento principal */
@@ -96,9 +99,9 @@
 	/* Profundidade — 3 tiers. shadow-halo-gold substitui a receita do CTA
 	   duplicada em Hero, Investimento e WhatsAppFloatingButton. */
 	--shadow-panel: 0 18px 48px -24px
-		color-mix(in srgb, var(--color-navy-deep) 85%, transparent);
+		color-mix(in srgb, var(--color-ink-deep) 85%, transparent);
 	--shadow-lift: 0 24px 60px -20px
-		color-mix(in srgb, var(--color-navy-deep) 90%, transparent);
+		color-mix(in srgb, var(--color-ink-deep) 90%, transparent);
 	--shadow-halo-gold: 0 18px 45px -12px
 		color-mix(in srgb, var(--color-gold) 55%, transparent);
 	--shadow-rim: inset 0 1px 0 color-mix(in srgb, white 8%, transparent);
@@ -115,7 +118,7 @@ html {
 
 body {
 	font-family: var(--font-sans);
-	background-color: var(--color-navy);
+	background-color: var(--color-ink);
 	color: var(--color-text-primary);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -131,10 +134,10 @@ body {
 	background-color: color-mix(in srgb, var(--color-gold) 10%, transparent);
 }
 
-@utility bg-navy-soft-70 {
+@utility bg-ink-soft-70 {
 	background-color: color-mix(
 		in srgb,
-		var(--color-navy-light) 70%,
+		var(--color-ink-raised) 70%,
 		transparent
 	);
 }
@@ -183,7 +186,7 @@ body {
 }
 
 .site-header.is-solid {
-	background-color: color-mix(in srgb, var(--color-navy-deep) 92%, transparent);
+	background-color: color-mix(in srgb, var(--color-ink-deep) 92%, transparent);
 	border-bottom-color: color-mix(in srgb, var(--color-gold) 18%, transparent);
 	backdrop-filter: blur(14px) saturate(130%);
 }
@@ -252,15 +255,15 @@ body {
 
 /* The tonal step between sections is the primary separator. */
 @utility band-base {
-	background-color: var(--color-navy);
+	background-color: var(--color-ink);
 }
 
 @utility band-alt {
-	background-color: var(--color-navy-band);
+	background-color: var(--color-ink-band);
 }
 
 @utility band-deep {
-	background-color: var(--color-navy-deep);
+	background-color: var(--color-ink-deep);
 }
 
 /* ===== Focus States (Accessibility) ===== */
@@ -272,7 +275,7 @@ body {
 	z-index: 9999;
 	padding: 0.5rem 1rem;
 	background-color: var(--color-gold);
-	color: var(--color-navy);
+	color: var(--color-ink);
 	font-weight: 600;
 	font-size: 0.875rem;
 	border-radius: 0.5rem;
@@ -350,21 +353,10 @@ body {
 	}
 }
 
-@keyframes reveal-scale {
-	from {
-		opacity: 0;
-		transform: scale(0.96);
-	}
-	to {
-		opacity: 1;
-		transform: scale(1);
-	}
-}
-
 /* Progressive enhancement: pre-reveal state applies only when the inline
    `<html class="js">` flag is present. If the script never runs (network
    error, blocked, parser delay), content stays visible instead of stuck
-   at opacity:0 on the navy background. */
+   at opacity:0 on the ink background. */
 .js [data-reveal] {
 	opacity: 0;
 }
@@ -402,10 +394,6 @@ body {
 
 .js [data-reveal="right"].revealed {
 	animation-name: reveal-right;
-}
-
-.js [data-reveal="scale"].revealed {
-	animation-name: reveal-scale;
 }
 
 /* Stagger: `data-reveal-delay="N"` apenas seta --reveal-index. Sem teto
@@ -452,9 +440,9 @@ body {
 	}
 }
 
-/* The halo both pulse utilities reference. It was missing, which silently
-   disabled `.gold-pulse-glow` / `.crimson-pulse-glow` (an undefined
-   animation-name is dropped, not inherited). */
+/* The halo `.gold-pulse-glow` references. It was missing once, which silently
+   disabled the utility (an undefined animation-name is dropped, not
+   inherited). */
 @keyframes gold-pulse {
 	0%,
 	100% {
@@ -477,37 +465,25 @@ body {
 	pointer-events: none;
 }
 
-.crimson-pulse-glow::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	box-shadow:
-		0 0 40px color-mix(in srgb, var(--color-crimson-bright) 45%, transparent),
-		0 0 64px color-mix(in srgb, var(--color-crimson) 22%, transparent);
-	animation: gold-pulse 3s ease-in-out infinite;
-	pointer-events: none;
-}
-
 /* ===== Glass Card Bright (CTA sections) ===== */
 
 @utility glass-card-bright {
 	background:
 		linear-gradient(
 			180deg,
-			color-mix(in srgb, var(--color-navy-light) 85%, white 8%) 0%,
-			color-mix(in srgb, var(--color-navy) 88%, transparent) 100%
+			color-mix(in srgb, var(--color-ink-raised) 94%, transparent) 0%,
+			color-mix(in srgb, var(--color-ink) 92%, transparent) 100%
 		),
 		radial-gradient(
 			circle at top left,
 			color-mix(in srgb, var(--color-gold) 18%, transparent) 0%,
-			transparent 50%
+			transparent 52%
 		);
-	border: 1px solid color-mix(in srgb, var(--color-gold) 35%, transparent);
-	backdrop-filter: blur(24px) saturate(140%);
+	border: 1px solid color-mix(in srgb, var(--color-gold) 36%, transparent);
+	backdrop-filter: blur(20px) saturate(135%);
 	box-shadow:
 		0 0 40px color-mix(in srgb, var(--color-gold) 15%, transparent),
-		0 24px 70px color-mix(in srgb, var(--color-navy) 45%, transparent),
+		0 24px 70px -22px color-mix(in srgb, var(--color-ink-deep) 90%, transparent),
 		inset 0 1px 0 color-mix(in srgb, white 10%, transparent);
 }
 
@@ -525,7 +501,7 @@ body {
 		),
 		radial-gradient(
 			ellipse at 50% 50%,
-			color-mix(in srgb, var(--color-navy-lighter) 15%, transparent) 0%,
+			color-mix(in srgb, var(--color-ink-edge) 15%, transparent) 0%,
 			transparent 60%
 		);
 	background-size:
