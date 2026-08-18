@@ -13,8 +13,10 @@
  * Three checks, in the order they fail:
  *   1. HEAD is on `origin/main` (fetches first — a stale ref would lie).
  *   2. `dist/` was built from this working tree.
- *   3. The production HTML references the same hashed assets as `dist/`.
- *      Astro hashes by content, so identical asset names mean identical output.
+ *   3. Every page in `dist/` is served byte-for-byte by production. A static
+ *      Astro page reaches the CDN unmodified, so the digests match exactly when
+ *      the deploy is current — which also catches a copy-only change, where the
+ *      hashed asset names would not move at all.
  *
  * Usage:
  *   node scripts/deploy-check.mjs [PRODUCTION_URL] [--wait=SECONDS]
@@ -23,7 +25,8 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { readdirSync, readFileSync } from "node:fs";
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
@@ -58,13 +61,32 @@ const fail = (message, hint) => {
 
 const ok = (message) => console.log(`${GREEN}✓${RESET} ${message}`);
 
-/** Hashed asset references are the build fingerprint: Astro derives them from
- *  content, so two pages naming the same files are the same build. */
+const digest = (text) => createHash("sha256").update(text).digest("hex");
+
+/** Hashed asset references, kept for the failure message: naming which asset
+ *  moved says more than "the bytes differ". */
 function assetRefs(html) {
 	return [...html.matchAll(/\/_astro\/[A-Za-z0-9._-]+\.(?:css|js)/g)]
 		.map((match) => match[0])
 		.filter((ref, index, all) => all.indexOf(ref) === index)
 		.sort();
+}
+
+/** Every route the build emitted: `dist/index.html` plus one level of
+ *  `dist/<route>/index.html`, which is what this project ships. */
+function builtRoutes() {
+	const routes = [{ route: "/", file: "dist/index.html" }];
+	for (const entry of readdirSync("dist", { withFileTypes: true })) {
+		if (!entry.isDirectory() || entry.name.startsWith("_")) continue;
+		const file = `dist/${entry.name}/index.html`;
+		try {
+			readFileSync(file);
+			routes.push({ route: `/${entry.name}`, file });
+		} catch {
+			// Not a page directory (assets, images, og): skip it.
+		}
+	}
+	return routes;
 }
 
 async function main() {
@@ -102,53 +124,80 @@ async function main() {
 	}
 
 	// 2 — was dist/ built from this tree?
-	let localHtml;
+	let routes;
 	try {
-		localHtml = readFileSync("dist/index.html", "utf8");
+		routes = builtRoutes().map((page) => ({
+			...page,
+			html: readFileSync(page.file, "utf8"),
+		}));
 	} catch {
 		fail("dist/index.html is missing", "bun run build");
 	}
 
-	const expected = assetRefs(localHtml);
+	const expected = assetRefs(routes[0].html);
 	if (!expected.length) {
 		fail("no hashed assets found in dist/index.html", "bun run build");
 	}
-	ok(`local build references ${expected.length} hashed asset(s)`);
+	ok(
+		`local build: ${routes.length} route(s), ${expected.length} hashed asset(s)`,
+	);
 
-	// 3 — is production serving that build?
+	// 3 — is production serving exactly that?
 	const deadline = Date.now() + WAIT_SECONDS * 1000;
-	let served = [];
+	let stale = [];
 	let attempt = 0;
 
 	while (Date.now() <= deadline) {
 		attempt += 1;
-		try {
-			const response = await fetch(`${BASE_URL}/`, {
-				cache: "no-store",
-				headers: { "cache-control": "no-cache" },
-			});
-			if (response.ok) {
-				served = assetRefs(await response.text());
-				if (expected.every((ref) => served.includes(ref))) {
-					ok(`${BASE_URL} is serving this build (attempt ${attempt})`);
-					console.log(`${GREEN}deploy verified${RESET}`);
-					return;
+		stale = [];
+
+		for (const page of routes) {
+			try {
+				const response = await fetch(`${BASE_URL}${page.route}`, {
+					cache: "no-store",
+					headers: { "cache-control": "no-cache" },
+				});
+				const body = response.ok ? await response.text() : "";
+				if (!response.ok || digest(body) !== digest(page.html)) {
+					stale.push({
+						route: page.route,
+						status: response.status,
+						served: assetRefs(body),
+					});
 				}
+			} catch (error) {
+				stale.push({
+					route: page.route,
+					status: `unreachable (${error instanceof Error ? error.message : error})`,
+					served: [],
+				});
 			}
-		} catch {
-			// Network hiccup or a deployment swapping over: keep polling.
+		}
+
+		if (!stale.length) {
+			ok(
+				`${BASE_URL} is serving this exact build on ${routes.length} route(s) (attempt ${attempt})`,
+			);
+			console.log(`${GREEN}deploy verified${RESET}`);
+			return;
 		}
 
 		if (Date.now() + POLL_INTERVAL_MS > deadline) break;
 		console.log(
-			`${DIM}… production still on a different build, retrying in ${POLL_INTERVAL_MS / 1000}s${RESET}`,
+			`${DIM}… ${stale.map((page) => page.route).join(", ")} still on a different build, retrying in ${POLL_INTERVAL_MS / 1000}s${RESET}`,
 		);
 		await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
 	}
 
+	const detail = stale
+		.map(
+			(page) =>
+				`${page.route} (HTTP ${page.status}) serving ${page.served.length ? page.served.join(", ") : "no known assets"}`,
+		)
+		.join("; ");
 	fail(
 		`${BASE_URL} is not serving this build after ${WAIT_SECONDS}s`,
-		`expected ${expected.join(", ")} — got ${served.length ? served.join(", ") : "no assets"}. Check the deployment log: vercel ls otb-usa`,
+		`local assets: ${expected.join(", ")} — stale: ${detail}. Check the deployment log: vercel ls otb-usa`,
 	);
 }
 

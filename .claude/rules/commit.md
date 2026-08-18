@@ -89,6 +89,8 @@ bun run deploy:verify -- <url> --wait=60
 ```
 
 `scripts/deploy-check.mjs` falha com mensagem acionável em três pontos: HEAD fora do
-`origin/main` (o caso acima), `dist/` ausente, e produção servindo assets com hash
-diferente do build local. Astro gera o hash pelo conteúdo, então nome de asset igual =
-build igual. Diagnóstico manual: `vercel ls otb-usa`.
+`origin/main` (o caso acima), `dist/` ausente, e produção servindo bytes diferentes dos
+de `dist/`. A comparação é o digest de **cada rota** construída (`/`, `/otb`,
+`/redirecionando`) contra o HTML servido — página estática do Astro chega ao CDN sem
+modificação, então a igualdade é exata. Comparar só o hash dos assets não bastaria:
+mudança só de texto não move nome de arquivo. Diagnóstico manual: `vercel ls otb-usa`.
