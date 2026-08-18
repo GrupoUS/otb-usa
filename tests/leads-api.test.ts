@@ -159,6 +159,34 @@ describe("POST /api/leads", () => {
 		},
 	);
 
+	it("accepts an empty e-mail and forwards it as a blank cell", async () => {
+		let forwarded: Record<string, unknown> | undefined;
+		const fetchImpl: typeof fetch = async (_input, init) => {
+			forwarded = JSON.parse(String(init?.body));
+			return Response.json({ ok: true, leadId: forwarded?.lead_id });
+		};
+
+		const response = await createHandler({ fetchImpl })(
+			makeRequest({ body: validPayload({ email: "   " }) }),
+		);
+
+		expect(response.status).toBe(200);
+		expect(forwarded?.email).toBe("");
+	});
+
+	it("accepts the inline application section as a CTA origin", async () => {
+		const fetchImpl: typeof fetch = async (_input, init) => {
+			const forwarded = JSON.parse(String(init?.body));
+			return Response.json({ ok: true, leadId: forwarded.lead_id });
+		};
+
+		const response = await createHandler({ fetchImpl })(
+			makeRequest({ body: validPayload({ cta_origem: "aplicacao" }) }),
+		);
+
+		expect(response.status).toBe(200);
+	});
+
 	it("normalizes fields and forwards only the exact schema plus the secret", async () => {
 		let forwarded: Record<string, unknown> | undefined;
 		const fetchImpl: typeof fetch = async (input, init) => {

@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon, { type IconName } from "../icons/Icon.astro";
+
+export interface Props {
+	transparencia: NonNullable<
+		CollectionEntry<"products">["data"]["transparencia"]
+	>;
+}
+
+const { transparencia } = Astro.props;
+---
+
+{/*
+	Disclosure bar. Every line is a compliance statement lifted from
+	`legal.disclaimer` and set where it is actually read — immediately before the
+	closing CTA, not buried in the footer.
+
+	Treated as chrome, not as a section: no plate, no heading, no gold beyond the
+	icons. Saying it plainly is the point; dressing it up would read as a claim.
+*/}
+<section
+	class="band-deep border-t border-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] py-block"
+	aria-label="Transparência e segurança"
+>
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<ul
+			class="grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
+		>
+			{transparencia.map((item, idx) => (
+				<li data-reveal="up" data-reveal-delay={String(idx + 1)}>
+					<Icon
+						name={item.icone as IconName}
+						size={18}
+						strokeWidth={2}
+						class="text-gold"
+					/>
+					<h3 class="mt-3 text-sm font-semibold text-text-primary">
+						{item.titulo}
+					</h3>
+					<p class="mt-1.5 text-meta text-text-muted">{item.texto}</p>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>

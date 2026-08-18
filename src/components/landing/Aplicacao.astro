@@ -1,0 +1,581 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon from "../icons/Icon.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+type ProductData = CollectionEntry<"products">["data"];
+
+export interface Props {
+	aplicacao: NonNullable<ProductData["aplicacao"]>;
+	/** Field copy, consent text and error strings are shared with the modal —
+	 *  one lead vocabulary, two surfaces. */
+	leadForm: ProductData["leadForm"];
+}
+
+const { aplicacao, leadForm } = Astro.props;
+
+const fieldClass =
+	"min-h-[52px] w-full rounded-plate border border-[color-mix(in_srgb,var(--color-gold)_24%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_66%,transparent)] px-4 text-body text-text-primary transition-colors duration-200 placeholder:text-text-muted/60 focus:border-gold";
+const labelClass =
+	"text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted";
+---
+
+{/*
+	Inline application. The modal (LeadFormDialog) still answers every CTA on the
+	page; this section is the one place where the form is simply *there*, at the
+	end of the offer, for the reader who has already decided.
+
+	Same pipeline as the modal — POST /api/leads, hand-off in sessionStorage,
+	/redirecionando fires the conversion event and forwards to WhatsApp. The two
+	qualification answers (profissão, momento) are not part of the lead payload:
+	they travel in the WhatsApp message so Laura reads them before replying.
+*/}
+<section
+	id="inscricao"
+	class="band-alt relative isolate overflow-hidden py-section"
+	aria-labelledby="inscricao-heading"
+>
+	<div
+		class="pointer-events-none absolute inset-x-0 -inset-y-[8%] -z-10"
+		data-parallax
+		data-speed="0.05"
+		aria-hidden="true"
+	>
+		<div
+			class="absolute right-[-12%] top-[8%] h-[38rem] w-[38rem] rounded-full opacity-[0.14]"
+			style="background: radial-gradient(circle, var(--color-gold) 0%, transparent 68%);"
+		>
+		</div>
+		<div
+			class="absolute left-[-10%] bottom-[4%] h-[30rem] w-[30rem] rounded-full opacity-[0.12]"
+			style="background: radial-gradient(circle, var(--color-crimson-bright) 0%, transparent 66%);"
+		>
+		</div>
+	</div>
+
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<div
+			class="flex flex-wrap items-start gap-x-[clamp(2.5rem,5vw,5rem)] gap-y-12"
+		>
+			<div class="min-w-0 flex-[1_1_28rem]">
+				<SectionHeader
+					headingId="inscricao-heading"
+					numeral="10"
+					kicker={aplicacao.kicker}
+					headline={aplicacao.headline}
+					highlight={aplicacao.highlight}
+					descricao={aplicacao.descricao}
+					reveal="mask"
+				/>
+
+				<ol class="mt-block grid grid-cols-1 gap-5">
+					{aplicacao.passos.map((passo, idx) => (
+						<li
+							class="flex items-baseline gap-4"
+							data-reveal="up"
+							data-reveal-delay={String(idx + 1)}
+						>
+							<span
+								class="w-8 shrink-0 font-sans text-lg font-bold leading-none tabular-nums text-gold/70"
+								aria-hidden="true"
+							>
+								{String(idx + 1).padStart(2, "0")}
+							</span>
+							<span class="text-body text-text-secondary">{passo}</span>
+						</li>
+					))}
+				</ol>
+			</div>
+
+			<div class="min-w-0 flex-[1_1_26rem]">
+				<div
+					class="glass-card-bright rounded-plate p-6 sm:p-8"
+					data-reveal="up"
+					data-reveal-delay="2"
+				>
+					<p
+						class="text-kicker font-semibold uppercase tracking-kicker text-gold"
+					>
+						{aplicacao.formTitulo}
+					</p>
+
+					<form
+						class="mt-6 grid grid-cols-1 gap-4"
+						data-apply-form
+						data-consent-version={leadForm.version}
+						data-submit-label={aplicacao.submitLabel}
+						data-pending-label={leadForm.pendingLabel}
+						data-validation-error={leadForm.validationError}
+						data-name-error={leadForm.fields.name.help}
+						data-generic-error={leadForm.genericError}
+						data-whatsapp-prefacio={aplicacao.whatsappPrefacio}
+					>
+						<p class="text-meta text-text-muted">{leadForm.requiredHint}</p>
+
+						<div class="grid gap-1.5">
+							<label class={labelClass} for="apply-name">
+								{leadForm.fields.name.label}
+							</label>
+							<input
+								id="apply-name"
+								name="nome_completo"
+								type="text"
+								autocomplete="name"
+								placeholder={leadForm.fields.name.placeholder}
+								minlength="3"
+								maxlength="120"
+								required
+								aria-required="true"
+								class={fieldClass}
+							/>
+						</div>
+
+						<div class="grid gap-1.5">
+							<label class={labelClass} for="apply-whatsapp">
+								{leadForm.fields.whatsapp.label}
+							</label>
+							<input
+								id="apply-whatsapp"
+								name="whatsapp"
+								type="tel"
+								autocomplete="tel"
+								inputmode="tel"
+								placeholder={leadForm.fields.whatsapp.placeholder}
+								minlength="10"
+								maxlength="32"
+								required
+								aria-required="true"
+								class={fieldClass}
+							/>
+						</div>
+
+						<div class="grid gap-1.5">
+							<label class={labelClass} for="apply-profissao">
+								{aplicacao.profissaoLabel}
+							</label>
+							<select
+								id="apply-profissao"
+								name="profissao"
+								required
+								aria-required="true"
+								class={fieldClass}
+							>
+								<option value="" disabled selected>
+									{aplicacao.profissaoPlaceholder}
+								</option>
+								{aplicacao.profissoes.map((item) => (
+									<option value={item}>{item}</option>
+								))}
+							</select>
+						</div>
+
+						<div class="grid gap-1.5">
+							<label class={labelClass} for="apply-momento">
+								{aplicacao.momentoLabel}
+							</label>
+							<select
+								id="apply-momento"
+								name="momento"
+								required
+								aria-required="true"
+								class={fieldClass}
+							>
+								<option value="" disabled selected>
+									{aplicacao.momentoPlaceholder}
+								</option>
+								{aplicacao.momentos.map((item) => (
+									<option value={item}>{item}</option>
+								))}
+							</select>
+						</div>
+
+						{/* Optional on purpose: the WhatsApp conversation is the channel
+						    that matters here, and one more required field on the last
+						    form of the page costs more leads than the address is worth. */}
+						<div class="grid gap-1.5">
+							<label class={labelClass} for="apply-email">
+								{leadForm.fields.email.label} <span class="normal-case tracking-normal text-text-muted/70">(opcional)</span>
+							</label>
+							<input
+								id="apply-email"
+								name="email"
+								type="email"
+								autocomplete="email"
+								inputmode="email"
+								placeholder={leadForm.fields.email.placeholder}
+								maxlength="254"
+								class={fieldClass}
+							/>
+						</div>
+
+						{/* Honeypot: off-screen rather than display:none so a bot that
+						    filters on visibility still fills it in. */}
+						<div class="apply-honeypot" aria-hidden="true">
+							<label for="apply-company">Empresa</label>
+							<input
+								id="apply-company"
+								name="empresa"
+								type="text"
+								tabindex="-1"
+								autocomplete="off"
+							/>
+						</div>
+
+						<label
+							class="flex items-start gap-3 text-meta text-text-secondary"
+							for="apply-consent"
+						>
+							<input
+								id="apply-consent"
+								name="consentimento"
+								type="checkbox"
+								required
+								aria-required="true"
+								class="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-gold)]"
+							/>
+							<span>
+								{leadForm.consent.prefix}<a
+									href={leadForm.consent.privacyUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="text-gold underline underline-offset-2"
+								>{leadForm.consent.linkLabel}</a>{leadForm.consent.suffix}
+							</span>
+						</label>
+
+						<div
+							class="flex items-start gap-2.5 text-meta text-text-primary"
+							data-apply-status
+							role="status"
+							aria-live="polite"
+							aria-atomic="true"
+							hidden
+						>
+							<Icon
+								name="alert-circle"
+								size={18}
+								strokeWidth={2}
+								class="mt-0.5 shrink-0 text-crimson-bright"
+							/>
+							<span data-apply-status-text></span>
+						</div>
+
+						<button
+							type="submit"
+							data-apply-submit
+							data-shine
+							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+						>
+							<span data-apply-submit-text>{aplicacao.submitLabel}</span>
+							<Icon name="arrow-right" size={18} strokeWidth={2.25} />
+						</button>
+
+						<p class="text-meta text-text-muted">{aplicacao.microcopy}</p>
+					</form>
+
+					{/* Confirmation state. Only reached when the lead was accepted but
+					    sessionStorage is unavailable, so the hand-off page cannot run —
+					    the reader gets the link instead of a silent redirect. */}
+					<div class="hidden" data-apply-success>
+						<span
+							class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-gold text-gold"
+							aria-hidden="true"
+						>
+							<Icon name="check" size={22} strokeWidth={2.25} />
+						</span>
+						<h3
+							class="mt-5 font-display text-h3 font-semibold text-text-primary"
+						>
+							{aplicacao.sucesso.titulo}
+						</h3>
+						<p class="mt-2 text-body text-text-secondary">
+							{aplicacao.sucesso.texto}
+						</p>
+						<a
+							href="#inscricao"
+							data-apply-success-link
+							target="_blank"
+							rel="noopener noreferrer"
+							class="mt-6 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-navy"
+						>
+							{aplicacao.sucesso.ctaLabel}
+							<Icon name="arrow-right" size={18} strokeWidth={2.25} />
+						</a>
+						<button
+							type="button"
+							data-apply-reset
+							class="mt-4 block text-meta text-text-muted underline underline-offset-2 hover:text-gold"
+						>
+							{aplicacao.sucesso.resetLabel}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.apply-honeypot {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
+</style>
+
+<script>
+	import {
+		clearLeadDraft,
+		createLeadId,
+		createSubmissionGate,
+		isCompleteLeadName,
+		type LeadDraft,
+		LEAD_CLIENT_TIMEOUT_MS,
+		postLead,
+		readLeadDraft,
+		writeLeadDraft,
+		writeLeadHandoff,
+	} from "../../lib/lead-client";
+	import { whatsappUrlWithText } from "../../lib/whatsapp";
+
+	const DRAFT_KEY = "otb-apply-draft-v1";
+	const CTA_ORIGIN = "aplicacao";
+
+	/** Progressive Brazilian mobile mask. Applied on input rather than on blur so
+	 *  the field reads as formatted while it is being typed; the server
+	 *  normalises to E.164 anyway, so the mask is presentation only. */
+	const maskPhone = (value: string): string => {
+		const digits = value.replace(/\D/g, "").slice(0, 11);
+		if (digits.length <= 2) return digits;
+		if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+		if (digits.length <= 10)
+			return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+		return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+	};
+
+	const initApplication = () => {
+		const form = document.querySelector<HTMLFormElement>("[data-apply-form]");
+		if (!form) return;
+
+		const nameInput = form.elements.namedItem("nome_completo");
+		const emailInput = form.elements.namedItem("email");
+		const whatsappInput = form.elements.namedItem("whatsapp");
+		const profissaoInput = form.elements.namedItem("profissao");
+		const momentoInput = form.elements.namedItem("momento");
+		const honeypotInput = form.elements.namedItem("empresa");
+		const consentInput = form.elements.namedItem("consentimento");
+		const submitButton = form.querySelector<HTMLButtonElement>("[data-apply-submit]");
+		const submitText = form.querySelector<HTMLElement>("[data-apply-submit-text]");
+		const status = form.querySelector<HTMLElement>("[data-apply-status]");
+		const statusText = form.querySelector<HTMLElement>("[data-apply-status-text]");
+		const panel = form.parentElement;
+		const success = panel?.querySelector<HTMLElement>("[data-apply-success]");
+		const successLink = success?.querySelector<HTMLAnchorElement>(
+			"[data-apply-success-link]",
+		);
+		const resetButton = success?.querySelector<HTMLButtonElement>(
+			"[data-apply-reset]",
+		);
+
+		if (
+			!(nameInput instanceof HTMLInputElement) ||
+			!(emailInput instanceof HTMLInputElement) ||
+			!(whatsappInput instanceof HTMLInputElement) ||
+			!(profissaoInput instanceof HTMLSelectElement) ||
+			!(momentoInput instanceof HTMLSelectElement) ||
+			!(honeypotInput instanceof HTMLInputElement) ||
+			!(consentInput instanceof HTMLInputElement) ||
+			!submitButton ||
+			!submitText ||
+			!status ||
+			!statusText ||
+			!success ||
+			!successLink ||
+			!resetButton
+		) {
+			return;
+		}
+
+		const gate = createSubmissionGate();
+		const submitLabel = form.dataset.submitLabel ?? "";
+		const pendingLabel = form.dataset.pendingLabel ?? "";
+		const validationError = form.dataset.validationError ?? "";
+		const nameValidationError = form.dataset.nameError ?? validationError;
+		const genericError = form.dataset.genericError ?? "";
+		const prefacio = form.dataset.whatsappPrefacio ?? "";
+
+		let draft = readLeadDraft(DRAFT_KEY);
+		let activeController: AbortController | null = null;
+
+		const ensureDraft = (): LeadDraft => {
+			if (!draft) {
+				draft = {
+					leadId: createLeadId(),
+					startedAt: Date.now(),
+					name: "",
+					email: "",
+					whatsapp: "",
+				};
+			}
+			return draft;
+		};
+
+		const persistInputs = () => {
+			const current = ensureDraft();
+			current.name = nameInput.value;
+			current.email = emailInput.value;
+			current.whatsapp = whatsappInput.value;
+			writeLeadDraft(DRAFT_KEY, current);
+		};
+
+		const restored = ensureDraft();
+		nameInput.value = restored.name;
+		emailInput.value = restored.email;
+		whatsappInput.value = restored.whatsapp;
+
+		const setPending = (pending: boolean) => {
+			submitButton.disabled = pending;
+			form.setAttribute("aria-busy", String(pending));
+			submitText.textContent = pending ? pendingLabel : submitLabel;
+		};
+
+		const hideStatus = () => {
+			status.hidden = true;
+			statusText.textContent = "";
+		};
+
+		const showStatus = (message: string) => {
+			statusText.textContent = message;
+			status.hidden = false;
+		};
+
+		for (const input of [nameInput, emailInput, whatsappInput]) {
+			input.addEventListener("input", () => {
+				if (input === nameInput) input.setCustomValidity("");
+				if (input === whatsappInput) {
+					const masked = maskPhone(whatsappInput.value);
+					if (masked !== whatsappInput.value) whatsappInput.value = masked;
+				}
+				input.removeAttribute("aria-invalid");
+				persistInputs();
+			});
+			input.addEventListener("invalid", () => {
+				input.setAttribute("aria-invalid", "true");
+			});
+		}
+
+		resetButton.addEventListener("click", () => {
+			success.classList.add("hidden");
+			form.classList.remove("hidden");
+			consentInput.checked = false;
+			hideStatus();
+			nameInput.focus();
+		});
+
+		form.addEventListener("submit", async (event) => {
+			event.preventDefault();
+			hideStatus();
+
+			if (!isCompleteLeadName(nameInput.value)) {
+				nameInput.setCustomValidity(nameValidationError);
+				nameInput.setAttribute("aria-invalid", "true");
+				showStatus(nameValidationError);
+				nameInput.focus();
+				nameInput.reportValidity();
+				return;
+			}
+			nameInput.setCustomValidity("");
+
+			if (!form.checkValidity()) {
+				showStatus(validationError);
+				form.reportValidity();
+				return;
+			}
+			if (!gate.tryStart()) return;
+
+			persistInputs();
+			const current = ensureDraft();
+			activeController = new AbortController();
+			const timeout = window.setTimeout(
+				() => activeController?.abort(),
+				LEAD_CLIENT_TIMEOUT_MS,
+			);
+			setPending(true);
+
+			try {
+				const message = [
+					prefacio,
+					"",
+					`Nome: ${nameInput.value}`,
+					`WhatsApp: ${whatsappInput.value}`,
+					`Profissão: ${profissaoInput.value}`,
+					`Momento atual: ${momentoInput.value}`,
+				].join("\n");
+				const destinationUrl = whatsappUrlWithText(message);
+
+				await postLead({
+					leadId: current.leadId,
+					nome: nameInput.value,
+					email: emailInput.value,
+					whatsapp: whatsappInput.value,
+					ctaOrigem: CTA_ORIGIN,
+					consentimento: consentInput.checked,
+					consentVersao: form.dataset.consentVersion ?? "",
+					empresa: honeypotInput.value,
+					startedAt: current.startedAt,
+					signal: activeController.signal,
+				});
+
+				const stored = writeLeadHandoff({
+					lead_id: current.leadId,
+					lead_name: nameInput.value,
+					lead_email: emailInput.value,
+					lead_phone: whatsappInput.value,
+					wa_url: destinationUrl,
+				});
+
+				clearLeadDraft(DRAFT_KEY);
+				draft = null;
+				consentInput.checked = false;
+
+				if (stored) {
+					window.location.assign("/redirecionando");
+					return;
+				}
+
+				// Lead accepted, hand-off impossible: hand the reader the link
+				// rather than redirect through a page that cannot read its payload.
+				successLink.href = destinationUrl;
+				form.classList.add("hidden");
+				success.classList.remove("hidden");
+				successLink.focus();
+			} catch {
+				showStatus(genericError);
+			} finally {
+				window.clearTimeout(timeout);
+				activeController = null;
+				gate.finish();
+				setPending(false);
+			}
+		});
+	};
+
+	try {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initApplication, {
+				once: true,
+			});
+		} else {
+			initApplication();
+		}
+	} catch {
+		// The form still submits nothing without JS; the page's other CTAs stay
+		// reachable, so a failure here degrades to "use the modal instead".
+	}
+</script>

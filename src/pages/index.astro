@@ -1,5 +1,6 @@
 ---
 import { getEntry } from "astro:content";
+import Aplicacao from "../components/landing/Aplicacao.astro";
 import Boston from "../components/landing/Boston.astro";
 import Certificacoes from "../components/landing/Certificacoes.astro";
 import FAQ from "../components/landing/FAQ.astro";
@@ -15,7 +16,9 @@ import Programa from "../components/landing/Programa.astro";
 import Speakers from "../components/landing/Speakers.astro";
 import StickyCta from "../components/landing/StickyCta.astro";
 import TargetAudience from "../components/landing/TargetAudience.astro";
+import Transparencia from "../components/landing/Transparencia.astro";
 import Turmas from "../components/landing/Turmas.astro";
+import Virada from "../components/landing/Virada.astro";
 import WhatsAppFloatingButton from "../components/landing/WhatsAppFloatingButton.astro";
 import WhyOTB from "../components/landing/WhyOTB.astro";
 import Layout from "../layouts/Layout.astro";
@@ -107,6 +110,7 @@ const breadcrumbJsonLd = {
 	*/}
 	<Hero hero={data.hero} ficha={heroFicha} />
 	{data.certificacoes && <Certificacoes certificacoes={data.certificacoes} />}
+	{data.virada && <Virada virada={data.virada} />}
 	<WhyOTB why={data.why} />
 	<TargetAudience audience={data.audience} />
 	<Programa programa={data.programa} />
@@ -115,8 +119,12 @@ const breadcrumbJsonLd = {
 	<Boston boston={data.boston} agenda={data.agenda} />
 	<Speakers speakers={data.speakers} />
 	<Investimento investimento={data.investimento} lotes={data.lotes} />
+	{data.aplicacao && (
+		<Aplicacao aplicacao={data.aplicacao} leadForm={data.leadForm} />
+	)}
 	{data.parceiros && <Parceiros parceiros={data.parceiros} />}
 	<FAQ faq={data.faq} faqIntro={data.faqIntro} />
+	{data.transparencia && <Transparencia transparencia={data.transparencia} />}
 	{data.finalCta && <FinalCta finalCta={data.finalCta} />}
 
 	<Footer legal={data.legal} footer={data.footer} />

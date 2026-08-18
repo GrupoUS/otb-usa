@@ -18,6 +18,9 @@ export interface Props {
 	descricao?: string;
 	accent?: "gold" | "crimson";
 	align?: "start" | "center";
+	/** `mask` uncovers the block bottom-up instead of translating it. Use it
+	 *  where the heading must hold its final position from the first frame. */
+	reveal?: "up" | "mask";
 	class?: string;
 }
 
@@ -30,6 +33,7 @@ const {
 	descricao,
 	accent = "gold",
 	align = "start",
+	reveal = "up",
 	class: className = "",
 } = Astro.props;
 
@@ -43,7 +47,7 @@ const alignment =
 const rowAlignment = align === "center" ? "justify-center" : "";
 ---
 
-<div class={`${alignment} ${className}`} data-reveal="up">
+<div class={`${alignment} ${className}`} data-reveal={reveal}>
 	<div class={`flex items-center gap-4 ${rowAlignment}`}>
 		{/*
 			Crimson plate. This is the page's numbering system: a solid, squared

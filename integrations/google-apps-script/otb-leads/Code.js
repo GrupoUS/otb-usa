@@ -25,6 +25,7 @@ var CTA_ORIGINS_ = Object.freeze([
 	"footer",
 	"flutuante_desktop",
 	"sticky_mobile",
+	"aplicacao",
 ]);
 var CONSENT_VERSION_ = "otb-lead-v1";
 var SHEET_ID_ = "1Nt12dz3uplG4Lj66nGsGSL-owP7bTO8YmFBpkjoGZfU";
@@ -98,9 +99,16 @@ function validatePayload_(payload) {
 	) {
 		throw new Error("invalid_request");
 	}
+	// Optional since the inline application section — mirrors normalizeEmail in
+	// src/lib/leads.ts. Empty is accepted and lands as a blank cell; malformed is
+	// still rejected. The column itself never moves.
+	if (typeof row.email !== "string") {
+		throw new Error("invalid_request");
+	}
 	if (
-		!isBoundedString_(row.email, 5, 254) ||
-		!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(row.email)
+		row.email !== "" &&
+		(!isBoundedString_(row.email, 5, 254) ||
+			!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(row.email))
 	) {
 		throw new Error("invalid_request");
 	}

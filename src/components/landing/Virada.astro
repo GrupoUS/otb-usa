@@ -1,0 +1,136 @@
+---
+import { Picture } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { resolveImage } from "../../lib/images";
+import SectionHeader from "./SectionHeader.astro";
+
+export interface Props {
+	virada: NonNullable<CollectionEntry<"products">["data"]["virada"]>;
+}
+
+const { virada } = Astro.props;
+const plate = resolveImage(virada.background.image);
+---
+
+{/*
+	Section 01 — the tension that precedes the offer.
+
+	It is the only section on the page that says nothing about the product: it
+	names the ceiling the reader already feels, so everything after it reads as
+	an answer rather than a pitch. Hence the deliberately dry treatment — one
+	desaturated photograph at 15%, no cards, no gold beyond the heading gradient
+	and the hover rule.
+*/}
+<section
+	id="virada"
+	class="band-deep relative isolate overflow-hidden py-section"
+	aria-labelledby="virada-heading"
+>
+	{/* The wrapper owns the parallax transform; the image inside never
+	    transforms, so the plate cannot jump at the travel limits
+	    (stability.md § Debug triage). */}
+	<div
+		class="absolute inset-x-0 -inset-y-[10%] -z-10 opacity-[0.15]"
+		style="filter: grayscale(1) contrast(1.1);"
+		data-parallax
+		data-speed="0.09"
+		aria-hidden="true"
+	>
+		<Picture
+			src={plate}
+			alt=""
+			formats={["avif", "webp"]}
+			fallbackFormat="jpeg"
+			widths={[640, 1024, 1600]}
+			quality={50}
+			sizes="100vw"
+			loading="lazy"
+			decoding="async"
+			fetchpriority="low"
+			aria-hidden="true"
+			class="h-full w-full object-cover object-center"
+		/>
+	</div>
+
+	<div
+		class="absolute inset-0 -z-10"
+		aria-hidden="true"
+		style="background: linear-gradient(180deg, var(--color-navy-deep) 0%, color-mix(in srgb, var(--color-navy-deep) 80%, transparent) 42%, var(--color-navy-deep) 100%);"
+	>
+	</div>
+
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<div
+			class="flex flex-wrap items-start gap-x-[clamp(2.5rem,5vw,5rem)] gap-y-12"
+		>
+			<div class="min-w-0 flex-[1_1_32rem]">
+				<SectionHeader
+					headingId="virada-heading"
+					numeral="01"
+					kicker={virada.kicker}
+					headline={virada.headline}
+					highlight={virada.highlight}
+					reveal="mask"
+				/>
+
+				<p class="mt-8 max-w-2xl text-lede font-light text-text-secondary">
+					{virada.paragrafo}
+				</p>
+
+				<blockquote
+					class="mt-10 max-w-2xl border-l-2 border-gold pl-6 font-display text-h3 font-semibold leading-snug text-text-primary"
+					data-reveal="up"
+					data-reveal-delay="2"
+				>
+					{virada.quote}
+				</blockquote>
+			</div>
+
+			<div class="min-w-0 flex-[1_1_22rem]">
+				<h3
+					class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
+					data-reveal="up"
+				>
+					{virada.listaTitulo}
+				</h3>
+
+				{/* Same hairline-row treatment as the module index: four bordered
+				    cards would read as a wall of boxes right before the pillars
+				    section, which is already a card grid. */}
+				<ol
+					class="mt-6 grid grid-cols-1 border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
+				>
+					{virada.lista.map((item, idx) => (
+						<li
+							class="group relative border-b border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
+							data-reveal="up"
+							data-reveal-delay={String(idx + 1)}
+						>
+							<span
+								class="absolute left-0 top-0 h-full w-[2px] origin-top scale-y-0 bg-gold transition-transform duration-300 group-hover:scale-y-100"
+								aria-hidden="true"></span>
+							<div
+								class="flex items-baseline gap-5 py-5 pl-4 transition-colors duration-200 group-hover:bg-[color-mix(in_srgb,var(--color-gold)_5%,transparent)]"
+							>
+								<span
+									class="w-9 shrink-0 font-sans text-lg font-bold leading-none tabular-nums"
+									style="color: color-mix(in srgb, var(--color-crimson-bright) 85%, transparent);"
+								>
+									{String(idx + 1).padStart(2, "0")}
+								</span>
+								<div class="min-w-0">
+									<h4 class="text-body font-semibold text-text-primary">
+										{item.titulo}
+									</h4>
+									<p class="mt-1 text-meta text-text-secondary">
+										{item.descricao}
+									</p>
+								</div>
+							</div>
+						</li>
+					))}
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>

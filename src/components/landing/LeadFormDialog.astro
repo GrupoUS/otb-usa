@@ -430,72 +430,23 @@ const { leadForm } = Astro.props;
 
 <script>
 	import {
+		clearLeadDraft,
+		createLeadId,
 		createSubmissionGate,
 		isCompleteLeadName,
+		type LeadDraft,
+		LEAD_CLIENT_TIMEOUT_MS,
+		postLead,
+		readLeadDraft,
+		writeLeadDraft,
+		writeLeadHandoff,
 	} from "../../lib/lead-client";
-	import { LEAD_CANONICAL_PAGE } from "../../lib/leads";
 
 	const DRAFT_KEY = "otb-lead-draft-v1";
-	// Hand-off payload read (and immediately erased) by /redirecionando.
-	const HANDOFF_KEY = "otb_lead";
-	const CLIENT_TIMEOUT_MS = 25_000;
-	const UUID_V4_PATTERN =
-		/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-	interface LeadDraft {
-		leadId: string;
-		startedAt: number;
-		name: string;
-		email: string;
-		whatsapp: string;
-	}
-
-	const createUuid = () => {
-		if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
-		const bytes = crypto.getRandomValues(new Uint8Array(16));
-		bytes[6] = (bytes[6] & 0x0f) | 0x40;
-		bytes[8] = (bytes[8] & 0x3f) | 0x80;
-		const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
-		return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex.slice(6, 8).join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
-	};
-
-	const readDraft = (): LeadDraft | null => {
-		try {
-			const raw = sessionStorage.getItem(DRAFT_KEY);
-			if (!raw) return null;
-			const value = JSON.parse(raw) as Partial<LeadDraft>;
-			if (
-				typeof value.leadId !== "string" ||
-				!UUID_V4_PATTERN.test(value.leadId) ||
-				typeof value.startedAt !== "number" ||
-				!Number.isInteger(value.startedAt) ||
-				typeof value.name !== "string" ||
-				typeof value.email !== "string" ||
-				typeof value.whatsapp !== "string"
-			) {
-				return null;
-			}
-			return value as LeadDraft;
-		} catch {
-			return null;
-		}
-	};
-
-	const writeDraft = (draft: LeadDraft) => {
-		try {
-			sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-		} catch {
-			// A blocked storage API must not break the form.
-		}
-	};
-
-	const clearDraft = () => {
-		try {
-			sessionStorage.removeItem(DRAFT_KEY);
-		} catch {
-			// Success is already acknowledged; navigation may proceed.
-		}
-	};
+	const readDraft = () => readLeadDraft(DRAFT_KEY);
+	const writeDraft = (draft: LeadDraft) => writeLeadDraft(DRAFT_KEY, draft);
+	const clearDraft = () => clearLeadDraft(DRAFT_KEY);
 
 	const initLeadForm = () => {
 		const dialog = document.querySelector<HTMLDialogElement>("[data-lead-dialog]");
@@ -546,7 +497,7 @@ const { leadForm } = Astro.props;
 		const ensureDraft = () => {
 			if (!draft) {
 				draft = {
-					leadId: createUuid(),
+					leadId: createLeadId(),
 					startedAt: Date.now(),
 					name: "",
 					email: "",
@@ -652,72 +603,42 @@ const { leadForm } = Astro.props;
 
 			persistInputs();
 			const current = ensureDraft();
-			const query = new URLSearchParams(window.location.search);
-			const utm = (key: string) => (query.get(key) ?? "").slice(0, 100);
 			activeController = new AbortController();
 			const timeout = window.setTimeout(
 				() => activeController?.abort(),
-				CLIENT_TIMEOUT_MS,
+				LEAD_CLIENT_TIMEOUT_MS,
 			);
 			setPending(true);
 
 			try {
-				const response = await fetch("/api/leads", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					credentials: "same-origin",
+				if (!destinationUrl) throw new Error("missing_destination");
+
+				await postLead({
+					leadId: current.leadId,
+					nome: nameInput.value,
+					email: emailInput.value,
+					whatsapp: whatsappInput.value,
+					ctaOrigem: ctaOrigin,
+					consentimento: consentInput.checked,
+					consentVersao: form.dataset.consentVersion ?? "",
+					empresa: honeypotInput.value,
+					startedAt: current.startedAt,
 					signal: activeController.signal,
-					body: JSON.stringify({
-						lead_id: current.leadId,
-						nome_completo: nameInput.value,
-						email: emailInput.value,
-						whatsapp: whatsappInput.value,
-						cta_origem: ctaOrigin,
-						pagina: LEAD_CANONICAL_PAGE,
-						utm_source: utm("utm_source"),
-						utm_medium: utm("utm_medium"),
-						utm_campaign: utm("utm_campaign"),
-						utm_content: utm("utm_content"),
-						utm_term: utm("utm_term"),
-						consentimento: consentInput.checked,
-						consentimento_versao: form.dataset.consentVersion ?? "",
-						empresa: honeypotInput.value,
-						form_started_at: current.startedAt,
-					}),
 				});
-				const acknowledgement = (await response.json()) as {
-					ok?: unknown;
-					leadId?: unknown;
-				};
-				if (
-					!response.ok ||
-					acknowledgement.ok !== true ||
-					acknowledgement.leadId !== current.leadId ||
-					!destinationUrl
-				) {
-					throw new Error("invalid_acknowledgement");
-				}
-				try {
-					sessionStorage.setItem(
-						HANDOFF_KEY,
-						JSON.stringify({
-							lead_id: current.leadId,
-							lead_name: nameInput.value,
-							lead_email: emailInput.value,
-							lead_phone: whatsappInput.value,
-							wa_url: destinationUrl,
-						}),
-					);
-				} catch {
-					// Lead already accepted: skip the hand-off page instead of failing.
-					clearDraft();
-					consentInput.checked = false;
-					window.location.assign(destinationUrl);
-					return;
-				}
+
+				const stored = writeLeadHandoff({
+					lead_id: current.leadId,
+					lead_name: nameInput.value,
+					lead_email: emailInput.value,
+					lead_phone: whatsappInput.value,
+					wa_url: destinationUrl,
+				});
+
 				clearDraft();
 				consentInput.checked = false;
-				window.location.assign("/redirecionando");
+				// Lead already accepted: when storage is blocked, skip the hand-off
+				// page instead of failing on an event that cannot be delivered.
+				window.location.assign(stored ? "/redirecionando" : destinationUrl);
 			} catch {
 				if (dialog.open) showStatus(genericError);
 			} finally {

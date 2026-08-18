@@ -6,6 +6,7 @@ export const LEAD_CTA_ORIGINS = [
 	"footer",
 	"flutuante_desktop",
 	"sticky_mobile",
+	"aplicacao",
 ] as const;
 
 export type LeadCtaOrigin = (typeof LEAD_CTA_ORIGINS)[number];
@@ -117,9 +118,16 @@ export function normalizeLeadName(value: unknown): string | null {
 	return name;
 }
 
+/** Optional since the inline application section: the WhatsApp number is the
+ *  channel that matters there, and a required e-mail on the last form of the
+ *  page costs more leads than the address is worth. An empty string is a valid
+ *  answer; a malformed one is still rejected. The sheet column stays in place
+ *  and simply arrives blank. */
 function normalizeEmail(value: unknown): string | null {
 	const email = normalizedString(value, 254)?.toLowerCase() ?? null;
-	if (!email || !EMAIL_PATTERN.test(email)) return null;
+	if (email === null) return null;
+	if (email === "") return "";
+	if (!EMAIL_PATTERN.test(email)) return null;
 	return email;
 }
 
@@ -168,7 +176,7 @@ export function validateLeadSubmission(
 	if (
 		!UUID_V4_PATTERN.test(leadId) ||
 		!name ||
-		!email ||
+		email === null ||
 		!whatsapp ||
 		!ctaOrigin ||
 		value.pagina !== LEAD_CANONICAL_PAGE ||
