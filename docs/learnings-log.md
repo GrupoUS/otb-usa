@@ -4,6 +4,49 @@
 
 ---
 
+### [2026-08-18] Uma cascata com fade segura o LCP da página inteira
+
+**Problem:** Depois da v2 o Lighthouse mobile marcava performance 75 e LCP 6,7s. Medindo o elemento de
+LCP direto no navegador (`PerformanceObserver` sobre `largest-contentful-paint`), não era a fotografia do
+hero (29KB) — era o parágrafo lede, que a cascata de entrada mantinha em `opacity: 0` até o módulo rodar
+e a animação chegar a um frame visível. O Chrome não pinta o que está em `opacity: 0`, então o LCP
+esperava a coreografia inteira. Os 545KB de GTM + GA4 + Meta Pixel atrasavam o módulo, o que amplificava
+o efeito, mas a causa era a animação.
+
+**Solution:** A cascata (`[data-enter]`) passou a animar **só `transform`**. O texto é pintado com força
+total no primeiro frame e ainda desliza. Como consequência o pré-estado em CSS deixou de existir — não há
+mais o risco de um módulo que não carrega deixar a dobra em branco. No mesmo passo, o wordmark de 822×453
+(43KB servido a 44px) virou 360×198 com paleta (8,9KB).
+
+**Pattern:** Nunca colocar o maior bloco de texto acima da dobra atrás de uma animação de `opacity`.
+Mover é de graça; apagar custa o LCP inteiro. Antes de otimizar imagem ou rede, medir **qual** elemento é
+o LCP — a intuição erra.
+
+**Validation:** Lighthouse mobile no build: performance 75 → 96/98 (duas execuções), LCP 6,7s → 2,0s,
+CLS 0, acessibilidade 100.
+
+---
+
+### [2026-08-18] O fluxo de lead tem quatro camadas e elas precisam mudar juntas
+
+**Problem:** Tornar o e-mail opcional na seção de aplicação parecia uma mudança de duas camadas
+(`src/lib/leads.ts` + o input). Eram quatro: o Apps Script valida o mesmo campo, e
+`src/pages/redirecionando.astro` — a página de hand-off que dispara o `lead_submit` — exigia
+`lead_email` não vazio. Com as três primeiras ajustadas, um lead da seção nova era aceito pela API,
+gravado na planilha, e então a página de hand-off descartava o payload e mandava o visitante de volta
+para a home. Conversão perdida depois de já ter sido registrada.
+
+**Solution:** As quatro camadas alinhadas na mesma mudança, com um teste de aceitação end-to-end
+(servidor stub que roda o `validateLeadSubmission` real) cobrindo formulário → API → hand-off →
+`dataLayer` → WhatsApp, nas duas superfícies de captura.
+
+**Pattern:** Campo de lead = `src/lib/leads.ts` + `api/leads.ts` + `integrations/google-apps-script/...`
++ `src/pages/redirecionando.astro` + `tests/`. Se mexer em `LEAD_SHEET_HEADERS`, a planilha também migra.
+Dado de qualificação que só a SDR lê (profissão, momento) viaja na mensagem do WhatsApp e não toca
+nenhuma dessas camadas.
+
+---
+
 ### [2026-08-18] A content-driven hero turns a font swap into CLS
 
 **Problem:** The v2 hero grew past the fold on a phone (1368px against an 823px viewport), so its height

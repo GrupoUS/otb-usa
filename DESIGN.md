@@ -286,7 +286,7 @@ o seu próprio listener de scroll.
 | Atributo | O que faz | Onde |
 |---|---|---|
 | `data-reveal="up\|left\|right\|scale\|mask\|wipe"` + `data-reveal-delay="1..10"` | reveal na entrada em viewport; `mask`/`wipe` usam `clip-path` (não movem o elemento) | CSS + IntersectionObserver em `Layout.astro` |
-| `data-enter="1..8"` | cascata no load, 700ms, delay `n × 0.06s`; pré-estado em CSS sob `.js`, classe `entered` aplicada **antes** de animar | Hero |
+| `data-enter="1..8"` | cascata no load, 700ms, delay `n × 0.06s`; **só `transform`** — sem opacity, para não segurar o LCP nem deixar a dobra em branco se o script falhar | Hero |
 | `data-count` (+ `data-count-format="pt"`) | count-up ao entrar em viewport | Programa, Boston |
 | `data-parallax` + `data-speed` (+ `data-parallax-slack="<px>"`) | translada o wrapper contra o scroll; `slack` declara a folga quando a camada é decorativa e não tem overscan | Hero, Virada, Boston, Investimento, Aplicação |
 | `data-tilt` | escreve `--tilt-x/--tilt-y/--tilt-lift`; o `transform` vive no CSS | cards |
@@ -317,6 +317,11 @@ correto — marquee volta a ser linha que quebra, trilho volta a ser carrossel, 
 - **Evitar** só o que prejudica de fato: vídeo autoplay com som, popup agressivo, motion travado sem fallback de reduced-motion.
 
 > **Gotchas de runtime** (reveal com `animation: … forwards` mascara hover/tilt; dois `transform` na mesma regra brigam; `[data-glow-card]::before` precisa de `z-index: -1`) estão em `.claude/rules/stability.md § Debug triage matrix`.
+
+> **A dobra não pode desaparecer para animar.** O lede do hero é o elemento de LCP no telefone, e o
+> Chrome não pinta o que está em `opacity: 0` — animar a entrada com fade empurra o LCP pelo tempo da
+> coreografia inteira (medido: 6,7s → 2,0s ao trocar por `transform` puro). Vale para qualquer entrada
+> acima da dobra: mova, não apague.
 
 > **Altura da dobra e CLS.** O hero é mais alto que a viewport no telefone, então a altura dele vem do
 > conteúdo — e qualquer reflow tardio arrasta a foto full-bleed atrás dele. Por isso as duas famílias têm
