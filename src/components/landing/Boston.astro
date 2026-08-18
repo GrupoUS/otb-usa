@@ -142,22 +142,15 @@ function splitStat(valor: string) {
 					Pinned rail. Above 900px the section holds while the three days —
 					and the panel that says what they leave behind — travel sideways;
 					the gold hairline underneath reads as the progress of the trip.
-					Below that, and under reduced motion, it is a native snap
-					carousel: same panels, thumb instead of scroll. Both states are
+					Below that, and under reduced motion, the panels stack and are read
+					by scrolling the page like everything else: an agenda should not
+					ask the reader to find a sideways gesture first. Both states are
 					laid out in global.css; motion.ts only adds `is-pinned` and writes
 					the reserved height, so the page never shifts when the rail
 					engages.
 				*/}
 				<div class="mt-8" data-hpin>
-					{/* In the carousel state this box is the only thing that scrolls the
-					    agenda, so it needs a name and a tab stop — otherwise the panels
-					    past the first are reachable by pointer only. */}
-					<div
-						data-hpin-vp
-						tabindex="0"
-						role="group"
-						aria-labelledby="boston-agenda-title"
-					>
+					<div data-hpin-vp>
 						<ol data-hpin-track>
 							{agenda.map((d) => (
 								<li

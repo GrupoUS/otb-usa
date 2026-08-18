@@ -10,15 +10,21 @@ export interface Props {
 }
 
 const { speakers } = Astro.props;
+
+/* The grid tracks the roster instead of hardcoding it: a fixed column count
+   leaves a permanent empty cell the moment someone joins or leaves. */
+const colunas =
+	speakers.lista.length % 5 === 0 ? "lg:grid-cols-5" : "lg:grid-cols-4";
 ---
 
 {/*
 	Editorial portraits, 4:5, hard corners — not circular avatars with a double
-	conic ring. The grid is 4 columns to match the roster: it used to be 5 with
-	4 entries, leaving a permanent empty cell.
+	conic ring. The column count is derived from the roster, so the grid never
+	ends on a half-empty row.
 
 	The Instagram link is a labelled text link, not the whole card: making the
-	portrait an outbound target sent traffic out of the funnel on tap.
+	portrait an outbound target sent traffic out of the funnel on tap. It is
+	rendered only for the speakers whose handle is on file.
 */}
 <section
 	id="speakers"
@@ -36,7 +42,7 @@ const { speakers } = Astro.props;
 		/>
 
 		<ul
-			class="mt-block grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
+			class={`mt-block grid grid-cols-1 gap-8 sm:grid-cols-2 lg:gap-6 ${colunas}`}
 		>
 			{speakers.lista.map((s, idx) => (
 				<li
@@ -74,16 +80,18 @@ const { speakers } = Astro.props;
 							{s.area}
 						</p>
 						<p class="mt-3 text-meta text-text-secondary">{s.bio}</p>
-						<a
-							href={s.instagram}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="mt-4 inline-flex min-h-11 items-center gap-2 text-meta font-medium text-text-muted transition-colors hover:text-gold focus-visible:text-gold"
-							aria-label={`Perfil do Instagram de ${s.nome}`}
-						>
-							<Icon name="instagram" size={16} strokeWidth={1.75} aria-hidden="true" />
-							Instagram
-						</a>
+						{s.instagram && (
+							<a
+								href={s.instagram}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="mt-4 inline-flex min-h-11 items-center gap-2 text-meta font-medium text-text-muted transition-colors hover:text-gold focus-visible:text-gold"
+								aria-label={`Perfil do Instagram de ${s.nome}`}
+							>
+								<Icon name="instagram" size={16} strokeWidth={1.75} aria-hidden="true" />
+								Instagram
+							</a>
+						)}
 					</div>
 				</li>
 			))}

@@ -883,28 +883,29 @@ html:not(.js) [data-cd-wrap] {
 
 /* ===== Horizontal pinned rail ===== */
 
-/* Default (and reduced-motion, and <900px) state: a native snap carousel. The
-   runtime upgrades it to a pinned rail by adding `is-pinned` and writing the
-   scroll distance onto the wrapper — never onto the sticky child, so the page
-   height is reserved before the rail engages (CLS 0). */
+/* Default (and reduced-motion, and <900px) state: the panels simply stack. It
+   used to be a horizontal snap carousel, but on a phone nothing announced that
+   the agenda continued sideways — the reader saw day 1 and moved on. Reading an
+   agenda should not require discovering a gesture.
+
+   The runtime upgrades this to a pinned rail by adding `is-pinned` and writing
+   the scroll distance onto the wrapper — never onto the sticky child, so the
+   page height is reserved before the rail engages (CLS 0). */
 [data-hpin-vp] {
-	display: flex;
-	align-items: stretch;
-	overflow-x: auto;
-	scroll-snap-type: x mandatory;
-	padding-bottom: 1.125rem;
-	-webkit-overflow-scrolling: touch;
+	display: block;
 }
 
 [data-hpin-track] {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr;
 	align-items: stretch;
 	gap: clamp(1.25rem, 2.4vw, 2.25rem);
 }
 
-[data-hpin-track] > * {
-	flex: 0 0 min(84vw, 25rem);
-	scroll-snap-align: start;
+@media (min-width: 40rem) {
+	[data-hpin-track] {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
 [data-hpin] {
@@ -929,6 +930,7 @@ html:not(.js) [data-cd-wrap] {
 	   it sticks centred instead — the empty space splits above and below and the
 	   rail reads as the focus of the screen. The runtime reads this offset back
 	   to keep the progress in step with the pin. */
+	display: flex;
 	--hpin-h: min(100svh, 34rem);
 	/* Centred in the space ABOVE the sticky conversion bar, not in the whole
 	   viewport: on a 1366x768 laptop the bar is already up by the time the rail
@@ -942,6 +944,7 @@ html:not(.js) [data-cd-wrap] {
 }
 
 .js [data-hpin].is-pinned [data-hpin-track] {
+	display: flex;
 	will-change: transform;
 }
 

@@ -215,7 +215,9 @@ const products = defineCollection({
 						nome: z.string(),
 						area: z.string(),
 						bio: z.string().max(280),
-						instagram: z.url(),
+						/** Optional: the card drops the link rather than carry an
+						 *  invented handle for a real person. */
+						instagram: z.url().optional(),
 						foto: z.string(),
 					}),
 				)
