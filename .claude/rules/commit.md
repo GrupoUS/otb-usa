@@ -67,3 +67,28 @@ Single-branch repository. Sempre editar em `main`.
 - **Never auto-merge/auto-approve PRs.**
 - Commits direto em `main` após o manual gate + lefthook.
 - Push para `origin/main` e deploy Vercel só quando o usuário pedir.
+
+## Deploy — o push é a metade que falha em silêncio
+
+O Vercel constrói a partir do `origin/main`, não do repositório local. Um commit que
+nunca chegou ao GitHub é indistinguível de um bem-sucedido no terminal — `git log` mostra
+ele, a árvore está limpa — e a produção simplesmente continua no build anterior, sem erro
+em lugar nenhum.
+
+Quando o usuário pedir deploy, usar **um comando só**:
+
+```bash
+bun run ship        # predeploy (lint + astro check + build) → git push origin main → deploy:verify
+```
+
+Se o push já foi feito e a dúvida é só se a produção está servindo aquilo:
+
+```bash
+bun run deploy:verify              # https://otb.gpus.com.br, espera até 240s
+bun run deploy:verify -- <url> --wait=60
+```
+
+`scripts/deploy-check.mjs` falha com mensagem acionável em três pontos: HEAD fora do
+`origin/main` (o caso acima), `dist/` ausente, e produção servindo assets com hash
+diferente do build local. Astro gera o hash pelo conteúdo, então nome de asset igual =
+build igual. Diagnóstico manual: `vercel ls otb-usa`.
