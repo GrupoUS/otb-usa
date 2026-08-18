@@ -321,14 +321,24 @@ function initTilt(): void {
 
 /* ------------------------------------------------------------ load cascade */
 
-/** Hero entrance. The initial state lives in the keyframes, not in CSS, and the
- *  animation fills backwards — so when this never runs the hero simply renders
- *  in its final state instead of staying at opacity 0. */
+/** Hero entrance.
+ *
+ *  The pre-state is CSS (`.js [data-enter] { opacity: 0 }`) rather than the
+ *  first keyframe, because the module runs after first paint: animating from
+ *  opacity 0 without it flashes the final state for a frame first. `entered` is
+ *  added before the animation is created and never depends on it — so a browser
+ *  without WAAPI, or a throwing animate(), still ends with a visible hero.
+ *  Layout.astro's last-resort catch adds the same class. */
 function initEnter(): void {
 	const items = document.querySelectorAll<HTMLElement>("[data-enter]");
-	if (!items.length || typeof Element.prototype.animate !== "function") return;
+	if (!items.length) return;
+
+	const canAnimate = typeof Element.prototype.animate === "function";
 
 	for (const el of items) {
+		el.classList.add("entered");
+		if (!canAnimate) continue;
+
 		const index = Number(el.dataset.enter ?? "0");
 		if (!Number.isFinite(index)) continue;
 		try {
@@ -345,7 +355,7 @@ function initEnter(): void {
 				},
 			);
 		} catch {
-			// Element already renders in its final state.
+			// Already visible through `entered`; it simply does not animate.
 		}
 	}
 }
@@ -527,21 +537,22 @@ export function initMotion(): void {
 		initHorizontalPin();
 	}
 
-	window.addEventListener("scroll", scheduleScroll, { passive: true });
-	window.addEventListener(
-		"resize",
-		() => {
-			for (const task of resizeTasks) {
-				try {
-					task();
-				} catch {
-					// Keep the remaining layouts alive.
-				}
+	const remeasure = () => {
+		for (const task of resizeTasks) {
+			try {
+				task();
+			} catch {
+				// Keep the remaining layouts alive.
 			}
-			scheduleScroll();
-		},
-		{ passive: true },
-	);
+		}
+		scheduleScroll();
+	};
+
+	window.addEventListener("scroll", scheduleScroll, { passive: true });
+	window.addEventListener("resize", remeasure, { passive: true });
+	// Late-loading images and webfonts change the measurements the parallax
+	// budget and the pinned rail were computed from.
+	window.addEventListener("load", remeasure, { once: true });
 
 	runScrollTasks();
 }

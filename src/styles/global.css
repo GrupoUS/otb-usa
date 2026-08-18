@@ -720,6 +720,26 @@ body {
 	animation-duration: 1s;
 }
 
+/* ===== Load cascade ===== */
+
+/* Same progressive-enhancement contract as [data-reveal]: the pre-state exists
+   only when the inline `<html class="js">` flag is present, and the runtime
+   adds `entered` before it tries to animate — so a scripting failure leaves the
+   fold visible rather than blank. */
+.js [data-enter] {
+	opacity: 0;
+}
+
+.js [data-enter].entered {
+	opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js [data-enter] {
+		opacity: 1;
+	}
+}
+
 /* ===== Marquee ===== */
 
 /* Base state = a wrapped row. This is what ships without JS and what stays

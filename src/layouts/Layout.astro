@@ -77,11 +77,19 @@ const jsonLdPayload = jsonLd
 		<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
 		<link rel="alternate icon" href="/favicon.ico" />
 
-		{/* Astro Fonts API — injects @font-face with font-display: swap.
-		    Sora is the LCP font (h1 / display headings) → preload.
-		    Inter is body copy → swap-only is enough; no preload (saves bytes). */}
+		{/* Astro Fonts API — injects @font-face with font-display: swap and
+		    metric-matched fallbacks (size-adjust / ascent-override).
+
+		    BOTH faces are preloaded. The metric overrides keep line HEIGHT stable
+		    across the swap, but they cannot keep line COUNT stable: per-glyph
+		    advances still differ, so a wrapped headline or label can gain a line
+		    when the real face lands. The hero is taller than the fold on a phone,
+		    which means its height is content-driven — so that reflow drags the
+		    full-bleed plate behind it and shows up as CLS. Preloading Inter (48KB)
+		    buys ~0.05 of CLS back; measured against the LCP photograph it costs
+		    nothing noticeable. Revisit if the hero ever fits inside 100svh again. */}
 		<Font cssVariable="--font-sora" preload />
-		<Font cssVariable="--font-inter" />
+		<Font cssVariable="--font-inter" preload />
 
 		<meta property="og:type" content="website" />
 		<meta property="og:locale" content="pt_BR" />
@@ -181,6 +189,9 @@ const jsonLdPayload = jsonLd
 				document
 					.querySelectorAll<HTMLElement>("[data-reveal]")
 					.forEach((el) => el.classList.add("revealed"));
+				document
+					.querySelectorAll<HTMLElement>("[data-enter]")
+					.forEach((el) => el.classList.add("entered"));
 			}
 		</script>
 	</body>
