@@ -344,30 +344,24 @@ function initTilt(): void {
 
 /** Hero entrance.
  *
- *  The pre-state is CSS (`.js [data-enter] { opacity: 0 }`) rather than the
- *  first keyframe, because the module runs after first paint: animating from
- *  opacity 0 without it flashes the final state for a frame first. `entered` is
- *  added before the animation is created and never depends on it — so a browser
- *  without WAAPI, or a throwing animate(), still ends with a visible hero.
- *  Layout.astro's last-resort catch adds the same class. */
+ *  Transform only — deliberately no opacity. The hero's lede is the LCP element
+ *  on a phone, and an element held at `opacity: 0` is not painted, so fading the
+ *  fold in pushes LCP out by the length of the cascade. Sliding it in costs
+ *  nothing: the text is painted at full strength from the first frame and the
+ *  choreography still reads.
+ *
+ *  It also means there is no pre-state to undo: if this module never runs, the
+ *  fold is already in its final position. */
 function initEnter(): void {
 	const items = document.querySelectorAll<HTMLElement>("[data-enter]");
-	if (!items.length) return;
-
-	const canAnimate = typeof Element.prototype.animate === "function";
+	if (!items.length || typeof Element.prototype.animate !== "function") return;
 
 	for (const el of items) {
-		el.classList.add("entered");
-		if (!canAnimate) continue;
-
 		const index = Number(el.dataset.enter ?? "0");
 		if (!Number.isFinite(index)) continue;
 		try {
 			el.animate(
-				[
-					{ opacity: 0, transform: "translateY(26px)" },
-					{ opacity: 1, transform: "translateY(0)" },
-				],
+				[{ transform: "translateY(26px)" }, { transform: "translateY(0)" }],
 				{
 					duration: 700,
 					delay: index * 60,
@@ -376,7 +370,7 @@ function initEnter(): void {
 				},
 			);
 		} catch {
-			// Already visible through `entered`; it simply does not animate.
+			// The element is already where it belongs; it simply does not animate.
 		}
 	}
 }

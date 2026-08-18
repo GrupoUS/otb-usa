@@ -726,25 +726,11 @@ body {
 	animation-duration: 1s;
 }
 
-/* ===== Load cascade ===== */
-
-/* Same progressive-enhancement contract as [data-reveal]: the pre-state exists
-   only when the inline `<html class="js">` flag is present, and the runtime
-   adds `entered` before it tries to animate — so a scripting failure leaves the
-   fold visible rather than blank. */
-.js [data-enter] {
-	opacity: 0;
-}
-
-.js [data-enter].entered {
-	opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.js [data-enter] {
-		opacity: 1;
-	}
-}
+/* ===== Load cascade =====
+   No CSS pre-state: the cascade animates `transform` only, from the keyframes,
+   so the fold paints at full strength on the first frame whether or not the
+   runtime ever gets to it. See initEnter() in src/scripts/motion.ts — the hero's
+   lede is the LCP element and must not sit behind an opacity animation. */
 
 /* ===== Marquee ===== */
 
