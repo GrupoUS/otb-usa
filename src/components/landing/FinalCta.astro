@@ -78,6 +78,7 @@ const hasCheckout = Boolean(finalCta.cta.checkoutUrl);
 						href={finalCta.cta.checkoutUrl}
 						target="_blank"
 						rel="noopener noreferrer"
+						data-shine
 						class="group inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03] sm:w-auto"
 					>
 						<span>{finalCta.cta.secondaryLabel ?? "Garantir vaga"}</span>
@@ -103,7 +104,8 @@ const hasCheckout = Boolean(finalCta.cta.checkoutUrl);
 					type="button"
 					data-lead-cta="cta_final"
 					data-whatsapp-url={whatsappHref}
-					class="group inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03] sm:w-auto"
+					data-shine
+						class="group inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03] sm:w-auto"
 					aria-label={`${finalCta.cta.label}`}
 				>
 					<Icon name="message-circle" size={20} strokeWidth={2.25} />

@@ -2,6 +2,7 @@
 import { Picture } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import { resolveImage } from "../../lib/images";
+import { whatsappUrlWithText } from "../../lib/whatsapp";
 import Icon from "../icons/Icon.astro";
 import SectionHeader from "./SectionHeader.astro";
 
@@ -13,6 +14,10 @@ export interface Props {
 }
 
 const { boston, agenda } = Astro.props;
+
+const ctaCardHref = boston.ctaCard
+	? whatsappUrlWithText(boston.ctaCard.cta.whatsappMessage)
+	: null;
 
 /** Splits a stat like "≤ 48h" into the parts around its first integer so the
  *  number can count up while the qualifier ("≤", "h", "%") stays put. Returns
@@ -71,7 +76,7 @@ function splitStat(valor: string) {
 	</div>
 
 	{/* Plate: the dates set typographically over the photograph. */}
-	<figure class="relative mt-block" data-reveal="up" data-reveal-delay="2">
+	<figure class="relative mt-block" data-reveal="wipe" data-reveal-delay="2">
 		<div class="relative aspect-[16/9] overflow-hidden rounded-plate sm:aspect-[21/9]">
 			{/* Overscanned wrapper owns the parallax transform; the image itself
 			    never transforms, so the plate cannot jump at the travel limits. */}
@@ -132,57 +137,112 @@ function splitStat(valor: string) {
 					Agenda dos 3 dias
 				</h3>
 
-				<ol
-					class="mt-8 grid grid-cols-1 gap-y-10 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-0"
-				>
-					{agenda.map((d, idx) => (
-						<li
-							class="relative border-t-2 border-crimson-mid-45 pt-6 lg:pt-8"
-							data-reveal="up"
-							data-reveal-delay={String(idx + 2)}
-						>
-							<span
-								class="absolute -top-[5px] left-0 h-2 w-2 rounded-full"
-								style="background-color: var(--color-crimson-bright);"
-								aria-hidden="true"></span>
-
-							<div class="flex items-baseline justify-between gap-3">
-								<span
-									class="font-sans text-2xl font-bold tracking-tight tabular-nums text-text-primary"
+				{/*
+					Pinned rail. Above 900px the section holds while the three days —
+					and the panel that says what they leave behind — travel sideways;
+					the gold hairline underneath reads as the progress of the trip.
+					Below that, and under reduced motion, it is a native snap
+					carousel: same panels, thumb instead of scroll. Both states are
+					laid out in global.css; motion.ts only adds `is-pinned` and writes
+					the reserved height, so the page never shifts when the rail
+					engages.
+				*/}
+				<div class="mt-8" data-hpin>
+					<div data-hpin-vp>
+						<ol data-hpin-track>
+							{agenda.map((d) => (
+								<li
+									class="relative flex flex-col border-t-2 border-crimson-mid-45 bg-[color-mix(in_srgb,var(--color-navy-light)_55%,transparent)] p-6 pt-7 lg:p-8 lg:pt-9"
 								>
-									Dia {d.dia}
-								</span>
-								<span
-									class="text-kicker uppercase tracking-kicker tabular-nums text-text-muted"
+									<span
+										class="absolute -top-[5px] left-0 h-2 w-2 rounded-full"
+										style="background-color: var(--color-crimson-bright);"
+										aria-hidden="true"></span>
+
+									<div class="flex items-baseline justify-between gap-3">
+										<span
+											class="font-sans text-2xl font-bold tracking-tight tabular-nums text-text-primary"
+										>
+											Dia {d.dia}
+										</span>
+										<span
+											class="text-kicker uppercase tracking-kicker tabular-nums text-text-muted"
+										>
+											{d.data}
+										</span>
+									</div>
+
+									<h4
+										class="mt-3 font-display text-h3 font-semibold leading-snug text-text-primary"
+									>
+										{d.titulo}
+									</h4>
+									<p class="mt-2 text-body text-text-secondary">{d.descricao}</p>
+
+									<ul class="mt-5 space-y-2.5">
+										{d.atividades.map((a) => (
+											<li class="flex items-start gap-2.5 text-meta text-text-secondary">
+												<Icon
+													name="chevron-right"
+													size={14}
+													strokeWidth={2.25}
+													class="mt-1 shrink-0 text-gold/60"
+													aria-hidden="true"
+												/>
+												<span>{a}</span>
+											</li>
+										))}
+									</ul>
+								</li>
+							))}
+
+							{boston.ctaCard && ctaCardHref && (
+								<li
+									class="relative flex flex-col justify-center border border-[color-mix(in_srgb,var(--color-gold)_34%,transparent)] p-6 lg:p-8"
+									style="background: linear-gradient(180deg, color-mix(in srgb, var(--color-navy-light) 94%, transparent), color-mix(in srgb, var(--color-navy) 92%, transparent));"
 								>
-									{d.data}
-								</span>
-							</div>
+									<div
+										class="pointer-events-none absolute inset-0 opacity-40"
+										aria-hidden="true"
+										style="background: radial-gradient(circle at 70% 15%, color-mix(in srgb, var(--color-gold) 22%, transparent) 0%, transparent 62%);"
+									>
+									</div>
+									<div class="relative">
+										<p
+											class="text-kicker font-semibold uppercase tracking-kicker text-gold"
+										>
+											{boston.ctaCard.kicker}
+										</p>
+										<p
+											class="mt-4 font-display text-[clamp(1.1875rem,1.6vw,1.5625rem)] font-semibold leading-snug text-text-primary"
+										>
+											{boston.ctaCard.texto}
+										</p>
+										<button
+											type="button"
+											data-lead-cta="boston"
+											data-whatsapp-url={ctaCardHref}
+											data-shine
+											class="group mt-7 inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+										>
+											<span>{boston.ctaCard.cta.label}</span>
+											<Icon
+												name="arrow-right"
+												size={18}
+												strokeWidth={2.25}
+												class="transition-transform duration-300 group-hover:translate-x-1"
+											/>
+										</button>
+									</div>
+								</li>
+							)}
+						</ol>
 
-							<h4
-								class="mt-3 font-display text-h3 font-semibold leading-snug text-text-primary"
-							>
-								{d.titulo}
-							</h4>
-							<p class="mt-2 text-body text-text-secondary">{d.descricao}</p>
-
-							<ul class="mt-5 space-y-2.5">
-								{d.atividades.map((a) => (
-									<li class="flex items-start gap-2.5 text-meta text-text-secondary">
-										<Icon
-											name="chevron-right"
-											size={14}
-											strokeWidth={2.25}
-											class="mt-1 shrink-0 text-gold/60"
-											aria-hidden="true"
-										/>
-										<span>{a}</span>
-									</li>
-								))}
-							</ul>
-						</li>
-					))}
-				</ol>
+						<div data-hpin-rail aria-hidden="true">
+							<span data-hpin-bar></span>
+						</div>
+					</div>
+				</div>
 			</div>
 		)}
 

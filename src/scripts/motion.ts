@@ -237,9 +237,18 @@ function initParallax(): void {
 			const host = el.parentElement;
 			// Half the overscan: how far the wrapper can slide before it stops
 			// covering the plate it fills.
-			const slack = host
-				? Math.max(0, (el.offsetHeight - host.clientHeight) / 2)
-				: 0;
+			//
+			// A decorative layer (a radial glow, say) has no plate to cover, so it
+			// has no overscan to derive a budget from and would compute to zero.
+			// `data-parallax-slack` lets such a layer declare its own travel in
+			// pixels instead.
+			const declared = Number(el.dataset.parallaxSlack ?? "");
+			const slack =
+				Number.isFinite(declared) && declared > 0
+					? declared
+					: host
+						? Math.max(0, (el.offsetHeight - host.clientHeight) / 2)
+						: 0;
 
 			const asked = Number(el.dataset.speed ?? "0.14");
 
@@ -356,6 +365,13 @@ function initMarquee(): void {
 		for (const child of originals) {
 			const copy = child.cloneNode(true) as HTMLElement;
 			copy.setAttribute("aria-hidden", "true");
+			// The clone is created after the reveal observer has taken its census,
+			// so it would never be observed and would sit at opacity 0 forever.
+			// It is a duplicate of something already on screen: strip the reveal.
+			copy.removeAttribute("data-reveal");
+			for (const nested of copy.querySelectorAll("[data-reveal]")) {
+				nested.removeAttribute("data-reveal");
+			}
 			track.appendChild(copy);
 		}
 

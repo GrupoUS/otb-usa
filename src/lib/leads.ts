@@ -7,6 +7,7 @@ export const LEAD_CTA_ORIGINS = [
 	"flutuante_desktop",
 	"sticky_mobile",
 	"aplicacao",
+	"boston",
 ] as const;
 
 export type LeadCtaOrigin = (typeof LEAD_CTA_ORIGINS)[number];

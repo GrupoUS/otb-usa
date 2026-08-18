@@ -10,9 +10,10 @@ type Lote = NonNullable<ProductData["lotes"]>[number];
 export interface Props {
 	investimento: ProductData["investimento"];
 	lotes?: ProductData["lotes"];
+	countdown?: ProductData["countdown"];
 }
 
-const { investimento, lotes } = Astro.props;
+const { investimento, lotes, countdown } = Astro.props;
 const loteList = lotes as Lote[] | undefined;
 const ctaHref = whatsappUrlWithText(investimento.cta.whatsappMessage);
 const hasCheckout = Boolean(investimento.cta.checkoutUrl);
@@ -44,7 +45,14 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 	class="band-base relative isolate overflow-hidden py-section"
 	aria-labelledby="investimento-heading"
 >
-	<div class="landing-mesh-bg absolute inset-0 -z-10 opacity-50" aria-hidden="true"></div>
+	{/* The mesh drifts slower than the page. `inset: -8% 0` gives it the vertical
+	    overscan the travel needs — without it the wash would expose the band
+	    colour at one of the ends. */}
+	<div
+		class="landing-mesh-bg absolute inset-x-0 -inset-y-[8%] -z-10 opacity-50"
+		data-parallax
+		data-speed="0.05"
+		aria-hidden="true"></div>
 
 	<div class="mx-auto max-w-6xl px-6 lg:px-8">
 		<div class="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-16">
@@ -168,6 +176,50 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 						</p>
 					)}
 
+					{countdown && (
+						<div
+							class="mt-8 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6"
+							data-cd-target={countdown.target}
+							data-cd-wrap
+						>
+							<div class="text-kicker uppercase tracking-kicker text-text-muted">
+								{countdown.investimentoKicker}
+							</div>
+							<dl
+								class="mt-3 flex items-end gap-3"
+								aria-label={countdown.ariaLabel}
+							>
+								{[
+									{ key: "d", rotulo: countdown.unidades.dias, valor: "000" },
+									{ key: "h", rotulo: countdown.unidades.horas, valor: "00" },
+									{ key: "m", rotulo: countdown.unidades.minutos, valor: "00" },
+								].map((unidade, idx) => (
+									<>
+										{idx > 0 && (
+											<span
+												class="pb-6 font-display text-xl font-bold leading-none"
+												style="color: color-mix(in srgb, var(--color-gold) 38%, transparent);"
+												aria-hidden="true">:</span>
+										)}
+										<div class="flex flex-col-reverse items-start">
+											<dt
+												class="mt-1.5 text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted"
+											>
+												{unidade.rotulo}
+											</dt>
+											<dd
+												class="m-0 font-display text-[1.625rem] font-extrabold leading-none tabular-nums text-text-primary"
+												data-cd={unidade.key}
+											>
+												{unidade.valor}
+											</dd>
+										</div>
+									</>
+								))}
+							</dl>
+						</div>
+					)}
+
 					<div
 						class="mt-8 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6"
 					>
@@ -197,6 +249,7 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 									href={investimento.cta.checkoutUrl}
 									target="_blank"
 									rel="noopener noreferrer"
+									data-shine
 									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
 								>
 									<span>{investimento.cta.secondaryLabel ?? "Garantir vaga"}</span>
@@ -223,7 +276,8 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 								type="button"
 								data-lead-cta="investimento"
 								data-whatsapp-url={ctaHref}
-								class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
+								data-shine
+									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
 								aria-label={`${investimento.cta.label} no WhatsApp`}
 							>
 								<Icon name="message-circle" size={20} strokeWidth={2.25} />

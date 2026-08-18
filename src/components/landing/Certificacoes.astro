@@ -29,12 +29,14 @@ const { certificacoes } = Astro.props;
 	<div class="ribbon-hatch absolute inset-0" aria-hidden="true"></div>
 	<div class="ribbon-fade absolute inset-0" aria-hidden="true"></div>
 
-	<ul
-		class="relative mx-auto grid max-w-7xl grid-cols-1 gap-x-10 gap-y-5 px-6 py-7 sm:grid-cols-2 lg:grid-cols-4 lg:px-8"
-	>
+	{/* Infinite ribbon: the runtime duplicates these four items and translates
+	    the track by -50%, so the loop never shows a seam. Without JS — and under
+	    reduced motion — the base rule in global.css keeps it a wrapped row, same
+	    items, no movement. */}
+	<ul class="relative" data-marquee data-marquee-dur="30">
 		{certificacoes.map((item, idx) => (
 			<li
-				class="flex items-baseline gap-3 text-kicker font-semibold uppercase leading-snug tracking-[0.16em] text-text-primary"
+				class="flex shrink-0 items-baseline gap-3 text-kicker font-semibold uppercase leading-snug tracking-[0.16em] text-text-primary"
 				data-reveal="up"
 				data-reveal-delay={String(idx + 1)}
 			>

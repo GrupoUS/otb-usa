@@ -108,7 +108,7 @@ const breadcrumbJsonLd = {
 		band-alt ↔ band-deep) is the separator now. A hairline between every
 		pair of sections just made a long dark page look striped.
 	*/}
-	<Hero hero={data.hero} ficha={heroFicha} />
+	<Hero hero={data.hero} ficha={heroFicha} countdown={data.countdown} />
 	{data.certificacoes && <Certificacoes certificacoes={data.certificacoes} />}
 	{data.virada && <Virada virada={data.virada} />}
 	<WhyOTB why={data.why} />
@@ -118,7 +118,11 @@ const breadcrumbJsonLd = {
 	<Modulos modulos={data.modulos} />
 	<Boston boston={data.boston} agenda={data.agenda} />
 	<Speakers speakers={data.speakers} />
-	<Investimento investimento={data.investimento} lotes={data.lotes} />
+	<Investimento
+		investimento={data.investimento}
+		lotes={data.lotes}
+		countdown={data.countdown}
+	/>
 	{data.aplicacao && (
 		<Aplicacao aplicacao={data.aplicacao} leadForm={data.leadForm} />
 	)}

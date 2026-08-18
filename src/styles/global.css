@@ -860,8 +860,19 @@ body {
 	scroll-snap-align: start;
 }
 
+[data-hpin] {
+	position: relative;
+}
+
 [data-hpin-rail] {
 	display: none;
+}
+
+[data-hpin-bar] {
+	display: block;
+	height: 100%;
+	width: 0;
+	background-color: var(--color-gold);
 }
 
 .js [data-hpin].is-pinned [data-hpin-vp] {

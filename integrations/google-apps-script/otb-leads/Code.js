@@ -26,6 +26,7 @@ var CTA_ORIGINS_ = Object.freeze([
 	"flutuante_desktop",
 	"sticky_mobile",
 	"aplicacao",
+	"boston",
 ]);
 var CONSENT_VERSION_ = "otb-lead-v1";
 var SHEET_ID_ = "1Nt12dz3uplG4Lj66nGsGSL-owP7bTO8YmFBpkjoGZfU";

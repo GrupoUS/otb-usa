@@ -18,9 +18,10 @@ export interface FichaRow {
 export interface Props {
 	hero: CollectionEntry<"products">["data"]["hero"];
 	ficha?: FichaRow[];
+	countdown?: CollectionEntry<"products">["data"]["countdown"];
 }
 
-const { hero, ficha } = Astro.props;
+const { hero, ficha, countdown } = Astro.props;
 const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 const hasCheckout = Boolean(hero.cta.checkoutUrl);
 const plate = resolveImage(hero.background.image);
@@ -77,17 +78,34 @@ const plate = resolveImage(hero.background.image);
 	>
 	</div>
 
-	{/* Single restrained accent wash. Gold reads as the light source. */}
+	{/* Two accent washes at different parallax speeds. Gold reads as the light
+	    source; the slower crimson pool on the opposite corner is what gives the
+	    fold depth as it scrolls — one flat wash reads as a gradient, two moving
+	    against each other read as space. */}
 	<div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
 		<div
 			class="absolute -top-40 -left-32 h-[560px] w-[560px] rounded-full opacity-[0.12]"
+			data-parallax
+			data-parallax-slack="70"
+			data-speed="0.06"
 			style="background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);"
+		>
+		</div>
+		<div
+			class="absolute -bottom-48 -right-40 h-[660px] w-[660px] rounded-full opacity-[0.2]"
+			data-parallax
+			data-parallax-slack="110"
+			data-speed="0.1"
+			style="background: radial-gradient(circle, var(--color-crimson-bright) 0%, transparent 66%);"
 		>
 		</div>
 	</div>
 
+	{/* The whole fold fades and drifts as it leaves — the transition into
+	    section 01 instead of a hard cut. Written by motion.ts. */}
 	<div
 		class="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pt-24 pb-10 lg:px-8 lg:pt-28"
+		data-hero-fade
 	>
 		<div
 			class="flex w-full flex-wrap items-end gap-x-[clamp(2rem,5vw,4.5rem)] gap-y-12"
@@ -96,7 +114,7 @@ const plate = resolveImage(hero.background.image);
 			{hero.eyebrow && (
 				<p
 					class="flex items-center gap-3.5 text-kicker font-semibold uppercase tracking-kicker text-gold tabular-nums"
-					data-reveal="up"
+					data-enter="1"
 				>
 					{/* Crimson rule — the sanctioned date/place marker role, and the
 					    first thing that ties the fold to "Estados Unidos". */}
@@ -111,8 +129,7 @@ const plate = resolveImage(hero.background.image);
 			<h1
 				id="hero-heading"
 				class="mt-6 font-display text-display font-bold text-balance"
-				data-reveal="up"
-				data-reveal-delay="1"
+				data-enter="2"
 			>
 				<span class="block text-text-primary">{hero.headline}</span>
 				{hero.highlight && (
@@ -122,16 +139,14 @@ const plate = resolveImage(hero.background.image);
 
 			<p
 				class="mt-7 max-w-2xl text-lede font-light text-text-secondary"
-				data-reveal="up"
-				data-reveal-delay="2"
+				data-enter="3"
 			>
 				{hero.subheadline}
 			</p>
 
 			<ul
 				class="mt-8 hidden flex-wrap gap-2.5 sm:flex"
-				data-reveal="up"
-				data-reveal-delay="3"
+				data-enter="4"
 				aria-label="Diferenciais do programa"
 			>
 				{hero.badges.map((badge) => (
@@ -148,8 +163,7 @@ const plate = resolveImage(hero.background.image);
 			    takes the gold slot only once otb.json carries the official URL. */}
 			<div
 				class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
-				data-reveal="up"
-				data-reveal-delay="4"
+				data-enter="5"
 			>
 				{hasCheckout && hero.cta.checkoutUrl ? (
 					<>
@@ -157,6 +171,7 @@ const plate = resolveImage(hero.background.image);
 							href={hero.cta.checkoutUrl}
 							target="_blank"
 							rel="noopener noreferrer"
+							data-shine
 							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
 						>
 							<span>{hero.cta.secondaryLabel ?? "Garantir vaga"}</span>
@@ -184,6 +199,7 @@ const plate = resolveImage(hero.background.image);
 							type="button"
 							data-lead-cta="hero"
 							data-whatsapp-url={ctaHref}
+							data-shine
 							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-navy shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
 							aria-label={hero.cta.label}
 						>
@@ -205,6 +221,67 @@ const plate = resolveImage(hero.background.image);
 					</>
 				)}
 			</div>
+
+			{/*
+				Live countdown. The only sanctioned urgency device besides the active
+				lote: a real date, counted down, rather than an invented scarcity
+				number. Runs under reduced motion too — it is information.
+
+				`<dl>` without `aria-live`: announcing a new value every second would
+				be noise. The list carries a label and is read on demand.
+			*/}
+			{countdown && (
+				<div
+					class="mt-block border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] pt-[26px]"
+					data-enter="6"
+					data-cd-target={countdown.target}
+					data-cd-wrap
+				>
+					<p
+						class="flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-gold-light"
+					>
+						<span
+							class="live-dot relative inline-flex h-2 w-2 shrink-0 rounded-full"
+							style="background-color: var(--color-crimson-bright);"
+							aria-hidden="true"></span>
+						{countdown.heroKicker}
+					</p>
+
+					<dl
+						class="mt-4 flex items-end gap-3 sm:gap-4"
+						aria-label={countdown.ariaLabel}
+					>
+						{[
+							{ key: "d", rotulo: countdown.unidades.dias, valor: "000" },
+							{ key: "h", rotulo: countdown.unidades.horas, valor: "00" },
+							{ key: "m", rotulo: countdown.unidades.minutos, valor: "00" },
+							{ key: "s", rotulo: countdown.unidades.segundos, valor: "00" },
+						].map((unidade, idx) => (
+							<>
+								{idx > 0 && (
+									<span
+										class="pb-6 font-display text-2xl font-bold leading-none"
+										style="color: color-mix(in srgb, var(--color-gold) 38%, transparent);"
+										aria-hidden="true">:</span>
+								)}
+								<div class="flex flex-col-reverse items-start">
+									<dt
+										class="mt-1.5 text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted"
+									>
+										{unidade.rotulo}
+									</dt>
+									<dd
+										class="m-0 font-display text-[clamp(1.625rem,2.4vw,2.125rem)] font-extrabold leading-none tabular-nums text-text-primary"
+										data-cd={unidade.key}
+									>
+										{unidade.valor}
+									</dd>
+								</div>
+							</>
+						))}
+					</dl>
+				</div>
+			)}
 		</div>
 
 		{/*
@@ -217,8 +294,7 @@ const plate = resolveImage(hero.background.image);
 			<aside
 				class="w-full min-w-0 flex-[0_1_20rem] border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6 lg:w-auto lg:border-t-0 lg:border-l lg:pt-0 lg:pl-[clamp(1.25rem,2vw,2rem)]"
 				aria-labelledby="hero-ficha-label"
-				data-reveal="up"
-				data-reveal-delay="3"
+				data-enter="7"
 			>
 				<p
 					id="hero-ficha-label"
@@ -268,8 +344,7 @@ const plate = resolveImage(hero.background.image);
 	{hero.facts && (
 		<div
 			class="relative z-10 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_72%,transparent)] backdrop-blur-sm"
-			data-reveal="up"
-			data-reveal-delay="5"
+			data-enter="8"
 		>
 			<dl
 				class="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] px-6 lg:grid-cols-4 lg:px-8"
