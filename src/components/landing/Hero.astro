@@ -5,23 +5,12 @@ import { resolveImage } from "../../lib/images";
 import { whatsappUrlWithText } from "../../lib/whatsapp";
 import Icon, { type IconName } from "../icons/Icon.astro";
 
-/** Edition spec rail. Derived in `index.astro` from `edicao`,
- *  `programa.horas` and the active lote — never duplicated in the JSON, so it
- *  can never drift from the lote table rendered in Investimento. */
-export interface FichaRow {
-	rotulo: string;
-	valor: string;
-	prefixo?: string;
-	destaque?: boolean;
-}
-
 export interface Props {
 	hero: CollectionEntry<"products">["data"]["hero"];
-	ficha?: FichaRow[];
 	countdown?: CollectionEntry<"products">["data"]["countdown"];
 }
 
-const { hero, ficha, countdown } = Astro.props;
+const { hero, countdown } = Astro.props;
 const ctaHref = whatsappUrlWithText(hero.cta.whatsappMessage);
 const hasCheckout = Boolean(hero.cta.checkoutUrl);
 const plate = resolveImage(hero.background.image);
@@ -110,10 +99,7 @@ const plate = resolveImage(hero.background.image);
 		class="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pt-24 pb-10 lg:px-8 lg:pt-28"
 		data-hero-fade
 	>
-		<div
-			class="flex w-full flex-wrap items-end gap-x-[clamp(2rem,5vw,4.5rem)] gap-y-12"
-		>
-		<div class="min-w-0 flex-[1_1_38rem]">
+		<div class="w-full min-w-0 max-w-4xl">
 			{hero.eyebrow && (
 				<p
 					class="flex items-center gap-3.5 text-kicker font-semibold uppercase tracking-kicker text-gold tabular-nums"

@@ -57,3 +57,5 @@
 {"timestamp": "2026-08-18T21:32:07Z", "session_id": "dccc7224-85a9-4c88-9f4d-41dd76ebecc3", "tool": "Bash", "error_head": "Exit code 1\nok"}
 {"timestamp": "2026-08-18T21:36:55Z", "session_id": "dccc7224-85a9-4c88-9f4d-41dd76ebecc3", "tool": "Bash", "error_head": "Exit code 1\n  File \"<stdin>\", line 16\n    print(f\"{:16}\" + \"\".join(f\"{n:>16}\" for n in bgs))\n             ^\nSyntaxError: f-string: valid expression required before ':'"}
 {"timestamp": "2026-08-18T21:42:53Z", "session_id": "dccc7224-85a9-4c88-9f4d-41dd76ebecc3", "tool": "Bash", "error_head": "Exit code 144"}
+{"timestamp": "2026-08-18T21:50:11Z", "session_id": "dccc7224-85a9-4c88-9f4d-41dd76ebecc3", "tool": "Bash", "error_head": "Exit code 1\n### helper apos setup ###\n\n!/usr/bin/gh auth git-credential"}
+{"timestamp": "2026-08-18T21:56:33Z", "session_id": "dccc7224-85a9-4c88-9f4d-41dd76ebecc3", "tool": "Bash", "error_head": "Exit code 1\n(eval):32: parse error near `)'"}

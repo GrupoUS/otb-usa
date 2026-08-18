@@ -1,0 +1,13 @@
+{
+  "session_id": "201caa9b-89d0-4f50-bcdd-de23c380e476",
+  "started_at": "2026-08-18T21:59:56.700276+00:00",
+  "branch": "main",
+  "head_sha": "152baba29983c179845428501a47c77f7778281f",
+  "preexisting_dirty": [
+    ".claude/logs/agent-orchestration-events.jsonl",
+    ".claude/logs/tool-failure-streak.json",
+    ".claude/logs/tool-failures.jsonl",
+    ".claude/logs/sessions/9071c79f-a1ad-4937-8c30-291ddfd914ff.baseline.json",
+    ".claude/logs/sessions/fd228e88-9043-40d1-8669-574d1fd9de31.baseline.json"
+  ]
+}

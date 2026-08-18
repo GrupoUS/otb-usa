@@ -38,3 +38,6 @@
 {"timestamp": "2026-08-04T20:48:52Z", "prompt_sha256_12": "6cbd103d2523", "prompt_length": 73, "mode": "routing-hint-only", "recommended_agents": ["debugger", "explorer"]}
 {"timestamp": "2026-08-18T18:16:59Z", "prompt_sha256_12": "99f7eac9a621", "prompt_length": 1567, "mode": "routing-hint-only", "recommended_agents": ["frontend-specialist", "explorer", "librarian"]}
 {"timestamp": "2026-08-18T21:17:32Z", "prompt_sha256_12": "ee9da0fd8463", "prompt_length": 388, "mode": "routing-hint-only", "recommended_agents": ["librarian"]}
+{"timestamp": "2026-08-18T21:46:46Z", "prompt_sha256_12": "88c5b792657d", "prompt_length": 87777, "mode": "parallel-authorized", "recommended_agents": ["debugger", "frontend-specialist", "performance-optimizer", "explorer", "librarian"]}
+{"timestamp": "2026-08-18T21:49:18Z", "prompt_sha256_12": "bb54602e6cb5", "prompt_length": 97, "mode": "routing-hint-only", "recommended_agents": ["debugger", "explorer"]}
+{"timestamp": "2026-08-18T21:54:18Z", "prompt_sha256_12": "7b107ffe45c6", "prompt_length": 147, "mode": "routing-hint-only", "recommended_agents": ["performance-optimizer"]}
