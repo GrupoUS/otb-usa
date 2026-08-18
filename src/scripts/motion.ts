@@ -383,15 +383,31 @@ function initEnter(): void {
 
 /* ----------------------------------------------------------------- marquee */
 
-/** Infinite ribbon. The children are duplicated once and the track translates
- *  by exactly -50%, so the seam never shows. Without JS (or under reduced
- *  motion) the list stays a wrapped flex row — the same items, no movement. */
+/** Infinite ribbon. The children are duplicated once and the track translates by
+ *  half its width plus half a gap, which is where the seamless period actually
+ *  falls on a doubled track. Without JS (or under reduced motion) the list stays
+ *  a wrapped flex row — the same items, no movement.
+ *
+ *  WCAG 2.2.2: content that moves automatically for more than five seconds needs
+ *  a mechanism to stop it, and hover is not one for a keyboard or a touch
+ *  reader. The runtime injects a real button, labelled from the content layer.
+ *  No labels declared means no control, and no control means no animation. */
 function initMarquee(): void {
 	for (const track of document.querySelectorAll<HTMLElement>(
 		"[data-marquee]",
 	)) {
 		const originals = Array.from(track.children);
 		if (!originals.length) continue;
+
+		// The control is authored in the component (so it can use the project's
+		// icon set) and stays `hidden` until here: without this runtime there is
+		// no animation for it to pause. No control, no animation.
+		const control = track.parentElement?.querySelector<HTMLButtonElement>(
+			"[data-marquee-toggle]",
+		);
+		const pauseLabel = control?.dataset.labelPause ?? "";
+		const resumeLabel = control?.dataset.labelResume ?? "";
+		if (!control || !pauseLabel || !resumeLabel) continue;
 
 		for (const child of originals) {
 			const copy = child.cloneNode(true) as HTMLElement;
@@ -410,12 +426,31 @@ function initMarquee(): void {
 		track.style.animationDuration = `${Number.isFinite(duration) ? duration : 30}s`;
 		track.classList.add("is-marquee");
 
+		let paused = false;
+		const setPlayState = () => {
+			track.style.animationPlayState = paused ? "paused" : "running";
+		};
+
+		const pauseIcon = control.querySelector<HTMLElement>("[data-icon-pause]");
+		const playIcon = control.querySelector<HTMLElement>("[data-icon-play]");
+
+		control.hidden = false;
+		control.addEventListener("click", () => {
+			paused = !paused;
+			control.setAttribute("aria-pressed", String(paused));
+			control.setAttribute("aria-label", paused ? resumeLabel : pauseLabel);
+			pauseIcon?.classList.toggle("hidden", paused);
+			pauseIcon?.classList.toggle("inline-flex", !paused);
+			playIcon?.classList.toggle("hidden", !paused);
+			playIcon?.classList.toggle("inline-flex", paused);
+			setPlayState();
+		});
+
+		// Hover is a convenience on top of the control, never the mechanism.
 		track.addEventListener("pointerenter", () => {
-			track.style.animationPlayState = "paused";
+			if (!paused) track.style.animationPlayState = "paused";
 		});
-		track.addEventListener("pointerleave", () => {
-			track.style.animationPlayState = "running";
-		});
+		track.addEventListener("pointerleave", setPlayState);
 	}
 }
 
@@ -539,6 +574,68 @@ function initHorizontalPin(): void {
 		}
 	});
 
+	/* While pinned the viewport is `overflow: hidden` — which still makes it a
+	   scroll container. Anything that scrolls it sideways (the browser revealing
+	   a focused control in an off-screen panel, a trackpad swipe, find-in-page)
+	   adds an offset the runtime cannot see, and the rail ends up wedged: its
+	   transform says one thing and the box says another.
+
+	   Rather than fight it, translate it. Any horizontal scroll of the box is
+	   converted into the equivalent page scroll and the box is put back to zero,
+	   so the rail keeps a single source of truth and the focused panel still
+	   ends up on screen. */
+	for (const pin of entries) {
+		pin.viewport.addEventListener(
+			"scroll",
+			() => {
+				if (!pin.active || !pin.overflow) return;
+				const left = pin.viewport.scrollLeft;
+				if (!left) return;
+
+				pin.viewport.scrollLeft = 0;
+				const rect = pin.root.getBoundingClientRect();
+				const rootTop = rect.top + window.scrollY;
+				const current = clamp01((pin.stickyTop - rect.top) / pin.overflow);
+				const next = clamp01(current + left / pin.overflow);
+				window.scrollTo(
+					0,
+					Math.round(rootTop - pin.stickyTop + next * pin.overflow),
+				);
+				runScrollTasks();
+			},
+			{ passive: true },
+		);
+
+		/* Chrome does not always scroll the clipped box: when the rail is still
+		   off-screen it scrolls the PAGE to the panel's static position instead,
+		   which lands on progress 0 with the focused panel still clipped. So the
+		   intent is read directly — move the page to the progress that reveals
+		   the panel the focus landed in. */
+		pin.viewport.addEventListener("focusin", (event) => {
+			if (!pin.active || !pin.overflow) return;
+
+			const target = event.target as HTMLElement | null;
+			const panel = target?.closest<HTMLElement>("[data-hpin-track] > *");
+			if (!panel) return;
+
+			requestAnimationFrame(() => {
+				if (pin.viewport.scrollLeft) pin.viewport.scrollLeft = 0;
+
+				const reveal = clamp01(
+					(panel.offsetLeft + panel.offsetWidth - pin.viewport.clientWidth) /
+						pin.overflow,
+				);
+				const rect = pin.root.getBoundingClientRect();
+				const rootTop = rect.top + window.scrollY;
+				window.scrollTo(
+					0,
+					Math.round(rootTop - pin.stickyTop + reveal * pin.overflow),
+				);
+				runScrollTasks();
+			});
+		});
+	}
+
 	onResize(layout);
 	layout();
 }
@@ -550,21 +647,41 @@ export function initMotion(): void {
 		typeof window.matchMedia === "function" &&
 		window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-	// Chrome that carries information runs in every mode.
-	initScrollProgress();
-	initHeader();
-	initBottomChrome();
-	initCountdown();
+	// Chrome that carries information runs in every mode. Each behaviour is
+	// isolated: one of them failing must not silence the rest.
+	for (const init of [
+		initScrollProgress,
+		initHeader,
+		initBottomChrome,
+		initCountdown,
+	]) {
+		try {
+			init();
+		} catch {
+			// Enhancement only — the markup underneath is already complete.
+		}
+	}
 
 	if (!reduceMotion) {
-		initCounters();
-		initParallax();
-		initTilt();
-		initEnter();
-		initMarquee();
-		initShine();
-		initHeroFade();
-		initHorizontalPin();
+		// The cascade runs FIRST: `[data-enter]` sits at opacity 0 under the `.js`
+		// flag, so a throw in anything registered before it would leave the whole
+		// fold invisible.
+		for (const init of [
+			initEnter,
+			initCounters,
+			initParallax,
+			initTilt,
+			initMarquee,
+			initShine,
+			initHeroFade,
+			initHorizontalPin,
+		]) {
+			try {
+				init();
+			} catch {
+				// Same contract: never take the page down for an effect.
+			}
+		}
 	}
 
 	const remeasure = () => {

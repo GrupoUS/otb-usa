@@ -73,6 +73,10 @@
 		"Imersão internacional em Boston"
 	],
 
+	"certificacoesControles": {
+		"pausar": "Pausar a faixa de certificações",
+		"retomar": "Retomar a faixa de certificações"
+	},
 	"why": {
 		"positioningQuote": "O OTB não é para quem está começando. É para quem já chegou longe e sabe que o próximo nível exige uma visão diferente de tudo.",
 		"headline": "Os três pilares do",
@@ -618,10 +622,11 @@
 		],
 		"submitLabel": "Enviar e falar com a Laura",
 		"microcopy": "Ao enviar, o WhatsApp abre com a sua mensagem pronta para a Laura.",
+		"semJs": "O formulário precisa de JavaScript para enviar a sua aplicação. Fale direto com a Laura no WhatsApp — ela pergunta o mesmo em dois minutos.",
 		"whatsappPrefacio": "Olá, Laura! Quero aplicar para a 3ª Edição do OTB Estados Unidos (19–21 abr 2027, Boston).",
 		"sucesso": {
 			"titulo": "Sua mensagem está pronta",
-			"texto": "Abrimos o WhatsApp com os seus dados preenchidos para a Laura. Se a janela não abriu, use o botão abaixo.",
+			"texto": "Recebemos a sua aplicação. Abra a conversa no botão abaixo — a sua mensagem já vai preenchida para a Laura.",
 			"ctaLabel": "Abrir conversa com a Laura",
 			"resetLabel": "Enviar outra aplicação"
 		}

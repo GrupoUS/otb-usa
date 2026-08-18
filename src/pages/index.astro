@@ -109,7 +109,12 @@ const breadcrumbJsonLd = {
 		pair of sections just made a long dark page look striped.
 	*/}
 	<Hero hero={data.hero} ficha={heroFicha} countdown={data.countdown} />
-	{data.certificacoes && <Certificacoes certificacoes={data.certificacoes} />}
+	{data.certificacoes && (
+		<Certificacoes
+			certificacoes={data.certificacoes}
+			controles={data.certificacoesControles}
+		/>
+	)}
 	{data.virada && <Virada virada={data.virada} />}
 	<WhyOTB why={data.why} />
 	<TargetAudience audience={data.audience} />

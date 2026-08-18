@@ -1,13 +1,17 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import Icon from "../icons/Icon.astro";
 
 export interface Props {
 	certificacoes: NonNullable<
 		CollectionEntry<"products">["data"]["certificacoes"]
 	>;
+	/** Without these the runtime leaves the ribbon a static wrapped row — an
+	 *  auto-scrolling list needs a way to stop it (WCAG 2.2.2). */
+	controles?: CollectionEntry<"products">["data"]["certificacoesControles"];
 }
 
-const { certificacoes } = Astro.props;
+const { certificacoes, controles } = Astro.props;
 ---
 
 {/*
@@ -33,7 +37,13 @@ const { certificacoes } = Astro.props;
 	    the track by -50%, so the loop never shows a seam. Without JS — and under
 	    reduced motion — the base rule in global.css keeps it a wrapped row, same
 	    items, no movement. */}
-	<ul class="relative" data-marquee data-marquee-dur="30">
+	<ul
+		class="relative"
+		data-marquee
+		data-marquee-dur="30"
+		data-marquee-pause={controles?.pausar}
+		data-marquee-resume={controles?.retomar}
+	>
 		{certificacoes.map((item, idx) => (
 			<li
 				class="flex shrink-0 items-baseline gap-3 text-kicker font-semibold uppercase leading-snug tracking-[0.16em] text-text-primary"
@@ -50,4 +60,29 @@ const { certificacoes } = Astro.props;
 			</li>
 		))}
 	</ul>
+
+	{/* Pause control for the ribbon. Moving text that runs for more than five
+	    seconds needs a way to stop it, and hover is not one for a keyboard or a
+	    touch reader (WCAG 2.2.2). Rendered here rather than injected so it can
+	    use the project's icon set; `hidden` until the runtime wires it up, since
+	    without JS there is no animation to pause. */}
+	{controles && (
+		<button
+			type="button"
+			class="marquee-toggle"
+			data-marquee-toggle
+			aria-pressed="false"
+			aria-label={controles.pausar}
+			data-label-pause={controles.pausar}
+			data-label-resume={controles.retomar}
+			hidden
+		>
+			<span data-icon-pause class="inline-flex">
+				<Icon name="pause" size={16} strokeWidth={2} />
+			</span>
+			<span data-icon-play class="hidden">
+				<Icon name="play" size={16} strokeWidth={2} />
+			</span>
+		</button>
+	)}
 </section>

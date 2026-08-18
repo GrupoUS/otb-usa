@@ -73,10 +73,14 @@ import Layout from "../layouts/Layout.astro";
 				return;
 			}
 
+			// lead_email is optional since the inline application section: the field
+			// is optional there, so an accepted lead can legitimately hand off with
+			// an empty address. Requiring it here would discard a lead the API has
+			// already stored and drop the reader back on the landing page.
 			if (
 				!uuidV4Pattern.test(lead.lead_id) ||
 				!hasText(lead.lead_name) ||
-				!hasText(lead.lead_email) ||
+				typeof lead.lead_email !== "string" ||
 				!hasText(lead.lead_phone)
 			) {
 				try {

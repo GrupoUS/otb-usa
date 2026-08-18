@@ -20,10 +20,14 @@ export type IconName =
 	| "users"
 	| "alert-circle"
 	| "expand"
+	| "pause"
+	| "play"
 	| "x";
 
 export const ICON_PATHS: Record<IconName, string[]> = {
 	check: ["M20 6 9 17l-5-5"],
+	pause: ["M14 4h3v16h-3z", "M7 4h3v16H7z"],
+	play: ["M6 3 20 12 6 21Z"],
 	"chevron-down": ["m6 9 6 6 6-6"],
 	"chevron-right": ["m9 18 6-6-6-6"],
 	stethoscope: [

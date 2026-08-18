@@ -193,28 +193,20 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 									{ key: "d", rotulo: countdown.unidades.dias, valor: "000" },
 									{ key: "h", rotulo: countdown.unidades.horas, valor: "00" },
 									{ key: "m", rotulo: countdown.unidades.minutos, valor: "00" },
-								].map((unidade, idx) => (
-									<>
-										{idx > 0 && (
-											<span
-												class="pb-6 font-display text-xl font-bold leading-none"
-												style="color: color-mix(in srgb, var(--color-gold) 38%, transparent);"
-												aria-hidden="true">:</span>
-										)}
-										<div class="flex flex-col-reverse items-start">
-											<dt
-												class="mt-1.5 text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted"
-											>
-												{unidade.rotulo}
-											</dt>
-											<dd
-												class="m-0 font-display text-[1.625rem] font-extrabold leading-none tabular-nums text-text-primary"
-												data-cd={unidade.key}
-											>
-												{unidade.valor}
-											</dd>
-										</div>
-									</>
+								].map((unidade) => (
+									<div class="cd-unit flex flex-col-reverse items-start">
+										<dt
+											class="mt-1.5 text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted"
+										>
+											{unidade.rotulo}
+										</dt>
+										<dd
+											class="m-0 font-display text-[1.625rem] font-extrabold leading-none tabular-nums text-text-primary"
+											data-cd={unidade.key}
+										>
+											{unidade.valor}
+										</dd>
+									</div>
 								))}
 							</dl>
 						</div>

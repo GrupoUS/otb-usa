@@ -233,12 +233,18 @@ body {
 .js [data-float-wa] {
 	transition:
 		transform var(--duration-reveal) var(--ease-editorial),
-		opacity var(--duration-reveal) var(--ease-editorial);
+		opacity var(--duration-reveal) var(--ease-editorial),
+		visibility var(--duration-reveal) var(--ease-editorial);
 }
 
+/* `visibility` — not opacity alone. A transparent button with
+   `pointer-events: none` still takes a tab stop and still receives focus, so a
+   keyboard user lands on an invisible control with an invisible focus ring.
+   The sticky bar uses the same mechanism for the same reason. */
 .js [data-float-wa].is-retracted {
 	transform: translateY(160%);
 	opacity: 0;
+	visibility: hidden;
 	pointer-events: none;
 }
 
@@ -770,12 +776,16 @@ body {
 	will-change: transform;
 }
 
+/* The track holds 2n items and therefore 2n-1 gaps, so its width is
+   `2S + (2n-1)g` while a seamless loop needs a shift of `S + n·g` — exactly half
+   a gap more than 50%. Without the correction the ribbon snaps 26px sideways on
+   every wrap, which is the seam this is supposed to hide. */
 @keyframes otb-marquee {
 	from {
 		transform: translate3d(0, 0, 0);
 	}
 	to {
-		transform: translate3d(-50%, 0, 0);
+		transform: translate3d(calc(-50% - 1.625rem), 0, 0);
 	}
 }
 
@@ -829,6 +839,37 @@ body {
 		transform: translateX(440%) skewX(-18deg);
 		opacity: 0;
 	}
+}
+
+/* ===== Countdown ===== */
+
+/* The cells ship as 000/00 placeholders and are only filled by the runtime, so
+   without JS the page would announce a 2027 event as already over. Same `.js`
+   contract as the reveals: no script, no countdown. */
+/* Written as the negative so the rule disappears entirely once the flag is
+   present — a positive `display: block` would also beat the `hidden sm:block`
+   the sticky bar uses to drop the mini countdown on a phone. */
+html:not(.js) [data-cd-wrap] {
+	display: none;
+}
+
+/* The `:` separators cannot be elements: a `<dl>` may hold only dt/dd groups,
+   `div` groups or script-supporting elements, and mixing a bare `<span>` in
+   breaks the content model (axe: definition-list). A pseudo-element is not an
+   element, so it carries the mark without entering the DOM. */
+.cd-unit {
+	position: relative;
+}
+
+.cd-unit + .cd-unit::before {
+	content: ":";
+	position: absolute;
+	left: -0.85rem;
+	bottom: 1.5rem;
+	font-family: var(--font-display);
+	font-weight: 700;
+	line-height: 1;
+	color: color-mix(in srgb, var(--color-gold) 38%, transparent);
 }
 
 /* ===== Live dot (countdown) ===== */
@@ -903,7 +944,10 @@ body {
 	   rail reads as the focus of the screen. The runtime reads this offset back
 	   to keep the progress in step with the pin. */
 	--hpin-h: min(100svh, 34rem);
-	top: calc((100svh - var(--hpin-h)) / 2);
+	/* Centred in the space ABOVE the sticky conversion bar, not in the whole
+	   viewport: on a 1366x768 laptop the bar is already up by the time the rail
+	   pins, and plain centring painted the gold progress hairline behind it. */
+	top: calc((100svh - 4.25rem - var(--hpin-h)) / 2);
 	height: var(--hpin-h);
 	align-items: center;
 	overflow: hidden;
@@ -927,4 +971,52 @@ body {
 	bottom: 0;
 	height: 2px;
 	background-color: color-mix(in srgb, var(--color-gold) 14%, transparent);
+}
+
+/* ===== Marquee pause control ===== */
+
+/* Injected by the runtime, so it exists only when there is motion to stop.
+   Quiet until it is wanted: it surfaces on hover of the ribbon and whenever it
+   takes focus, which is what makes it reachable without a pointer. */
+.marquee-toggle {
+	position: absolute;
+	right: 0.75rem;
+	bottom: 0.5rem;
+	z-index: 1;
+	display: inline-flex;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid
+		color-mix(in srgb, var(--color-text-primary) 45%, transparent);
+	border-radius: 9999px;
+	background-color: color-mix(
+		in srgb,
+		var(--color-crimson-dark) 70%,
+		transparent
+	);
+	color: var(--color-text-primary);
+	line-height: 1;
+	opacity: 0;
+	cursor: pointer;
+	transition:
+		opacity var(--duration-hover) ease,
+		border-color var(--duration-hover) ease;
+}
+
+section:hover > .marquee-toggle,
+.marquee-toggle:focus-visible,
+.marquee-toggle[aria-pressed="true"] {
+	opacity: 1;
+}
+
+.marquee-toggle:hover {
+	border-color: var(--color-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.marquee-toggle {
+		display: none;
+	}
 }

@@ -131,6 +131,7 @@ function splitStat(valor: string) {
 		{agenda && agenda.length > 0 && (
 			<div class="mt-block">
 				<h3
+					id="boston-agenda-title"
 					class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
 					data-reveal="up"
 				>
@@ -148,7 +149,15 @@ function splitStat(valor: string) {
 					engages.
 				*/}
 				<div class="mt-8" data-hpin>
-					<div data-hpin-vp>
+					{/* In the carousel state this box is the only thing that scrolls the
+					    agenda, so it needs a name and a tab stop — otherwise the panels
+					    past the first are reachable by pointer only. */}
+					<div
+						data-hpin-vp
+						tabindex="0"
+						role="group"
+						aria-labelledby="boston-agenda-title"
+					>
 						<ol data-hpin-track>
 							{agenda.map((d) => (
 								<li

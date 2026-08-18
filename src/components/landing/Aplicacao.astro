@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { whatsappUrlWithText } from "../../lib/whatsapp";
 import Icon from "../icons/Icon.astro";
 import SectionHeader from "./SectionHeader.astro";
 
@@ -13,6 +14,12 @@ export interface Props {
 }
 
 const { aplicacao, leadForm } = Astro.props;
+
+/** Without JS the form cannot submit anywhere useful, so it is not rendered at
+ *  all — a native GET would put the reader's name, phone and e-mail in the
+ *  address bar and still deliver nothing. The fallback is the conversation the
+ *  form was going to open anyway. */
+const fallbackHref = whatsappUrlWithText(aplicacao.whatsappPrefacio);
 
 const fieldClass =
 	"min-h-[52px] w-full rounded-plate border border-[color-mix(in_srgb,var(--color-gold)_24%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_66%,transparent)] px-4 text-body text-text-primary transition-colors duration-200 placeholder:text-text-muted/60 focus:border-gold";
@@ -100,7 +107,7 @@ const labelClass =
 					</p>
 
 					<form
-						class="mt-6 grid grid-cols-1 gap-4"
+						class="apply-form mt-6 grid-cols-1 gap-4"
 						data-apply-form
 						data-consent-version={leadForm.version}
 						data-submit-label={aplicacao.submitLabel}
@@ -243,21 +250,23 @@ const labelClass =
 							</span>
 						</label>
 
-						<div
-							class="flex items-start gap-2.5 text-meta text-text-primary"
-							data-apply-status
-							role="status"
-							aria-live="polite"
-							aria-atomic="true"
-							hidden
-						>
-							<Icon
-								name="alert-circle"
-								size={18}
-								strokeWidth={2}
-								class="mt-0.5 shrink-0 text-crimson-bright"
-							/>
-							<span data-apply-status-text></span>
+						{/* The live region itself is never hidden: a `role="status"` that is
+						    `hidden` (or `display:none`) at the moment its text changes is
+						    outside the accessibility tree and announces nothing. Only its
+						    contents are toggled, and an empty region has no box. */}
+						<div role="status" aria-live="polite" aria-atomic="true">
+							<span
+								class="hidden items-start gap-2.5 text-meta text-text-primary"
+								data-apply-status
+							>
+								<Icon
+									name="alert-circle"
+									size={18}
+									strokeWidth={2}
+									class="mt-0.5 shrink-0 text-crimson-bright"
+								/>
+								<span data-apply-status-text></span>
+							</span>
 						</div>
 
 						<button
@@ -272,6 +281,21 @@ const labelClass =
 
 						<p class="text-meta text-text-muted">{aplicacao.microcopy}</p>
 					</form>
+
+					<noscript>
+						<p class="mt-6 text-body text-text-secondary">
+							{aplicacao.semJs}
+						</p>
+						<a
+							href={fallbackHref}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="mt-5 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-gold px-6 text-sm font-semibold text-navy"
+						>
+							{aplicacao.sucesso.ctaLabel}
+							<Icon name="arrow-right" size={18} strokeWidth={2.25} />
+						</a>
+					</noscript>
 
 					{/* Confirmation state. Only reached when the lead was accepted but
 					    sessionStorage is unavailable, so the hand-off page cannot run —
@@ -316,6 +340,17 @@ const labelClass =
 </section>
 
 <style>
+	/* Progressive enhancement, same contract as the reveals: the form only
+	   exists once the inline `<html class="js">` flag is present, because its
+	   submit handler is the only thing that can deliver it. */
+	.apply-form {
+		display: none;
+	}
+
+	:global(html.js) .apply-form {
+		display: grid;
+	}
+
 	.apply-honeypot {
 		position: absolute;
 		width: 1px;
@@ -452,13 +487,17 @@ const labelClass =
 		};
 
 		const hideStatus = () => {
-			status.hidden = true;
+			status.classList.add("hidden");
+			status.classList.remove("flex");
 			statusText.textContent = "";
 		};
 
 		const showStatus = (message: string) => {
+			// Unhide first, then write: the region has to be in the accessibility
+			// tree before its text changes or the change is never announced.
+			status.classList.remove("hidden");
+			status.classList.add("flex");
 			statusText.textContent = message;
-			status.hidden = false;
 		};
 
 		for (const input of [nameInput, emailInput, whatsappInput]) {

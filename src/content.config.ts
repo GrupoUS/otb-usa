@@ -70,6 +70,16 @@ const products = defineCollection({
 		 *  never marketing copy; each entry is verifiable in legal.disclaimer. */
 		certificacoes: z.array(z.string().min(8).max(60)).length(4).optional(),
 
+		/** Labels for the ribbon's pause control. The runtime refuses to animate a
+		 *  marquee without them: moving text that cannot be stopped fails
+		 *  WCAG 2.2.2, and hover is not a mechanism for keyboard or touch. */
+		certificacoesControles: z
+			.object({
+				pausar: z.string().min(10),
+				retomar: z.string().min(10),
+			})
+			.optional(),
+
 		why: z.object({
 			positioningQuote: z.string().min(60).max(220).optional(),
 			headline: z.string(),
@@ -412,6 +422,9 @@ const products = defineCollection({
 				momentos: z.array(z.string()).min(3).max(6),
 				submitLabel: z.string(),
 				microcopy: z.string().min(40),
+				/** Shown inside <noscript>: without JS the form is not rendered at
+				 *  all, so this is the only thing that stands in for it. */
+				semJs: z.string().min(40),
 				whatsappPrefacio: z
 					.string()
 					.refine((m) => m.startsWith("Olá, Laura!"), {
