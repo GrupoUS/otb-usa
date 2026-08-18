@@ -204,12 +204,11 @@ body {
 	opacity: 1;
 }
 
-/* Space for the mobile bar, reserved from first paint — never injected on
-   scroll, which would shift layout (CLS). */
-@media (max-width: 1023px) {
-	body {
-		padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
-	}
+/* Space for the conversion bar, reserved from first paint — never injected on
+   scroll, which would shift layout (CLS). The bar is no longer mobile-only, so
+   the reservation is unconditional. */
+body {
+	padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
 }
 
 /* Hidden state gated on `.js`: with scripting off the bar simply stays put
@@ -226,6 +225,21 @@ body {
 .js .sticky-cta.is-visible {
 	visibility: visible;
 	transform: translateY(0);
+}
+
+/* The floating button and the sticky bar are two primaries fighting for the
+   same corner. Past the same threshold the button retracts — pointer-events
+   included, so it can never be an invisible click target over the bar. */
+.js [data-float-wa] {
+	transition:
+		transform var(--duration-reveal) var(--ease-editorial),
+		opacity var(--duration-reveal) var(--ease-editorial);
+}
+
+.js [data-float-wa].is-retracted {
+	transform: translateY(160%);
+	opacity: 0;
+	pointer-events: none;
 }
 
 /* ===== Section banding ===== */
@@ -681,4 +695,200 @@ body {
 		transform: none !important;
 		will-change: auto;
 	}
+}
+
+/* ===== Reveal: mask / wipe ===== */
+
+/* A clip-path reveal instead of a translate: the heading holds its final
+   position from the first frame and is uncovered bottom-up. Used on section
+   headings and on the full-bleed plates, where a translate would fight the
+   parallax wrapper for the transform. */
+@keyframes reveal-mask {
+	from {
+		opacity: 0.25;
+		clip-path: inset(0 0 100% 0);
+	}
+	to {
+		opacity: 1;
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+.js [data-reveal="mask"].revealed,
+.js [data-reveal="wipe"].revealed {
+	animation-name: reveal-mask;
+	animation-duration: 1s;
+}
+
+/* ===== Marquee ===== */
+
+/* Base state = a wrapped row. This is what ships without JS and what stays
+   under reduced motion: same items, same order, no movement. `is-marquee` is
+   added by the runtime only after the children have been duplicated, so the
+   -50% translate always lands on a seamless copy. */
+[data-marquee] {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1rem 3.25rem;
+	margin: 0 auto;
+	max-width: 80rem;
+	padding: 1.375rem 1.5rem;
+	list-style: none;
+}
+
+.js [data-marquee].is-marquee {
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	white-space: nowrap;
+	width: max-content;
+	max-width: none;
+	padding: 1.5rem 0;
+	animation-name: otb-marquee;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	will-change: transform;
+}
+
+@keyframes otb-marquee {
+	from {
+		transform: translate3d(0, 0, 0);
+	}
+	to {
+		transform: translate3d(-50%, 0, 0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js [data-marquee].is-marquee {
+		animation: none !important;
+		flex-wrap: wrap;
+		width: auto;
+		will-change: auto;
+	}
+}
+
+/* ===== CTA shine ===== */
+
+/* Injected by the runtime (never authored in markup) so it cannot end up in
+   the accessibility tree of a control that has no other label. */
+.has-shine {
+	position: relative;
+	overflow: hidden;
+}
+
+.cta-shine {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: -60%;
+	width: 45%;
+	pointer-events: none;
+	background: linear-gradient(
+		100deg,
+		transparent 0%,
+		color-mix(in srgb, white 50%, transparent) 50%,
+		transparent 100%
+	);
+	transform: skewX(-18deg);
+	animation: otb-shine 4.8s var(--ease-editorial) infinite;
+}
+
+@keyframes otb-shine {
+	0% {
+		transform: translateX(0) skewX(-18deg);
+		opacity: 0;
+	}
+	18% {
+		opacity: 0.85;
+	}
+	55% {
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(440%) skewX(-18deg);
+		opacity: 0;
+	}
+}
+
+/* ===== Live dot (countdown) ===== */
+
+.live-dot::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 9999px;
+	background-color: var(--color-crimson-bright);
+	animation: otb-ping 2.6s var(--ease-editorial) infinite;
+}
+
+@keyframes otb-ping {
+	0% {
+		transform: scale(0.55);
+		opacity: 0.9;
+	}
+	70%,
+	100% {
+		transform: scale(2);
+		opacity: 0;
+	}
+}
+
+/* ===== Horizontal pinned rail ===== */
+
+/* Default (and reduced-motion, and <900px) state: a native snap carousel. The
+   runtime upgrades it to a pinned rail by adding `is-pinned` and writing the
+   scroll distance onto the wrapper — never onto the sticky child, so the page
+   height is reserved before the rail engages (CLS 0). */
+[data-hpin-vp] {
+	display: flex;
+	align-items: stretch;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	padding-bottom: 1.125rem;
+	-webkit-overflow-scrolling: touch;
+}
+
+[data-hpin-track] {
+	display: flex;
+	align-items: stretch;
+	gap: clamp(1.25rem, 2.4vw, 2.25rem);
+}
+
+[data-hpin-track] > * {
+	flex: 0 0 min(84vw, 25rem);
+	scroll-snap-align: start;
+}
+
+[data-hpin-rail] {
+	display: none;
+}
+
+.js [data-hpin].is-pinned [data-hpin-vp] {
+	position: sticky;
+	top: 0;
+	height: 100svh;
+	max-height: 51.25rem;
+	align-items: center;
+	overflow: hidden;
+	scroll-snap-type: none;
+	padding-bottom: 0;
+}
+
+.js [data-hpin].is-pinned [data-hpin-track] {
+	will-change: transform;
+}
+
+.js [data-hpin].is-pinned [data-hpin-track] > * {
+	flex: 0 0 min(46vw, 29.375rem);
+}
+
+.js [data-hpin].is-pinned [data-hpin-rail] {
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2px;
+	background-color: color-mix(in srgb, var(--color-gold) 14%, transparent);
 }

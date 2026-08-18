@@ -10,40 +10,66 @@ export interface Props {
 	/** Null until the official enrolment link is registered (WS-73). */
 	checkoutUrl?: string | null;
 	checkoutLabel?: string;
+	/** Countdown strip. Both arrive together or not at all — the prefix without
+	 *  a target would render a dangling "faltam". */
+	countdownPrefixo?: string;
+	countdownTarget?: string;
 }
 
-const { info, label, whatsappMessage, checkoutUrl, checkoutLabel } =
-	Astro.props;
+const {
+	info,
+	label,
+	whatsappMessage,
+	checkoutUrl,
+	checkoutLabel,
+	countdownPrefixo,
+	countdownTarget,
+} = Astro.props;
+
+const hasCountdown = Boolean(countdownPrefixo && countdownTarget);
 
 const whatsappHref = whatsappUrlWithText(whatsappMessage);
 const hasCheckout = Boolean(checkoutUrl);
 ---
 
 {/*
-	Mobile conversion bar. Owns the bottom edge below `lg`; the round floating
-	button is hidden there so the two never collide. Body padding-bottom is
-	reserved in global.css from first paint — never injected on scroll (CLS).
-	It only appears once the hero has scrolled away, so the fold's fact rail is
-	never covered.
+	Conversion bar. Owns the bottom edge at EVERY width since v2 — the round
+	floating button retracts at the same threshold (global.css
+	`[data-float-wa].is-retracted`) so the two never share the corner. Body
+	padding-bottom is reserved in global.css from first paint, never injected on
+	scroll (CLS).
+
+	It only appears once 80% of the first fold has scrolled away, so the hero's
+	fact rail is never covered.
 
 	Dual path: while `checkoutUrl` is null the WhatsApp action stays gold and
 	primary. The moment the official link lands in otb.json, checkout takes the
 	gold slot and WhatsApp demotes to the consultative outline action.
 */}
-<div
-	class="sticky-cta fixed inset-x-0 bottom-0 z-50 lg:hidden"
-	data-sticky-cta
->
+<div class="sticky-cta fixed inset-x-0 bottom-0 z-50" data-sticky-cta>
 	<div
-		class="flex items-center justify-between gap-3 border-t border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_95%,transparent)] px-4 py-3 backdrop-blur-md"
+		class="mx-auto flex max-w-7xl items-center justify-between gap-3 border-t border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_95%,transparent)] px-4 py-3 backdrop-blur-md lg:px-8"
 		style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));"
 	>
-		<span
-			class="min-w-0 shrink text-meta font-medium tabular-nums text-text-secondary"
-		>
-			{info}
-		</span>
+		<div class="min-w-0 shrink">
+			<p class="text-meta font-medium tabular-nums text-text-secondary">
+				{info}
+			</p>
+			{hasCountdown && (
+				<p
+					class="mt-0.5 hidden text-kicker font-semibold uppercase tracking-kicker tabular-nums text-text-muted sm:block"
+					data-cd-target={countdownTarget}
+				>
+					{countdownPrefixo}{" "}
+					<span class="text-gold" data-cd-mini>000d 00h 00m</span>
+				</p>
+			)}
+		</div>
 
+		{/* `sticky_mobile` is the historical origin id: it predates the bar being
+		    shown on desktop too. Renaming it would split the column in the leads
+		    sheet and in the Apps Script allowlist, so the name stays and this
+		    comment carries the meaning. */}
 		{hasCheckout && checkoutUrl ? (
 			<span class="flex shrink-0 items-center gap-2">
 				<button
@@ -59,6 +85,7 @@ const hasCheckout = Boolean(checkoutUrl);
 					href={checkoutUrl}
 					target="_blank"
 					rel="noopener noreferrer"
+					data-shine
 					class="inline-flex min-h-11 min-w-[9rem] items-center justify-center gap-2 rounded-full bg-gold px-5 text-sm font-semibold text-navy"
 				>
 					{checkoutLabel ?? "Garantir vaga"}
@@ -70,6 +97,7 @@ const hasCheckout = Boolean(checkoutUrl);
 				type="button"
 				data-lead-cta="sticky_mobile"
 				data-whatsapp-url={whatsappHref}
+				data-shine
 				class="inline-flex min-h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 rounded-full bg-gold px-5 text-sm font-semibold text-navy"
 				aria-label={`${label} no WhatsApp`}
 			>
@@ -79,53 +107,3 @@ const hasCheckout = Boolean(checkoutUrl);
 		)}
 	</div>
 </div>
-
-<script>
-	// Reveals once the hero sentinel leaves the viewport, mirroring the header.
-	const initStickyCta = () => {
-		const bar = document.querySelector<HTMLElement>("[data-sticky-cta]");
-		// Watches the hero, not the header sentinel: the bar must not cover the
-		// hero fact rail, which sits on the bottom edge of the first fold.
-		const sentinel = document.getElementById("topo");
-		if (!bar) return;
-
-		// visibility (not aria-hidden) drives the hidden state, so the links
-		// leave the tab order and the a11y tree together.
-		const show = () => bar.classList.add("is-visible");
-
-		if (!sentinel || typeof IntersectionObserver === "undefined") {
-			show();
-			return;
-		}
-
-		try {
-			const observer = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						if (entry.isIntersecting) {
-							bar.classList.remove("is-visible");
-						} else {
-							show();
-						}
-					}
-				},
-				{ threshold: 0 },
-			);
-			observer.observe(sentinel);
-		} catch {
-			show();
-		}
-	};
-
-	try {
-		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", initStickyCta, {
-				once: true,
-			});
-		} else {
-			initStickyCta();
-		}
-	} catch {
-		// Bar stays hidden; the in-page CTAs remain reachable.
-	}
-</script>

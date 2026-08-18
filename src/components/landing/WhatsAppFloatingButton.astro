@@ -17,8 +17,11 @@ const {
 const href = whatsappUrlWithText(message);
 ---
 
+{/* Retracts once the sticky conversion bar takes the bottom edge — one
+    primary per corner. The class is toggled in src/scripts/motion.ts. */}
 <button
 	type="button"
+	data-float-wa
 	data-lead-cta="flutuante_desktop"
 	data-whatsapp-url={href}
 	aria-label={label}
