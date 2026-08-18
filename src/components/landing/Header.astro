@@ -15,9 +15,11 @@ const ctaHref = whatsappUrlWithText(whatsappMessage);
 ---
 
 {/*
-	Fixed shell. Transparent over the hero; goes solid once #header-sentinel
-	leaves the viewport. No hamburger on mobile by design — the slot is spent
-	on the edition chip (date + place), which is the fold's job per the brief.
+	Fixed shell. Transparent over the hero; goes solid past 40px of scroll — the
+	state is written by the single scroll listener in src/scripts/motion.ts, so
+	this component is markup only. No hamburger on mobile by design: the slot is
+	spent on the edition chip (date + place), which is the fold's job per the
+	brief.
 */}
 <header
 	id="site-header"
@@ -87,42 +89,3 @@ const ctaHref = whatsappUrlWithText(whatsappMessage);
 		</button>
 	</div>
 </header>
-
-<script>
-	// Solid-state toggle. Degrades to the permanently transparent header when
-	// IntersectionObserver is unavailable or throws (hardened WebViews).
-	const initHeader = () => {
-		const header = document.querySelector<HTMLElement>("[data-header]");
-		const sentinel = document.getElementById("header-sentinel");
-		if (!header || !sentinel) return;
-
-		if (typeof IntersectionObserver === "undefined") {
-			header.classList.add("is-solid");
-			return;
-		}
-
-		try {
-			const observer = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						header.classList.toggle("is-solid", !entry.isIntersecting);
-					}
-				},
-				{ rootMargin: "-56px 0px 0px 0px", threshold: 0 },
-			);
-			observer.observe(sentinel);
-		} catch {
-			header.classList.add("is-solid");
-		}
-	};
-
-	try {
-		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", initHeader, { once: true });
-		} else {
-			initHeader();
-		}
-	} catch {
-		// Never leave the header in a broken state.
-	}
-</script>

@@ -117,14 +117,6 @@ const jsonLdPayload = jsonLd
 
 		<slot name="header" />
 
-		{/* Drives the header solid state. Positioned absolutely at the top of the
-		    page so it has a real box to observe without occupying flow. */}
-		<div
-			id="header-sentinel"
-			class="pointer-events-none absolute top-0 left-0 h-px w-px"
-			aria-hidden="true">
-		</div>
-
 		<main id="conteudo-principal" tabindex="-1">
 			<slot />
 		</main>

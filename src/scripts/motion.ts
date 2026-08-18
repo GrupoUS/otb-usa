@@ -93,6 +93,27 @@ function initScrollProgress(): void {
 	});
 }
 
+/** Header shell. Transparent over the hero, solid once the reader has moved.
+ *
+ *  This used to be an IntersectionObserver on a 1px sentinel at the very top of
+ *  the page, with `rootMargin: -56px` — which shrinks the root past the sentinel,
+ *  so it never intersected and the header was solid from the first frame. The
+ *  visible cost was the header CTA (gated on `.is-solid`) sharing the fold with
+ *  the hero CTA. A threshold on the scroll position says what was meant. */
+function initHeader(): void {
+	const header = document.querySelector<HTMLElement>("[data-header]");
+	if (!header) return;
+
+	let solid: boolean | null = null;
+
+	onScroll(({ y }) => {
+		const next = y > 40;
+		if (next === solid) return;
+		solid = next;
+		header.classList.toggle("is-solid", next);
+	});
+}
+
 /** Bottom conversion chrome. The sticky bar and the floating WhatsApp button
  *  are two primaries competing for the same corner, so they are driven by ONE
  *  threshold: past 80% of the first fold the bar takes over and the button
@@ -449,6 +470,9 @@ function initHorizontalPin(): void {
 		track: HTMLElement;
 		bar: HTMLElement | null;
 		overflow: number;
+		/** The CSS `top` the viewport sticks at. Progress is measured against it,
+		 *  not against 0, or the rail starts travelling before it is pinned. */
+		stickyTop: number;
 		active: boolean;
 	}
 
@@ -464,6 +488,7 @@ function initHorizontalPin(): void {
 			track,
 			bar: root.querySelector<HTMLElement>("[data-hpin-bar]"),
 			overflow: 0,
+			stickyTop: 0,
 			active: false,
 		});
 	}
@@ -486,6 +511,10 @@ function initHorizontalPin(): void {
 			// Measure with the track at rest, otherwise the previous transform
 			// leaks into scrollWidth on a resize.
 			pin.track.style.transform = "translate3d(0, 0, 0)";
+			pin.stickyTop = Number.parseFloat(
+				window.getComputedStyle(pin.viewport).top,
+			);
+			if (!Number.isFinite(pin.stickyTop)) pin.stickyTop = 0;
 			pin.overflow = Math.max(
 				0,
 				pin.track.scrollWidth - pin.viewport.clientWidth + 24,
@@ -503,7 +532,7 @@ function initHorizontalPin(): void {
 		for (const pin of entries) {
 			if (!pin.active) continue;
 			const progress = clamp01(
-				-pin.root.getBoundingClientRect().top / pin.overflow,
+				(pin.stickyTop - pin.root.getBoundingClientRect().top) / pin.overflow,
 			);
 			pin.track.style.transform = `translate3d(${(-progress * pin.overflow).toFixed(1)}px, 0, 0)`;
 			if (pin.bar) pin.bar.style.width = `${(progress * 100).toFixed(1)}%`;
@@ -523,6 +552,7 @@ export function initMotion(): void {
 
 	// Chrome that carries information runs in every mode.
 	initScrollProgress();
+	initHeader();
 	initBottomChrome();
 	initCountdown();
 

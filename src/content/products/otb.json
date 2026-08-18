@@ -597,6 +597,7 @@
 			"Confirmação de lote, condições de pagamento e vaga."
 		],
 		"formTitulo": "Formulário de aplicação",
+		"requiredHint": "Nome, WhatsApp, profissão e momento são obrigatórios — o e-mail é opcional.",
 		"profissaoLabel": "Profissão",
 		"profissaoPlaceholder": "Selecione a sua profissão",
 		"profissoes": [

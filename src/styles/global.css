@@ -897,9 +897,14 @@ body {
 
 .js [data-hpin].is-pinned [data-hpin-vp] {
 	position: sticky;
-	top: 0;
-	height: 100svh;
-	max-height: 51.25rem;
+	/* The panels are ~22rem tall. Pinning a short rail at top:0 parks it under
+	   the header and leaves the rest of the screen empty for the whole pin, so
+	   it sticks centred instead — the empty space splits above and below and the
+	   rail reads as the focus of the screen. The runtime reads this offset back
+	   to keep the progress in step with the pin. */
+	--hpin-h: min(100svh, 34rem);
+	top: calc((100svh - var(--hpin-h)) / 2);
+	height: var(--hpin-h);
 	align-items: center;
 	overflow: hidden;
 	scroll-snap-type: none;

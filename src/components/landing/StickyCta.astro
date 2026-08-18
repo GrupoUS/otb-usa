@@ -46,9 +46,15 @@ const hasCheckout = Boolean(checkoutUrl);
 	primary. The moment the official link lands in otb.json, checkout takes the
 	gold slot and WhatsApp demotes to the consultative outline action.
 */}
-<div class="sticky-cta fixed inset-x-0 bottom-0 z-50" data-sticky-cta>
+<div
+	class="sticky-cta fixed inset-x-0 bottom-0 z-50 border-t border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_95%,transparent)] backdrop-blur-md"
+	data-sticky-cta
+>
+	{/* The surface spans the viewport; only the content is contained. Putting
+	    both on the same box left the bar floating with the page showing through
+	    the gutters. */}
 	<div
-		class="mx-auto flex max-w-7xl items-center justify-between gap-3 border-t border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] bg-[color-mix(in_srgb,var(--color-navy-deep)_95%,transparent)] px-4 py-3 backdrop-blur-md lg:px-8"
+		class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 lg:px-8"
 		style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));"
 	>
 		<div class="min-w-0 shrink">

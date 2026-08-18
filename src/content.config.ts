@@ -401,6 +401,9 @@ const products = defineCollection({
 				descricao: z.string().min(60),
 				passos: z.array(z.string().min(20)).length(3),
 				formTitulo: z.string(),
+				/** Own hint: unlike the modal, this form treats the e-mail as
+				 *  optional, so `leadForm.requiredHint` would be a lie here. */
+				requiredHint: z.string(),
 				profissaoLabel: z.string(),
 				profissaoPlaceholder: z.string(),
 				profissoes: z.array(z.string()).min(3).max(10),
