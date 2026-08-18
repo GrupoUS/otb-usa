@@ -43,31 +43,6 @@ const stickyInfo = loteAtivo
 	? `${loteAtivoLabel} · ${loteAtivo.moeda} ${loteAtivo.preco}`
 	: `${data.investimento.moeda} ${data.investimento.preco}`;
 
-/* Hero edition rail. Composed here from existing SSOT fields rather than a
-   dedicated JSON block, so it can never disagree with the lote table rendered
-   further down the page. */
-const heroFicha = [
-	...(data.edicao
-		? [
-				{
-					rotulo: "Edição",
-					valor: `${String(data.edicao.numero).padStart(2, "0")} · ${data.edicao.ano}`,
-				},
-			]
-		: []),
-	{ rotulo: "Carga horária", valor: `${data.programa.horas} horas` },
-	...(loteAtivo
-		? [
-				{
-					rotulo: `${loteAtivoLabel} ativo`,
-					prefixo: loteAtivo.moeda,
-					valor: loteAtivo.preco,
-					destaque: true,
-				},
-			]
-		: []),
-];
-
 const breadcrumbJsonLd = {
 	"@context": "https://schema.org",
 	"@type": "BreadcrumbList",
@@ -108,7 +83,7 @@ const breadcrumbJsonLd = {
 		band-alt ↔ band-deep) is the separator now. A hairline between every
 		pair of sections just made a long dark page look striped.
 	*/}
-	<Hero hero={data.hero} ficha={heroFicha} countdown={data.countdown} />
+	<Hero hero={data.hero} countdown={data.countdown} />
 	{data.certificacoes && (
 		<Certificacoes
 			certificacoes={data.certificacoes}

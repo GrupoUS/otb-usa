@@ -148,42 +148,53 @@ const plate = resolveImage(hero.background.image);
 				))}
 			</ul>
 
-			{/* CTA duo. Gold stays on the single primary action; the checkout link
-			    takes the gold slot only once otb.json carries the official URL. */}
+			{/*
+				Action row. One gold CTA and, beside it, the live countdown — the
+				only sanctioned urgency device besides the active lote: a real date,
+				counted down, rather than an invented scarcity number. Sharing the
+				row is what lets the deadline argue for the button instead of
+				sitting further down the fold as its own block.
+
+				The wrapper carries no `data-enter`: nesting one cascade item inside
+				another would compose two `translateY` animations on the same
+				subtree.
+			*/}
 			<div
-				class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
-				data-enter="5"
+				class="mt-10 flex flex-col items-start gap-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-6"
 			>
-				{hasCheckout && hero.cta.checkoutUrl ? (
-					<>
-						<a
-							href={hero.cta.checkoutUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							data-shine
-							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
-						>
-							<span>{hero.cta.secondaryLabel ?? "Garantir vaga"}</span>
-							<Icon
-								name="arrow-right"
-								size={18}
-								strokeWidth={2.25}
-								class="transition-transform duration-300 group-hover:translate-x-1"
-							/>
-						</a>
-						<button
-							type="button"
-							data-lead-cta="hero"
-							data-whatsapp-url={ctaHref}
-							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
-							aria-label={`${hero.cta.label} — atendimento consultivo`}
-						>
-							<Icon name="message-circle" size={18} strokeWidth={2.25} />
-							<span>{hero.cta.label}</span>
-						</button>
-					</>
-				) : (
-					<>
+				<div
+					class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
+					data-enter="5"
+				>
+					{hasCheckout && hero.cta.checkoutUrl ? (
+						<>
+							<a
+								href={hero.cta.checkoutUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								data-shine
+								class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
+							>
+								<span>{hero.cta.secondaryLabel ?? "Garantir vaga"}</span>
+								<Icon
+									name="arrow-right"
+									size={18}
+									strokeWidth={2.25}
+									class="transition-transform duration-300 group-hover:translate-x-1"
+								/>
+							</a>
+							<button
+								type="button"
+								data-lead-cta="hero"
+								data-whatsapp-url={ctaHref}
+								class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_40%,transparent)] px-6 text-sm font-medium text-text-primary transition-colors hover:border-gold hover:text-gold"
+								aria-label={`${hero.cta.label} — atendimento consultivo`}
+							>
+								<Icon name="message-circle" size={18} strokeWidth={2.25} />
+								<span>{hero.cta.label}</span>
+							</button>
+						</>
+					) : (
 						<button
 							type="button"
 							data-lead-cta="hero"
@@ -201,138 +212,77 @@ const plate = resolveImage(hero.background.image);
 								class="transition-transform duration-300 group-hover:translate-x-1"
 							/>
 						</button>
-						<a
-							href="#programa"
-							class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_30%,transparent)] px-6 text-sm font-medium text-text-primary/90 transition-colors hover:border-gold hover:text-gold"
+					)}
+				</div>
+
+				{/*
+					`<dl>` without `aria-live`: announcing a new value every second
+					would be noise. The list carries a label and is read on demand.
+				*/}
+				{countdown && (
+					<div
+						class="w-full border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] pt-5 sm:w-auto sm:border-t-0 sm:border-l sm:pt-0 sm:pl-8"
+						data-enter="6"
+						data-cd-target={countdown.target}
+						data-cd-wrap
+					>
+						<p
+							class="flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-gold-light"
 						>
-							Conhecer o programa
-						</a>
-					</>
+							<span
+								class="live-dot relative inline-flex h-2 w-2 shrink-0 rounded-full"
+								style="background-color: var(--color-crimson-bright);"
+								aria-hidden="true"></span>
+							{countdown.heroKicker}
+						</p>
+
+						{/*
+							`flex-nowrap` + a `ch`-sized number cell + non-wrapping labels:
+							the row must be geometry-stable, because it sits inside a hero
+							whose height is content-driven. A single wrap when the body face
+							swaps in moves the full-bleed plate behind it by ~50px — which is
+							the whole CLS budget for the page.
+
+							Seconds are desktop-only: a digit ticking next to the CTA is
+							noise on a phone, and dropping it buys the row its margin.
+						*/}
+						<dl
+							class="mt-3 flex flex-nowrap items-end gap-2.5 sm:gap-3.5"
+							aria-label={countdown.ariaLabel}
+						>
+							{[
+								{ key: "d", rotulo: countdown.unidades.dias, valor: "000", cells: "3.4ch" },
+								{ key: "h", rotulo: countdown.unidades.horas, valor: "00", cells: "2.3ch" },
+								{ key: "m", rotulo: countdown.unidades.minutos, valor: "00", cells: "2.3ch" },
+								{
+									key: "s",
+									rotulo: countdown.unidades.segundos,
+									valor: "00",
+									cells: "2.3ch",
+									apenasDesktop: true,
+								},
+							].map((unidade) => (
+								<div
+									class={`cd-unit flex-col-reverse items-start ${unidade.apenasDesktop ? "hidden sm:flex" : "flex"}`}
+								>
+									<dt
+										class="mt-1 whitespace-nowrap text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted"
+									>
+										{unidade.rotulo}
+									</dt>
+									<dd
+										class="m-0 font-display text-[clamp(1.5rem,2vw,1.875rem)] font-extrabold leading-none tabular-nums text-text-primary"
+										style={`min-width: ${unidade.cells}`}
+										data-cd={unidade.key}
+									>
+										{unidade.valor}
+									</dd>
+								</div>
+							))}
+						</dl>
+					</div>
 				)}
 			</div>
-
-			{/*
-				Live countdown. The only sanctioned urgency device besides the active
-				lote: a real date, counted down, rather than an invented scarcity
-				number. Runs under reduced motion too — it is information.
-
-				`<dl>` without `aria-live`: announcing a new value every second would
-				be noise. The list carries a label and is read on demand.
-			*/}
-			{countdown && (
-				<div
-					class="mt-block border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] pt-[26px]"
-					data-enter="6"
-					data-cd-target={countdown.target}
-					data-cd-wrap
-				>
-					<p
-						class="flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-gold-light"
-					>
-						<span
-							class="live-dot relative inline-flex h-2 w-2 shrink-0 rounded-full"
-							style="background-color: var(--color-crimson-bright);"
-							aria-hidden="true"></span>
-						{countdown.heroKicker}
-					</p>
-
-					{/*
-						`flex-nowrap` + a `ch`-sized number cell + non-wrapping labels:
-						the row must be geometry-stable, because it sits inside a hero
-						whose height is content-driven. A single wrap when the body face
-						swaps in moves the full-bleed plate behind it by ~50px — which is
-						the whole CLS budget for the page.
-
-						Seconds are desktop-only: a digit ticking next to the CTAs is
-						noise on a phone, and dropping it buys the row its margin.
-					*/}
-					<dl
-						class="mt-4 flex flex-nowrap items-end gap-2.5 sm:gap-4"
-						aria-label={countdown.ariaLabel}
-					>
-						{[
-							{ key: "d", rotulo: countdown.unidades.dias, valor: "000", cells: "3.4ch" },
-							{ key: "h", rotulo: countdown.unidades.horas, valor: "00", cells: "2.3ch" },
-							{ key: "m", rotulo: countdown.unidades.minutos, valor: "00", cells: "2.3ch" },
-							{
-								key: "s",
-								rotulo: countdown.unidades.segundos,
-								valor: "00",
-								cells: "2.3ch",
-								apenasDesktop: true,
-							},
-						].map((unidade) => (
-							<div
-								class={`cd-unit flex-col-reverse items-start ${unidade.apenasDesktop ? "hidden sm:flex" : "flex"}`}
-							>
-								<dt
-									class="mt-1.5 whitespace-nowrap text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted"
-								>
-									{unidade.rotulo}
-								</dt>
-								<dd
-									class="m-0 font-display text-[clamp(1.625rem,2.4vw,2.125rem)] font-extrabold leading-none tabular-nums text-text-primary"
-									style={`min-width: ${unidade.cells}`}
-									data-cd={unidade.key}
-								>
-									{unidade.valor}
-								</dd>
-							</div>
-						))}
-					</dl>
-				</div>
-			)}
-		</div>
-
-		{/*
-			Edition spec rail. The asymmetric second column the fold was missing:
-			it used to be a single 4xl text block with dead space to its right at
-			≥1280px. Hairlines and numerals only — the glass pedestal stays
-			reserved for Investimento (DESIGN.md § Depth).
-		*/}
-		{ficha && ficha.length > 0 && (
-			<aside
-				class="w-full min-w-0 flex-[0_1_20rem] border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] pt-6 lg:w-auto lg:border-t-0 lg:border-l lg:pt-0 lg:pl-[clamp(1.25rem,2vw,2rem)]"
-				aria-labelledby="hero-ficha-label"
-				data-enter="7"
-			>
-				<p
-					id="hero-ficha-label"
-					class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
-				>
-					Ficha da edição
-				</p>
-				<dl
-					class="mt-5 divide-y divide-[color-mix(in_srgb,var(--color-gold)_14%,transparent)]"
-				>
-					{ficha.map((row) => (
-						<div class="grid gap-1.5 py-4 first:pt-0 last:pb-0">
-							<dt
-								class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
-							>
-								{row.rotulo}
-							</dt>
-							<dd class="m-0 flex items-baseline gap-2 tabular-nums">
-								{row.prefixo && (
-									<span class="text-sm font-medium text-text-secondary">
-										{row.prefixo}
-									</span>
-								)}
-								<span
-									class={
-										row.destaque
-											? "font-display text-3xl font-extrabold tracking-tight text-gradient-gold"
-											: "font-display text-xl font-bold tracking-tight text-text-primary"
-									}
-								>
-									{row.valor}
-								</span>
-							</dd>
-						</div>
-					))}
-				</dl>
-			</aside>
-		)}
 		</div>
 	</div>
 
