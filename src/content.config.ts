@@ -259,6 +259,20 @@ const products = defineCollection({
 				ano: z.number().int().positive(),
 				local: z.string(),
 				badge: z.string().optional(),
+				/** Machine-readable end of the immersion, for `Event.endDate`. The
+				 *  START is not repeated here on purpose — `countdown.target` is
+				 *  already that instant, with the Boston offset, and a second copy
+				 *  would drift. Calendar date, not an instant: the SSOT has no
+				 *  closing time for day three and inventing one is a fabricated
+				 *  fact. */
+				fim: z.iso.date().optional(),
+				endereco: z
+					.object({
+						localidade: z.string(),
+						regiao: z.string(),
+						pais: z.string().length(2),
+					})
+					.optional(),
 			})
 			.optional(),
 
@@ -270,6 +284,9 @@ const products = defineCollection({
 					moeda: z.string(),
 					preco: z.string(),
 					validade: z.string().optional(),
+					/** ISO form of `validade`, for `Offer.validFrom`. Only the active
+					 *  lote is published as an offer, so only it needs this. */
+					validoDe: z.iso.date().optional(),
 					status: z.enum(["encerrado", "ativo", "futuro"]),
 					nota: z.string().optional(),
 				}),
@@ -472,6 +489,39 @@ const products = defineCollection({
 					segundos: z.string(),
 				}),
 				ariaLabel: z.string(),
+			})
+			.optional(),
+
+		/** `Course.educationalCredentialAwarded`. Explicit rather than derived
+		 *  from `certificacoes`: that strip mixes credentials with descriptive
+		 *  claims ("10 módulos · 320 horas"), and a positional slice would publish
+		 *  the wrong one the day someone reorders the marquee for design reasons.
+		 *  Guardrail: `emissor` may only name Instituto IESA, Grupo US and the
+		 *  Anatomy Society of America. */
+		credenciais: z
+			.array(
+				z.object({
+					nome: z.string().min(4),
+					categoria: z.string().min(3),
+					emissor: z.string().min(3),
+				}),
+			)
+			.min(1)
+			.max(4)
+			.optional(),
+
+		/** Copy for the 404 route. Lives here for the same reason every other
+		 *  string does: the page must not author product copy. */
+		erro404: z
+			.object({
+				eyebrow: z.string(),
+				titulo: z.string(),
+				descricao: z.string(),
+				ctaLabel: z.string(),
+				whatsappLabel: z.string(),
+				whatsappMessage: z.string().refine((m) => m.startsWith("Olá, Laura!"), {
+					message: "WhatsApp message must start with 'Olá, Laura!' (SDR SSOT).",
+				}),
 			})
 			.optional(),
 

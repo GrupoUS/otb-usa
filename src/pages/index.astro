@@ -1,4 +1,5 @@
 ---
+import { getImage } from "astro:assets";
 import { getEntry } from "astro:content";
 import Aplicacao from "../components/landing/Aplicacao.astro";
 import Boston from "../components/landing/Boston.astro";
@@ -22,6 +23,8 @@ import Virada from "../components/landing/Virada.astro";
 import WhatsAppFloatingButton from "../components/landing/WhatsAppFloatingButton.astro";
 import WhyOTB from "../components/landing/WhyOTB.astro";
 import Layout from "../layouts/Layout.astro";
+import { resolveImage } from "../lib/images";
+import { buildLandingGraph } from "../lib/structured-data";
 
 const otb = await getEntry("products", "otb");
 if (!otb) {
@@ -43,24 +46,26 @@ const stickyInfo = loteAtivo
 	? `${loteAtivoLabel} · ${loteAtivo.moeda} ${loteAtivo.preco}`
 	: `${data.investimento.moeda} ${data.investimento.preco}`;
 
-const breadcrumbJsonLd = {
-	"@context": "https://schema.org",
-	"@type": "BreadcrumbList",
-	itemListElement: [
-		{
-			"@type": "ListItem",
-			position: 1,
-			name: "Início",
-			item: canonicalUrl,
-		},
-		{
-			"@type": "ListItem",
-			position: 2,
-			name: "MBA em Business Aesthetic Health",
-			item: canonicalUrl,
-		},
-	],
-};
+const landingGraph = await buildLandingGraph(data, {
+	site: (Astro.site?.toString() ?? "https://otb.gpus.com.br/").replace(
+		/\/$/,
+		"",
+	),
+	pageUrl: canonicalUrl,
+});
+
+/* Preload hint for the LCP plate. The <Picture> in Hero.astro is only
+   discoverable once the parser has walked past 63KB of blocking CSS; this makes
+   the fetch start with the document. Parameters MUST mirror the AVIF branch of
+   that <Picture> (widths, quality, format) — a mismatch downloads the plate
+   twice instead of once. */
+const heroPlatePreload = await getImage({
+	src: resolveImage(data.hero.background.image),
+	widths: [640, 960, 1280, 1600],
+	sizes: "100vw",
+	format: "avif",
+	quality: 62,
+});
 ---
 
 <Layout
@@ -68,8 +73,18 @@ const breadcrumbJsonLd = {
 	description={data.seo.description}
 	ogImage={data.seo.ogImage}
 	canonical={canonicalUrl}
-	jsonLd={breadcrumbJsonLd}
+	jsonLd={landingGraph}
 >
+	<link
+		slot="head"
+		rel="preload"
+		as="image"
+		type="image/avif"
+		imagesrcset={heroPlatePreload.srcSet.attribute}
+		imagesizes="100vw"
+		fetchpriority="high"
+	/>
+
 	{data.header && (
 		<Header
 			slot="header"

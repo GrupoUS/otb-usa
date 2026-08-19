@@ -179,10 +179,12 @@ body {
 
 .site-header {
 	border-bottom: 1px solid transparent;
+	/* `backdrop-filter` is deliberately NOT in this list: transitioning it makes
+	   the browser re-blur everything behind a full-width fixed bar on every
+	   frame of the 160ms. The blur snaps; the colour still fades. */
 	transition:
 		background-color var(--duration-hover) ease,
-		border-color var(--duration-hover) ease,
-		backdrop-filter var(--duration-hover) ease;
+		border-color var(--duration-hover) ease;
 }
 
 .site-header.is-solid {
@@ -570,7 +572,10 @@ body {
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
-	animation: shimmer 3s linear infinite;
+	/* Finite on purpose. This utility sits on the hero H1 — the text LCP
+	   candidate — and `background-clip: text` repaints the glyphs on every
+	   frame. Three passes read as a sweep; forever reads as a battery drain. */
+	animation: shimmer 3s linear 3;
 }
 
 /* ===== Gradient Text ===== */

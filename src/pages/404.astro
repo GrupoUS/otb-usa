@@ -1,0 +1,141 @@
+---
+import { getEntry } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import { whatsappUrlWithText } from "../lib/whatsapp";
+
+const otb = await getEntry("products", "otb");
+const erro = otb?.data.erro404;
+
+/* Copy lives in the collection like every other string on the site. If the
+   block is missing the build fails here rather than shipping a page that
+   invents its own words. */
+if (!erro) {
+	throw new Error(
+		"Content collection 'products' entry 'otb' is missing the `erro404` block. Add it to src/content/products/otb.json.",
+	);
+}
+
+const whatsappHref = whatsappUrlWithText(erro.whatsappMessage);
+---
+
+<Layout title={`${erro.titulo} | OTB Estados Unidos`} description={erro.descricao} noindex>
+	<section class="erro-page" aria-labelledby="erro-title">
+		<div class="erro-card">
+			<p class="erro-eyebrow">{erro.eyebrow}</p>
+			<h1 id="erro-title">{erro.titulo}</h1>
+			<p class="erro-message">{erro.descricao}</p>
+			<div class="erro-actions">
+				<a class="erro-cta" href="/">{erro.ctaLabel}</a>
+				<a
+					class="erro-cta erro-cta--ghost"
+					href={whatsappHref}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{erro.whatsappLabel}
+				</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.erro-page {
+		display: grid;
+		min-height: 100svh;
+		place-items: center;
+		padding: clamp(2rem, 8vw, 6rem) 1rem;
+		background:
+			radial-gradient(circle at top, color-mix(in srgb, var(--color-gold) 12%, transparent), transparent 44%),
+			var(--color-ink);
+	}
+
+	.erro-card {
+		width: min(100%, 38rem);
+		padding: clamp(2rem, 7vw, 4rem);
+		border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+		border-radius: 1.5rem;
+		background: color-mix(in srgb, var(--color-ink-deep) 92%, transparent);
+		box-shadow: var(--shadow-lift);
+		text-align: center;
+	}
+
+	.erro-eyebrow {
+		margin: 0;
+		font-size: var(--text-kicker);
+		font-weight: 600;
+		letter-spacing: var(--tracking-kicker);
+		text-transform: uppercase;
+		color: var(--color-gold);
+	}
+
+	.erro-card h1 {
+		margin: 0.75rem 0 0;
+		font-family: var(--font-display);
+		font-size: clamp(2rem, 8vw, 3.5rem);
+		line-height: 1.05;
+		letter-spacing: -0.04em;
+	}
+
+	.erro-message {
+		margin: 1rem auto 0;
+		font-size: var(--text-body);
+		line-height: 1.6;
+		color: var(--color-text-secondary);
+	}
+
+	.erro-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.75rem;
+		margin-top: 1.75rem;
+	}
+
+	.erro-cta {
+		display: inline-flex;
+		min-height: 3.25rem;
+		align-items: center;
+		justify-content: center;
+		padding: 0.75rem 1.5rem;
+		border: 1px solid transparent;
+		border-radius: 9999px;
+		background: var(--color-gold);
+		color: var(--color-ink);
+		font-weight: 700;
+		text-decoration: none;
+		box-shadow: var(--shadow-halo-gold);
+		transition: background-color var(--duration-hover) ease, transform var(--duration-hover) ease;
+	}
+
+	.erro-cta:hover {
+		background: var(--color-gold-light);
+		transform: scale(1.02);
+	}
+
+	.erro-cta--ghost {
+		background: transparent;
+		border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
+		color: var(--color-text-primary);
+		box-shadow: none;
+	}
+
+	.erro-cta--ghost:hover {
+		background: color-mix(in srgb, var(--color-gold) 12%, transparent);
+	}
+
+	.erro-cta:focus-visible {
+		outline: 2px solid var(--color-text-primary);
+		outline-offset: 4px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.erro-cta {
+			transition: none;
+		}
+
+		.erro-cta:hover {
+			transform: none;
+		}
+	}
+</style>

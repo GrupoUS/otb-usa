@@ -345,7 +345,16 @@ function initParallax(): void {
 		}
 	};
 
+	/* Scratch buffer for the read pass, reused every frame so the scroll loop
+	   allocates nothing. */
+	const pending: Array<{ el: HTMLElement; offset: number }> = [];
+
 	onScroll(({ vh }) => {
+		/* Read pass. A style write between two rect reads invalidates layout,
+		   so an interleaved loop forces a synchronous reflow for every element
+		   after the first — nine of them, every frame, while scrolling. */
+		pending.length = 0;
+
 		for (const el of plates) {
 			const rect = el.getBoundingClientRect();
 			if (rect.bottom < -200 || rect.top > vh + 200) continue;
@@ -357,8 +366,11 @@ function initParallax(): void {
 			// Belt and braces: the damped speed already keeps the wrapper inside
 			// its overscan for every on-screen position, but the clamp makes the
 			// invariant unconditional for any future plate or aspect ratio.
-			const offset = Math.max(-slack, Math.min(slack, raw));
+			pending.push({ el, offset: Math.max(-slack, Math.min(slack, raw)) });
+		}
 
+		/* Write pass. */
+		for (const { el, offset } of pending) {
 			el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
 			applied.set(el, offset);
 		}
@@ -709,12 +721,23 @@ function initHorizontalPin(): void {
 		}
 	};
 
+	/* Same read-then-write split as the parallax loop: `pin.bar` animates
+	   `width`, which is a layout write, so a rect read after it would reflow. */
+	const pinPending: Array<{ pin: (typeof entries)[number]; progress: number }> =
+		[];
+
 	onScroll(() => {
+		pinPending.length = 0;
+
 		for (const pin of entries) {
 			if (!pin.active) continue;
 			const progress = clamp01(
 				(pin.stickyTop - pin.root.getBoundingClientRect().top) / pin.overflow,
 			);
+			pinPending.push({ pin, progress });
+		}
+
+		for (const { pin, progress } of pinPending) {
 			pin.track.style.transform = `translate3d(${(-progress * pin.overflow).toFixed(1)}px, 0, 0)`;
 			if (pin.bar) pin.bar.style.width = `${(progress * 100).toFixed(1)}%`;
 		}

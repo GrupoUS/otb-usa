@@ -4,6 +4,95 @@
 
 ---
 
+### [2026-08-19] `EducationalEvent` não existe — e nada no gate reclama
+
+**Problem:** O nó principal do grafo JSON-LD da imersão saiu como `"@type": "EducationalEvent"`. O tipo
+parece óbvio (existem `EducationalOrganization`, `EducationalAudience`, `EducationalOccupationalCredential`)
+e **não existe**: `https://schema.org/EducationalEvent` responde 404; a classe real é `EducationEvent`.
+Sob `@vocab`, um tipo inexistente vira um IRI sem definição — o nó que carrega `startDate`, `endDate`,
+`location`, `offers` e `performer` deixa de ser lido como evento, e os três dias da agenda passam a
+pendurar `superEvent` num nó sem tipo.
+
+**Solution:** `EducationEvent`, com asserção no teste fixando o tipo daquele `@id`. No mesmo passo saiu
+`instructor` do nó `Course`: a propriedade tem domínio `CourseInstance` apenas.
+
+**Pattern:** Nome de tipo e de propriedade de schema.org se verifica contra o vocabulário, não contra a
+memória — `curl -o /dev/null -w "%{http_code}" https://schema.org/<Tipo>` ou o
+`schemaorg-current-https.jsonld` (que também dá o `domainIncludes` de cada propriedade). Nenhum gate do
+projeto pega isso: lint, `astro check` e build não conhecem o vocabulário, Lighthouse SEO 100 olha meta e
+crawlabilidade, e uma checagem de `@id` pendurado passa — o nó existe, só o **tipo** é que não.
+
+**Validation:** 404 confirmado em `EducationalEvent` contra 200 em `EducationEvent`; `domainIncludes` de
+`instructor` = `["schema:CourseInstance"]` no vocabulário oficial; `bun test` 51 pass.
+
+---
+
+### [2026-08-19] O pipeline de imagem engorda arte chapada
+
+**Problem:** O wordmark (`otb-logo-gold.png`, 360×198, PNG-8 de 8.960B) era servido cru e renderizado a
+36–44px de altura — 4,5× oversize na rede. A correção óbvia era passar por `astro:assets`. Medindo o
+resultado: webp 2x = 15.564B, avif 2x = 17.797B, PNG full-color = 14.496B. Todas as três **maiores** que
+o arquivo original que se queria otimizar.
+
+**Solution:** PNG-8 quantizado (32 cores) nas duas larguras reais da caixa: 2.102B em 1x (176px) e
+5.622B em 2x (352px), servidos por `srcset` a partir de `public/`. O original de 360px ficou em
+`src/assets/images/otb/` como fonte, com o comando de regeneração no `README.md` da pasta.
+
+**Pattern:** Codec com perdas é para fotografia. Arte chapada — wordmark, ícone, diagrama — comprime
+melhor em paleta indexada, e `astro:assets` não gera PNG-8 (`.claude/rules/DESIGN.md § 8` já diz para
+preferir vetor nesse caso). Antes de rotear um asset pelo pipeline, medir os dois lados: "otimizado"
+não é uma propriedade do pipeline, é um número.
+
+**Validation:** `sharp` nas duas larguras × 4 qualidades × 3 formatos; Lighthouse mediana de 3 no build
+(mobile 95/100/96/100, LCP 2,18s, CLS 0; desktop 96, LCP 2,03s).
+
+---
+
+### [2026-08-19] A página de hand-off estava no índice do Google
+
+**Problem:** `/redirecionando` — a página que recebe o lead, dispara `lead_submit` e manda para o
+WhatsApp — não tinha `noindex` e **estava no `sitemap-0.xml`**. O filtro do sitemap só excluía `/otb`.
+Uma página que só faz sentido com um lead no `sessionStorage` estava sendo oferecida ao Google como
+conteúdo. No mesmo lugar: o `canonical` dela apontava para `/redirecionando/` (com barra), que o Vercel
+responde com 308 por causa de `trailingSlash: false` + `cleanUrls: true`.
+
+**Solution:** Prop `noindex` no `Layout.astro` (emite `noindex, follow` e **suprime** o canonical — em
+página noindex, canonical é sinal conflitante), filtro do sitemap ampliado, e `pageUrl` normalizado no
+Layout: `build.format: "directory"` dá barra final a toda rota, mas só a raiz responde 200 com ela.
+
+**Pattern:** Rota nova herda a indexabilidade do Layout por omissão — o default do Layout é "indexável".
+Toda página utilitária (hand-off, erro, obrigado) precisa declarar o contrário na mesma mudança que a
+cria. E não usar `Disallow` no `robots.txt` para isso: bloquear o rastreio impede a leitura do próprio
+`noindex`.
+
+**Validation:** `tests/structured-data.test.ts` afirma sobre o `dist/`: `noindex` presente e canonical
+ausente em `/redirecionando` e `/404`, sitemap com uma única `<loc>` e `<lastmod>`, robots sem nenhum
+`Disallow`.
+
+---
+
+### [2026-08-19] 453KB de GTM eram o primeiro elemento do `<head>`
+
+**Problem:** O loader do GTM era o primeiro elemento do `<head>`, antes de `<meta charset>`. O container
+`GTM-MVQW6VLD` mede 453KB e puxa GA4 (`G-4CCWNEG0EV`) + Meta Pixel (`fbevents.js`) — ~552KB de terceiros
+medidos na rede. O `<script>` injetado é `async`, então a rede não bloqueia; o custo real é que o
+handshake com `googletagmanager.com` começava **antes** de o parser descobrir a imagem LCP e as fontes.
+
+**Solution:** Prop `gtmStrategy` no Layout. Em `lazy` (default) o `dataLayer` nasce inline no `<head>` —
+nenhum push se perde, o GTM reprocessa o array que encontra — e o container carrega no primeiro de
+`pointerdown`/`keydown`/`touchstart`/`scroll` ou `requestIdleCallback` depois do `load`. `/redirecionando`
+passa `gtmStrategy="eager"`: a página existe para disparar `lead_submit` antes de navegar, e não tem LCP
+a defender.
+
+**Pattern:** Tag manager adiado precisa de duas coisas para não virar perda de dado: o `dataLayer`
+criado cedo (a fila sobrevive) e uma exceção explícita nas páginas de conversão. Adiar em toda página é
+que quebra.
+
+**Validation:** GTM saiu do offset 68 para 23.721 no `dist/index.html`; LCP 2,18s mobile / 2,03s desktop
+com CLS 0; `/redirecionando` mantém o snippet clássico com `preconnect`.
+
+---
+
 ### [2026-08-18] O protótipo renderizado ganha do prompt que o descreve
 
 **Problem:** A v2 tinha dois artefatos no mesmo projeto do Claude Design: o spec escrito

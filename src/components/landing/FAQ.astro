@@ -12,18 +12,8 @@ export interface Props {
 
 const { faq, faqIntro } = Astro.props;
 
-const faqJsonLd = {
-	"@context": "https://schema.org",
-	"@type": "FAQPage",
-	mainEntity: faq.map((item) => ({
-		"@type": "Question",
-		name: item.pergunta,
-		acceptedAnswer: {
-			"@type": "Answer",
-			text: item.resposta,
-		},
-	})),
-};
+/* The FAQPage node moved into the page graph in src/lib/structured-data.ts:
+   one ld+json block per page, with every node addressable by @id. */
 ---
 
 {/*
@@ -76,7 +66,6 @@ const faqJsonLd = {
 		</div>
 	</div>
 
-	<script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)}></script>
 </section>
 
 <style>

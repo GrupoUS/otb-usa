@@ -404,6 +404,12 @@
 		"numero": 3,
 		"ano": 2027,
 		"local": "Boston, Estados Unidos",
+		"fim": "2027-04-21",
+		"endereco": {
+			"localidade": "Boston",
+			"regiao": "MA",
+			"pais": "US"
+		},
 		"badge": "3ª Edição — Boston, abr 2027"
 	},
 
@@ -423,6 +429,7 @@
 			"moeda": "US$",
 			"preco": "3.500",
 			"validade": "A partir de 01 mai 2026",
+			"validoDe": "2026-05-01",
 			"status": "ativo",
 			"nota": "Migração automática após o Lote 0"
 		},
@@ -669,6 +676,28 @@
 			"segundos": "seg"
 		},
 		"ariaLabel": "Tempo restante para a imersão em Boston"
+	},
+
+	"credenciais": [
+		{
+			"nome": "MBA em Business Aesthetic Health",
+			"categoria": "MBA",
+			"emissor": "Instituto IESA / Grupo US"
+		},
+		{
+			"nome": "Fresh Specimens Course Certificate",
+			"categoria": "Certificado de prática anatômica",
+			"emissor": "Anatomy Society of America (ASA)"
+		}
+	],
+
+	"erro404": {
+		"eyebrow": "Erro 404",
+		"titulo": "Esta página não existe",
+		"descricao": "O endereço que você abriu não faz parte do OTB Estados Unidos. Volte para o início para ver o programa, as datas de Boston e o lote ativo.",
+		"ctaLabel": "Voltar para o início",
+		"whatsappLabel": "Falar com Laura",
+		"whatsappMessage": "Olá, Laura! Cheguei a uma página que não existe no site do OTB e gostaria de falar sobre o programa."
 	},
 
 	"legal": {

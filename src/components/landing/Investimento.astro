@@ -301,11 +301,29 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 				if (reduceMotion) return;
 				cards.forEach((card) => {
 					if (!(card instanceof HTMLElement)) return;
-					card.addEventListener("pointermove", (e) => {
-						const rect = card.getBoundingClientRect();
-						card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-						card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-					});
+					// One read and one write per FRAME, not per event: pointermove
+					// fires far faster than the compositor draws, and the raw handler
+					// forced a layout read plus two style writes every single time.
+					// No scroll listener here on purpose — the runtime owns the only
+					// one (astro.md § Motion); reading the rect inside the frame keeps
+					// the glow correct while the page moves.
+					let frame = 0;
+					let last = null;
+					card.addEventListener(
+						"pointermove",
+						(e) => {
+							last = e;
+							if (frame) return;
+							frame = requestAnimationFrame(() => {
+								frame = 0;
+								if (!last) return;
+								const rect = card.getBoundingClientRect();
+								card.style.setProperty("--mouse-x", `${last.clientX - rect.left}px`);
+								card.style.setProperty("--mouse-y", `${last.clientY - rect.top}px`);
+							});
+						},
+						{ passive: true },
+					);
 				});
 			} catch {
 				/* decorative; failure is acceptable */

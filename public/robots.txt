@@ -1,5 +1,42 @@
+# robots.txt — OTB Estados Unidos (Grupo US)
+# Landing de página única. Não há área privada, staging path nem paginação.
+#
+# MANUTENÇÃO: um bot que casa com um grupo NOMEADO ignora o grupo `*` inteiro
+# (RFC 9309 §2.2.1). Se algum dia entrar um `Disallow` no grupo `*`, ele PRECISA
+# ser repetido no grupo dos crawlers de IA — senão eles seguem rastreando o
+# caminho bloqueado.
+#
+# Não usar `Disallow` para tirar página do índice: bloquear o rastreio impede a
+# leitura do próprio `noindex`. /redirecionando e /404 saem do índice pela meta
+# robots (src/layouts/Layout.astro, prop `noindex`).
+#
+# Resumo do produto para leitura de LLM: https://otb.gpus.com.br/llms.txt
+
 User-agent: *
 Allow: /
-Disallow: /404
+
+# Crawlers e agentes de IA — acesso EXPLICITAMENTE liberado. Decisão de GEO:
+# queremos ser lidos e citados por buscadores generativos. Google-Extended e
+# Applebot-Extended são tokens de opt-out (não rastreiam sozinhos); listá-los
+# com Allow registra a escolha de não sair.
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: Claude-Web
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: Amazonbot
+User-agent: Meta-ExternalAgent
+User-agent: cohere-ai
+User-agent: Diffbot
+User-agent: Timpibot
+Allow: /
 
 Sitemap: https://otb.gpus.com.br/sitemap-index.xml

@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import ScrollProgress from "../components/landing/ScrollProgress.astro";
+import { WHATSAPP_SDR_E164 } from "../lib/whatsapp";
 import "../styles/global.css";
 
 export interface Props {
@@ -8,6 +9,17 @@ export interface Props {
 	description: string;
 	ogImage?: string;
 	canonical?: string;
+	/** Utility pages (hand-off, 404) that must stay out of the index. Emits
+	 *  `noindex, follow` — never pair this with a robots.txt Disallow, or the
+	 *  crawler is blocked before it can read the directive. */
+	noindex?: boolean;
+	/** GTM load timing. `lazy` (default) waits for the first interaction or for
+	 *  the browser to go idle after `load`; `eager` ships the classic head
+	 *  snippet and is reserved for pages whose whole job is to fire a
+	 *  conversion before navigating away. */
+	gtmStrategy?: "lazy" | "eager";
+	/** Schema.org nodes contributed by the page. They are merged into the single
+	 *  `@graph` this layout emits, after the Organization node. */
 	jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
@@ -16,54 +28,83 @@ const {
 	description,
 	ogImage = "/og/otb-default.jpg",
 	canonical,
+	noindex = false,
+	gtmStrategy = "lazy",
 	jsonLd,
 } = Astro.props;
 
 const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
+
+/* `build.format: "directory"` gives every route a trailing slash, but
+   vercel.json runs `trailingSlash: false` + `cleanUrls: true` — so `/foo/`
+   answers 308, not 200. A canonical must point at the URL that answers 200;
+   only the root keeps its slash. */
+const rawPath = Astro.url.pathname;
+const normalizedPath =
+	rawPath !== "/" && rawPath.endsWith("/") ? rawPath.slice(0, -1) : rawPath;
 const pageUrl =
 	canonical ??
-	new URL(
-		Astro.url.pathname,
-		Astro.site ?? "https://otb.gpus.com.br",
-	).toString();
+	new URL(normalizedPath, Astro.site ?? "https://otb.gpus.com.br").toString();
 const absoluteOgImage = ogImage.startsWith("http")
 	? ogImage
 	: `${site}${ogImage}`;
 
+/* Site identity, not product copy: it names the property, the way `lang` and
+   `theme-color` do. Product copy stays in the content collection. */
+const SITE_NAME = "OTB Estados Unidos";
+const GTM_ID = "GTM-MVQW6VLD";
+
+/* The one Organization node for the whole site. Everything else references it
+   by `@id`, so the graph has a single publisher instead of one per page. */
+/* `Organization`, deliberately NOT `EducationalOrganization`: the latter reads
+   as an accredited teaching institution, and this page exists partly to say the
+   opposite (see `legal.disclaimer` and the first FAQ). `Course.provider` accepts
+   a plain Organization, so nothing is lost. */
 const organizationJsonLd = {
-	"@context": "https://schema.org",
 	"@type": "Organization",
+	"@id": `${site}/#organization`,
 	name: "Grupo US",
 	url: site || "https://otb.gpus.com.br",
-	logo: `${site}/images/otb/otb-logo-gold.png`,
-	sameAs: [] as string[],
+	logo: {
+		"@type": "ImageObject",
+		url: `${site}/images/otb/otb-logo-gold-352.png`,
+		width: 352,
+		height: 194,
+	},
+	sameAs: ["https://www.gpus.com.br", "https://drasacha.com.br"],
 	contactPoint: {
 		"@type": "ContactPoint",
-		telephone: "+556294705081",
+		telephone: `+${WHATSAPP_SDR_E164}`,
 		contactType: "sales",
 		areaServed: "BR",
 		availableLanguage: ["pt-BR"],
 	},
 };
 
-const jsonLdPayload = jsonLd
-	? Array.isArray(jsonLd)
-		? [organizationJsonLd, ...jsonLd]
-		: [organizationJsonLd, jsonLd]
-	: organizationJsonLd;
+/** Page nodes carry no `@context` of their own — the graph owns it. */
+const stripContext = (node: Record<string, unknown>) => {
+	const { "@context": _context, ...rest } = node;
+	return rest;
+};
+
+const pageNodes = jsonLd
+	? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map(stripContext)
+	: [];
+
+const jsonLdPayload = {
+	"@context": "https://schema.org",
+	"@graph": [organizationJsonLd, ...pageNodes],
+};
+
+/* A FAQ answer containing `</script>` would close the block and leak JSON into
+   the DOM. Escaping `<` is the standard mitigation and does not change how the
+   JSON parses. */
+const jsonLdHtml = JSON.stringify(jsonLdPayload).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
 <html lang="pt-BR">
 	<head>
-		<!-- Google Tag Manager -->
-		<script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-MVQW6VLD');</script>
-		<!-- End Google Tag Manager -->
-		<script is:inline>document.documentElement.classList.add("js");</script>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		{/* meta theme-color cannot read CSS variables; literal MUST mirror --color-ink in src/styles/global.css @theme. Keep in sync if the ink token changes. */}
@@ -71,7 +112,17 @@ const jsonLdPayload = jsonLd
 
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<link rel="canonical" href={pageUrl} />
+		{/* A canonical on a noindex page is a conflicting signal, and on /404 it
+		    would point at a URL that does not exist. */}
+		{!noindex && <link rel="canonical" href={pageUrl} />}
+		<meta
+			name="robots"
+			content={
+				noindex
+					? "noindex, follow"
+					: "index, follow, max-image-preview:large, max-snippet:-1"
+			}
+		/>
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
@@ -91,11 +142,20 @@ const jsonLdPayload = jsonLd
 		<Font cssVariable="--font-sora" preload />
 		<Font cssVariable="--font-inter" preload />
 
+		{/* Page-owned head content — the LCP preload hint lives here, which is
+		    the whole point: it has to be discoverable before the parser reaches
+		    the markup that needs it. */}
+		<slot name="head" />
+
 		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={SITE_NAME} />
 		<meta property="og:locale" content="pt_BR" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={absoluteOgImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={title} />
 		<meta property="og:url" content={pageUrl} />
 
 		<meta name="twitter:card" content="summary_large_image" />
@@ -103,14 +163,38 @@ const jsonLdPayload = jsonLd
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={absoluteOgImage} />
 
-		<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLdPayload)}></script>
+		<script type="application/ld+json" is:inline set:html={jsonLdHtml}></script>
+
+		{/* dataLayer exists from the first byte no matter when the container
+		    lands, so nothing a page pushes early is ever dropped: GTM replays
+		    the array it finds. */}
+		<script is:inline>window.dataLayer = window.dataLayer || [];</script>
+
+		{
+			gtmStrategy === "eager" && (
+				<Fragment>
+					<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+					<script is:inline set:html={`(function(w,d,s,l,i){w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`} />
+				</Fragment>
+			)
+		}
+
+		{
+			gtmStrategy === "lazy" && (
+				/* The container is 453KB of third-party JS (GA4 + Meta Pixel). Held
+				   back until the reader interacts or the browser is idle after
+				   `load`, it stops competing with the LCP image and the fonts. */
+				<script is:inline set:html={`(function(w,d,s,l,i){var done=false;function go(){if(done)return;done=true;w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}try{['pointerdown','keydown','touchstart','scroll'].forEach(function(e){w.addEventListener(e,go,{once:true,passive:true});});var idle=function(){if('requestIdleCallback'in w){w.requestIdleCallback(go,{timeout:2000});}else{w.setTimeout(go,2000);}};if(d.readyState==='complete'){idle();}else{w.addEventListener('load',idle,{once:true});}}catch(e){go();}})(window,document,'script','dataLayer','${GTM_ID}');`} />
+			)
+		}
+
+		<script is:inline>document.documentElement.classList.add("js");</script>
 	</head>
 
 	<body>
-		<!-- Google Tag Manager (noscript) -->
-		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MVQW6VLD"
+		{/* Google Tag Manager (noscript) */}
+		<noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
 		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-		<!-- End Google Tag Manager (noscript) -->
 		<a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
 
 		<ScrollProgress />

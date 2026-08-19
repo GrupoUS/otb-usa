@@ -36,7 +36,34 @@ export default defineConfig({
 	// install. Add it back together with the first real island.
 	integrations: [
 		sitemap({
-			filter: (page) => !/\/otb\/?$/.test(page),
+			// Two exclusions, both for the same reason — neither URL is a
+			// destination a searcher should land on. `/otb` is the 301 to `/`
+			// (indexing both splits the canonical), and `/redirecionando` is the
+			// lead hand-off page, which only makes sense with a lead in
+			// sessionStorage and carries `noindex` for the same reason.
+			// /404 and /500 are dropped by the integration itself; the .txt guard
+			// is defensive, in case an endpoint like llms.txt ever shows up in
+			// `pages`.
+			filter: (page) =>
+				!/\/(otb|redirecionando)\/?$/.test(page) && !page.endsWith(".txt"),
+			// Build date. The landing is a single page rebuilt on every content
+			// change, so "when this was deployed" is the most accurate lastmod
+			// available without hand-maintaining a date field.
+			lastmod: new Date(),
+			// Nothing here is news, image, video or multilingual — without this
+			// every urlset carries four dead namespace declarations.
+			namespaces: { news: false, xhtml: false, image: false, video: false },
+			// vercel.json runs trailingSlash:false + cleanUrls:true, so /foo/
+			// answers 308. The sitemap must list the URL that answers 200; only
+			// the root keeps its slash.
+			serialize(item) {
+				if (!item.url) return item;
+				const url = new URL(item.url);
+				if (url.pathname !== "/" && url.pathname.endsWith("/")) {
+					url.pathname = url.pathname.slice(0, -1);
+				}
+				return { ...item, url: url.href };
+			},
 		}),
 	],
 	vite: {

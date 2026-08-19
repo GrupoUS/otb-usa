@@ -34,11 +34,17 @@ const ctaHref = whatsappUrlWithText(whatsappMessage);
 			class="inline-flex shrink-0 items-center"
 			aria-label={`${header.marca} — voltar ao topo`}
 		>
+			{/* Rendered 36-44px tall, so the box is ~80px wide: the 360px plate was
+			    4.5x oversize. Served as quantised PNG-8 at 1x/2x (2.1KB / 5.6KB)
+			    instead of through astro:assets — measured on this file, webp and
+			    avif both come out LARGER than PNG-8 for flat wordmark art. See
+			    src/assets/images/otb/README.md. */}
 			<img
-				src="/images/otb/otb-logo-gold.png"
+				src="/images/otb/otb-logo-gold-176.png"
+				srcset="/images/otb/otb-logo-gold-176.png 1x, /images/otb/otb-logo-gold-352.png 2x"
 				alt=""
-				width="360"
-				height="198"
+				width="176"
+				height="97"
 				decoding="async"
 				class="h-9 w-auto object-contain lg:h-11"
 				aria-hidden="true"
