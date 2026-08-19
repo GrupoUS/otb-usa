@@ -44,4 +44,4 @@ python .claude/skills/evolution-core/scripts/memory_manager.py stats
 
 ## Portability
 
-Generic. Database auto-resolves to project root via `.git` lookup or `EVOLUTION_PROJECT_ROOT` env var. To copy to another project: copy `.claude/skills/evolution-core/` + `.claude/hooks/{session_context,task_completed,subagent_stop}.py` + matching `.claude/settings.json` hook entries.
+Generic. Database auto-resolves to project root via `.git` lookup or `EVOLUTION_PROJECT_ROOT` env var. To copy to another project: copy `.claude/skills/evolution-core/` + `~/.claude/hooks/{session_context,task_completed,subagent_stop}.py` (globais) + matching `.claude/settings.json` hook entries.

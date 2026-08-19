@@ -50,7 +50,7 @@ Detail + bootstrap commands in `scripts/AUTORESEARCH_README.md`.
 
 ## Hooks (auto, project-wide)
 
-`.claude/hooks/{session_context,task_completed,subagent_stop}.py` — Python for portability. Wired in `.claude/settings.json`. Generate `errors.jsonl` + `sessions.jsonl` automatically.
+`~/.claude/hooks/{session_context,task_completed,subagent_stop}.py` (globais) — Python for portability. Wired in `.claude/settings.json`. Generate `errors.jsonl` + `sessions.jsonl` automatically.
 
 ## Hard rules (cross-cutting)
 
@@ -62,4 +62,4 @@ Detail + bootstrap commands in `scripts/AUTORESEARCH_README.md`.
 
 ## Portability
 
-Generic. To copy to another project: copy this skill dir + `.claude/hooks/{session_context,task_completed,subagent_stop}.py` + matching `.claude/settings.json` hook entries. Database auto-resolves to project root via `.git` lookup or `EVOLUTION_PROJECT_ROOT` env var.
+Generic. To copy to another project: copy this skill dir + `~/.claude/hooks/{session_context,task_completed,subagent_stop}.py` (globais) + matching `.claude/settings.json` hook entries. Database auto-resolves to project root via `.git` lookup or `EVOLUTION_PROJECT_ROOT` env var.

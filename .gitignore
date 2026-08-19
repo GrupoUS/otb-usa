@@ -31,3 +31,9 @@ __pycache__/
 # Lighthouse cache (created by chrome-launcher on WSL)
 C\:*
 .vercel
+
+# Claude Code runtime state (regenerado a cada sessão — nunca versionar)
+.claude/logs/
+.claude/docs/evolution/memory.db
+.claude/docs/evolution/.current_session
+.claude/scheduled_tasks.lock

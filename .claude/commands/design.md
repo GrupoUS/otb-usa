@@ -117,7 +117,7 @@ python .claude/skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack astro
 
 ### 3.4 Spawn explorer (design spec synthesis)
 
-Spawn `explorer` (**`run_in_background: true`** — `task_routing_guard.py` forces read-only research agents to background) and wait for its returned spec before advancing.
+Spawn `explorer` (**`run_in_background: true`** — `~/.claude/hooks/task_routing_guard.py` forces read-only research agents to background) and wait for its returned spec before advancing.
 
 ```
 Invoke Skill("gpus-theme") and Skill("grupo-us"), then analyze: [user request]

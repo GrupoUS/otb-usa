@@ -91,7 +91,7 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 - Sempre usar timeout; comandos não-interativos.
 - Git read-only com `git --no-pager`; editor-risk com `GIT_EDITOR=true`.
 - Vercel: CLI autenticado (`vercel whoami`). Deploy/alias = sempre perguntar.
-- `rm -rf` em diretório pode ser bloqueado (deny em `settings.json` + hook `smart_bash_approver`) — remover arquivos com `rm -f file...`.
+- `rm -rf` em diretório pode ser bloqueado (deny em `settings.json` + hook global `smart_bash_approver` (`~/.claude/hooks/`)) — remover arquivos com `rm -f file...`.
 
 ### Branch workflow — main-only
 

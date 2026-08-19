@@ -108,6 +108,7 @@
     "orm": ""
   },
   "gates": {
+    "label": "lint+astro-check+build",
     "advisory": true,
     "lighthouse": {
       "performance": 95,
@@ -131,7 +132,9 @@
       "lefthook.yml"
     ],
     "segments": [],
-    "contains": ["bun.lock"]
+    "contains": [
+      "bun.lock"
+    ]
   },
   "rulesDir": ".claude/rules",
   "templatesDir": ".claude/templates",

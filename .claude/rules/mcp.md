@@ -26,7 +26,7 @@ Do not add backend, DB or payments MCPs without an explicit requirement. This re
 - Never use `npm`, `yarn`, `pnpm`.
 - Never `--no-verify` unless explicitly requested.
 - Vercel CLI autenticado (`vercel whoami`); deploy/alias/env de produção = sempre perguntar.
-- `rm -rf` em diretório pode ser bloqueado (deny em `settings.json` + hook `smart_bash_approver`) — usar `rm -f file...` por arquivo.
+- `rm -rf` em diretório pode ser bloqueado (deny em `settings.json` + hook global `smart_bash_approver` (`~/.claude/hooks/`)) — usar `rm -f file...` por arquivo.
 
 ## Debug on error
 
