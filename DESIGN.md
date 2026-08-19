@@ -132,7 +132,7 @@ SSOT técnica. Estes são os tokens que existem hoje; qualquer cor nova entra aq
 repete em sequência**: `deep → base → alt → base → deep → base → alt → base →
 deep → alt → deep → base → deep → alt → deep`.
 
-**Crimson (Harvard / bandeira US) é acento de posicionamento desta landing, não substituto do gold.** Gold permanece primário de CTA e de anel de foco; crimson marca a narrativa Boston/Estados Unidos (badges, filetes, realces de seção, gradientes de profundidade). Nunca usar crimson como cor de CTA primário nem como cor de estado de erro.
+**Crimson (bandeira norte-americana) é acento de posicionamento desta landing, não substituto do gold.** Gold permanece primário de CTA e de anel de foco; crimson marca a narrativa Boston/Estados Unidos (badges, filetes, realces de seção, gradientes de profundidade). Nunca usar crimson como cor de CTA primário nem como cor de estado de erro.
 
 ### Regras de cor
 

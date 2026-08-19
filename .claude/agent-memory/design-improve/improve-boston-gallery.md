@@ -5,6 +5,11 @@ metadata:
   type: project
 ---
 
+> **SUPERSEDED (19/08/2026).** Registro histórico de uma passagem anterior. A seção virou
+> `Boston.astro` / âncora `#boston` / chave `boston`, e a issue #1 proibiu nomear qualquer
+> instituição de ensino local em superfície pública. Não usar este arquivo como instrução.
+
+
 ## Files touched
 
 | File | Action | Summary |

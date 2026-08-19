@@ -110,7 +110,7 @@ src/styles/global.css
 | `programa` | `Programa.astro` | `#programa` | `programa` |
 | `turmas` | `Turmas.astro` | `#turmas` | `turmas`, `edicao` |
 | `modulos` | `Modulos.astro` | `#modulos` | `modulos` |
-| `boston` / `bostonharvard` | `BostonHarvard.astro` | `#boston-harvard` | `bostonHarvard`, `agenda` |
+| `boston` | `Boston.astro` | `#boston` | `boston`, `agenda` |
 | `speakers` | `Speakers.astro` | `#speakers` | `speakers` |
 | `investimento` | `Investimento.astro` | `#investimento` | `investimento`, `lotes` |
 | `parceiros` | `Parceiros.astro` | `#parceiros` | `parceiros` |

@@ -98,6 +98,7 @@ const plate = resolveImage(hero.background.image);
 	<div
 		class="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pt-24 pb-10 lg:px-8 lg:pt-28"
 		data-hero-fade
+		data-hero-fold
 	>
 		<div class="w-full min-w-0 max-w-4xl">
 			{hero.eyebrow && (
@@ -175,7 +176,7 @@ const plate = resolveImage(hero.background.image);
 								data-shine
 								class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
 							>
-								<span>{hero.cta.secondaryLabel ?? "Garantir vaga"}</span>
+								<span>{hero.cta.checkoutLabel ?? "Garantir vaga"}</span>
 								<Icon
 									name="arrow-right"
 									size={18}

@@ -37,3 +37,6 @@ C\:*
 .claude/docs/evolution/memory.db
 .claude/docs/evolution/.current_session
 .claude/scheduled_tasks.lock
+
+# Evidências do smoke responsivo (bun run smoke -- --shots)
+.smoke/

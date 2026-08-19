@@ -4,6 +4,30 @@
 
 ---
 
+### [2026-08-19] O smoke que lê o SSOT encontra a copy que fugiu dele
+
+**Problem:** Escrevendo `scripts/responsive-smoke.mjs` para provar o critério "primeira dobra com
+edição/local" da issue #1, o seletor heurístico ("primeiro elemento folha com ano e 'Boston'") pegou
+**"Abr 2027 · Boston, EUA"** — uma string que não existe no `otb.json`. Estava hardcoded em
+`Boston.astro`, junto com o `19–21` do plate full-bleed. Dois pedaços de copy de produto fora do SSOT,
+num arquivo que ninguém suspeitaria: a data aparecia certa na tela, então nada denunciava.
+
+**Solution:** Bloco `boston.plate { dias, periodo }` no schema + JSON, componente lendo os dois; o
+overlay inteiro fica condicionado à presença do bloco (o `<figcaption>` com `boston.datas` já cobria
+leitor de tela). E o smoke passou a fixar a asserção em `product.hero.eyebrow` lido do próprio JSON —
+o teste agora falha se a copy sair do SSOT, em vez de tropeçar nela por acaso.
+
+**Pattern:** Teste de UI que compara contra literal escrito no teste só confirma o que o autor lembrava.
+Teste que compara contra o SSOT vira detector de drift de conteúdo de graça. Quando um seletor
+heurístico acha "o elemento errado", a primeira hipótese não é o seletor — é perguntar de onde veio
+aquele texto.
+
+**Validation:** `bun run smoke` — 15 verificações em cada um dos 6 viewports (alturas de navegador reais, não de tela), todas verdes;
+`grep -rnE "(Boston|IESA|Fresh Specimens|US\$|abr 2027)" src/components --include="*.astro"` volta só
+comentários e imports.
+
+---
+
 ### [2026-08-19] `EducationalEvent` não existe — e nada no gate reclama
 
 **Problem:** O nó principal do grafo JSON-LD da imersão saiu como `"@type": "EducationalEvent"`. O tipo

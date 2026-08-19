@@ -31,6 +31,8 @@ Brief de produto → [`PRODUCT.md`](PRODUCT.md) · Design system → [`DESIGN.md
 | Lint + auto-fix | `bun run lint:fix` |
 | Build de produção | `bun run build` |
 | Preview do build | `bun run preview` |
+| Testes | `bun test` |
+| Smoke responsivo (precisa de `bun run preview`) | `bun run smoke` |
 | Lighthouse local | `bun run lighthouse:audit` |
 | Gate pré-deploy | `bun run predeploy` |
 
@@ -84,7 +86,7 @@ A collection `products` usa JSON com schema Zod em `src/content.config.ts`.
 
 Fonte principal:
 
-- `src/content/products/otb.json` — SEO, hero, público, programa, módulos, Boston/Harvard, especialistas, investimento, FAQ e disclaimer legal.
+- `src/content/products/otb.json` — SEO, hero, público, programa, módulos, Boston, especialistas, investimento, FAQ e disclaimer legal.
 
 Componentes recebem dados já tipados a partir de `getEntry("products", "otb")`.
 
@@ -94,7 +96,7 @@ Componentes recebem dados já tipados a partir de `getEntry("products", "otb")`.
 
 - OTB USA é o escopo do repo; Grupo US é marca-mãe.
 - Não importar rotas, copy, CTAs ou regras de outros produtos.
-- Harvard deve aparecer apenas como contexto geográfico/institucional do ecossistema acadêmico; sem vínculo, patrocínio, endosso ou certificação oficial.
+- **Nenhuma instituição de ensino local pode ser nomeada em superfície pública** (issue #1, decisão do Grupo US de 04/08/2026). Boston é contexto geográfico; as certificações reais são Instituto IESA / Grupo US e Anatomy Society of America (ASA), ditas com essas palavras.
 - WhatsApp passa por `src/lib/whatsapp.ts`.
 - Tokens visuais vivem em `src/styles/global.css`.
 - Site é Astro static-only; sem SPA, sem SSR adapter.

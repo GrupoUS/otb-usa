@@ -108,20 +108,22 @@ function splitStat(valor: string) {
 			>
 			</div>
 
-			<div
-				class="absolute inset-0 mx-auto flex max-w-7xl flex-col justify-center px-6 lg:px-8"
-			>
-				<span
-					class="font-sans text-6xl font-bold leading-none tracking-tight tabular-nums text-text-primary sm:text-7xl lg:text-8xl"
+			{boston.plate && (
+				<div
+					class="absolute inset-0 mx-auto flex max-w-7xl flex-col justify-center px-6 lg:px-8"
 				>
-					19&ndash;21
-				</span>
-				<span
-					class="mt-3 text-kicker font-semibold uppercase tracking-kicker text-gold"
-				>
-					Abr 2027 &middot; Boston, EUA
-				</span>
-			</div>
+					<span
+						class="font-sans text-6xl font-bold leading-none tracking-tight tabular-nums text-text-primary sm:text-7xl lg:text-8xl"
+					>
+						{boston.plate.dias}
+					</span>
+					<span
+						class="mt-3 text-kicker font-semibold uppercase tracking-kicker text-gold"
+					>
+						{boston.plate.periodo}
+					</span>
+				</div>
+			)}
 		</div>
 		<figcaption class="sr-only">{boston.datas}</figcaption>
 	</figure>

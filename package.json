@@ -13,9 +13,11 @@
     "lint": "bunx biome check src astro.config.mjs && bunx oxlint src --ignore-pattern 'src/layouts/*'",
     "lint:fix": "bunx biome check src astro.config.mjs --write && bunx oxlint src --ignore-pattern 'src/layouts/*' --fix --fix-suggestions",
     "lighthouse:audit": "node scripts/lighthouse-audit.mjs",
+    "smoke": "bun scripts/responsive-smoke.mjs",
+    "test": "bun test",
     "deploy:verify": "node scripts/deploy-check.mjs",
     "ship": "bun run predeploy && git push origin main && node scripts/deploy-check.mjs",
-    "predeploy": "bun run lint && bunx astro check && bun run build",
+    "predeploy": "bun run lint && bunx astro check && bun run build && bun test",
     "prepare": "lefthook install || true"
   },
   "dependencies": {

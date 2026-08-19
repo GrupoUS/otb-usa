@@ -550,6 +550,35 @@ body {
 	opacity: 1;
 }
 
+/* ===== Hero fold on short viewports ===== */
+
+/* `min-h-[100svh]` is a floor, not a ceiling, and the hero stack is
+   content-driven — so the taller the copy, the further the CTA falls. Measured
+   on the real thing: at 1366×657 (what 1366×768 becomes once the browser chrome
+   is on it — the most common desktop in the world) the primary CTA sat 184px
+   BELOW the fold; at 1440×789 (13" MacBook Air) 65px below; at 375×553 (iPhone
+   SE in Safari) 29px below. Issue #1 fails on exactly that.
+
+   Compress the stack only where height is scarce; the tall-viewport composition
+   is untouched. `--text-display` is used by exactly one element in the whole
+   codebase — the hero h1 — so overriding the token here is surgical. */
+@media (max-height: 880px) {
+	:root {
+		--text-display: clamp(2rem, 0.9rem + 3.2vw, 3.5rem);
+	}
+
+	[data-hero-fold] {
+		padding-top: 4.5rem;
+		padding-bottom: 1.5rem;
+	}
+
+	/* One rhythm instead of the 24/28/32/40 ladder: at this height the ladder is
+	   what pushes the action row off screen. */
+	[data-hero-fold] > div > * + * {
+		margin-top: 1.25rem;
+	}
+}
+
 /* ===== Text Shimmer ===== */
 
 @keyframes shimmer {

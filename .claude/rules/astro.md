@@ -31,12 +31,12 @@ Default = sem directive. Astro puro primeiro; **ilha React só quando a interati
 - Copy da landing vive em `${content.productJson}`.
 - Schema em `src/content.config.ts` (slug `${content.productSlug}`).
 - Página carrega via `getCollection("products")` + `find(slug === "${content.productSlug}")`.
-- Componentes recebem `.data` (sub-objetos: `seo`, `hero`, `why`, `audience`, `programa`, `turmas`, `modulos`, `bostonHarvard`, `speakers`, `investimento`, `faq`, `edicao`, `lotes`, `agenda`, `parceiros`, `legal`), nunca a entry completa.
+- Componentes recebem `.data` (sub-objetos: `seo`, `hero`, `why`, `audience`, `programa`, `turmas`, `modulos`, `boston`, `speakers`, `investimento`, `faq`, `edicao`, `lotes`, `agenda`, `parceiros`, `legal`), nunca a entry completa.
 - Adicionar campo = schema + JSON + leitor numa só mudança.
 
 ## 4. Rotas
 
-Rotas públicas hoje: **`/` apenas**, mais o redirect `/otb` → `/` (excluído do sitemap via `filter`). `${content.legalRoutes}` está vazio — não existem `/termos`, `/politica-de-privacidade` nem `/404` neste repo; criar qualquer uma delas = decisão de escopo, não efeito colateral. Âncoras internas: `${content.anchors}`. Não adicionar rotas/redirects de outros produtos. Mudança de rota/redirect = atualizar `astro.config.mjs` + sitemap + `robots.txt` numa só mudança.
+Rotas hoje: **`/`** (única indexável), `/redirecionando` e `/404` (ambas `noindex`), o endpoint `/llms.txt` e o redirect `/otb` → `/`. As duas últimas rotas e o `/otb` ficam fora do sitemap via `filter`. `${content.legalRoutes}` está vazio — não existem `/termos` nem `/politica-de-privacidade` neste repo (o consentimento aponta para a política do gpus.com.br); criar qualquer uma delas = decisão de escopo, não efeito colateral. Âncoras internas: `${content.anchors}`. Não adicionar rotas/redirects de outros produtos. Mudança de rota/redirect = atualizar `astro.config.mjs` + sitemap + `robots.txt` numa só mudança.
 
 ## 5. WhatsApp SSOT
 

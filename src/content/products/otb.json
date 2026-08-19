@@ -245,6 +245,10 @@
 		"highlight": "Três dias no coração acadêmico de Boston",
 		"descricao": "Três dias em Boston: percurso guiado pela cidade, sessões executivas, Anatomy Review com Mike — correspondente americano que aprofunda planos e variações anatômicas — e prática com Fresh Specimens.",
 		"datas": "19 a 21 de abril de 2027 — Boston, Estados Unidos",
+		"plate": {
+			"dias": "19–21",
+			"periodo": "Abr 2027 · Boston, EUA"
+		},
 		"cards": [
 			{
 				"titulo": "Anatomy Review com correspondente americano",
@@ -347,7 +351,7 @@
 		"cta": {
 			"label": "Falar com Laura no WhatsApp",
 			"whatsappMessage": "Olá, Laura! Quero garantir minha vaga no Lote 1 da 3ª Edição do OTB Estados Unidos.",
-			"secondaryLabel": "Conhecer o programa",
+			"checkoutLabel": "Garantir vaga",
 			"checkoutUrl": null
 		}
 	},
@@ -510,7 +514,7 @@
 		"cta": {
 			"label": "Falar com Laura no WhatsApp",
 			"whatsappMessage": "Olá, Laura! Quero conversar sobre a 3ª Edição do OTB Estados Unidos e entender as condições.",
-			"secondaryLabel": "Garantir vaga",
+			"checkoutLabel": "Garantir vaga",
 			"checkoutUrl": null
 		}
 	},

@@ -8,7 +8,12 @@ const ctaSchema = z.object({
 		message: "WhatsApp message must start with 'Olá, Laura!' (SDR SSOT).",
 	}),
 	checkoutUrl: z.url().nullable().optional(),
-	secondaryLabel: z.string().optional(),
+	/** Label of the DIRECT ENROLMENT button, which only renders once
+	 *  `checkoutUrl` exists. Named for what it drives: as `secondaryLabel` it
+	 *  read like "the other CTA" and one surface filled it with
+	 *  "Conhecer o programa", which would have shipped as the label of the gold
+	 *  purchase button the day the checkout URL landed. */
+	checkoutLabel: z.string().optional(),
 });
 
 const products = defineCollection({
@@ -172,6 +177,18 @@ const products = defineCollection({
 			highlight: z.string().optional(),
 			descricao: z.string(),
 			datas: z.string(),
+			/** Display split of `datas` for the full-bleed plate: the day range is
+			 *  set at display size and the qualifier below it in kicker case. Two
+			 *  strings instead of a parser because "19–21" and "Abr 2027 · Boston,
+			 *  EUA" are typographic decisions, not derivations. Absent = the plate
+			 *  renders photo only, and `datas` still carries the dates to screen
+			 *  readers through the figcaption. */
+			plate: z
+				.object({
+					dias: z.string().min(1).max(12),
+					periodo: z.string().min(4).max(40),
+				})
+				.optional(),
 			cards: z
 				.array(
 					z.object({

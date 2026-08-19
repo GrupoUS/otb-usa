@@ -9,6 +9,8 @@
  */
 import { describe, expect, it } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
+import { LEAD_CTA_ORIGINS } from "../src/lib/leads";
+import { WHATSAPP_SDR_E164 } from "../src/lib/whatsapp";
 
 const DIST = new URL("../dist/", import.meta.url).pathname;
 const SITE = "https://otb.gpus.com.br";
@@ -185,5 +187,44 @@ describe("llms.txt", () => {
 				"não possui vínculo, patrocínio, endosso ou certificação por instituições de ensino locais",
 			),
 		).toBe(true);
+	});
+});
+
+describe("superfícies de conversão", () => {
+	it("only ships data-lead-cta values the lead contract knows", () => {
+		// A typo here is silent: the modal still opens and the lead still reaches
+		// the sheet, but with an origin nobody can group by. Nothing at build time
+		// checks the attribute against the enum, so the built HTML is the gate.
+		const origins = [...html.matchAll(/data-lead-cta="([^"]+)"/g)].map((m) => m[1]);
+		const known = new Set(LEAD_CTA_ORIGINS as readonly string[]);
+		expect(origins.filter((origin) => !known.has(origin))).toEqual([]);
+		expect(origins.length > 0).toBe(true);
+	});
+
+	it("points every WhatsApp link at a number the content layer declares", () => {
+		const product = JSON.parse(
+			readFileSync(new URL("../src/content/products/otb.json", import.meta.url), "utf8"),
+		);
+		const partnerNumbers = (product.parceiros?.lista ?? [])
+			.map((partner: { contato?: { whatsapp?: string } }) =>
+				(partner.contato?.whatsapp ?? "").replace(/\D/g, ""),
+			)
+			.filter(Boolean);
+		const allowed = new Set([WHATSAPP_SDR_E164, ...partnerNumbers]);
+		const numbers = [...html.matchAll(/wa\.me\/(\d+)/g)].map((m) => m[1]);
+		expect(numbers.filter((number) => !allowed.has(number))).toEqual([]);
+	});
+
+	it("never labels the enrolment button with the learn-more copy", () => {
+		// `checkoutLabel` used to be called `secondaryLabel`, and one surface filled
+		// it with "Conhecer o programa" — which would have shipped as the label of
+		// the gold purchase button the day a checkout URL landed.
+		const product = JSON.parse(
+			readFileSync(new URL("../src/content/products/otb.json", import.meta.url), "utf8"),
+		);
+		const labels = [product.hero, product.investimento, product.finalCta]
+			.map((block: { cta?: { checkoutLabel?: string } }) => block?.cta?.checkoutLabel)
+			.filter(Boolean) as string[];
+		expect(labels.filter((label) => /conhecer|saiba|detalhes/i.test(label))).toEqual([]);
 	});
 });

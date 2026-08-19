@@ -837,9 +837,11 @@ function startDecorative(): void {
 	if (decorController) return;
 	decorController = new AbortController();
 
-	// The cascade runs FIRST: `[data-enter]` sits at opacity 0 under the `.js`
-	// flag, so a throw in anything registered before it would leave the whole
-	// fold invisible.
+	// The cascade still runs FIRST, but no longer because anything depends on it
+	// to become visible: `[data-enter]` animates transform only and the fold is
+	// painted at full opacity on the first frame (that is what took LCP from 6.7s
+	// to 2.0s). Order kept so the entrance reads as one choreography rather than
+	// starting mid-way through the other effects.
 	for (const init of [
 		initEnter,
 		initCounters,

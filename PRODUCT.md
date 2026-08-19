@@ -41,7 +41,7 @@ Landing estática de **captação** para o **OTB — MBA em Business Aesthetic H
 
 O produto é um programa executivo de **320 horas**: 10 módulos online de business, gestão clínica, marketing e vendas (MBA Business Online, plataforma por 12 meses, Instituto IESA / Grupo US) + 3 dias de imersão presencial em Boston com prática demonstrativa **Fresh Specimens ≤ 48h post-mortem** e **Anatomy Review** com correspondente americano.
 
-Sucesso da página = visitante qualificado inicia conversa no WhatsApp com a SDR Laura. **Não há formulário nem checkout** (`hero.cta.checkoutUrl` e `investimento.cta.checkoutUrl` são `null`): o WhatsApp é o único destino de conversão.
+Sucesso da página = visitante qualificado inicia conversa no WhatsApp com a SDR Laura. O fluxo é **formulário curto → WhatsApp**: as duas superfícies de captura (modal `LeadFormDialog` e a seção inline `Aplicacao`) fazem `POST /api/leads` e passam por `/redirecionando`, que dispara `lead_submit` antes de abrir a conversa. **Não há checkout** (`hero.cta.checkoutUrl`, `investimento.cta.checkoutUrl` e `finalCta.cta.checkoutUrl` são `null`): o link oficial de matrícula ainda não foi registrado, e o botão de compra só aparece quando ele existir.
 
 ---
 
@@ -51,7 +51,7 @@ Sucesso da página = visitante qualificado inicia conversa no WhatsApp com a SDR
 
 Três pilares declarados (`otb.json § why.cards`): **formação técnica avançada · branding internacional · networking global**.
 
-**Limite duro de posicionamento:** Boston/Cambridge/Harvard são **contexto geográfico e acadêmico**, nunca certificação, vínculo, patrocínio ou endosso. O disclaimer integral vive em `otb.json § legal.disclaimer` e deve permanecer acessível na página.
+**Limite duro de posicionamento:** Boston é **contexto geográfico**, nunca certificação, vínculo, patrocínio ou endosso — e **nenhuma instituição de ensino local pode ser nomeada em superfície pública** (issue #1, decisão do Grupo US de 04/08/2026: a remoção alcança texto visível, âncoras, dados estruturados, metadados e textos acessíveis). O disclaimer integral vive em `otb.json § legal.disclaimer` e deve permanecer acessível na página.
 
 ---
 
@@ -71,20 +71,20 @@ Três pilares declarados (`otb.json § why.cards`): **formação técnica avanç
 
 - Slug de conteúdo `otb`; SSOT em `src/content/products/otb.json`, validado por `src/content.config.ts`.
 - Canonical: `https://otb.gpus.com.br`. Redirect `/otb` → `/` (excluído do sitemap).
-- Rota única `/` — **não existem** páginas legais (`/termos`, `/politica-de-privacidade`) nem `/404` neste repo.
+- Rotas: `/` (landing), `/redirecionando` (hand-off do lead, `noindex`) e `/404` (`noindex`), mais o endpoint `/llms.txt` e o redirect `/otb` → `/`. **Não existem** páginas legais próprias (`/termos`, `/politica-de-privacidade`): o consentimento aponta para `https://www.gpus.com.br/politica-de-privacidade`.
 - CTA primário único: **"Falar com Laura no WhatsApp"** (hero e investimento). CTA secundário: "Conhecer o programa".
 - WhatsApp SSOT: `src/lib/whatsapp.ts` (`WHATSAPP_SDR_E164 = 556294705081`); toda mensagem começa com `Olá, Laura!` (validado em runtime).
 - Lotes: Lote 0 US$ 3.000 (encerrado 30 abr 2026) · **Lote 1 US$ 3.500 (ativo, desde 01 mai 2026)** · Lote 2 US$ 4.000 (liberação por volume ou data, ainda não ativado).
 - Parcelamento: cartão de crédito (parcelas conforme operadora) e boleto parcelado com taxa de 5% sobre o número de parcelas.
 - Certificações declaradas: MBA em parceria **Instituto IESA / Grupo US**; certificado de prática anatômica **Fresh Specimens pela Anatomy Society of America (ASA)**.
 - Agenda de 3 dias (19–21 abr 2027) descrita em `otb.json § agenda`; visita guiada ao campus tem caráter **descritivo**, sem atividade acadêmica oficial.
-- Corpo docente publicado: 4 nomes em `otb.json § speakers.lista`.
+- Corpo docente publicado: 5 nomes em `otb.json § speakers.lista`.
 - Parceiros operacionais: 2, com WhatsApp próprio (roteados por `whatsappPartnerUrl`).
 
 **Restrições técnicas:**
 
 - Astro estático MPA, zero ilha React hoje. Sem SSR, sem `ClientRouter`, sem `prerender = false`.
-- Sem backend, sem banco, sem endpoint de lead. Sem GA4/Pixel instrumentado (`import.meta.env` não é lido em `src/`).
+- Sem banco. O único endpoint é a função serverless `api/leads.ts` (fora do build do Astro), que valida o lead e repassa ao Apps Script da planilha. Tracking instrumentado via container GTM inline em `Layout.astro` (GA4 + Meta Pixel dentro do container), com carga adiada fora das páginas de conversão.
 - Copy comercial nunca vive em `.astro` — campo novo = schema + JSON + leitor numa só mudança.
 
 **Explicitamente indefinido — não fabricar:**
@@ -106,7 +106,7 @@ Tom de voz: **premium, claro, consultivo e internacional**. Falar em **"nós"**.
 - Business e segurança clínica caminham juntos.
 - Grupo US é a marca-mãe; a narrativa principal é o produto da página.
 
-Voz canônica, valores (A.C.T.I.V.A.) e frases-guia vivem em `Skill('grupo-us')`. Tokens visuais (Navy/Gold + acento crimson Harvard/USA) em `DESIGN.md` + `src/styles/global.css @theme`.
+Voz canônica, valores (A.C.T.I.V.A.) e frases-guia vivem em `Skill('grupo-us')`. Tokens visuais (escala ink + gold, com acento crimson da bandeira norte-americana) em `DESIGN.md` + `src/styles/global.css @theme`.
 
 ---
 
@@ -134,7 +134,7 @@ Voz canônica, valores (A.C.T.I.V.A.) e frases-guia vivem em `Skill('grupo-us')`
 
 1. **Apex, não entrada.** Cada seção fala com quem já chegou longe; nada de didatismo de topo de funil.
 2. **Um CTA, um destino.** WhatsApp com Laura é o único caminho de conversão — nenhuma seção inventa CTA próprio.
-3. **Contexto internacional, nunca credencial emprestada.** Harvard/Boston descrevem o cenário; certificação real é IESA + ASA e é dita com essas palavras.
+3. **Contexto internacional, nunca credencial emprestada.** Boston descreve o cenário; certificação real é IESA + ASA e é dita com essas palavras. Instituição de ensino local não é nomeada.
 4. **Preço é argumento, não constrangimento.** Lotes e parcelamento aparecem com clareza; escassez só quando o JSON a confirma.
 5. **Prova é o acervo real.** Fotos das edições anteriores carregam a credibilidade que depoimento fabricado carregaria — e não temos depoimento.
 
@@ -195,7 +195,7 @@ Ofertas envolvem saúde estética, harmonização e formação profissional regu
 - **Público elegível claro** conforme legislação e conselho aplicável.
 - **Separar resultado de aluno de promessa universal.**
 - **Prova social com contexto:** nome, profissão, cidade, situação inicial, evolução — e só quando existir de fato.
-- **Claims sensíveis** — "única", "reconhecida pelos Conselhos", "MEC", "Harvard", "ASA" — só com documentação / nota legal adequada. Harvard e Boston são **contexto geográfico/acadêmico**, nunca certificação.
+- **Claims sensíveis** — "única", "o primeiro do mundo", "reconhecida pelos Conselhos", "MEC", "ASA" — só com documentação / nota legal adequada. Boston é **contexto geográfico**, nunca certificação, e instituição de ensino local não é nomeada.
 - **Copy não confirmada = PROPOSTA.** Datas/valores não confirmados = placeholder explícito.
 - **Disclaimer legal** (`otb.json § legal.disclaimer`) permanece visível e não pode ser encurtado por motivo estético.
 

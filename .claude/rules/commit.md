@@ -32,6 +32,8 @@ Run in order before commit/PR:
 1. `bun run lint`
 2. `bunx astro check`
 3. `bun run build`
+3a. `bun test` (asserções sobre o `dist/`: grafo JSON-LD, indexabilidade, origens de CTA)
+3b. `bun run preview` noutro terminal + `bun run smoke` (dobra, overflow, modal e foco em 6 viewports reais)
 4. Hex scan em UI files: nenhum `#[0-9a-fA-F]{3,8}` fora de `src/styles/global.css` (exceção: `<meta theme-color>`).
 5. WhatsApp scan: nenhum `wa.me/` fora de `src/lib/whatsapp.ts`.
 6. Content drift scan: nenhuma copy/FAQ/oferta hardcoded em `.astro`/`.tsx` (vive em `${content.productJson}`).
