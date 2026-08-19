@@ -70,9 +70,15 @@ const cardIcons: IconName[] = ["graduation-cap", "globe", "microscope"];
 
 				{/* Scale rail. Four figures that answer "how much of what" before the
 				    reader reaches the syllabus column. */}
+				{/* Two columns again at `lg`: from that breakpoint this rail lives
+				    inside the 5/12 column, where four tracks measure ~99px — and
+				    "Certificações" alone is 139px once the kicker's 0.28em tracking
+				    is applied to 13 uppercase characters it cannot break. The label
+				    spilled into the neighbour and the two words rendered on top of
+				    each other. Four tracks are only safe while the rail is full-width. */}
 				{programa.kpis && programa.kpis.length > 0 && (
 					<dl
-						class="mt-9 grid grid-cols-2 gap-6 border-t border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] pt-7 tabular-nums sm:grid-cols-4"
+						class="mt-9 grid grid-cols-2 gap-6 border-t border-[color-mix(in_srgb,var(--color-gold)_18%,transparent)] pt-7 tabular-nums sm:grid-cols-4 lg:grid-cols-2"
 						data-reveal="up"
 						data-reveal-delay="3"
 					>

@@ -148,8 +148,11 @@ const FOLD_PROBE = `(() => {
 	   \`overflow-x: clip\`, so the root is clamped and a genuine 3000px overflow
 	   still measures 0. Walk content elements instead and ignore anything a
 	   clipping ancestor is deliberately hiding (decorative glows, marquee track). */
+	/* html and body carry \`overflow-x: clip\` as page hygiene — counting them as
+	   clipping ancestors makes every element "intentionally clipped" and turns
+	   both spill checks into assertions that can never fail. Stop at body. */
 	const clippedByAncestor = (el) => {
-		for (let p = el.parentElement; p; p = p.parentElement) {
+		for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
 			const s = getComputedStyle(p);
 			if (s.overflowX === "hidden" || s.overflowX === "clip") return true;
 		}
@@ -166,6 +169,29 @@ const FOLD_PROBE = `(() => {
 		.slice(0, 4)
 		.map((el) => el.tagName + "." + String(el.className).slice(0, 40) + " right=" + Math.round(el.getBoundingClientRect().right));
 
+	/* Text wider than the box it sits in. This is how "CERTIFICAÇÕEⓂSESES DE
+	   PLATAFORMA" happened: an unbreakable uppercase word with 0.28em tracking
+	   measured 139px inside a 99px grid track and printed over its neighbour.
+	   Pairwise box intersection misses it — the boxes barely overlap, the GLYPHS
+	   do — so measure each text run against its own element instead. */
+	const spillingText = [];
+	document.querySelectorAll("body *").forEach((el) => {
+		if (el.children.length || el.closest('[aria-hidden="true"]')) return;
+		const text = el.textContent.trim();
+		if (!text) return;
+		const cs = getComputedStyle(el);
+		if (cs.display === "none" || cs.overflowX === "hidden" || cs.overflowX === "clip") return;
+		const box = el.getBoundingClientRect();
+		if (box.width === 0 || box.height === 0) return;
+		if (clippedByAncestor(el)) return;
+		const range = document.createRange();
+		range.selectNodeContents(el);
+		const widest = Math.max(0, ...[...range.getClientRects()].map((r) => r.width));
+		if (widest > box.width + 1.5) {
+			spillingText.push(el.tagName + ' "' + text.slice(0, 28) + '" ' + Math.round(widest) + "px em " + Math.round(box.width) + "px");
+		}
+	});
+
 	/* The floating WhatsApp button is fixed and above everything; if it lands on
 	   top of fold content, the reader loses that content with no way to move it. */
 	const float = document.querySelector("[data-float-wa]");
@@ -181,6 +207,7 @@ const FOLD_PROBE = `(() => {
 
 	return JSON.stringify({
 		viewport: { vw, vh },
+		spillingText: spillingText.slice(0, 4),
 		coveredByFloat: covered,
 		spilling,
 		overflowX: document.documentElement.scrollWidth - vw,
@@ -290,6 +317,11 @@ try {
 			JSON.stringify(fold.cta.box),
 		);
 		check(fold.cta.hit === "livre", "CTA sem obstrução", fold.cta.hit);
+		check(
+			fold.spillingText.length === 0,
+			"nenhum texto transborda a própria caixa",
+			fold.spillingText.join(" | ") || "",
+		);
 		check(
 			fold.coveredByFloat.length === 0,
 			"botão flutuante não cobre conteúdo da dobra",
