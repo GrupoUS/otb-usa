@@ -4,6 +4,34 @@
 
 ---
 
+### [2026-08-19] Duas asserções verdes que não podiam falhar
+
+**Problem:** O smoke afirmava "sem overflow horizontal" e "nenhum texto transborda a própria caixa" —
+e passava em tudo, inclusive numa página que **tinha** os dois defeitos. A primeira media
+`documentElement.scrollWidth - innerWidth`, mas `html, body { overflow-x: clip }` (higiene de página)
+zera essa conta por construção. A segunda descartava qualquer elemento com ancestral que recorta — e,
+com `clip` em `body`, isso é *todo* elemento. Duas asserções que nunca falhariam, dando aval verde a
+"CERTIFICAÇÕEⓂSESES DE PLATAFORMA" renderizado em produção de 1024px para cima.
+
+**Solution:** A busca de ancestral que recorta agora para em `body`. A medição de transbordo passou a
+ser por elemento (caixa contra viewport) e por corrida de texto (`Range.getClientRects()` contra a
+caixa do próprio elemento). O defeito de KPI foi corrigido separadamente (`sm:grid-cols-4
+lg:grid-cols-2`, porque a régua vive dentro da coluna 5/12 a partir de `lg`).
+
+**Pattern:** **Controle negativo ou a asserção não existe.** Antes de confiar num check novo, rodar
+contra uma superfície que comprovadamente tem o defeito — aqui, a própria produção ainda não
+atualizada, que devolveu `DT "Certificações" 139px em 99px` em três viewports. Um check verde só é
+informação depois que você viu ele ficar vermelho.
+
+**Pattern 2:** Colisão de texto não se detecta por interseção de caixas. A auditoria que usou
+"interseção > 12% da menor caixa" passou raspando (~11%): as caixas mal se tocam, os **glifos** é que
+se sobrepõem. Medir a corrida de texto contra a caixa que deveria contê-la.
+
+**Validation:** `bun run smoke -- https://otb.gpus.com.br` (sem a correção) falha em 1366×657,
+1440×789 e 1440×900; `bun run smoke` no build corrigido passa nos 6 viewports.
+
+---
+
 ### [2026-08-19] O smoke que lê o SSOT encontra a copy que fugiu dele
 
 **Problem:** Escrevendo `scripts/responsive-smoke.mjs` para provar o critério "primeira dobra com
