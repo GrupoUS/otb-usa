@@ -11,14 +11,14 @@ Use for build failures, regressions, broken pages, content/schema errors, stylin
 ## 0. Context load
 
 ```typescript
-Skill("debugger");
-Skill("astro");
+Skill("graph-powers:debugger");
+Skill("graph-powers:astro");
 ```
 
 Add as needed:
 
 - `Skill("gpus-theme")` for styling/design regressions.
-- `Skill("performance-optimization")` for bundle, Lighthouse, CWV, or runtime performance.
+- `Skill("graph-powers:performance-optimization")` for bundle, Lighthouse, CWV, or runtime performance.
 - `Skill("grupo-us")` for product/legal/CTA copy issues.
 
 ## 1. Debug discipline
@@ -35,7 +35,7 @@ Add as needed:
 - Content source of truth: `${content.productJson}` + `src/content.config.ts`.
 - WhatsApp source of truth: `src/lib/whatsapp.ts`; messages start with `${lead.whatsappGreeting}`.
 - Package manager: Bun only (`bun`, `bunx`).
-- Conversão/legal guardrail: fluxo é WhatsApp-only (`lead.leadFlow`) — sem form, endpoint ou banco. Disclaimer legal (`${content.productJson}` § `legal`) permanece visível. Tracking IDs (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) vivem em env, nunca commitados.
+- Conversão/legal guardrail: fluxo é **form → WhatsApp** (`lead.leadFlow: "form-then-whatsapp"`) — duas superfícies de captura (`LeadFormDialog.astro`, `Aplicacao.astro`) fazem `POST /api/leads` → Apps Script → planilha, e passam por `/redirecionando`. Mudar o payload toca `src/lib/leads.ts` + `api/leads.ts` + `Code.js` + `tests/` na mesma mudança (raiz `REVIEW.md` B10). Disclaimer legal (`${content.productJson}` § `legal`) permanece visível. Tracking IDs (`${tracking.ga4Env}`, `${tracking.pixelEnv}`) vivem em env, nunca commitados.
 
 ## 3. Common checks
 

@@ -1,5 +1,12 @@
 ---
-globs: src/**, .claude/**, public/**, scripts/**, astro.config.mjs, package.json, src/content/**
+paths:
+  - "src/**"
+  - ".claude/**"
+  - "public/**"
+  - "scripts/**"
+  - "astro.config.mjs"
+  - "package.json"
+  - "src/content/**"
 ---
 
 # Commit Format + Pre-Commit Gate — GPUS Astro Landing
@@ -37,14 +44,14 @@ Run in order before commit/PR:
 4. Hex scan em UI files: nenhum `#[0-9a-fA-F]{3,8}` fora de `src/styles/global.css` (exceção: `<meta theme-color>`).
 5. WhatsApp scan: nenhum `wa.me/` fora de `src/lib/whatsapp.ts`.
 6. Content drift scan: nenhuma copy/FAQ/oferta hardcoded em `.astro`/`.tsx` (vive em `${content.productJson}`).
-7. Production noise scan: nenhum `console.log` ou `debugger`.
+7. Production noise scan: nenhum `console.log` ou `graph-powers:debugger`.
 8. Form/PII scan: campos com `<label>`, consent + link de privacidade presentes; sem PII logada.
 
 Para mudanças de UI/perf também rodar `bun run lighthouse:audit` com preview/dev server local.
 
 ## Protected files
 
-Per `.claude/config.json::protectedFiles.exact`:
+Per `.claude/config.json::protectedFiles.warn`:
 
 - `astro.config.mjs`
 - `src/lib/whatsapp.ts`
@@ -54,7 +61,7 @@ Per `.claude/config.json::protectedFiles.exact`:
 - `biome.json`
 - `lefthook.yml`
 
-Editar com razão explícita + validar. O hook `protect_files.py` lê essa lista de `config.json` e **avisa** (stderr) no Write/Edit, sem bloquear — o bloqueio duro vale só para credenciais, lockfiles e `.git/`. O aviso não substitui a regra: mudança nesses arquivos precisa de razão explícita e dos gates rodados.
+Editar com razão explícita + validar. `.claude/hooks/protect_files.py` lê a lista `warn` e **avisa** (stderr) no Write/Edit, sem bloquear. O bloqueio duro vale só para credenciais, lockfiles e `.git/`, e quem o aplica é o `protect_files.py` do plugin graph-powers, que lê `protectedFiles.exact` / `segments` / `contains`. **As duas listas são separadas de propósito:** o hook do plugin nega sem escape, então qualquer arquivo movido de `warn` para `exact` deixa de ser editável por qualquer agente. O aviso não substitui a regra: mudança nesses arquivos precisa de razão explícita e dos gates rodados.
 
 ## Env / secrets
 

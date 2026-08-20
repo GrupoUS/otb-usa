@@ -1,5 +1,6 @@
 ---
-globs: .claude/**
+paths:
+  - ".claude/**"
 ---
 
 # Slash Commands + Skill Phase Ordering — GPUS Astro Landing
@@ -26,25 +27,25 @@ Skip commands for L1–L2 trivial edits.
 
 | Phase | Skills |
 |---|---|
-| Process | `senior-prompt-engineer`, `planning`, `evolution-core`, `debugger` |
-| Tech-stack | `astro` |
+| Process | `graph-powers:senior-prompt-engineer`, `graph-powers:planning`, `evolution-core`, `graph-powers:debugger` |
+| Tech-stack | `graph-powers:astro` |
 | Project | `grupo-us`, `gpus-theme` |
-| Implementation | `ui-ux-pro-max`, `performance-optimization`, `skill-creator` |
+| Implementation | `ui-ux-pro-max`, `graph-powers:performance-optimization`, `graph-powers:skill-creator` |
 
 ## Agent ↔ skill default pairings
 
 | Skill loaded | Paired agent | Spawn when |
 |---|---|---|
-| `debugger` | `debugger` | L3+ bug/crash/regression |
-| `performance-optimization` | `performance-optimizer` | L3+ perf/bundle/Lighthouse |
-| `gpus-theme` | `frontend-specialist` | L3+ UI/page/component |
-| `astro` | `frontend-specialist` | L3+ `.astro`, Content Collections, `client:*` |
-| `planning` | `project-planner` | L4+ plan handoff |
-| `verification-before-completion` | `verification-agent` | L3+ pre-merge gate |
-| unclear L3+ scope | `explorer-agent` + `librarian` | parallel read-only research |
+| `graph-powers:debugger` | `graph-powers:debugger` | L3+ bug/crash/regression |
+| `graph-powers:performance-optimization` | `graph-powers:performance-optimizer` | L3+ perf/bundle/Lighthouse |
+| `gpus-theme` | `graph-powers:frontend-specialist` | L3+ UI/page/component |
+| `graph-powers:astro` | `graph-powers:frontend-specialist` | L3+ `.astro`, Content Collections, `client:*` |
+| `graph-powers:planning` | `graph-powers:project-planner` | L4+ plan handoff |
+| `verification-before-completion` | `graph-powers:verification` | L3+ pre-merge gate |
+| unclear L3+ scope | `graph-powers:explorer` + `graph-powers:librarian` | parallel read-only research |
 
 ## Stopping conditions
 
-- Max 3 fix attempts on same hypothesis → `evaluator` Mode 3 + `/debug recover`.
+- Max 3 fix attempts on same hypothesis → `graph-powers:evaluator` Mode 3 + `/debug recover`.
 - Max 5 agent spawns per request → checkpoint with user.
 - 2 consecutive failures of same approach → `/recover`.

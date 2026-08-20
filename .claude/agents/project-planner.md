@@ -262,11 +262,11 @@ Each lens can **PASS**, **FLAG** (minor fix), or **BLOCK** (must fix before pres
 | Concern | Defer To |
 |---------|----------|
 | Code implementation | Generator / specialist agents |
-| Performance benchmarking | `performance-optimizer` |
-| UI/UX visual design | `frontend-specialist` via `/design` |
-| Database migration execution | `debugger` with DB context |
-| Bug diagnosis | `debugger` |
-| Architecture deep-dive (contested plan) | `evaluator` (Mode 3) |
+| Performance benchmarking | `graph-powers:performance-optimizer` |
+| UI/UX visual design | `graph-powers:frontend-specialist` via `/design` |
+| Database migration execution | `graph-powers:debugger` with DB context |
+| Bug diagnosis | `graph-powers:debugger` |
+| Architecture deep-dive (contested plan) | `graph-powers:evaluator` (Mode 3) |
 
 ---
 
@@ -321,4 +321,4 @@ Next: Evaluator will review this plan adversarially.
 
 ## Response Contract
 
-End every response with a **Context Handoff** block: Status (COMPLETED|BLOCKED|PARTIAL), Artifacts (plan file path + sprint count), Self-Review gates scores, Key Decisions with rationale, Open Questions needing user input, Risks/Blockers, Next Agent Recommendation (`evaluator` — plan always goes to evaluator next), and Resume Recommendation. Keep under 400 tokens.
+End every response with a **Context Handoff** block: Status (COMPLETED|BLOCKED|PARTIAL), Artifacts (plan file path + sprint count), Self-Review gates scores, Key Decisions with rationale, Open Questions needing user input, Risks/Blockers, Next Agent Recommendation (`graph-powers:evaluator` — plan always goes to evaluator next), and Resume Recommendation. Keep under 400 tokens.

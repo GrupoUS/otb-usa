@@ -5,7 +5,7 @@ description: Use for systematic bug diagnosis, failing gates, runtime errors, SE
 
 # Debugger — GPUS Astro landing
 
-Root-cause debugging skill for the **GPUS static Astro landing**. This repo has no backend, database, auth, payments, tenant model, or server runtime; debug work must stay within Astro static generation, Content Collections, assets, SEO, accessibility, and browser evidence.
+Root-cause debugging skill for the **GPUS static Astro landing**. This repo has no database, auth, payments or tenant model, and exactly one server-side surface: the `api/leads.ts` Vercel function behind the lead form. Debug work covers Astro static generation, Content Collections, assets, SEO, accessibility, browser evidence — and that one endpoint plus its Apps Script sink.
 
 ---
 

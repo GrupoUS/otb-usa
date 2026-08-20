@@ -1,5 +1,10 @@
 ---
-globs: src/pages/**, src/components/**, src/layouts/**, src/styles/**, src/content/**
+paths:
+  - "src/pages/**"
+  - "src/components/**"
+  - "src/layouts/**"
+  - "src/styles/**"
+  - "src/content/**"
 ---
 
 # Frontend — Universal Tier 2 Rules
@@ -101,7 +106,7 @@ When the task touches framework-specific patterns, **load the matching tech-stac
 
 | Surface | Load |
 |---|---|
-| `*.astro` files, Astro Content Collections, `client:*` directives, `astro.config.mjs`, View Transitions, Astro `<Image>` | `astro` skill |
+| `*.astro` files, Astro Content Collections, `client:*` directives, `astro.config.mjs`, View Transitions, Astro `<Image>` | `graph-powers:astro` skill |
 | `*.tsx` / `*.jsx` (React), hooks, JSX patterns, React 19+ features | `react` skill (or stack skill if present) |
 | Next.js App Router, Server Components, route handlers | `nextjs` skill |
 | Remix loaders / actions, `app/routes/`, Remix conventions | `remix` skill |

@@ -15,8 +15,8 @@ Use to execute an approved plan or a clearly scoped implementation request.
 3. Load relevant skills:
 
 ```typescript
-Skill("planning"); // when executing a plan
-Skill("astro");
+Skill("graph-powers:planning"); // when executing a plan
+Skill("graph-powers:astro");
 Skill("grupo-us");
 Skill("gpus-theme"); // if UI/styling is touched
 ```
@@ -37,10 +37,10 @@ Skill("gpus-theme"); // if UI/styling is touched
 | Work type | Default executor |
 |---|---|
 | Single-file known fix | Direct edit |
-| Astro/page/component/styling | `frontend-specialist` for L3+ |
-| Build/type/runtime bug | `debugger` for L3+ |
-| Performance/SEO/a11y/security | `performance-optimizer` for L3+ |
-| Codebase discovery | `explorer-agent` |
+| Astro/page/component/styling | `graph-powers:frontend-specialist` for L3+ |
+| Build/type/runtime bug | `graph-powers:debugger` for L3+ |
+| Performance/SEO/a11y/security | `graph-powers:performance-optimizer` for L3+ |
+| Codebase discovery | `graph-powers:explorer` |
 
 ## 3. Validation
 

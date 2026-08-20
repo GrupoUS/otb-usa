@@ -25,7 +25,7 @@ effort: high
 
 ```typescript
 Skill("mobile-development")  // ALWAYS — React Native/Flutter architecture, platform patterns, touch UX, release constraints
-Skill("debugger")             // WHEN debugging — frontend-debug pack for structure, accessibility, quality gates
+Skill("graph-powers:debugger")             // WHEN debugging — frontend-debug pack for structure, accessibility, quality gates
 ```
 
 Invoke additional project-specific design system skills as needed for UI consistency.

@@ -35,11 +35,11 @@ NO UI FIXES WITHOUT STATIC/VISUAL DIAGNOSTIC EVIDENCE WHEN THE BUG IS VISUAL
 Additional hard rules:
 
 - ${project.displayName} only; Grupo US / Dra. Sacha Gualberto is parent brand, not a broader product funnel.
-- Static Astro only: no SSR adapter, no `ClientRouter`, no `prerender = false`. There is no backend, no API route, and no database in this repo.
+- Static Astro only: no SSR adapter, no `ClientRouter`, no `prerender = false`. There is no database, and no server runtime beyond **one** Vercel function: `api/leads.ts` (the lead endpoint). Everything else is prerendered HTML.
 - Bun only: `bun install`, `bun run`, `bunx`.
 - Product/copy SSOT is `${content.productJson}`.
 - WhatsApp SSOT is `src/lib/whatsapp.ts`; never inline `wa.me`; messages start `${lead.whatsappGreeting}`. Partner numbers go through `whatsappPartnerUrl`.
-- Conversion is **WhatsApp-only** (`lead.leadFlow`): no form, no endpoint, no lead table. Never log PII; never commit tracking env (`${tracking.pixelEnv}`, `${tracking.ga4Env}` — declared but not wired today).
+- Conversion is **form → WhatsApp** (`lead.leadFlow: "form-then-whatsapp"`): two capture surfaces (`LeadFormDialog.astro` modal, `Aplicacao.astro` inline) → `POST /api/leads` → Apps Script → Google Sheet, handed off through `/redirecionando`. Never log PII; never commit tracking env (`${tracking.pixelEnv}`, `${tracking.ga4Env}`). Tracking **is** wired: GTM container inline in `Layout.astro`, `lead_submit` fired in `src/pages/redirecionando.astro` before the redirect.
 - One fix at a time; no unrelated cleanup during incident handling.
 
 ---
@@ -60,7 +60,7 @@ Before claiming completion:
 
 ## Skill Invocation
 
-`debugger` and `senior-prompt-engineer` are preloaded via frontmatter. Invoke/use project rules from `.claude/CLAUDE.md`, `.claude/rules/astro.md`, `.claude/rules/stability.md`, and project skills (`grupo-us`, `gpus-theme`) as needed.
+`graph-powers:debugger` and `senior-prompt-engineer` are preloaded via frontmatter. Invoke/use project rules from `.claude/CLAUDE.md`, `.claude/rules/astro.md`, `.claude/rules/stability.md`, and project skills (`grupo-us`, `gpus-theme`) as needed.
 
 ---
 
@@ -99,7 +99,7 @@ ${content.productJson}
   → src/content.config.ts
   → src/pages/*.astro / src/components/landing/*.astro
   → src/layouts/Layout.astro / helpers (src/lib/whatsapp.ts)
-  → WhatsApp SDR (wa.me deep link — único destino de conversão)
+  → `POST /api/leads` → Apps Script → planilha, depois `/redirecionando` (dispara `lead_submit`) → WhatsApp da SDR (deep link via `src/lib/whatsapp.ts`)
   → dist/index.html / sitemap / robots / public assets
 ```
 
@@ -112,7 +112,7 @@ ${content.productJson}
 | Missing asset | Verify `public/**` path referenced by content/layout |
 | Broken CTA/anchor | Check target ID exists in `dist/index.html` (`${content.anchors}`) |
 | CTA WhatsApp quebrado | Trace helper `src/lib/whatsapp.ts` → mensagem no `${content.productJson}`; o prefixo `${lead.whatsappGreeting}` é validado em runtime e lança erro no build se faltar |
-| Tracking/pixel | Não instrumentado hoje; se existir, inspecionar `Layout.astro` e confirmar IDs vindos de env (`${tracking.pixelEnv}`, `${tracking.ga4Env}`) |
+| Tracking/pixel | **Instrumentado**: container GTM inline em `Layout.astro`, evento `lead_submit` em `src/pages/redirecionando.astro` antes do redirect. Confirmar IDs vindos de env (`${tracking.pixelEnv}`, `${tracking.ga4Env}`); instrumentar evento novo = aprovação |
 | SEO/canonical | Inspect `astro.config.mjs`, `Layout.astro`, `dist/sitemap-0.xml`, `robots.txt` |
 | Visual/hydration | Capture browser evidence, then inspect component/island |
 | Legacy reference | Search active source/docs excluding archives/dist |
@@ -152,7 +152,7 @@ Gates passing: [lint | astro-check | build]
 |---|---|
 | 1–2 fix attempts fail | Restart from evidence with a fresh hypothesis |
 | 3 fix attempts fail on same hypothesis | Stop and ask for direction with evidence summary |
-| Performance bottleneck found during debug | Hand off to `performance-optimizer` |
+| Performance bottleneck found during debug | Hand off to `graph-powers:performance-optimizer` |
 | Production/deploy config needed | Ask user before editing |
 | Copy/legal/date/LGPD-consent uncertainty | Ask user before changing protected content |
 | Lead destination / tracking ID change | Ask user before editing env or endpoint target |

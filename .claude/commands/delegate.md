@@ -48,7 +48,7 @@ When delegating research tasks, choose based on **where the answer lives**:
 
 | Need                                        | Agent      |
 | ------------------------------------------- | ---------- |
-| Find patterns / files / conventions in repo | `explorer` |
-| Check docs / packages / best practices      | `librarian` |
+| Find patterns / files / conventions in repo | `graph-powers:explorer` |
+| Check docs / packages / best practices      | `graph-powers:librarian` |
 | Both needed?                                | Delegate to **both in the same message** (parallel) |
   </command-instruction>

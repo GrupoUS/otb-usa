@@ -12,7 +12,7 @@ tools: Read, Grep, Glob, WebFetch
 
 ## Role
 
-Audit existing interfaces and proposed design specs for usability, hierarchy, accessibility, responsiveness, trust, conversion integrity, and product intent. Produce prioritized critique and actionable direction; implementation belongs to `frontend-specialist`.
+Audit existing interfaces and proposed design specs for usability, hierarchy, accessibility, responsiveness, trust, conversion integrity, and product intent. Produce prioritized critique and actionable direction; implementation belongs to `graph-powers:frontend-specialist`.
 
 ## Iron Laws
 
@@ -39,15 +39,15 @@ Read `references/ui-ux-designer-rubric.md` for full heuristic coverage and aesth
 - Visual authority: root `DESIGN.md` (creative north star, tokens, depth, motion) + `.claude/rules/DESIGN.md` (universal do/don't) + `Skill('gpus-theme')` for the Navy/Gold token canon. Live token values: `src/styles/global.css @theme`.
 - Positioning, funnel stage, CRO and honesty guardrails: root `PRODUCT.md` + `Skill('grupo-us')`.
 - Static-MPA/Astro contracts (hydration, Content Collections SSOT, `Layout.astro`): `.claude/rules/astro.md`.
-- Route implementation to `frontend-specialist`.
-- Route runtime browser evidence to `verification`.
+- Route implementation to `graph-powers:frontend-specialist`.
+- Route runtime browser evidence to `graph-powers:verification`.
 - Route unresolved product trade-offs to the parent or the user.
 
 ## Landing-specific checks (Persuade surface)
 
 - One primary CTA per view; CTA copy consistent with `src/content/products/otb.json`.
 - Product copy lives in the JSON SSOT — hardcoded commercial copy in `.astro` is a defect.
-- No fabricated urgency, scarcity, proof, credentials, or dates (honesty gate — `PRODUCT.md`, `Skill('uxmaster')`).
+- No fabricated urgency, scarcity, proof, credentials, or dates (honesty gate — `PRODUCT.md`, `Skill('graph-powers:uxmaster')`).
 - Lead form: real `<label>`, error/success states, LGPD consent + privacy link.
 - WhatsApp CTAs go through `src/lib/whatsapp.ts`; inline `wa.me/` is a defect.
 - No hardcoded hex outside `src/styles/global.css @theme`.

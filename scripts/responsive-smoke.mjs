@@ -59,11 +59,39 @@ const check = (condition, label, detail) =>
 
 /* ---------------------------------------------------------------- CDP glue */
 
+// Hosts de telemetria de terceiros. Os beacons deles falham *sempre* num Chrome headless e
+// nenhuma dessas falhas é um defeito desta página: `google-analytics.com/g/collect` é recusado
+// por rede em ambiente de CI/sandbox, e `connect.facebook.net/log/error` devolve o próprio
+// diagnóstico "Bot traffic detected and blocked" — o Meta Pixel reconhecendo o headless. Contar
+// isso como erro de console transformou este check num gate que não podia passar desde que o GTM
+// foi ligado, e como `smoke` não está no `predeploy`, a falha ficou invisível. Erro vindo de
+// qualquer outro host — a começar pela própria origem — continua reprovando.
+const TERCEIROS_TELEMETRIA = [
+	"google-analytics.com",
+	"googletagmanager.com",
+	"analytics.google.com",
+	"connect.facebook.net",
+	"facebook.com",
+	"doubleclick.net",
+	"www.google.com",
+];
+
+function ehTerceiro(url) {
+	if (!url) return false;
+	try {
+		const { hostname } = new URL(url);
+		return TERCEIROS_TELEMETRIA.some((h) => hostname === h || hostname.endsWith(`.${h}`));
+	} catch {
+		return false;
+	}
+}
+
 function connect(webSocketDebuggerUrl) {
 	const ws = new WebSocket(webSocketDebuggerUrl);
 	let id = 0;
 	const pending = new Map();
 	const consoleErrors = [];
+	const errosIgnorados = [];
 
 	ws.onmessage = (message) => {
 		const payload = JSON.parse(message.data);
@@ -73,10 +101,12 @@ function connect(webSocketDebuggerUrl) {
 			return;
 		}
 		if (payload.method === "Log.entryAdded" && payload.params.entry.level === "error") {
-			consoleErrors.push(payload.params.entry.text);
+			const { text, url } = payload.params.entry;
+			(ehTerceiro(url) ? errosIgnorados : consoleErrors).push(text);
 		}
 		if (payload.method === "Runtime.exceptionThrown") {
-			consoleErrors.push(payload.params.exceptionDetails.text);
+			const details = payload.params.exceptionDetails;
+			(ehTerceiro(details.url) ? errosIgnorados : consoleErrors).push(details.text);
 		}
 	};
 
@@ -100,7 +130,7 @@ function connect(webSocketDebuggerUrl) {
 		ws.onopen = resolve;
 	});
 
-	return { ws, send, evaluate, consoleErrors, ready };
+	return { ws, send, evaluate, consoleErrors, errosIgnorados, ready };
 }
 
 /* ------------------------------------------------------- in-page probes */
@@ -283,6 +313,7 @@ try {
 
 	for (const viewport of VIEWPORTS) {
 		cdp.consoleErrors.length = 0;
+		cdp.errosIgnorados.length = 0;
 		console.log(`${viewport.name} ${viewport.width}×${viewport.height}`);
 
 		await cdp.send("Emulation.setDeviceMetricsOverride", {
@@ -369,7 +400,14 @@ try {
 		check(!closed.aberto, "Escape fecha o modal", "");
 		check(closed.foco === "hero", "foco volta para o gatilho", closed.foco ?? "perdido");
 
-		check(cdp.consoleErrors.length === 0, "console sem erros", cdp.consoleErrors.join(" | ") || "");
+		check(
+			cdp.consoleErrors.length === 0,
+			"console sem erros",
+			cdp.consoleErrors.join(" | ") ||
+				(cdp.errosIgnorados.length
+					? `${cdp.errosIgnorados.length} beacon(s) de terceiro ignorado(s)`
+					: ""),
+		);
 		console.log("");
 	}
 

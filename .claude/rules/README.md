@@ -1,7 +1,7 @@
 # Rules — Tier 2 Guardrails (GPUS Astro Landing)
 
-> Tier-2 rules para **landings Astro do Grupo US** (Astro 6 + React 19 + Tailwind v4 + Bun + static-only MPA, deploy Vercel). Valores de instância em `.claude/config.json`.
-> Project-specific values resolve from `.claude/config.json` + `Skill('astro')` + `Skill('gpus-theme')` + `Skill('grupo-us')`.
+> Tier-2 rules para **landings Astro do Grupo US** (Astro 6 + Tailwind v4 + Bun + static-only MPA, zero ilhas, deploy Vercel). Valores de instância em `.claude/config.json`.
+> Project-specific values resolve from `.claude/config.json` + `Skill('graph-powers:astro')` + `Skill('gpus-theme')` + `Skill('grupo-us')`.
 
 ## Files
 
@@ -20,9 +20,9 @@
 
 | Surface | Skill / Rule |
 |---|---|
-| `*.astro`, Content Collections, `client:*`, `astro.config.mjs` | `Skill('astro')` + `.claude/rules/astro.md` |
-| React 19 islands (`*.tsx`) | `Skill('astro')` |
-| Tailwind v4 `@theme` | `Skill('gpus-theme')` + `Skill('astro')` |
+| `*.astro`, Content Collections, `client:*`, `astro.config.mjs` | `Skill('graph-powers:astro')` + `.claude/rules/astro.md` |
+| Ilhas React (`*.tsx`) — nenhuma hoje | `Skill('graph-powers:astro')` |
+| Tailwind v4 `@theme` | `Skill('gpus-theme')` + `Skill('graph-powers:astro')` |
 
 ## Project signals
 

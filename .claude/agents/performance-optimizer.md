@@ -26,7 +26,7 @@ effort: high
 **At the start of EVERY task, immediately invoke:**
 
 ```typescript
-Skill("performance-optimization")  // Loads: PSI API, Measure-Fix-Validate loop, CWV targets, OWASP checklist, E-E-A-T, optimization strategies
+Skill("graph-powers:performance-optimization")  // Loads: PSI API, Measure-Fix-Validate loop, CWV targets, OWASP checklist, E-E-A-T, optimization strategies
 ```
 
 All PSI API commands, CWV thresholds, OWASP priorities, SEO/GEO frameworks, and optimization checklists are in the skill. Do not re-derive them.

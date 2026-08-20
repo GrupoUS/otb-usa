@@ -40,3 +40,17 @@ C\:*
 
 # Evidências do smoke responsivo (bun run smoke -- --shots)
 .smoke/
+
+# graph-powers
+.graph-powers/logs/
+AGENT_STOP
+
+# Snapshots do instalador (rollback local; nunca versionados)
+.claude.bak-*/
+AGENTS.md.bak-*
+
+# Gerados com caminhos absolutos desta máquina — .codex/rules/ e o bloco do
+# AGENTS.md são do projeto e DEVEM ser commitados; estes dois não.
+.graph-powers/installed.json
+.codex/hooks.json
+.claude/settings.local.json

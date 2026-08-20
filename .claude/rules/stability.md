@@ -1,5 +1,8 @@
 ---
-globs: src/**, package.json, tsconfig.json
+paths:
+  - "src/**"
+  - "package.json"
+  - "tsconfig.json"
 ---
 
 # Stability — Universal Tier 2 Rules
@@ -93,7 +96,7 @@ grep -rnE "<h1[^>]*>" <src>/pages | wc -l
 ### Bundle audit
 
 ```bash
-${tooling.packageManager} run ${tooling.buildTool}
+${tooling.commands.build}
 # After build, audit largest chunks:
 ls -lh <dist>/<assets>/*.js | sort -k5 -rh | head -5
 # advisory: top initial-bundle files ~< 50KB on prerendered pages (anotar; libs de animação ficam no island)
@@ -102,10 +105,10 @@ ls -lh <dist>/<assets>/*.js | sort -k5 -rh | head -5
 ### Type / lint / test gates
 
 ```bash
-${tooling.packageManager} run ${tooling.linter}
-${tooling.packageManager} run ${tooling.typeChecker}
-${tooling.packageManager} run ${tooling.testRunner}    # when project has tests
-${tooling.packageManager} run ${tooling.buildTool}
+${tooling.commands.lint}
+${tooling.commands.typeCheck}
+${tooling.commands.test}
+${tooling.commands.build}
 ```
 
 ### Accessibility manual smoke (browser)
@@ -189,9 +192,10 @@ ${tooling.packageManager} run ${tooling.buildTool}
 ## Final gates
 
 ```bash
-${tooling.packageManager} run ${tooling.linter}
-${tooling.packageManager} run ${tooling.typeChecker}
-${tooling.packageManager} run ${tooling.buildTool}
+${tooling.commands.lint}
+${tooling.commands.typeCheck}
+${tooling.commands.test}
+${tooling.commands.build}
 ```
 
 When the project ships tests / E2E / link checks, append those after build.
@@ -206,7 +210,7 @@ Load deeper context **before** changing code when:
 - Bug spans multiple layers (page + component + data schema + redirect).
 - Change affects a cross-cutting SSOT (theme tokens, content layer, external surfaces).
 - Change affects a layout that touches every page.
-- Two consecutive fix attempts on the same hypothesis failed → invoke `evaluator` Mode 3 / `/debug recover`.
+- Two consecutive fix attempts on the same hypothesis failed → invoke `graph-powers:evaluator` Mode 3 / `/debug recover`.
 
 ---
 

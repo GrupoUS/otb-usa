@@ -11,6 +11,26 @@
     "locale": "pt-BR",
     "designModelRepo": ""
   },
+  "git": {
+    "workBranch": "main",
+    "protectedBranches": [
+      "main"
+    ],
+    "optInPrefix": "OTBUSA"
+  },
+  "autonomy": {
+    "level": "autonomous",
+    "destructiveFloor": true,
+    "allowPackageManagers": [
+      "bun",
+      "bunx"
+    ],
+    "git": {
+      "commit": "ask",
+      "push": "ask",
+      "protectedBranch": "ask"
+    }
+  },
   "content": {
     "productSlug": "otb",
     "productJson": "src/content/products/otb.json",
@@ -88,7 +108,7 @@
     "wired": true
   },
   "paths": {
-    "backendRoot": "",
+    "backendRoot": "api",
     "frontendRoot": "src",
     "schemaRoot": "src/content.config.ts",
     "stylesRoot": "src/styles",
@@ -101,11 +121,17 @@
     "buildTool": "astro",
     "typeChecker": "astro-check",
     "linter": "biome",
-    "testRunner": "",
+    "testRunner": "bun",
     "deployer": "vercel-static",
-    "frontendFramework": "astro+react-islands",
+    "frontendFramework": "astro-static-zero-islands",
     "database": "",
-    "orm": ""
+    "orm": "",
+    "commands": {
+      "lint": "bun run lint",
+      "typeCheck": "bun run check",
+      "test": "bun test",
+      "build": "bun run build"
+    }
   },
   "gates": {
     "label": "lint+astro-check+build",
@@ -122,7 +148,12 @@
     "initialJsKb": 50
   },
   "protectedFiles": {
-    "exact": [
+    "exact": [],
+    "segments": [],
+    "contains": [
+      "bun.lock"
+    ],
+    "warn": [
       "astro.config.mjs",
       "src/lib/whatsapp.ts",
       "src/content.config.ts",
@@ -130,10 +161,6 @@
       "tsconfig.json",
       "biome.json",
       "lefthook.yml"
-    ],
-    "segments": [],
-    "contains": [
-      "bun.lock"
     ]
   },
   "rulesDir": ".claude/rules",

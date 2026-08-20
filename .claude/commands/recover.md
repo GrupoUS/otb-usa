@@ -39,7 +39,7 @@ bun install                               # Reinstall deps
 bunx astro check && bun run build         # Verify clean state
 ```
 
-Common Astro recovery patterns (from `astro` skill → troubleshooting.md):
+Common Astro recovery patterns (from `graph-powers:astro` skill → troubleshooting.md):
 - **Content Collection not found** → Check `src/content/<name>/` exists with at least one file
 - **Hydration mismatch** → Guard browser-only APIs with `typeof window !== 'undefined'`
 - **Tailwind classes not working** → Verify `@import "tailwindcss"` in global.css + `@tailwindcss/vite` in astro.config.mjs
@@ -56,7 +56,7 @@ Common Astro recovery patterns (from `astro` skill → troubleshooting.md):
 
 - Present oracle analysis
 - Present options with effort estimates
-- Reference relevant `astro` skill sections if Astro-related
+- Reference relevant `graph-powers:astro` skill sections if Astro-related
 - Ask user how to proceed
 
 ## Astro-Specific Recovery Checklist

@@ -11,8 +11,8 @@ Use for Lighthouse, Core Web Vitals, bundle size, render cost, static asset, SEO
 ## 0. Context load
 
 ```typescript
-Skill("performance-optimization");
-Skill("astro");
+Skill("graph-powers:performance-optimization");
+Skill("graph-powers:astro");
 Skill("gpus-theme"); // when visual/styling changes affect performance
 ```
 

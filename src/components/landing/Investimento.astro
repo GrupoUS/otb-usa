@@ -269,11 +269,13 @@ const statusLabel: Record<"encerrado" | "ativo" | "futuro", string> = {
 								data-lead-cta="investimento"
 								data-whatsapp-url={ctaHref}
 								data-shine
-									class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
-								{/* The visible label already ends in "no WhatsApp"; appending it
-								    again produced "…no WhatsApp no WhatsApp" for screen readers. */}
+								class="group flex min-h-[52px] w-full items-center justify-center gap-3 rounded-full bg-gold px-6 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.02] focus-visible:scale-[1.02]"
 								aria-label={investimento.cta.label}
 							>
+								{/* The aria-label is the visible label verbatim: it already ends in
+								    "no WhatsApp", and appending it again produced "…no WhatsApp no
+								    WhatsApp" for screen readers. A comment cannot sit between two
+								    attributes — there it is parsed as an attribute and breaks the tag. */}
 								<Icon name="message-circle" size={20} strokeWidth={2.25} />
 								<span>{investimento.cta.label}</span>
 								<Icon

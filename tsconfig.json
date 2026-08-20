@@ -1,7 +1,11 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
+  // `integrations/` guarda código Google Apps Script: roda no V8 do Google, com globais
+  // (`SpreadsheetApp`) e pontos de entrada (`doPost`) que não existem no mundo de tipos do
+  // Astro/Node. Type-checá-lo aqui produzia dois diagnósticos falsos em todo `astro check`.
+  // `tests/apps-script-writer.test.ts` lê o arquivo como texto (`readFileSync`), não o importa.
+  "exclude": ["dist", "integrations"],
   "compilerOptions": {
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",

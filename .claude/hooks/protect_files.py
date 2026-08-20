@@ -3,8 +3,8 @@
 Trigger: PreToolUse (Edit|Write)
 
 Generic defaults block .env, lockfiles, and .git/ directory.
-Project-specific protected paths read from .claude/config.json::protectedFiles
-(extends each list).
+Project-specific soft warnings read from .claude/config.json::protectedFiles.warn
+(stderr note, never a block — the hard lists belong to the plugin's own hook).
 """
 import json
 import os
@@ -52,9 +52,13 @@ def load_extra_protections() -> tuple[set[str], set[str], list[str]]:
         try:
             cfg = json.loads(config_path.read_text(errors="replace"))
             pf = cfg.get("protectedFiles", {}) or {}
-            extra_exact.update(pf.get("exact", []) or [])
-            extra_segments.update(pf.get("segments", []) or [])
-            extra_contains.extend(pf.get("contains", []) or [])
+            # `exact`/`segments`/`contains` are the HARD list — the plugin's own
+            # protect_files denies them outright. `warn` is this project's soft tier:
+            # .claude/rules/commit.md promises a note on stderr, never a block, so the
+            # two lists must stay separate or the promise silently becomes a deny.
+            extra_exact.update(pf.get("warn", []) or [])
+            extra_segments.update(pf.get("warnSegments", []) or [])
+            extra_contains.extend(pf.get("warnContains", []) or [])
         except Exception:
             pass
 

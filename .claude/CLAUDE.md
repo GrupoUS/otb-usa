@@ -13,7 +13,7 @@
 **Parent brand:** Grupo US · Dra. Sacha Gualberto
 **Purpose:** `${project.purpose}` — landing estática premium (config: `project.purpose`).
 
-Stack: Astro 6 static-only · Bun · Tailwind CSS v4 · React 19 (islands mínimas — preferir zero ilha) · Lucide / SVG inline · Sora + Inter · `${project.locale}` · deploy Vercel static em `${project.productionUrl}`.
+Stack: Astro 6 static-only · Bun · Tailwind CSS v4 · **zero ilhas** (sem React: `astro.config.mjs` removeu a integração — nenhum `.tsx`, nenhum `client:*` em `src`; volta junto com a primeira ilha real) · Lucide / SVG inline · Sora + Inter · `${project.locale}` · deploy Vercel static em `${project.productionUrl}`.
 
 Project metadata: `.claude/config.json`. Product/copy SSOT: `${content.productJson}`. Schema: `src/content.config.ts`. Brand skills: `gpus-theme` (Navy/Gold — **esta landing diverge: escala `ink` preta, ver root `DESIGN.md § 2`**) + `grupo-us` (copy/funil drasacha). Sistema de design: root `DESIGN.md`; posicionamento/conversão: root `PRODUCT.md`.
 
@@ -61,21 +61,21 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 
 | Task touches | Load these | Implement in |
 |---|---|---|
-| Copy, FAQ, datas, oferta, legal/disclaimer | `grupo-us` + `astro` | `${content.productJson}` |
+| Copy, FAQ, datas, oferta, legal/disclaimer | `grupo-us` + `graph-powers:astro` | `${content.productJson}` |
 | WhatsApp CTA/message | `grupo-us` | `${content.productJson}` message; `${lead.whatsappHelper}` só para número/helper |
-| Seção da landing | `frontend.md` + `DESIGN.md` + `astro` + `gpus-theme` | `src/components/landing/*.astro` |
+| Seção da landing | `frontend.md` + `DESIGN.md` + `graph-powers:astro` + `gpus-theme` | `src/components/landing/*.astro` |
 | Design de seção/página (chain completo) | `impeccable` (4.x) + `gpus-theme` + `ui-ux-pro-max` | `/design`, `/design-improve`, `/design-fix` |
-| UX de conversão / objeção / oferta | `uxmaster` + `grupo-us` | `${content.productJson}` + seção correspondente |
-| Tracking GA4/Pixel/GTM/consent | `seo.md` + `performance-optimization` | GTM inline em `src/layouts/Layout.astro`; evento de conversão em `src/pages/redirecionando.astro` (mudança = aprovação) |
+| UX de conversão / objeção / oferta | `graph-powers:uxmaster` + `grupo-us` | `${content.productJson}` + seção correspondente |
+| Tracking GA4/Pixel/GTM/consent | `seo.md` + `graph-powers:performance-optimization` | GTM inline em `src/layouts/Layout.astro`; evento de conversão em `src/pages/redirecionando.astro` (mudança = aprovação) |
 | Captura de lead / payload / planilha | `frontend.md` + `stability.md` | `src/lib/leads.ts` + `src/lib/lead-client.ts` + `api/leads.ts` + Apps Script + `tests/` numa só mudança |
 | Motion (reveal, parallax, marquee, countdown, trilho fixado) | `DESIGN.md § 9` | `src/scripts/motion.ts` (runtime único) + `global.css`; nunca um listener de scroll novo num componente |
-| React island / floating UI | `astro` + `frontend.md` | `.tsx`/`.astro` só quando interatividade provada; preferir Astro puro |
+| Ilha React / floating UI | `graph-powers:astro` + `frontend.md` | Hoje não existe ilha nenhuma. Adicionar `.tsx` = reinstalar a integração React em `astro.config.mjs` na mesma mudança, com interatividade provada; preferir Astro puro |
 | Content schema | `astro/references/content-collections.md` | `src/content.config.ts` + JSON em uma mudança |
-| SEO meta / JSON-LD / canonical | `seo.md` + `astro` | `src/layouts/Layout.astro`, `src/pages/index.astro`, `astro.config.mjs` |
+| SEO meta / JSON-LD / canonical | `seo.md` + `graph-powers:astro` | `src/layouts/Layout.astro`, `src/pages/index.astro`, `astro.config.mjs` |
 | Theme token / utility | `DESIGN.md` + `gpus-theme` | `src/styles/global.css` `@theme` / utilities |
 | FAQ behavior | `frontend.md` + `DESIGN.md § Motion` | `src/components/landing/FAQ.astro`; `<details>` nativo ou disclosure animado (height/grid livre) |
-| Performance / Lighthouse | `stability.md` + `performance-optimization` | hydration audit, image priority, fonts, bundle |
-| Agent prompt / command | `senior-prompt-engineer` | `.claude/agents/*.md`, `.claude/commands/*.md` |
+| Performance / Lighthouse | `stability.md` + `graph-powers:performance-optimization` | hydration audit, image priority, fonts, bundle |
+| Agent prompt / command | `graph-powers:senior-prompt-engineer` | `.claude/agents/*.md`, `.claude/commands/*.md` |
 | Anywhere | `stability.md` | universal checklist |
 
 ---
@@ -114,7 +114,7 @@ Invoke before acting when L4+, multi-domain, 3+ dependent phases, irreversible a
 - `.claude/config.json` — instância (nome, domínio, slug, SDR, rotas, tracking), tooling, gates, protected files.
 - `Skill('grupo-us')` — marca, copy, público, funil drasacha, voz Dra. Sacha.
 - `Skill('gpus-theme')` — Navy/Gold dark-first visual canon.
-- `Skill('astro')` — Astro static-only patterns.
+- `Skill('graph-powers:astro')` — Astro static-only patterns.
 - root `DESIGN.md` / `PRODUCT.md` — sistema de design + posicionamento GPUS.
 - Modelo de design opcional: `${project.designModelRepo}`.
 

@@ -488,3 +488,19 @@ Não importar rota, produto, credencial ou copy de um projeto para outro.
 | Tokens vivos (valores reais) | `src/styles/global.css @theme` |
 | Metodologia de design (shape/new-work/craft floor) | `Skill('impeccable')` |
 | Stack patterns (Astro etc.) | matching tech-stack skill |
+| O que este projeto recusa mergear | `REVIEW.md` |
+
+---
+
+## Lacunas declaradas
+
+O spec de `DESIGN.md` do graph-powers pede seis seções. Cinco estão cobertas: tokens (§2),
+hierarquia e densidade (§5–§6), autoridade de componente (§8), inegociáveis (§9 a11y + §14) e o que
+o projeto deliberadamente não faz (§13, §14). A que falta:
+
+- **Regras nomeadas com ID.** As decisões deste arquivo existem e são específicas — gold sem teto
+  com intenção focal, escala `ink` no lugar da Navy, motion em qualquer propriedade, anti-genérico —
+  mas nenhuma carrega um identificador estável que uma revisão possa citar em vez de reargumentar.
+  *Não decidido — resolve numa passada que numere as decisões já escritas (sem criar nenhuma nova) e
+  as referencie em `REVIEW.md § 2`.*
+

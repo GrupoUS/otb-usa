@@ -7,7 +7,7 @@ workflow_type: prompt-chaining
 
 **ARGUMENTS**: $ARGUMENTS
 
-> Adaptive production-readiness chain for the existing GPUS Astro landing. Phase 0 loads `uxmaster`, inspects the resolved scope plus an optional functional brief, and locks a measurable UX direction before code changes. **Surgical** fixes get a compact UX contract and continue automatically; **structural** changes compare three genuinely different directions and require user selection before implementation. The impeccable chain then runs onboarding, hardening, typesetting, layout, adaptation, optimization, and polish, with `ui-ux-designer` read-only critique at both ends and a single `/verify quick` gate.
+> Adaptive production-readiness chain for the existing GPUS Astro landing. Phase 0 loads `graph-powers:uxmaster`, inspects the resolved scope plus an optional functional brief, and locks a measurable UX direction before code changes. **Surgical** fixes get a compact UX contract and continue automatically; **structural** changes compare three genuinely different directions and require user selection before implementation. The impeccable chain then runs onboarding, hardening, typesetting, layout, adaptation, optimization, and polish, with `graph-powers:ui-ux-designer` read-only critique at both ends and a single `/verify quick` gate.
 
 ---
 
@@ -26,7 +26,7 @@ workflow_type: prompt-chaining
 - STOP if a phase touches a protected file (`astro.config.mjs`, `src/lib/whatsapp.ts`, `src/content.config.ts`, `package.json`, `tsconfig.json`, `biome.json`, `lefthook.yml`) → ASK first
 - STOP if scope resolves to 0 files
 - STOP if `/verify quick` returns `NEEDS-WORK` → surface gate + all agent-memory reports, ASK user (no auto-retry)
-- STOP if the `ui-ux-designer` review gate (Phase 7.5) reports Critical issues → present report, ASK user
+- STOP if the `graph-powers:ui-ux-designer` review gate (Phase 7.5) reports Critical issues → present report, ASK user
 - ASK if SCOPE points outside `src/**`, `public/**`, root `DESIGN.md`, or project docs (this chain is frontend-only)
 - ASK if `--from=optimize` is invoked on > 50 files (recommend splitting the run)
 - ASK if a phase would introduce a React island (`client:*`) — the landing is currently zero-island
@@ -37,7 +37,7 @@ workflow_type: prompt-chaining
 
 ```typescript
 Skill("superpowers:using-superpowers"); // meta — bootstrap (per _shared.md § 0.5)
-Skill("uxmaster");                      // user/task/flow/measurement layer; NEVER a token source
+Skill("graph-powers:uxmaster");                      // user/task/flow/measurement layer; NEVER a token source
 ```
 
 1. Run `/prime frontend` — loads `.claude/rules/DESIGN.md`, `frontend.md`, `astro.md`.
@@ -48,10 +48,10 @@ Skill("uxmaster");                      // user/task/flow/measurement layer; NEV
 **Tier 3 references (read on demand inside the spawned agent):**
 - Visual authority: root `DESIGN.md` + live `src/styles/global.css @theme` + `Skill("gpus-theme")`
 - Positioning / copy / funnel / honesty guardrails: root `PRODUCT.md` + `Skill("grupo-us")`
-- Astro static-only contracts: `Skill("astro")` + `.claude/rules/astro.md`
-- impeccable methodology (**v4.0.4**): `Skill("impeccable")` (per-phase references at `.claude/skills/impeccable/reference/`). Setup script is `scripts/context.mjs`; **`load-context.mjs` no longer exists**. The `brand`/`product` **register** was replaced by four **modes** — this landing is **Persuade**. `reference/craft-floor.md` carries the quality floor + refuse list and loads **last**, right before editing UI.
+- Astro static-only contracts: `Skill("graph-powers:astro")` + `.claude/rules/astro.md`
+- impeccable methodology (**v4.1.1**): `Skill("impeccable")` (per-phase references at `.claude/skills/impeccable/reference/`). Setup script is `scripts/context.mjs`; **`load-context.mjs` no longer exists**. The `brand`/`product` **register** was replaced by four **modes** — this landing is **Persuade**. `reference/craft-floor.md` carries the quality floor + refuse list and loads **last**, right before editing UI.
 - ui-ux-pro-max design intelligence: `Skill("ui-ux-pro-max")` — CLI `python .claude/skills/ui-ux-pro-max/scripts/search.py` (UX / typography / layout / landing / `--stack astro`; **palette suggestions discarded — GPUS tokens canonical**)
-- uxmaster behavioral layer: the controller loads `Skill("uxmaster")`; leaf agents read only the routed references under `.claude/skills/uxmaster/references/`, because subagents do not inherit parent skills
+- uxmaster behavioral layer: the controller loads `Skill("graph-powers:uxmaster")`; each leaf agent loads `Skill("graph-powers:uxmaster")` itself and reads only the reference the controller routed it to, because subagents do not inherit parent skills. Never hand a leaf agent a literal path into the plugin: that path carries the plugin version and dangles on the next update
 - For Phase 3 (typeset) ONLY: `clarify.md` loads alongside `typeset.md` (impeccable 4.x removed the standalone `typography.md` / `ux-writing.md`)
 
 **uxmaster progressive-disclosure routing:**
@@ -66,7 +66,7 @@ Skill("uxmaster");                      // user/task/flow/measurement layer; NEV
 | Pricing, lots, offer framing, retention | `references/pricing-retention-expansion.md` |
 | Named behavioral lever | `references/engagement-psychology.md` |
 
-Load only matched references. `uxmaster` supplies behavioral rationale and acceptance criteria; `gpus-theme` + root `DESIGN.md` remain canonical for palette, tokens, typography assets, and motion. The **honesty gate is hard**: no fabricated urgency, scarcity, proof, results, dates, or credentials — it also matches root `PRODUCT.md` ("copy não confirmada = PROPOSTA").
+Load only matched references. `graph-powers:uxmaster` supplies behavioral rationale and acceptance criteria; `gpus-theme` + root `DESIGN.md` remain canonical for palette, tokens, typography assets, and motion. The **honesty gate is hard**: no fabricated urgency, scarcity, proof, results, dates, or credentials — it also matches root `PRODUCT.md` ("copy não confirmada = PROPOSTA").
 
 ---
 
@@ -173,7 +173,7 @@ Every `Agent()` call follows `.claude/skills/senior-prompt-engineer/references/a
 
 ```typescript
 Agent({
-  subagent_type: "frontend-specialist",
+  subagent_type: "graph-powers:frontend-specialist",
   run_in_background: false,
   description: "design-fix / {{PHASE_NAME}} — {{resolvedScope}}",
   prompt: `
@@ -189,7 +189,7 @@ Agent({
       1. Skill("superpowers:using-superpowers")
       2. Skill("gpus-theme")                              // Navy/Gold tokens — NEVER substitute
       3. Skill("grupo-us")                                // voice, funnel, CTA, LGPD/legal guardrails
-      4. Skill("astro")                                   // static MPA + Content Collections
+      4. Skill("graph-powers:astro")                                   // static MPA + Content Collections
       5. Skill("ui-ux-pro-max")                           // creative execution layer
       6. Skill("impeccable")                              // router (Setup + mode)
       7. node .claude/skills/impeccable/scripts/context.mjs --target {{firstScopeFile}}
@@ -363,11 +363,11 @@ Then add:
 
 #### 0D. Read-only critique and lock
 
-After the controller writes the draft baseline, spawn `ui-ux-designer` foreground/read-only.
+After the controller writes the draft baseline, spawn `graph-powers:ui-ux-designer` foreground/read-only.
 
 ```typescript
 Agent({
-  subagent_type: "ui-ux-designer",
+  subagent_type: "graph-powers:ui-ux-designer",
   run_in_background: false,
   description: "design-fix / UX baseline critique — {{resolvedScope}}",
   prompt: `
@@ -399,54 +399,54 @@ The controller appends the critique and resolves Critical findings in the baseli
 - **SURGICAL:** once critique has no Critical issues, keep `decision.md` auto-locked and proceed to Phase 1.
 - **STRUCTURAL:** present the three proposals, comparison, recommendation, and hybrid; ASK the user to select proposal 1/2/3 or the hybrid. Do not spawn a write-capable agent yet. After selection, write `decision.md` with `STATUS: USER-LOCKED`, exact `SCOPE_MANIFEST`, selected/hybrid direction, accepted/rejected trade-offs, visitor path and CTA hierarchy, required states, assumptions, non-goals, and validation metrics. Then proceed.
 
-### Phase 1 — onboard (`frontend-specialist` + impeccable/onboard.md)
+### Phase 1 — onboard (`graph-powers:frontend-specialist` + impeccable/onboard.md)
 
 **Skip when:** `--from` resolves to any later phase.
 **Inputs:** resolved scope + `baseline.md` + locked `decision.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** On a static landing, "onboarding" is **first-view orientation**, not a product tour: what the first viewport promises, whether the visitor knows where they are and what to do next, scroll affordance, anchor navigation, and the JS-off / reduced-motion entry state. Nothing added may block or gate content, and nothing may be dismissible-only. If the scope has no orientation surface at all (e.g. `SectionDivider.astro`), record an evidence-backed `N/A` and advance — do not invent an overlay.
 
-### Phase 2 — harden (`frontend-specialist` + impeccable/harden.md)
+### Phase 2 — harden (`graph-powers:frontend-specialist` + impeccable/harden.md)
 
 **Skip when:** `--from` resolves to `typeset` or later.
 **Inputs:** `baseline.md` + locked `decision.md` + `onboard.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Cover the hardening dimensions that exist on a static landing: text overflow (long PT-BR strings, accents, CJK/emoji in user-supplied fields), missing/failed images, empty or single-item lists from the JSON SSOT, very long FAQ answers, JS-off, reduced-motion, and a11y semantics. Run `bunx astro check` mid-phase; STOP on regression. Where a lead form exists, cover real `<label>`, validation, error/success states, LGPD consent + privacy link.
 
-### Phase 3 — typeset (`frontend-specialist` + impeccable/typeset.md + clarify.md)
+### Phase 3 — typeset (`graph-powers:frontend-specialist` + impeccable/typeset.md + clarify.md)
 
 **Skip when:** `--from` resolves to `layout` or later.
 **Inputs:** `baseline.md` + locked `decision.md` + `harden.md`.
 **EXTRA_REFS:** `Read .claude/skills/impeccable/reference/clarify.md` (the UX-copy half of the pass). The standalone `typography.md` and `ux-writing.md` were **removed in impeccable 4.x**.
 **PHASE_SPECIFIC_CONSTRAINT:** Type hierarchy (≥1.25 scale between steps) + body line length 65–75ch + weight consistency + Playfair/Inter pairing per root `DESIGN.md` + microcopy (labels, CTAs, error text) in the same phase. `tabular-nums` on dates, prices, and lot counters. Copy IS half the typeset pass — never treat it as a font swap. Any copy change lands in `src/content/products/otb.json`, never in the component.
 
-### Phase 4 — layout (`frontend-specialist` + impeccable/layout.md)
+### Phase 4 — layout (`graph-powers:frontend-specialist` + impeccable/layout.md)
 
 **Skip when:** `--from` resolves to `adapt` or later.
 **Inputs:** `baseline.md` + locked `decision.md` + `typeset.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Spatial design — rhythm, proximity, grouping, 8px grid. Vary spacing; no monotone card grids. Hierarchy via space, not borders or background shifts unless justified. Section vertical spacing ≥96px desktop / ≥64px mobile. Asymmetric hero splits (7/5, 8/4) over 50/50.
 
-### Phase 5 — adapt (`frontend-specialist` + impeccable/adapt.md)
+### Phase 5 — adapt (`graph-powers:frontend-specialist` + impeccable/adapt.md)
 
 **Skip when:** `--from` resolves to `optimize` or `polish`.
 **Inputs:** `baseline.md` + locked `decision.md` + `layout.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Multi-device adaptation (mobile 320–767, tablet 768–1023, desktop 1024+). Touch targets ≥44×44px. The page body must never scroll horizontally — wide content (tables, agenda grids, speaker rails) scrolls inside its own `overflow-x: auto` container. Sticky/floating CTA must not obscure focus (WCAG 2.2 SC 2.4.11).
 
-### Phase 6 — optimize (`frontend-specialist` + impeccable/optimize.md)
+### Phase 6 — optimize (`graph-powers:frontend-specialist` + impeccable/optimize.md)
 
 **Skip when:** `--from` resolves to `polish`.
 **Inputs:** `baseline.md` + locked `decision.md` + `adapt.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Image / CSS / font / animation performance. Above-fold LCP image eager + `fetchpriority="high"`; below-fold lazy + low priority; explicit `width`/`height` everywhere. Run `bun run build` mid-phase and compare `dist/` asset sizes; if initial JS regresses > 5% → STOP and escalate to `/perf build`. CWV targets are **advisory** per `.claude/rules/stability.md` — do not strip intentional motion or depth to chase a Lighthouse number.
 
-### Phase 7 — polish (`frontend-specialist` + impeccable/polish.md)
+### Phase 7 — polish (`graph-powers:frontend-specialist` + impeccable/polish.md)
 
 **Skip when:** never (last phase).
 **Inputs:** `baseline.md` + locked `decision.md` + `optimize.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Final checklist from `polish.md`. Polish runs AFTER optimize — never reverse the order; polish targets need a stable bundle. Drift root-cause fixes only: replace one-offs with tokens, do not patch around them.
 
-### Phase 7.5 — design review gate (`ui-ux-designer`, read-only)
+### Phase 7.5 — design review gate (`graph-powers:ui-ux-designer`, read-only)
 
 **Skip when:** never (runs after the last executed phase, full chain or `--from` resume).
 
-Spawn `ui-ux-designer` (foreground) over the files touched in this run:
+Spawn `graph-powers:ui-ux-designer` (foreground) over the files touched in this run:
 - Receives the Mandatory Context block and returns the canonical Context Handoff;
 - Reads `baseline.md`, locked `decision.md`, `ux-foundations.md`, `metrics-ethics-process.md`, the touched files, and applicable surface-specific uxmaster references;
 - Re-checks the Maestro gates + Template Test + WCAG 2.2 + production-readiness dimensions against the Phase 0 baseline (which findings were resolved?), citing root `DESIGN.md` sections and `file:line`;
@@ -495,7 +495,7 @@ On `VERIFIED` / `VERIFIED-WITH-NOTES`:
 | Treat estimated scroll depth/clicks as observed results | Keep them as hypotheses until real evidence measures them |
 | Invent dates, prices, credentials, or partners | Everything factual comes from `src/content/products/otb.json` / `PRODUCT.md`; unconfirmed copy = PROPOSTA |
 | Run phases out of order | Strict onboard → harden → typeset → layout → adapt → optimize → polish |
-| Run `frontend-specialist` in background | Foreground only (background silently denies Write/Edit) |
+| Run `graph-powers:frontend-specialist` in background | Foreground only (background silently denies Write/Edit) |
 | Skip `Skill("gpus-theme")` in phase prompts | Load EVERY phase — impeccable LAYERS on top |
 | Treat `typeset` as a font swap | Load `typeset.md` AND `clarify.md` — copy is half of typeset |
 | Reference `typography.md` / `ux-writing.md` | Removed in impeccable 4.x — use `typeset.md` + `clarify.md` |
@@ -512,12 +512,12 @@ On `VERIFIED` / `VERIFIED-WITH-NOTES`:
 | Hardcode hex anywhere in the chain | Semantic tokens only |
 | Inline `wa.me/` in a component | `src/lib/whatsapp.ts` helpers only |
 | Auto-retry on `/verify quick` failure | ASK user — never silent retry |
-| Spawn other agents from inside a phase | Leaf executor only — the controller spawns `ui-ux-designer` |
-| Let `ui-ux-designer` edit files or run scripts | Read-only critic; the controller persists its reports |
+| Spawn other agents from inside a phase | Leaf executor only — the controller spawns `graph-powers:ui-ux-designer` |
+| Let `graph-powers:ui-ux-designer` edit files or run scripts | Read-only critic; the controller persists its reports |
 | Apply ui-ux-pro-max palette output | CLI contributes UX/typography/layout; GPUS tokens are canonical |
 | Use uxmaster as a visual-token source | It owns visitor/task/flow/measurement criteria; `gpus-theme` + `DESIGN.md` own visuals |
 | Duplicate agent context/handoff schemas | Reference `senior-prompt-engineer/references/agent-handoff-contracts.md` |
-| Skip Phase 0 baseline or Phase 7.5 review | The adaptive UX gate opens the chain and `ui-ux-designer` always closes it |
+| Skip Phase 0 baseline or Phase 7.5 review | The adaptive UX gate opens the chain and `graph-powers:ui-ux-designer` always closes it |
 
 ---
 

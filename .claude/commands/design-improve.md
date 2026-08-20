@@ -7,7 +7,7 @@ workflow_type: prompt-chaining
 
 **ARGUMENTS**: $ARGUMENTS
 
-> Sequential impeccable chain for the GPUS Astro landing. Phase 1 (audit) spawns `ui-ux-designer` (read-only critique) and, when defects exist, `frontend-specialist` fixes them; phases 2-5 spawn `frontend-specialist` (foreground, write-capable). Each phase reads its impeccable reference + a `ui-ux-pro-max` domain search, runs the impeccable mechanical detector, and writes a phase report under `.claude/agent-memory/design-improve/`. `ui-ux-designer` review gate (Phase 5.5) + single `/verify quick` close the chain. Resume mid-chain with `--from=<phase>`.
+> Sequential impeccable chain for the GPUS Astro landing. Phase 1 (audit) spawns `graph-powers:ui-ux-designer` (read-only critique) and, when defects exist, `graph-powers:frontend-specialist` fixes them; phases 2-5 spawn `graph-powers:frontend-specialist` (foreground, write-capable). Each phase reads its impeccable reference + a `ui-ux-pro-max` domain search, runs the impeccable mechanical detector, and writes a phase report under `.claude/agent-memory/design-improve/`. `graph-powers:ui-ux-designer` review gate (Phase 5.5) + single `/verify quick` close the chain. Resume mid-chain with `--from=<phase>`.
 
 ---
 
@@ -22,7 +22,7 @@ workflow_type: prompt-chaining
 - STOP if 2 consecutive phases produce zero file changes → ASK (likely scope mis-targeted)
 - STOP after 3 phases if `bunx astro check` errors accumulate (do not let errors compound across phases)
 - STOP if `/verify quick` returns `NEEDS-WORK` → surface gate + all agent-memory reports, ASK user (no auto-retry)
-- STOP if the `ui-ux-designer` review gate (Phase 5.5) reports Critical issues → present report, ASK user
+- STOP if the `graph-powers:ui-ux-designer` review gate (Phase 5.5) reports Critical issues → present report, ASK user
 - ASK if glob resolves to 0 files
 - ASK before Phase 5 (`overdrive`) when SCOPE includes conversion-critical surfaces (`Hero.astro`, `Investimento.astro`, `Turmas.astro`, `WhatsAppFloatingButton.astro`) — overdrive can break the CTA path
 
@@ -42,8 +42,8 @@ Skill("superpowers:using-superpowers"); // meta — bootstrap (per _shared.md §
 **Tier 3 references (read on demand inside the spawned agent):**
 - Visual authority: root `DESIGN.md` + live `src/styles/global.css @theme` + `Skill("gpus-theme")` (Navy/Gold token canon)
 - Positioning / copy / funnel / honesty guardrails: root `PRODUCT.md` + `Skill("grupo-us")`
-- Astro static-only contracts: `Skill("astro")` + `.claude/rules/astro.md`
-- impeccable methodology (**v4.0.4**): `Skill("impeccable")` is the router; per-phase references live in `.claude/skills/impeccable/reference/`. Setup script is `scripts/context.mjs` — **`load-context.mjs` no longer exists**. The old `brand`/`product` **register** was replaced by four **modes**: this landing is **Persuade**. `reference/craft-floor.md` carries the quality floor + refuse list and loads **last**, immediately before editing UI.
+- Astro static-only contracts: `Skill("graph-powers:astro")` + `.claude/rules/astro.md`
+- impeccable methodology (**v4.1.1**): `Skill("impeccable")` is the router; per-phase references live in `.claude/skills/impeccable/reference/`. Setup script is `scripts/context.mjs` — **`load-context.mjs` no longer exists**. The old `brand`/`product` **register** was replaced by four **modes**: this landing is **Persuade**. `reference/craft-floor.md` carries the quality floor + refuse list and loads **last**, immediately before editing UI.
 - ui-ux-pro-max design intelligence: `Skill("ui-ux-pro-max")` — CLI `python .claude/skills/ui-ux-pro-max/scripts/search.py` (UX / typography / layout / landing / `--stack astro`; **palette suggestions discarded — GPUS Navy/Gold tokens are canonical**)
 - Optional design model repo: `${project.designModelRepo}` — visual reference only, never a token authority
 
@@ -134,7 +134,7 @@ Each phase uses the same template. Variables shown in `{{...}}`.
 
 ```typescript
 Agent({
-  subagent_type: "frontend-specialist",
+  subagent_type: "graph-powers:frontend-specialist",
   run_in_background: false,
   description: "design-improve / {{PHASE_NAME}} — {{resolvedScope}}",
   prompt: `
@@ -147,7 +147,7 @@ Agent({
       1. Skill("superpowers:using-superpowers")
       2. Skill("gpus-theme")                              // Navy/Gold tokens — NEVER substitute
       3. Skill("grupo-us")                                // voice, funnel, CTA, honesty guardrails
-      4. Skill("astro")                                   // static MPA + Content Collections
+      4. Skill("graph-powers:astro")                                   // static MPA + Content Collections
       5. Skill("ui-ux-pro-max")                           // creative execution layer
       6. Skill("impeccable")                              // router (Setup + mode)
       7. node .claude/skills/impeccable/scripts/context.mjs --target {{firstScopeFile}}
@@ -236,46 +236,46 @@ Supplement on demand with `--stack astro` for implementation patterns.
 5. Detector result recorded, with P0/P1 findings resolved or justified
 6. If any gate fails → STOP, surface report, ASK user before retry
 
-### Phase 1 — audit (`ui-ux-designer` critique → `frontend-specialist` fixes + impeccable/audit.md)
+### Phase 1 — audit (`graph-powers:ui-ux-designer` critique → `graph-powers:frontend-specialist` fixes + impeccable/audit.md)
 
 **Skip when:** `--from` resolves to `bolder`, `animate`, `colorize`, or `overdrive`.
 **Inputs:** `$ARGUMENTS` SCOPE only (first phase).
 
-**Step 1 — critique (read-only):** spawn `ui-ux-designer` (foreground) with the SCOPE file list. It reads the files (Read/Grep/Glob only — no Bash/Write), applies the `impeccable/audit.md` dimensions + NN/g heuristics + WCAG 2.2 + the Maestro gates, cites root `DESIGN.md` sections and `file:line`, and returns prioritized findings (Critical/High/Medium, < 2000 tokens). The **chain controller** writes the return into `.claude/agent-memory/design-improve/audit.md` — the agent cannot write files itself.
+**Step 1 — critique (read-only):** spawn `graph-powers:ui-ux-designer` (foreground) with the SCOPE file list. It reads the files (Read/Grep/Glob only — no Bash/Write), applies the `impeccable/audit.md` dimensions + NN/g heuristics + WCAG 2.2 + the Maestro gates, cites root `DESIGN.md` sections and `file:line`, and returns prioritized findings (Critical/High/Medium, < 2000 tokens). The **chain controller** writes the return into `.claude/agent-memory/design-improve/audit.md` — the agent cannot write files itself.
 
-**Step 2 — fixes (write, conditional):** defects found → spawn `frontend-specialist` (shared template above) with the critique findings as input, fixing in-phase before the final report. Zero defects → report-only, no file changes.
+**Step 2 — fixes (write, conditional):** defects found → spawn `graph-powers:frontend-specialist` (shared template above) with the critique findings as input, fixing in-phase before the final report. Zero defects → report-only, no file changes.
 
 **PHASE_SPECIFIC_CONSTRAINT (frontend-specialist):** Fix ONLY the critique findings — no scope creep; bold-up opportunities go to Deferred (owned by Phase 2).
 
-### Phase 2 — bolder (`frontend-specialist` + impeccable/bolder.md)
+### Phase 2 — bolder (`graph-powers:frontend-specialist` + impeccable/bolder.md)
 
 **Skip when:** `--from` resolves to `animate`, `colorize`, or `overdrive`.
 **Inputs:** `.claude/agent-memory/design-improve/audit.md` (deferred bold-up opportunities).
 **PHASE_SPECIFIC_CONSTRAINT:** Gold is hierarchy and impact, not decoration — there is no fixed coverage ceiling (root `DESIGN.md`), but every gold surface must earn attention. Adjust intensity, weight, contrast, and structural boldness; never replace token anchors. Anti-genérico: if the section could be any template, redesign it.
 
-### Phase 3 — animate (`frontend-specialist` + impeccable/animate.md)
+### Phase 3 — animate (`graph-powers:frontend-specialist` + impeccable/animate.md)
 
 **Skip when:** `--from` resolves to `colorize` or `overdrive`.
 **Inputs:** `.claude/agent-memory/design-improve/bolder.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Every motion change ships a `prefers-reduced-motion` fallback — that is the only hard gate. Any property may be animated; prefer `transform`/`opacity` when the effect is equivalent. Motion + depth canon: root `DESIGN.md § 9 Motion` and `§ 10 Depth & elevation`; the reveal/tilt/glow gotchas are in `.claude/rules/stability.md § Debug triage matrix` (reveal must not use `animation: … forwards`, tilt and hover-lift never share a `transform` rule, `[data-glow-card]::before` needs `z-index: -1`).
 
-### Phase 4 — colorize (`frontend-specialist` + impeccable/colorize.md)
+### Phase 4 — colorize (`graph-powers:frontend-specialist` + impeccable/colorize.md)
 
 **Skip when:** `--from` resolves to `overdrive`.
 **Inputs:** `.claude/agent-memory/design-improve/animate.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Semantic tokens only. No new hex. If a color role is missing → STOP and ASK before adding a token to `@theme`. Validate every new foreground/background pair against WCAG AA before reporting.
 
-### Phase 5 — overdrive (`frontend-specialist` + impeccable/overdrive.md)
+### Phase 5 — overdrive (`graph-powers:frontend-specialist` + impeccable/overdrive.md)
 
 **Skip when:** never (last phase).
 **Inputs:** `.claude/agent-memory/design-improve/colorize.md`.
 **PHASE_SPECIFIC_CONSTRAINT:** Maestro Template Test must still pass post-overdrive; re-run the 6-gate self-check after the change. The CTA path (primary CTA copy, WhatsApp message, form/turmas entry points) must remain intact and reachable. Pre-flight ASK gate fires when SCOPE includes `Hero.astro`, `Investimento.astro`, `Turmas.astro`, or `WhatsAppFloatingButton.astro`.
 
-### Phase 5.5 — design review gate (`ui-ux-designer`, read-only)
+### Phase 5.5 — design review gate (`graph-powers:ui-ux-designer`, read-only)
 
 **Skip when:** never (runs after the last executed phase, full chain or `--from` resume).
 
-Spawn `ui-ux-designer` (foreground) over the files touched in this run:
+Spawn `graph-powers:ui-ux-designer` (foreground) over the files touched in this run:
 - Re-checks the Maestro gates + Template Test + WCAG 2.2 + usability heuristics, citing root `DESIGN.md` sections and `file:line`;
 - Verifies the Persuade-mode contract: one primary CTA per view, honest claims (no fabricated urgency/scarcity/proof/dates), copy still sourced from `src/content/products/otb.json`;
 - Returns verdict + prioritized issues (< 2000 tokens); controller writes it to `.claude/agent-memory/design-improve/review.md`;
@@ -314,7 +314,7 @@ On `VERIFIED` / `VERIFIED-WITH-NOTES`:
 | Don't | Do |
 |---|---|
 | Run phases out of order | Strict audit → bolder → animate → colorize → overdrive |
-| Run `frontend-specialist` in background | Foreground only (background silently denies Write/Edit) |
+| Run `graph-powers:frontend-specialist` in background | Foreground only (background silently denies Write/Edit) |
 | Skip `Skill("gpus-theme")` in phase prompts | Load EVERY phase — impeccable LAYERS on top |
 | Substitute the impeccable color strategy for Navy/Gold | impeccable enriches; Navy/Gold stays canonical |
 | Call `load-context.mjs` (removed in impeccable 4.x) | `node .claude/skills/impeccable/scripts/context.mjs --target <file>`, once per session |
@@ -329,7 +329,7 @@ On `VERIFIED` / `VERIFIED-WITH-NOTES`:
 | Inline `wa.me/` in a component | `src/lib/whatsapp.ts` helpers only |
 | Skip the Maestro Template Test after `overdrive` | Re-run all gates — it's the highest-risk phase |
 | Auto-retry on `/verify quick` failure | ASK user — never silent retry |
-| Spawn other agents from inside a phase | Leaf executor only — the controller spawns `ui-ux-designer`, never `frontend-specialist` |
-| Let `ui-ux-designer` edit files or run scripts | Read-only critic — fixes belong to `frontend-specialist`; the controller persists its reports |
+| Spawn other agents from inside a phase | Leaf executor only — the controller spawns `graph-powers:ui-ux-designer`, never `graph-powers:frontend-specialist` |
+| Let `graph-powers:ui-ux-designer` edit files or run scripts | Read-only critic — fixes belong to `graph-powers:frontend-specialist`; the controller persists its reports |
 | Apply ui-ux-pro-max palette output | CLI contributes UX/typography/layout; GPUS tokens are canonical |
-| Skip the Phase 5.5 review gate | `ui-ux-designer` closes the chain before `/verify quick` |
+| Skip the Phase 5.5 review gate | `graph-powers:ui-ux-designer` closes the chain before `/verify quick` |

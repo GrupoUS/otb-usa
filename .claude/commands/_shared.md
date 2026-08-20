@@ -61,8 +61,8 @@ Substitution placeholders used in commands (resolve at runtime):
 |---|---|
 | `${rulesDir}/routing-supplements.md` | Project-specific routing matrix rows (loaded by `/prime`, `/implement`) |
 | `${rulesDir}/verify-supplements.md` | Project-specific smoke tests (loaded by `/verify`) |
-| `Skill("debugger")` → `references/anti-patterns.md` | Project-specific bug patterns + Negative Constraints index |
-| `Skill("planning")` → `references/layer-map.md` | Project-specific layer map for sprint phase ordering |
+| `Skill("graph-powers:debugger")` → `references/anti-patterns.md` | Project-specific bug patterns + Negative Constraints index |
+| `Skill("graph-powers:planning")` → `references/layer-map.md` | Project-specific layer map for sprint phase ordering |
 | `Skill("grupo-us")` → product/legal references | ${project.displayName} product, copy, audience, CTA and LGPD/consent guardrails |
 | `${rulesDir}/docs/evolution/` | Runtime data: errors.jsonl, memory.db, HANDOFF.md (not docs) |
 
@@ -78,7 +78,7 @@ Every command **MUST** invoke the superpowers meta-router as the first skill loa
 Skill("superpowers:using-superpowers"); // meta-router — sets discipline + announce pattern
 ```
 
-This loads the discipline-skill index and the "announce-before-action" rule. GPUS Astro landing domain skills (`debugger`, `planning`, `evolution-core`, `grupo-us`, `gpus-theme`, `astro`, `performance-optimization`) are loaded **after** the superpowers method layer, per § 12 (Skill invocation order).
+This loads the discipline-skill index and the "announce-before-action" rule. GPUS Astro landing domain skills (`graph-powers:debugger`, `graph-powers:planning`, `evolution-core`, `grupo-us`, `gpus-theme`, `graph-powers:astro`, `graph-powers:performance-optimization`) are loaded **after** the superpowers method layer, per § 12 (Skill invocation order).
 
 Exceptions:
 - `/prime` is a context loader — it only **recommends** the next command run the bootstrap.
@@ -154,26 +154,26 @@ Anti-pattern: marking a task complete after only inspecting code; running a non-
 
 | Task type | Agent | Background? |
 |---|---|---|
-| Backend handler/service/auth/DB | `debugger` | No (write-capable) |
-| React/components/UI/styling | `frontend-specialist` | No (write-capable) |
-| Schema/migrations/indexes | `debugger` | No |
-| Tests/QA | `debugger` | No |
-| Performance/security/SEO | `performance-optimizer` | No |
-| Codebase patterns/files lookup | `explorer` | **YES — mandatory** |
-| External docs/packages | `librarian` | **YES — mandatory** |
-| Architecture consultation | `evaluator` (Mode 3) | Caller decides |
+| Backend handler/service/auth/DB | `graph-powers:debugger` | No (write-capable) |
+| React/components/UI/styling | `graph-powers:frontend-specialist` | No (write-capable) |
+| Schema/migrations/indexes | `graph-powers:debugger` | No |
+| Tests/QA | `graph-powers:debugger` | No |
+| Performance/security/SEO | `graph-powers:performance-optimizer` | No |
+| Codebase patterns/files lookup | `graph-powers:explorer` | **YES — mandatory** |
+| External docs/packages | `graph-powers:librarian` | **YES — mandatory** |
+| Architecture consultation | `graph-powers:evaluator` (Mode 3) | Caller decides |
 
-Read-only agents (`explorer`, `librarian`) **must** use `run_in_background: true`.
+Read-only agents (`graph-powers:explorer`, `graph-powers:librarian`) **must** use `run_in_background: true`.
 
 **Explorer vs Librarian:**
 
 | Question | Agent |
 |---|---|
-| What exists in this codebase? | `explorer` |
-| How does this library/API work? | `librarian` |
+| What exists in this codebase? | `graph-powers:explorer` |
+| How does this library/API work? | `graph-powers:librarian` |
 | Both needed? | Spawn both in same message |
 
-> `explorer` = custom agent (`.claude/agents/explorer-agent.md`), NOT the built-in `Explore`. Use `subagent_type: "explorer"`.
+> `graph-powers:explorer` = the research agent shipped by the graph-powers plugin, NOT the built-in `Explore`. Use `subagent_type: "graph-powers:explorer"` (exact case, namespace included).
 
 ---
 
@@ -194,7 +194,7 @@ Before any task, load the right tier:
 **Tier 3 (read on demand only):**
 - `Skill("grupo-us")` — ${project.displayName} product, audience, CTA, LGPD/consent guardrails
 - `Skill("gpus-theme")` — Navy/Gold tokens, design canon, frontend handoff
-- `Skill("astro")` — static Astro MPA, Content Collections
+- `Skill("graph-powers:astro")` — static Astro MPA, Content Collections
 - `${rulesDir}/docs/` — project Tier-3 markdown the host project chooses to keep outside skills (e.g. PRDs, planning docs)
 
 ---
@@ -212,7 +212,7 @@ Before any task, load the right tier:
 | `mcp__claude_ai_Context7__*` | Library/framework docs | Any library Q: API, config, migration | General research (Tavily); internal (Grep) | resolve-library-id first → query-docs |
 | `mcp__sequential-thinking__sequentialthinking` | Multi-step reasoning | L4+, ambiguous, 3+ file errors, irreversible | L1-L2, known patterns | Invoke BEFORE acting |
 | `Read / Grep / Glob` | Codebase exploration | Always prefer over bulk reads | Never overly broad Grep patterns | Grep to filter → Read for content |
-| `WebFetch` | Fetch web content | Official docs deep-dive, specific page | General research (Tavily) | `librarian` agent context only |
+| `WebFetch` | Fetch web content | Official docs deep-dive, specific page | General research (Tavily) | `graph-powers:librarian` agent context only |
 
 ---
 
@@ -222,16 +222,16 @@ Single source of truth — used by `/implement`, `/design`, `/verify`, `/debug a
 
 | Domain / task signal | Primary skill | Supporting skills |
 |---|---|---|
-| Bug fix / runtime error / regression | `debugger` | `evolution-core` (post-fix capture) |
-| Plan / decompose / architecture decision | `planning` | `senior-prompt-engineer` (if AI feature) |
-| UI / component / page / design system | `gpus-theme` + `astro` | `debugger` (if mid-fix) |
-| Performance / SEO / security baseline / Core Web Vitals / bundle | `performance-optimization` | Host database/performance skill if present |
-| Database query / schema / permission model | Host database skill if present | `debugger` |
-| External provider / deployment / product API | Host provider skill if present | `librarian` for external docs |
+| Bug fix / runtime error / regression | `graph-powers:debugger` | `evolution-core` (post-fix capture) |
+| Plan / decompose / architecture decision | `graph-powers:planning` | `graph-powers:senior-prompt-engineer` (if AI feature) |
+| UI / component / page / design system | `gpus-theme` + `graph-powers:astro` | `graph-powers:debugger` (if mid-fix) |
+| Performance / SEO / security baseline / Core Web Vitals / bundle | `graph-powers:performance-optimization` | Host database/performance skill if present |
+| Database query / schema / permission model | Host database skill if present | `graph-powers:debugger` |
+| External provider / deployment / product API | Host provider skill if present | `graph-powers:librarian` for external docs |
 | Spreadsheet / financial model | `xlsx` | — |
-| Skill creation / iteration | `skill-creator` | — |
+| Skill creation / iteration | `graph-powers:skill-creator` | — |
 | Memory / cross-session learning | `evolution-core` | — |
-| Prompt engineering / LLM apps / RAG | `senior-prompt-engineer` | — |
+| Prompt engineering / LLM apps / RAG | `graph-powers:senior-prompt-engineer` | — |
 
 If domain isn't listed → no skill applies; use rules + tool docs directly.
 
@@ -250,8 +250,8 @@ This skill enforces: distinct scope per agent, shared return contract, single-me
 When invoking 2+ agents in parallel:
 
 1. **Single message** — all `Agent()` calls in the same response (concurrent execution).
-2. **Background flag** — `run_in_background: true` for read-only agents (`explorer`, `librarian`, audit dimensions, codex:rescue diagnose).
-3. **Foreground only** when the agent must write/edit (`frontend-specialist`, `debugger` in fix mode).
+2. **Background flag** — `run_in_background: true` for read-only agents (`graph-powers:explorer`, `graph-powers:librarian`, audit dimensions, codex:rescue diagnose).
+3. **Foreground only** when the agent must write/edit (`graph-powers:frontend-specialist`, `graph-powers:debugger` in fix mode).
 4. **Distinct scope** — each agent prompt has non-overlapping investigation area; otherwise merge into one agent.
 5. **Same return contract** — all agents in a parallel batch return findings in the same format (table, columns, severity scale) so consolidation is mechanical.
 6. **Maximum 5 spawns per user request** (per CLAUDE.md stopping conditions). At 5 → checkpoint with user.
@@ -300,7 +300,7 @@ Used by `/verify` to consolidate signals from gates + agents + reviews into a si
 | Spec compliance | manual or eval | PASS / FAIL | {requirements satisfied?} |
 | Codex review | `codex:rescue` | PASS / FAIL / N findings | {by severity} |
 | Codex adversarial | `codex:rescue` adversarial-review | PASS / FAIL / N findings | {by severity} |
-| Architecture review | `evaluator` Mode 3 | PASS / WARNINGS | {warnings if any} |
+| Architecture review | `graph-powers:evaluator` Mode 3 | PASS / WARNINGS | {warnings if any} |
 
 ## Decision
 - **Ship** if: all PASS + no P0/P1 findings unresolved
@@ -322,7 +322,7 @@ Loop:
 1. Identify external question (library API, version diff, current best practice, CVE)
 2. Run `mcp__claude_ai_Context7__resolve-library-id` → `query-docs` (preferred for libraries)
 3. If still unresolved → `mcp__tavily__search` (with year + version in query)
-4. If both fail → spawn `librarian` agent with full context
+4. If both fail → spawn `graph-powers:librarian` agent with full context
 5. Cache the answer in conversation; if useful long-term → propose memory write via `/evolve`
 6. Resume the original task with new info
 
@@ -342,7 +342,7 @@ Hard limit: 3 cycles. After 3 unresolved → flag to user as a research blocker.
 | WhatsApp SSOT (sem `wa.me` inline) | `.claude/rules/astro.md` § 5 | CTA changes |
 | Design tokens / no hex / motion expressivo | `.claude/rules/DESIGN.md` + root `DESIGN.md` | Style changes |
 | Craft floor + refuse list | `Skill("impeccable")` → `reference/craft-floor.md` | Antes de editar UI |
-| Project-specific anti-patterns | `Skill("debugger")` → `references/anti-patterns.md` | Per-project bugs |
+| Project-specific anti-patterns | `Skill("graph-powers:debugger")` → `references/anti-patterns.md` | Per-project bugs |
 | Pre-commit formatter/linter | `${tooling.linter}` per AGENTS.md | Every commit |
 
 ---
@@ -353,8 +353,8 @@ When a task touches multiple domains, invoke skills in this order:
 
 1. **Meta layer** — `superpowers:using-superpowers` (always first, per § 0.5)
 2. **Superpowers method** — `superpowers:brainstorming` / `writing-plans` / `executing-plans` / `subagent-driven-development` / `test-driven-development` / `systematic-debugging` / `verification-before-completion` / `requesting-code-review` / `receiving-code-review` / `dispatching-parallel-agents` / `using-git-worktrees` / `finishing-a-development-branch` / `writing-skills` (HOW: discipline + format)
-3. **GPUS Astro landing knowledge** — `grupo-us`, `planning`, `debugger`, `evolution-core` (WHAT: product rules, bug catalog, layer-map, anti-patterns, memory)
-4. **Domain skills** — `astro`, `performance-optimization`, `senior-prompt-engineer`
-5. **Implementation/design skills last** — `gpus-theme`, `ui-ux-pro-max`, `xlsx`, `skill-creator`
+3. **GPUS Astro landing knowledge** — `grupo-us`, `graph-powers:planning`, `graph-powers:debugger`, `evolution-core` (WHAT: product rules, bug catalog, layer-map, anti-patterns, memory)
+4. **Domain skills** — `graph-powers:astro`, `graph-powers:performance-optimization`, `graph-powers:senior-prompt-engineer`
+5. **Implementation/design skills last** — `gpus-theme`, `ui-ux-pro-max`, `xlsx`, `graph-powers:skill-creator`
 
 Multiple skills can be loaded in the same response; order matters because earlier skills set context that later ones build on. The pipeline `spec (brainstorming) → plan (writing-plans) → execute (executing-plans / subagent-driven-development) → verify (verification-before-completion) → review (requesting-code-review / receiving-code-review) → finish (finishing-a-development-branch)` is the canonical flow for any L3+ feature work.

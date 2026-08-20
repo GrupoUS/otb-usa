@@ -1,11 +1,15 @@
 ---
-globs: src/**, astro.config.mjs, src/content.config.ts, .claude/**
+paths:
+  - "src/**"
+  - "astro.config.mjs"
+  - "src/content.config.ts"
+  - ".claude/**"
 ---
 
 # Astro Invariants — GPUS Astro Landing
 
-> Astro overlay portável para landings GPUS. Valores de instância em `.claude/config.json` (`${...}`). Framework deep-dive em `Skill('astro')`.
-> Stack: Astro 6 + React 19 islands (preferir zero) + Tailwind v4 + Bun, static-only MPA, deploy Vercel.
+> Astro overlay portável para landings GPUS. Valores de instância em `.claude/config.json` (`${...}`). Framework deep-dive em `Skill('graph-powers:astro')`.
+> Stack: Astro 6 + Tailwind v4 + Bun, static-only MPA, deploy Vercel. **Zero ilhas hoje** — a integração React foi removida de `astro.config.mjs` (ver o comentário lá) e volta junto com a primeira ilha real.
 
 ## 1. Render-mode invariant
 
@@ -92,7 +96,7 @@ Páginas passam `title`, `description`, `ogImage`, `whatsappMessage`, `hasBottom
 
 ## Pointers
 
-- Astro framework: `Skill('astro')`.
+- Astro framework: `Skill('graph-powers:astro')`.
 - Copy/funil/voz: `Skill('grupo-us')`.
 - Theme/tokens: `Skill('gpus-theme')`.
 - Cardinal rules: `.claude/CLAUDE.md`.

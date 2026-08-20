@@ -13,17 +13,17 @@ workflow_type: parallelization
 
 ## Agent routing (mandatory — choose by **where the answer lives**)
 
-> **`explorer` = custom agent at `.claude/agents/explorer-agent.md`** — structured findings table with confidence scores (1-5), Knowledge Gaps, Librarian Requests.
-> **NOT the built-in `Explore`.** Use `subagent_type: "explorer"` (exact case).
+> **`graph-powers:explorer` = the research agent shipped by the graph-powers plugin** — structured findings table with confidence scores (1-5), Knowledge Gaps, Librarian Requests.
+> **NOT the built-in `Explore`.** Use `subagent_type: "graph-powers:explorer"` (exact case).
 
 | Question type | Agent | Why |
 |---|---|---|
-| What exists in our codebase? | `explorer` | Filesystem |
-| How does this code pattern work? | `explorer` | Filesystem |
-| Which files need to change? | `explorer` | Filesystem |
-| How does this library/API work? | `librarian` | External |
-| What are best practices for X? | `librarian` | External |
-| Is this package behavior documented? | `librarian` | External |
+| What exists in our codebase? | `graph-powers:explorer` | Filesystem |
+| How does this code pattern work? | `graph-powers:explorer` | Filesystem |
+| Which files need to change? | `graph-powers:explorer` | Filesystem |
+| How does this library/API work? | `graph-powers:librarian` | External |
+| What are best practices for X? | `graph-powers:librarian` | External |
+| Is this package behavior documented? | `graph-powers:librarian` | External |
 
 ---
 
@@ -38,8 +38,8 @@ If the research scope is open-ended (user says "should we build X?" / "how shoul
 
 ## Execution
 
-1. Fire `explorer` (custom agent, **NOT** built-in `Explore`) in background for codebase analysis.
-2. Fire `librarian` in background for external documentation **IF** any library, package, or external API is mentioned.
+1. Fire `graph-powers:explorer` (custom agent, **NOT** built-in `Explore`) in background for codebase analysis.
+2. Fire `graph-powers:librarian` in background for external documentation **IF** any library, package, or external API is mentioned.
 3. Continue reading immediately — do not wait for agents.
 4. Collect background results.
 5. Output structured findings table with confidence (1-5), source, impact.

@@ -7,7 +7,7 @@ workflow_type: prompt-chaining
 
 **ARGUMENTS**: $ARGUMENTS
 
-> **Invoke the `planning` skill now** (`.claude/skills/planning/SKILL.md`) before proceeding.
+> **Invoke the `graph-powers:planning` skill now** (`.claude/skills/planning/SKILL.md`) before proceeding.
 > All methodology, output formats, layer stack, classification rules, and checklists are defined there.
 >
 > Project layer chain documented in `.claude/CLAUDE.md § Routing matrix (project-specific)` and root `AGENTS.md § Architecture Map`.
@@ -39,7 +39,7 @@ Contains "--build"?                               → Plan → Sprint Contracts 
 1. **Classify** the request: Simple (L1-L3) / Medium (L4-L5) / Complex (L6+)
 2. **Research** for Medium+: invoke `/research` to grep codebase + check external docs before planning
 3. **Produce plan** in the format matching the classification (per planning skill)
-4. **Evaluator gate** for Complex (L6+): spawn `evaluator` agent — must pass all thresholds
+4. **Evaluator gate** for Complex (L6+): spawn `graph-powers:evaluator` agent — must pass all thresholds
 5. **Present plan** and wait for user approval — do not begin implementation
 
 ---
@@ -48,7 +48,7 @@ Contains "--build"?                               → Plan → Sprint Contracts 
 
 - STOP if request is L1-L2 → tell user to fix directly, skip planning
 - STOP after presenting plan → wait for user approval before `/implement`
-- STOP if `evaluator` returns REVISION_REQUIRED 3× → present all feedback, ask user
+- STOP if `graph-powers:evaluator` returns REVISION_REQUIRED 3× → present all feedback, ask user
 - ASK if requirements span 3+ domains without clear priority order
 
 ---

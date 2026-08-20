@@ -18,8 +18,8 @@ Load supporting skills only when relevant:
 
 - `Skill("grupo-us")` for product, copy, CTA, or LGPD/legal guardrails.
 - `Skill("gpus-theme")` for visual system learnings.
-- `Skill("astro")` for Astro/static/Content Collection learnings.
-- `Skill("performance-optimization")` for Lighthouse/CWV/bundle learnings.
+- `Skill("graph-powers:astro")` for Astro/static/Content Collection learnings.
+- `Skill("graph-powers:performance-optimization")` for Lighthouse/CWV/bundle learnings.
 
 ## 1. What to capture
 
@@ -38,7 +38,7 @@ Do **not** capture one-off implementation details, guesses, or unvalidated assum
 |---|---|
 | Behavioral/project rule | `AGENTS.md` or `.claude/CLAUDE.md` |
 | Frontend/design rule | `.claude/rules/DESIGN.md` or `.claude/rules/frontend.md` |
-| Astro/static invariant | `.claude/rules/astro.md` or `Skill("astro")` references |
+| Astro/static invariant | `.claude/rules/astro.md` or `Skill("graph-powers:astro")` references |
 | Product/legal/CTA | `Skill("grupo-us")` references or `README.md` |
 | Design canon | `Skill("gpus-theme")` references or `.claude/rules/DESIGN.md` |
 | Session log | `docs/learnings-log.md` |

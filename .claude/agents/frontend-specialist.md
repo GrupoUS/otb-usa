@@ -30,7 +30,7 @@ At the start of every task, invoke relevant skills:
 
 ```typescript
 Skill("ui-ux-pro-max")    // WHEN creating new components/pages — design intelligence, styles, palettes
-Skill("debugger")          // WHEN debugging UI issues — root cause analysis, systematic audit
+Skill("graph-powers:debugger")          // WHEN debugging UI issues — root cause analysis, systematic audit
 Skill("frontend-design")  // WHEN converting design spec to React code — creative execution, anti-slop rules
 ```
 

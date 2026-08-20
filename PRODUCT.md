@@ -187,7 +187,11 @@ Nunca inventar número de vagas, "últimas unidades" ou prazo que o JSON não co
 
 ---
 
-## Guardrails
+## Guardrails — o portão de honestidade `[HARD]`
+
+Esta é a seção que `/design`, `/design-fix` e `.codex/rules/ux.md` citam como *portão de
+honestidade*: nenhuma técnica de conversão entra se ela precisa que a pessoa **não perceba** para
+funcionar. Vem antes de qualquer meta de conversão, e vence qualquer regra de UX que a contrarie.
 
 Ofertas envolvem saúde estética, harmonização e formação profissional regulada → linguagem segura, sempre:
 
@@ -218,7 +222,9 @@ Evitar:
 
 ## CRO
 
-**Eventos de analytics a instrumentar** (nenhum implementado hoje): `click_cta_hero`, `click_whatsapp_hero`, `click_whatsapp_investimento`, `click_whatsapp_floating`, `faq_open`, `section_view_*`, `scroll_25/50/75/90`.
+**Instrumentado hoje:** container GTM inline em `src/layouts/Layout.astro` e o evento de conversão `lead_submit`, disparado em `src/pages/redirecionando.astro` antes do redirect para o WhatsApp (`.claude/config.json::tracking.wired: true`).
+
+**Eventos ainda a instrumentar** (nenhum deles existe hoje): `click_cta_hero`, `click_whatsapp_hero`, `click_whatsapp_investimento`, `click_whatsapp_floating`, `faq_open`, `section_view_*`, `scroll_25/50/75/90`.
 
 **Prioridades de A/B:** CTA (consultivo vs direto) · hero visual (foto Boston vs editorial tipográfico) · posição da prova (galeria antes vs depois do programa) · framing do investimento (lote ativo vs benefício total).
 
@@ -252,3 +258,17 @@ Evitar:
 | SEO / tracking / env | `.claude/rules/seo.md` + `.claude/config.json` |
 | Conteúdo/copy do produto | `src/content/products/otb.json` |
 | Valores de instância (rotas, âncoras, componentes) | `.claude/config.json` |
+| O que este projeto recusa mergear | `REVIEW.md` |
+
+---
+
+## Lacunas declaradas
+
+O spec de `PRODUCT.md` do graph-powers (`$PLUGIN/PRODUCT.md § Required sections`) pede sete seções.
+Seis estão cobertas acima. A que falta fica registrada como lacuna em vez de preenchida com um
+default plausível:
+
+- **Como o sucesso é medido, com número.** `## CRO` lista *quais* métricas observar (CTR de WhatsApp
+  por seção, scroll até investimento, conversas iniciadas, qualificação) mas nenhuma delas tem alvo
+  nem linha de base. *Não decidido — resolve com uma leitura do GTM/planilha de leads da 3ª edição:
+  quantas conversas por mil sessões esta landing precisa entregar para valer o investimento.*

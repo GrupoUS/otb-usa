@@ -11,11 +11,11 @@ Use for read-only PR review or local diff review. Do not approve, merge, auto-me
 ## 0. Context load
 
 ```typescript
-Skill("debugger");
-Skill("astro");
+Skill("graph-powers:debugger");
+Skill("graph-powers:astro");
 Skill("grupo-us");
 Skill("gpus-theme"); // if UI/styling changed
-Skill("performance-optimization"); // if perf/SEO/a11y/security changed
+Skill("graph-powers:performance-optimization"); // if perf/SEO/a11y/security changed
 ```
 
 ## 1. Read-only collection

@@ -1,5 +1,8 @@
 ---
-globs: src/**, .claude/**, scripts/**
+paths:
+  - "src/**"
+  - ".claude/**"
+  - "scripts/**"
 ---
 
 # MCPs + Terminal + Debug Discipline — GPUS Astro Landing

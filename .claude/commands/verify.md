@@ -11,9 +11,9 @@ Use before claiming completion of L3+ work or before handing work to review.
 ## 0. Context load
 
 ```typescript
-Skill("astro");
-Skill("debugger");
-Skill("performance-optimization"); // if perf/SEO/a11y/security changed
+Skill("graph-powers:astro");
+Skill("graph-powers:debugger");
+Skill("graph-powers:performance-optimization"); // if perf/SEO/a11y/security changed
 ```
 
 ## 1. Required gates for code/config changes

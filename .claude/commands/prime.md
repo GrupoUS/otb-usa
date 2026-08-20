@@ -18,12 +18,12 @@ Use when the task scope is unclear, cross-domain, or L3+.
 
 | Mode / signal | Load |
 |---|---|
-| `frontend`, Astro, `.astro`, `src/**` | `.claude/rules/frontend.md`, `.claude/rules/DESIGN.md`, `.claude/rules/astro.md`, `Skill("astro")` |
+| `frontend`, Astro, `.astro`, `src/**` | `.claude/rules/frontend.md`, `.claude/rules/DESIGN.md`, `.claude/rules/astro.md`, `Skill("graph-powers:astro")` |
 | Design/UI/visual polish | `Skill("gpus-theme")`, `Skill("ui-ux-pro-max")` |
 | Product/copy/CTA/legal | `Skill("grupo-us")` |
-| Build/runtime bug | `Skill("debugger")`, `Skill("astro")` |
-| Perf/SEO/a11y/security | `Skill("performance-optimization")`, `.claude/rules/seo.md` |
-| Planning/decomposition | `Skill("planning")` |
+| Build/runtime bug | `Skill("graph-powers:debugger")`, `Skill("graph-powers:astro")` |
+| Perf/SEO/a11y/security | `Skill("graph-powers:performance-optimization")`, `.claude/rules/seo.md` |
+| Planning/decomposition | `Skill("graph-powers:planning")` |
 
 ## 2. Project invariants to keep in context
 

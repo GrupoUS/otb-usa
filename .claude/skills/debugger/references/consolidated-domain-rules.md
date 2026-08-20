@@ -2,7 +2,7 @@
 
 ## Project scope
 
-This is a static Astro landing for a Grupo US program. It has no backend, database, auth or payments integration in this repo.
+This is a static Astro landing for a Grupo US program. It has no database, auth or payments integration. Its only server-side code is `api/leads.ts`, the lead endpoint that forwards to a Google Apps Script sink.
 
 ## Debug priorities
 

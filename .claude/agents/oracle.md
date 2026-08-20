@@ -2,6 +2,7 @@
 name: oracle
 description: "Read-only high-IQ consultant for architecture, repeated failures, and security/performance tradeoffs. Never edits files and never executes write actions."
 model: opus
+tools: Read, Grep, Glob
 color: yellow
 ---
 

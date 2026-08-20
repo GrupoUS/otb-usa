@@ -20,7 +20,7 @@ Read `.claude/CLAUDE.md` and treat root **`AGENTS.md`** as the single source of 
 </role>
 
 <scope>
-`src/**`, `src/layouts/Layout.astro`, `astro.config.mjs`, `src/content.config.ts`, `package.json`, `tsconfig.json`, `biome.json` as relevant to the request.
+`src/**`, `api/**`, `src/layouts/Layout.astro`, `astro.config.mjs`, `src/content.config.ts`, `package.json`, `tsconfig.json`, `biome.json` as relevant to the request.
 </scope>
 
 <checks>
@@ -29,7 +29,7 @@ Read `.claude/CLAUDE.md` and treat root **`AGENTS.md`** as the single source of 
 3. **Performance (advisory — medir & anotar, não bloquear merge):** Astro `<Image />` with dimensions (CLS = hard); prefer pure Astro over islands (`client:visible` vs `client:load` when interactivity proven); libs de animação dentro do island, não no entry. FAQ: `<details>`/grid `0fr↔1fr` OU `height`/`AnimatePresence` animado é OK se honra `prefers-reduced-motion` (não marcar como defeito). Motion expressivo (3D/parallax/glow) é doctrine — só `prefers-reduced-motion` é hard.
 4. **SEO (`.claude/rules/seo.md`):** Unique titles; description length; `ogImage` resolves to a file that exists under `public/`; JSON-LD org URL (`${project.productionUrl}`); canonical; sitemap correctness for `/` and the `/otb` → `/` redirect exclusion.
 5. **A11y (`.claude/rules/frontend.md` + `DESIGN.md`):** Contrast, focus-visible ring, skip link, `aria-label`, alt text, heading hierarchy, `prefers-reduced-motion`, `<noscript>` reveal fallback.
-6. **Conversion path / PII:** lead flow is **WhatsApp-only** (`lead.leadFlow: "whatsapp-only"`) — there is no form, endpoint, or database in this repo. Verify: one primary CTA per view (`${lead.whatsappGreeting}` prefix on every message), no inline `wa.me` outside `src/lib/whatsapp.ts`, partner numbers routed through `whatsappPartnerUrl`, no PII logged. If a lead form is ever introduced, it needs real `<label>`s, `aria-required`, accessible error/success states, LGPD consent + privacy link, and env-held endpoint — flag that as an approval-gated change.
+6. **Conversion path / PII:** lead flow is **form → WhatsApp** (`lead.leadFlow: "form-then-whatsapp"`). Two capture surfaces — the `LeadFormDialog.astro` modal and the inline `Aplicacao.astro` section (`#inscricao`) — `POST /api/leads` and hand off through `/redirecionando`. Verify: one primary CTA per view (`${lead.whatsappGreeting}` prefix on every message), no inline `wa.me` outside `src/lib/whatsapp.ts`, partner numbers routed through `whatsappPartnerUrl`, no PII logged. Every form field needs a real `<label>`, `aria-required`, accessible error/success states and LGPD consent + privacy link; the endpoint lives in env (`LEADS_WEBAPP_URL`, `LEADS_WEBAPP_SECRET`). A payload change touches `src/lib/leads.ts` + `api/leads.ts` + the Apps Script `Code.js` + `tests/` in one change — see root `REVIEW.md` B10. Changing the lead destination or a tracking ID is approval-gated.
 7. **Hooks / settings:** Only describe hook behavior when reviewing `.claude/settings.json` or hook scripts — do not bypass `protect_files` or weaken bash guards.
 </checks>
 

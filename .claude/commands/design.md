@@ -7,7 +7,7 @@ workflow_type: prompt-chaining
 
 **ARGUMENTS**: $ARGUMENTS
 
-> Orchestration-only. Visual policy lives in root `DESIGN.md` + `Skill("gpus-theme")`; creative execution in `Skill("impeccable")` (v4.0.4) + `Skill("ui-ux-pro-max")`; product truth in root `PRODUCT.md` + `Skill("grupo-us")`.
+> Orchestration-only. Visual policy lives in root `DESIGN.md` + `Skill("gpus-theme")`; creative execution in `Skill("impeccable")` (v4.1.1) + `Skill("ui-ux-pro-max")`; product truth in root `PRODUCT.md` + `Skill("grupo-us")`.
 >
 > Use for new or revised landing sections, components, visual hierarchy, motion, or copy/design alignment. For production-readiness passes on existing UI use `/design-fix`; for iterative enhancement use `/design-improve`.
 
@@ -38,7 +38,7 @@ Skill("superpowers:using-superpowers"); // meta — bootstrap (per _shared.md §
 **Tier 3 references (read on demand):**
 - Visual authority: root `DESIGN.md` + live `src/styles/global.css @theme` + `Skill("gpus-theme")`
 - Positioning / conversion / copy / voice: root `PRODUCT.md` + `Skill("grupo-us")`
-- Astro static-only contracts: `Skill("astro")` + `.claude/rules/astro.md`
+- Astro static-only contracts: `Skill("graph-powers:astro")` + `.claude/rules/astro.md`
 - Motion + depth canon: root `DESIGN.md § 9 Motion` + `§ 10 Depth & elevation`; runtime gotchas in `.claude/rules/stability.md § Debug triage matrix`
 - Optional visual model repo: `${project.designModelRepo}` — reference only, never a token authority
 
@@ -69,7 +69,7 @@ Phase 2:   frontend-specialist + impeccable new-work + craft-floor + gpus-theme 
 Phase 3:   impeccable detect.mjs + ui-ux-designer audit + performance-optimizer → validate
 ```
 
-**Key rule:** `gpus-theme` + root `DESIGN.md` own the *tokens and palette*. `impeccable` owns the *creative direction and craft floor*. `ui-ux-pro-max` contributes UX / typography / layout / landing-structure intelligence — **never palette**: on any color conflict, GPUS tokens win. `ui-ux-designer` critiques and audits (read-only); `frontend-specialist` is the only write-capable executor.
+**Key rule:** `gpus-theme` + root `DESIGN.md` own the *tokens and palette*. `impeccable` owns the *creative direction and craft floor*. `ui-ux-pro-max` contributes UX / typography / layout / landing-structure intelligence — **never palette**: on any color conflict, GPUS tokens win. `graph-powers:ui-ux-designer` critiques and audits (read-only); `graph-powers:frontend-specialist` is the only write-capable executor.
 
 ---
 
@@ -96,7 +96,7 @@ Read(".claude/skills/impeccable/reference/shape.md");
 //   Follow its directives. A CONTEXT_STALE finding is REPORTED, never repaired as a side effect.
 ```
 
-Apply the shape flow (Phase 1 discovery interview → Phase 2 resolve direction → Phase 3 write the brief → confirm and stop), then hand BOTH the brainstorming spec AND the shape brief to `explorer`.
+Apply the shape flow (Phase 1 discovery interview → Phase 2 resolve direction → Phase 3 write the brief → confirm and stop), then hand BOTH the brainstorming spec AND the shape brief to `graph-powers:explorer`.
 
 For a **new surface or a replacement visual world**, also load `reference/new-work.md` and run its direction sequence (§1 what is already true · §2 what will change the work · §3 amount of invention · §4 commit the world · §5 record the decision). Refinement preserves the incumbent identity; redesign replaces it — never split the difference into polish on a discarded look.
 
@@ -117,7 +117,7 @@ python .claude/skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack astro
 
 ### 3.4 Spawn explorer (design spec synthesis)
 
-Spawn `explorer` (**`run_in_background: true`** — `~/.claude/hooks/task_routing_guard.py` forces read-only research agents to background) and wait for its returned spec before advancing.
+Spawn `graph-powers:explorer` (**`run_in_background: true`** — `~/.claude/hooks/task_routing_guard.py` forces read-only research agents to background) and wait for its returned spec before advancing.
 
 ```
 Invoke Skill("gpus-theme") and Skill("grupo-us"), then analyze: [user request]
@@ -143,13 +143,13 @@ Inputs: brainstorming spec + impeccable shape brief + ui-ux-pro-max design-syste
 Return: structured design spec (no code yet)
 ```
 
-### 3.5 Spec critique gate (`ui-ux-designer` — read-only)
+### 3.5 Spec critique gate (`graph-powers:ui-ux-designer` — read-only)
 
-After the explorer returns the spec (mandatory L4+; recommended L3), spawn `ui-ux-designer` BEFORE any code:
+After the explorer returns the spec (mandatory L4+; recommended L3), spawn `graph-powers:ui-ux-designer` BEFORE any code:
 
 ```typescript
 Agent({
-  subagent_type: "ui-ux-designer",
+  subagent_type: "graph-powers:ui-ux-designer",
   run_in_background: false, // blocking gate
   description: "design / spec critique — [surface]",
   prompt: `
@@ -172,7 +172,7 @@ Agent({
 });
 ```
 
-**Gate:** Critical issues → the controller revises the spec (re-run explorer with the findings) before Phase 2. A spec with open Critical issues never reaches `frontend-specialist`.
+**Gate:** Critical issues → the controller revises the spec (re-run explorer with the findings) before Phase 2. A spec with open Critical issues never reaches `graph-powers:frontend-specialist`.
 
 ---
 
@@ -180,12 +180,12 @@ Agent({
 
 | Task type | Agent | Background? |
 |---|---|---|
-| Component or new section | `frontend-specialist` | **No — foreground (Write/Edit required)** |
-| Spec critique / UX-visual audit (read-only) | `ui-ux-designer` | Foreground for blocking gates; background OK when advisory |
-| Codebase pattern research | `explorer` | Yes |
-| External docs / library questions | `librarian` | Yes |
-| Accessibility / runtime bug | `debugger` | Yes |
-| Performance, SEO, CWV | `performance-optimizer` | Yes |
+| Component or new section | `graph-powers:frontend-specialist` | **No — foreground (Write/Edit required)** |
+| Spec critique / UX-visual audit (read-only) | `graph-powers:ui-ux-designer` | Foreground for blocking gates; background OK when advisory |
+| Codebase pattern research | `graph-powers:explorer` | Yes |
+| External docs / library questions | `graph-powers:librarian` | Yes |
+| Accessibility / runtime bug | `graph-powers:debugger` | Yes |
+| Performance, SEO, CWV | `graph-powers:performance-optimizer` | Yes |
 
 For parallel execution of write-capable agents: multiple foreground `Agent()` calls in **one message**.
 
@@ -199,15 +199,15 @@ Edit directly. Skip Phase 0 and background agents. Still run the gates in Phase 
 
 ### 5.2 L3 (component / known pattern)
 
-1. Pre-flight: `shape` (§3.2) + ui-ux-pro-max `--design-system` (§3.3) + `explorer` (background, aguardar retorno)
+1. Pre-flight: `shape` (§3.2) + ui-ux-pro-max `--design-system` (§3.3) + `graph-powers:explorer` (background, aguardar retorno)
 2. Wait for spec (critique §3.5 recommended, not mandatory)
-3. Spawn `frontend-specialist` foreground with the spec
+3. Spawn `graph-powers:frontend-specialist` foreground with the spec
 
 ### 5.3 L4-L5 (new section / multi-component)
 
-1. Pre-flight: brainstorming + `shape` + ui-ux-pro-max + `explorer`
+1. Pre-flight: brainstorming + `shape` + ui-ux-pro-max + `graph-powers:explorer`
 2. Spec critique gate (§3.5, mandatory)
-3. Spawn `frontend-specialist` agents foreground (one per component/section) in the same message
+3. Spawn `graph-powers:frontend-specialist` agents foreground (one per component/section) in the same message
 
 ### 5.4 L6+ (new page / landing-wide redesign)
 
@@ -215,7 +215,7 @@ Edit directly. Skip Phase 0 and background agents. Still run the gates in Phase 
 2. Spec critique gate (§3.5, mandatory)
 3. Phase 1 visual reference when a model exists (`${project.designModelRepo}` or an approved comp)
 4. `Skill("superpowers:writing-plans")` → implementation plan before code
-5. Spawn `frontend-specialist` agents per section as foreground parallel calls
+5. Spawn `graph-powers:frontend-specialist` agents per section as foreground parallel calls
 
 ---
 
@@ -226,7 +226,7 @@ Phase 0 (controller):             Skill("impeccable") + shape.md (+ new-work.md 
                                   Skill("ui-ux-pro-max") → CLI --design-system (§3.3)
 Phase 0 (in explorer)      :      Skill("gpus-theme") + Skill("grupo-us")
 Phase 0.5 (ui-ux-designer):       read-only — receives the spec + gates inline (no Skill/Bash tool)
-Phase 2 (in frontend-specialist): Skill("gpus-theme") + Skill("grupo-us") + Skill("astro")
+Phase 2 (in frontend-specialist): Skill("gpus-theme") + Skill("grupo-us") + Skill("graph-powers:astro")
                                   + Skill("impeccable") → new-work.md, then craft-floor.md LAST
                                   + ui-ux-pro-max via Bash: search.py "<keyword>" --stack astro
 Phase 3 (validate):               impeccable detect.mjs + ui-ux-designer audit + performance-optimizer
@@ -238,7 +238,7 @@ Phase 3 (validate):               impeccable detect.mjs + ui-ux-designer audit +
 
 ### Phase 0 — Design research
 
-Always for L3+. Controller runs `shape` + the ui-ux-pro-max `--design-system` search; `explorer` synthesizes the structured spec from brainstorming + shape + design-system inputs. The spec then passes the `ui-ux-designer` critique gate (§3.5).
+Always for L3+. Controller runs `shape` + the ui-ux-pro-max `--design-system` search; `graph-powers:explorer` synthesizes the structured spec from brainstorming + shape + design-system inputs. The spec then passes the `graph-powers:ui-ux-designer` critique gate (§3.5).
 
 ### Phase 1 — Visual reference (optional)
 
@@ -248,12 +248,12 @@ Treat it as **visual reference only**: recreate with project primitives + semant
 
 ### Phase 2 — Convert to code
 
-`frontend-specialist` MUST load, in order, before writing any code:
+`graph-powers:frontend-specialist` MUST load, in order, before writing any code:
 
 ```typescript
 Skill("gpus-theme");                                          // Navy/Gold token canon
 Skill("grupo-us");                                            // voice, funnel, CTA, legal
-Skill("astro");                                               // static MPA + Content Collections
+Skill("graph-powers:astro");                                               // static MPA + Content Collections
 Skill("impeccable");                                          // router (Setup + mode)
 Read(".claude/skills/impeccable/reference/new-work.md");      // §1-§5 direction flow
 Read(".claude/skills/impeccable/reference/craft-floor.md");   // LAST — right before editing UI
@@ -308,9 +308,9 @@ Skill("superpowers:verification-before-completion"); // evidence before completi
 
 Run the detector **once**, after the UI is finished — never during concept selection. Fix P0/P1 findings; justify anything left.
 
-#### UX / visual audit (`ui-ux-designer`, read-only — may run in background here)
+#### UX / visual audit (`graph-powers:ui-ux-designer`, read-only — may run in background here)
 
-Spawn over the implemented files: usability heuristics + WCAG 2.2 + aesthetic assessment + Template Test, citing root `DESIGN.md` sections and `file:line`. Critical findings → `frontend-specialist` fixes before the verdict; never let the auditor edit files.
+Spawn over the implemented files: usability heuristics + WCAG 2.2 + aesthetic assessment + Template Test, citing root `DESIGN.md` sections and `file:line`. Critical findings → `graph-powers:frontend-specialist` fixes before the verdict; never let the auditor edit files.
 
 #### Maestro gates (auto-rejection)
 
@@ -345,7 +345,7 @@ If ANY trigger is true → rework that element:
 - [ ] `bun run lint`, `bunx astro check`, `bun run build` all pass in this session
 - [ ] No `wa.me/` outside `src/lib/whatsapp.ts`
 - [ ] No hardcoded product copy in `.astro`
-- [ ] No `console.log` / `debugger`
+- [ ] No `console.log` / `graph-powers:debugger`
 
 #### Tail — request a review
 
@@ -363,8 +363,8 @@ For L4+ surfaces (new section, page redesign), invoke `Skill("superpowers:reques
 | Call `load-context.mjs` | `node .claude/skills/impeccable/scripts/context.mjs --target <file>`, once per session |
 | Load `craft-floor.md` while planning | Load it LAST, right before editing UI |
 | Treat the landing as `Operate` mode | It is **Persuade** — the visitor decides and acts |
-| Run `frontend-specialist` in background | Foreground only (background silently denies Write/Edit) |
-| Let `ui-ux-designer` write code | Read-only critic — all writes go through `frontend-specialist` |
+| Run `graph-powers:frontend-specialist` in background | Foreground only (background silently denies Write/Edit) |
+| Let `graph-powers:ui-ux-designer` write code | Read-only critic — all writes go through `graph-powers:frontend-specialist` |
 | Adopt ui-ux-pro-max palette suggestions | `gpus-theme` + root `DESIGN.md` are the token authority |
 | Add SPA/SSR behavior | Keep Astro static MPA |
 | Add a React island by reflex | Astro-first; `client:*` needs proven interactivity + ASK |

@@ -26,7 +26,7 @@ You are the lead coordinator for ${project.name}-team. Your role is to **plan AN
 | **PLAN** | Create plans with agent assignments | `docs/plans/YYYY-MM-DD-<feature>.md` |
 | **EXECUTE** | Orchestrate implementation | Delegate to specialists |
 
-**Invoke methodology:** `Skill("planning")` for D.R.P.I.V workflow
+**Invoke methodology:** `Skill("graph-powers:planning")` for D.R.P.I.V workflow
 
 ---
 
@@ -183,7 +183,7 @@ GOOD: "Add Hero.astro component with headline and inscription CTA"
 ### Task N: [Name]
 
 **Files:** `path/file.astro:123-145`
-**Agent:** `frontend-specialist` | `performance-optimizer` | `explorer`
+**Agent:** `graph-powers:frontend-specialist` | `graph-powers:performance-optimizer` | `graph-powers:explorer`
 **Dependencies:** None PARALLEL-SAFE | Depends on: Task X
 
 **Step 1:** [Action]
@@ -247,7 +247,7 @@ After plan approval, delegate to specialists via `/implement`.
 
 ```
 Task({
-  subagent_type: "explorer",
+  subagent_type: "graph-powers:explorer",
   prompt: "Research [topic] and report findings",
   run_in_background: true  // MANDATORY for concurrent execution
 })
@@ -257,7 +257,7 @@ Task({
 
 ```
 Task({
-  subagent_type: "frontend-specialist",
+  subagent_type: "graph-powers:frontend-specialist",
   prompt: `Execute: [task from plan]
 
 FILE: path/to/Component.astro:10-25
@@ -282,21 +282,21 @@ Run: bun run build
 
 | Task Type                                        | Agent                   | Skills                                       |
 | ------------------------------------------------ | ----------------------- | -------------------------------------------- |
-| Astro components, layouts, pages                 | `frontend-specialist`   | frontend-design, gpus-theme, ui-ux-pro-max  |
-| Design spec critique / UX-visual audit (read-only) | `ui-ux-designer`      | impeccable, gpus-theme                       |
-| Content Collections (JSON data)                  | `frontend-specialist`   | frontend-design                              |
-| Tailwind CSS, design tokens, GPUS theme          | `frontend-specialist`   | gpus-theme, ui-ux-pro-max                   |
-| Performance, accessibility, SEO, tracking        | `performance-optimizer` | performance-optimization                     |
+| Astro components, layouts, pages                 | `graph-powers:frontend-specialist`   | frontend-design, gpus-theme, ui-ux-pro-max  |
+| Design spec critique / UX-visual audit (read-only) | `graph-powers:ui-ux-designer`      | impeccable, gpus-theme                       |
+| Content Collections (JSON data)                  | `graph-powers:frontend-specialist`   | frontend-design                              |
+| Tailwind CSS, design tokens, GPUS theme          | `graph-powers:frontend-specialist`   | gpus-theme, ui-ux-pro-max                   |
+| Performance, accessibility, SEO, tracking        | `graph-powers:performance-optimizer` | performance-optimization                     |
 | Architecture consultation                        | `oracle`                | read-only analysis                           |
-| Codebase research, file discovery                | `explorer`              | planning                                     |
-| External docs, library research                  | `librarian`             | documentation research                       |
+| Codebase research, file discovery                | `graph-powers:explorer`              | planning                                     |
+| External docs, library research                  | `graph-powers:librarian`             | documentation research                       |
 
 ### Plan Agent Assignment
 
 When creating tasks, ALWAYS include:
 
 ```markdown
-**Agent:** `frontend-specialist`
+**Agent:** `graph-powers:frontend-specialist`
 ```
 
 This tells `/implement` which specialist to spawn.
@@ -310,18 +310,18 @@ This tells `/implement` which specialist to spawn.
 | Architecture or multi-system    | `oracle`                | Tradeoffs, unfamiliar patterns           |
 | Self-review after big change    | `oracle`                | Significant implementation               |
 | Hard debugging (2+ failures)    | `oracle`                | Repeated failed attempts                 |
-| External docs or libraries      | `librarian`             | Unfamiliar packages, quirks              |
-| Internal codebase structure     | `explorer`              | Find patterns, file locations            |
-| Astro pages, layouts, components | `frontend-specialist`  | .astro files, routing, slots             |
-| Design critique / visual audit  | `ui-ux-designer`        | Read-only spec critique or post-build audit |
-| Content Collections             | `frontend-specialist`   | JSON data, collection schemas            |
-| Tailwind CSS, design system     | `frontend-specialist`   | Styling, tokens, GPUS theme             |
-| Reveal/scroll motion            | `frontend-specialist`   | `[data-reveal]` + IntersectionObserver, transform/opacity |
-| Bug investigation               | `debugger`              | Root cause analysis                      |
-| CTA WhatsApp / tracking         | `debugger`              | `src/lib/whatsapp.ts` helpers, mensagens no JSON, Pixel/GA4 |
-| Security concerns               | `performance-optimizer` | Headers, CSP, best practices             |
-| Performance, SEO, a11y          | `performance-optimizer` | Lighthouse, Core Web Vitals, WCAG        |
-| Deploy or infra                 | `debugger`              | Vercel static build, CI/CD                      |
+| External docs or libraries      | `graph-powers:librarian`             | Unfamiliar packages, quirks              |
+| Internal codebase structure     | `graph-powers:explorer`              | Find patterns, file locations            |
+| Astro pages, layouts, components | `graph-powers:frontend-specialist`  | .astro files, routing, slots             |
+| Design critique / visual audit  | `graph-powers:ui-ux-designer`        | Read-only spec critique or post-build audit |
+| Content Collections             | `graph-powers:frontend-specialist`   | JSON data, collection schemas            |
+| Tailwind CSS, design system     | `graph-powers:frontend-specialist`   | Styling, tokens, GPUS theme             |
+| Reveal/scroll motion            | `graph-powers:frontend-specialist`   | `[data-reveal]` + IntersectionObserver, transform/opacity |
+| Bug investigation               | `graph-powers:debugger`              | Root cause analysis                      |
+| CTA WhatsApp / tracking         | `graph-powers:debugger`              | `src/lib/whatsapp.ts` helpers, mensagens no JSON, Pixel/GA4 |
+| Security concerns               | `graph-powers:performance-optimizer` | Headers, CSP, best practices             |
+| Performance, SEO, a11y          | `graph-powers:performance-optimizer` | Lighthouse, Core Web Vitals, WCAG        |
+| Deploy or infra                 | `graph-powers:debugger`              | Vercel static build, CI/CD                      |
 
 ---
 
@@ -562,7 +562,7 @@ Invoke these skills directly when the task matches:
 
 ## References
 
-- **Methodology:** `Skill("planning")` — D.R.P.I.V workflow
+- **Methodology:** `Skill("graph-powers:planning")` — D.R.P.I.V workflow
 - **Discovery:** `.claude/skills/planning/references/01-discover.md`
 - **Plan Template:** `.claude/skills/planning/references/02-plan.md`
 - **Risk (L6+):** `.claude/skills/planning/references/03-risk.md`

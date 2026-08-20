@@ -65,14 +65,14 @@ L1–L2: editar direto, sem overhead.
 
 | Task signal | Agent |
 |---|---|
-| Astro / React islands / styling / form | `frontend-specialist` |
-| Bugs, regressões, build/type errors | `debugger` |
-| Performance, SEO, a11y, segurança, tracking | `performance-optimizer` |
-| Pesquisa interna do codebase | `explorer` |
-| Docs externas / libs | `librarian` |
-| Planejamento / PRD | `project-planner` |
+| Astro / styling / form (zero ilhas hoje) | `graph-powers:frontend-specialist` |
+| Bugs, regressões, build/type errors | `graph-powers:debugger` |
+| Performance, SEO, a11y, segurança, tracking | `graph-powers:performance-optimizer` |
+| Pesquisa interna do codebase | `graph-powers:explorer` |
+| Docs externas / libs | `graph-powers:librarian` |
+| Planejamento / PRD | `graph-powers:project-planner` |
 | Revisão de código | `code-reviewer` |
-| Verificação final | `verification-agent` |
+| Verificação final | `graph-powers:verification` |
 
 Max 5 agents por pedido; checkpoint com usuário se exceder.
 
@@ -80,10 +80,10 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 
 | Phase | Skills |
 |---|---|
-| Process | `senior-prompt-engineer`, `planning`, `evolution-core`, `debugger` |
-| Tech-stack | `astro` |
+| Process | `graph-powers:senior-prompt-engineer`, `graph-powers:planning`, `evolution-core`, `graph-powers:debugger` |
+| Tech-stack | `graph-powers:astro` |
 | Project (brand) | `grupo-us`, `gpus-theme` |
-| Implementation | `ui-ux-pro-max`, `impeccable`, `performance-optimization`, `skill-creator` |
+| Implementation | `ui-ux-pro-max`, `impeccable`, `graph-powers:performance-optimization`, `graph-powers:skill-creator` |
 
 ### Terminal
 
@@ -107,7 +107,7 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 2. `.claude/rules/*.md`
 3. `.claude/CLAUDE.md` + `.claude/config.json`
 4. Root `AGENTS.md`
-5. Tech-stack skill `astro`
+5. Tech-stack skill `graph-powers:astro`
 6. Brand skills `grupo-us`, `gpus-theme`
 7. `docs/` sob demanda
 
@@ -131,7 +131,7 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 | Cardinal rules + routing + stopping conditions | `.claude/CLAUDE.md` |
 | Valores de instância (nome, domínio, slug, SDR, rotas, tracking) | `.claude/config.json` |
 | Frontend/design/stability/SEO | `.claude/rules/{frontend,DESIGN,stability,seo}.md` |
-| Astro static-only + Content Collections + layout contracts | `.claude/rules/astro.md` + `Skill('astro')` |
+| Astro static-only + Content Collections + layout contracts | `.claude/rules/astro.md` + `Skill('graph-powers:astro')` |
 | Sistema de design visual (Navy/Gold, componentes, motion) | root `DESIGN.md` + `Skill('gpus-theme')` |
 | Posicionamento / conversão / CRO / guardrails | root `PRODUCT.md` |
 | Copy, público, CTA, funil, voz Dra. Sacha | `Skill('grupo-us')` |
@@ -145,3 +145,34 @@ Max 5 agents por pedido; checkpoint com usuário se exceder.
 ## Recent learnings
 
 > Aprendizados específicos da instância vivem em `docs/learnings-log.md` (ou `docs/<project>-changelog.md`), não nesta governança portável. Capturar via `/evolve`.
+
+<!-- graph-powers:start -->
+## Graph Powers
+
+This machine runs the Graph Powers harness, installed once and shared by every project.
+
+Two files carry everything else:
+
+- `~/.codex/graph-powers/shared-context.md` — an index of the shared patterns, one file each under
+  `~/.codex/graph-powers/shared/`: config loader, quality gates, complexity routing, agent matrix,
+  spawn patterns, and the rest. Read the index, then only the fragments the task needs.
+- `~/.codex/graph-powers/safety-floor.md` — the invariants that hold regardless of the task: git and
+  outward-facing actions, tenant and personal data, irreversible operations, secrets, tooling,
+  scope, completion claims, accessibility.
+
+**What is global and what is this project's.** The harness itself — skills, subagents,
+commands, guardrails — is installed once for the whole machine, because it is identical
+everywhere. What belongs to this repository and nothing else lives here:
+
+- `.graph-powers/config.json` — the branch, the gate commands, the paths, the opt-in prefix
+- `.codex/rules/` and `.claude/rules/` — this project's domain rules
+- `DESIGN.md`, `PRODUCT.md`, `REVIEW.md` — its design, product and review authorities
+
+The guardrails are what make one global copy correct rather than sloppy: they read **this**
+project's config at runtime, so the same files enforce a different work branch and a different
+opt-in key in every repository.
+
+Read the config; never assume it. A denied command is the rule working, not a bug to route
+around: it names the environment variable that releases it, and a person sets that variable,
+in the turn they approved it.
+<!-- graph-powers:end -->
