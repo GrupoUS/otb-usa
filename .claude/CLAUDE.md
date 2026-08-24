@@ -65,6 +65,8 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 | WhatsApp CTA/message | `grupo-us` | `${content.productJson}` message; `${lead.whatsappHelper}` só para número/helper |
 | Seção da landing | `frontend.md` + `DESIGN.md` + `graph-powers:astro` + `gpus-theme` | `src/components/landing/*.astro` |
 | Design de seção/página (chain completo) | `impeccable` (4.x) + `gpus-theme` + `ui-ux-pro-max` | `/design`, `/design-improve`, `/design-fix` |
+| Estrutura de landing, ordem de seções, headline/CTA, objeção, FAQ | `landing-page-design` **Part A only** (ver nota abaixo) + `grupo-us` | `${content.productJson}` + `src/components/landing/*.astro` |
+| Audit / upgrade de landing existente ("está genérico", "parece feito por IA") | `redesign-existing-projects` **diagnóstico only** (ver nota abaixo) + `DESIGN.md` + `gpus-theme` | `/design-fix`, `/design-improve` |
 | UX de conversão / objeção / oferta | `graph-powers:uxmaster` + `grupo-us` | `${content.productJson}` + seção correspondente |
 | Tracking GA4/Pixel/GTM/consent | `seo.md` + `graph-powers:performance-optimization` | GTM inline em `src/layouts/Layout.astro`; evento de conversão em `src/pages/redirecionando.astro` (mudança = aprovação) |
 | Captura de lead / payload / planilha | `frontend.md` + `stability.md` | `src/lib/leads.ts` + `src/lib/lead-client.ts` + `api/leads.ts` + Apps Script + `tests/` numa só mudança |
@@ -77,6 +79,62 @@ Autonomia quando a mudança é local, reversível, baseada em evidência e dentr
 | Performance / Lighthouse | `stability.md` + `graph-powers:performance-optimization` | hydration audit, image priority, fonts, bundle |
 | Agent prompt / command | `graph-powers:senior-prompt-engineer` | `.claude/agents/*.md`, `.claude/commands/*.md` |
 | Anywhere | `stability.md` | universal checklist |
+
+### Skills externas de design — o que vale e o que é sobrescrito
+
+Duas skills globais da elayadesign estão instaladas: `landing-page-design` (construir landing nova) e `redesign-existing-projects` (auditar/melhorar landing existente). Ambas têm `description` larga e disparam sozinhas em quase qualquer trabalho de UI. **Neste repo as duas valem só pela metade estratégica.** As duas carregam o mesmo bloco de valores visuais (Geist/Manrope, hex literais, Phosphor, spacing próprio, escala do Tailwind) — esse bloco está sobrescrito nas duas.
+
+#### `landing-page-design` — Part A only
+
+Origem: `github.com/elayadesign/ai-design-skills`.
+
+| Metade | Status aqui |
+|---|---|
+| **Part A — estratégia e estrutura** (A1 intake · A2 estrutura de página · A3 seleção de layout · A4 regras de conversão · A5 copywriting · A6 ordem de build seção a seção · A7 SEO/AEO · A8 pitfalls) | **Usar.** Complementa `grupo-us` + `PRODUCT.md`. Copy resultante vai para `${content.productJson}`, nunca hardcoded. |
+| **Part B — sistema visual** (B1 tipografia/fontes · B2 spacing · B3 radius · B4 borders/backgrounds · B5 hero · B6 ícones · B7 motion · B11 tagline reveal) | **Ignorar.** Sobrescrito por root `DESIGN.md` + `.claude/rules/DESIGN.md` + `Skill('gpus-theme')`. |
+
+Part B é ignorada porque colide de frente com as cardinal rules e com o canon visual:
+
+| Part B manda | Vale aqui |
+|---|---|
+| Geist/Manrope/Poppins; "never use Inter" | Sora (headings) + Inter (body), via `@theme` |
+| Ícones Phosphor/Solar/Iconamoon | Lucide ou SVG inline (`DESIGN.md § 6`, uma lib só) |
+| Hex literais (`#181818`, `#9B9B9B`, gradiente de heading) | Cardinal rule 7 — zero hex fora do `@theme` de `src/styles/global.css`; usar tokens semânticos |
+| "Never use gradients in backgrounds" | Glow/glass/profundidade dramática liberados (`DESIGN.md § 9`) |
+| Tabela de spacing própria (2/4/8/12/16/24…) | Grid de 8px (`DESIGN.md § 4`) |
+| `IntersectionObserver` próprio por seção, `whileInView` do Framer | Runtime único `src/scripts/motion.ts` + `[data-reveal]`; componente não abre listener/observer próprio (`astro.md § 9`) |
+| Escala de tipo do Tailwind (`text-4xl`…) | Escala clamp em `@theme` (`gpus-theme`) |
+
+B8 (content realism), B9 (states), B10 (ship requirements) não conflitam e servem como checklist extra — mas a autoridade continua sendo `DESIGN.md` + `.claude/rules/frontend.md`.
+
+#### `redesign-existing-projects` — diagnóstico only
+
+Origem: `github.com/elayadesign/redesign-skill`. Skill de auditoria: cada bullet é "sintoma → substituto". **O diagnóstico vale; o substituto não.**
+
+| Metade | Status aqui |
+|---|---|
+| **Lentes de diagnóstico** — hierarquia fraca, tudo centralizado e simétrico, três colunas iguais de card, medida de parágrafo larga demais, ritmo vertical desalinhado, sombra sem direção de luz única, estados faltando, dead link, div soup, `alt` ausente, `z-index: 9999`, omissões estratégicas (404, legal, skip link, validação de form), `100vh` → `min-height: 100dvh` | **Usar.** Bom checklist de audit; roda antes de `/design-fix`. |
+| **`# Design values`** (fim do arquivo) + todo bullet que nomeia valor concreto | **Ignorar.** A SSOT de valor visual aqui é `src/styles/global.css @theme` + root `DESIGN.md` + `Skill('gpus-theme')`. |
+
+O skill diz "Never invent a design value. If it is not in Design Values, ask" — **aqui `Design Values` lê-se `@theme` + `DESIGN.md`**, não a seção dele.
+
+Colisões diretas, além das já listadas em Part B acima:
+
+| `redesign-existing-projects` manda | Vale aqui |
+|---|---|
+| "Lucide, Feather, Material Icons — these are the default AI choices. Replace." | **Lucide é obrigatório** (cardinal rule 3 + `DESIGN.md § 6`). Este bullet é o oposto da regra do repo. |
+| Remover gradiente de background "of any kind" | Glow/glass/profundidade dramática liberados (`DESIGN.md § 9`) |
+| "Animating `top`, `left`, `width`, `height` → switch to transform" | Cardinal rule 8 permite animar qualquer propriedade; `transform`/`opacity` é preferência, não regra |
+| Trocar o padrão de FAQ accordion | `FAQ.astro` usa `<details>` nativo por decisão de rota — mudar = decisão de produto, não item de audit |
+| Navbar docked → floating glass pill obrigatória | Decisão de produto, não regra. `Header.astro` como está. |
+| Saturação de accent < 80%, um accent só | Gold sem teto de cobertura (`AGENTS.md § Design philosophy`) |
+| `IntersectionObserver`/`whileInView` por componente | Runtime único `src/scripts/motion.ts` (`astro.md § 9`) |
+
+Fluxo correto: rodar as lentes de diagnóstico → relatar → aplicar fix **via `/design-fix`**, com os valores vindo de `DESIGN.md` + `gpus-theme`. O skill também manda "report the diagnosis before applying fixes" — isso bate com o repo, manter.
+
+#### Precedência
+
+`AGENTS.md § Authority precedence` já põe `.claude/rules/*.md` e `.claude/CLAUDE.md` acima de qualquer skill. Esta nota existe para tornar isso explícito antes que as skills disparem sozinhas.
 
 ---
 
@@ -115,6 +173,8 @@ Invoke before acting when L4+, multi-domain, 3+ dependent phases, irreversible a
 - `Skill('grupo-us')` — marca, copy, público, funil drasacha, voz Dra. Sacha.
 - `Skill('gpus-theme')` — Navy/Gold dark-first visual canon.
 - `Skill('graph-powers:astro')` — Astro static-only patterns.
+- `Skill('landing-page-design')` — **Part A only** (estrutura, copy de conversão, SEO/AEO). Part B sobrescrita por `DESIGN.md` + `gpus-theme` — ver § Routing matrix.
+- `Skill('redesign-existing-projects')` — **diagnóstico only** (lentes de audit). Seção `Design values` e todo substituto concreto sobrescritos por `DESIGN.md` + `gpus-theme` — ver § Routing matrix.
 - root `DESIGN.md` / `PRODUCT.md` — sistema de design + posicionamento GPUS.
 - Modelo de design opcional: `${project.designModelRepo}`.
 
