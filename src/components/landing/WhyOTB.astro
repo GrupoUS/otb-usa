@@ -10,11 +10,16 @@ export interface Props {
 const { why } = Astro.props;
 
 const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
+const cardLayouts = [
+	"lg:col-span-5 lg:pr-10",
+	"lg:col-span-3 lg:border-l lg:border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] lg:pl-8",
+	"lg:col-span-4 lg:border-l lg:border-[color-mix(in_srgb,var(--color-gold)_20%,transparent)] lg:pl-8",
+] as const;
 ---
 
 {/*
-	Hairline triptych. No card chrome: three columns divided by vertical gold
-	rules, each opened by an oversized serif numeral. The previous version was
+	Asymmetric typographic pillars. No card chrome: three columns divided by
+	delicate rules. The previous version was
 	three glass cards — the exact shape Programa, Boston and Parceiros were
 	also using, which is why nothing on the page read as distinct.
 */}
@@ -42,31 +47,20 @@ const cardIcons: IconName[] = ["shield-check", "globe", "sparkles"];
 			</figure>
 		)}
 
-		{/* `data-tilt` is the whole hover treatment on these columns — no
-		    hover-lift on top of it, because two rules writing the same
-		    `transform` cancel each other (stability.md § Debug triage). */}
+		{/* The pillars stay static so the section reads as one typographic block. */}
 		<div
-			class="mt-block grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-[color-mix(in_srgb,var(--color-gold)_20%,transparent)]"
+			class="mt-block grid grid-cols-1 gap-10 md:grid-cols-3 lg:grid-cols-12 md:gap-x-8"
 		>
 			{why.cards.map((card, idx) => (
 				<article
-					class="md:px-8 md:first:pl-0 md:last:pr-0"
-					data-reveal="up"
-					data-reveal-delay={String(idx + 2)}
-					data-tilt
+					class:list={["min-w-0", cardLayouts[idx]]}
 				>
 					<div class="flex items-baseline gap-4">
-						<span
-							class="font-display text-5xl font-extrabold leading-none tabular-nums text-gold/35"
-							aria-hidden="true"
-						>
-							{String(idx + 1).padStart(2, "0")}
-						</span>
 						<Icon
 							name={cardIcons[idx] ?? "sparkles"}
 							size={20}
 							strokeWidth={1.75}
-							class="text-gold"
+							class="text-text-secondary"
 							aria-hidden="true"
 						/>
 					</div>

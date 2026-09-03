@@ -7,10 +7,8 @@
   // `tests/apps-script-writer.test.ts` lê o arquivo como texto (`readFileSync`), não o importa.
   "exclude": ["dist", "integrations"],
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react",

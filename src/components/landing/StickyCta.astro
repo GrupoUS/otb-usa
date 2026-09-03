@@ -92,7 +92,6 @@ const hasCheckout = Boolean(checkoutUrl);
 					href={checkoutUrl}
 					target="_blank"
 					rel="noopener noreferrer"
-					data-shine
 					class="inline-flex min-h-11 min-w-[9rem] items-center justify-center gap-2 rounded-full bg-gold px-5 text-sm font-semibold text-ink-deep"
 				>
 					{checkoutLabel ?? "Garantir vaga"}
@@ -104,8 +103,7 @@ const hasCheckout = Boolean(checkoutUrl);
 				type="button"
 				data-lead-cta="sticky_mobile"
 				data-whatsapp-url={whatsappHref}
-				data-shine
-				class="inline-flex min-h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 rounded-full bg-gold px-5 text-sm font-semibold text-ink-deep"
+				class="inline-flex min-h-11 min-w-[10rem] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gold px-5 text-sm font-semibold text-ink-deep"
 				aria-label={`${label} no WhatsApp`}
 			>
 				<Icon name="message-circle" size={18} strokeWidth={2.25} />

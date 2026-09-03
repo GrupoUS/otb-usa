@@ -25,7 +25,7 @@ const { audience } = Astro.props;
 >
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-20">
-			<div class="lg:col-span-5" data-reveal="left">
+			<div class="lg:col-span-5">
 				<SectionHeader
 					headingId="audience-heading"
 					numeral="03"
@@ -44,17 +44,15 @@ const { audience } = Astro.props;
 
 			<div class="lg:col-span-7">
 				<ul class="flex flex-wrap gap-2.5" aria-label="Profissões elegíveis">
-					{audience.categorias.map((c, idx) => (
+					{audience.categorias.map((c) => (
 						<li
 							class="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] px-4 text-sm font-medium text-text-primary transition-colors duration-200 hover:border-[color-mix(in_srgb,var(--color-gold)_50%,transparent)]"
-							data-reveal="up"
-							data-reveal-delay={String((idx % 6) + 1)}
 						>
 							<Icon
 								name={c.icone as IconName}
 								size={16}
 								strokeWidth={1.75}
-								class="text-gold"
+								class="text-text-secondary"
 								aria-hidden="true"
 							/>
 							{c.nome}
@@ -76,19 +74,11 @@ const { audience } = Astro.props;
 						<ol
 							class="mt-8 divide-y divide-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
 						>
-							{audience.personaBullets.map((bullet, idx) => (
+							{audience.personaBullets.map((bullet) => (
 								<li
-									class="flex min-w-0 items-baseline gap-5 py-4"
-									data-reveal="up"
-									data-reveal-delay={String((idx % 4) + 3)}
+									class="min-w-0 py-4"
 								>
-									<span
-										class="shrink-0 font-sans text-xl font-bold leading-none tabular-nums text-gold/70"
-										aria-hidden="true"
-									>
-										{String(idx + 1).padStart(2, "0")}
-									</span>
-									<span class="min-w-0 wrap-break-word text-body text-text-secondary">
+									<span class="block min-w-0 wrap-break-word text-body text-text-secondary">
 										{bullet}
 									</span>
 								</li>

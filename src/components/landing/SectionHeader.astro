@@ -1,18 +1,19 @@
 ---
 /**
- * Shared section spine: structural numeral + kicker + rule + heading.
+ * Shared section spine: kicker + rule + heading.
  *
  * Replaces the recipe that was copy-pasted into 8 of 11 sections
  * (`text-[11px] uppercase tracking-[0.32em] text-gold` + a gold hairline).
  *
- * Gold discipline (DESIGN.md § 3): the kicker is muted and only the rule and
- * the numeral carry gold at low weight, so the ONE gold moment per section is
+ * Gold discipline (DESIGN.md § 3): the kicker is muted and the rule carries
+ * gold at low weight, so the ONE gold moment per section is
  * the gradient on `highlight`. Never make the kicker gold again.
  */
 export interface Props {
 	headingId: string;
 	kicker: string;
 	headline: string;
+	/** Legacy prop retained for callers; section headers intentionally omit badges. */
 	numeral?: string;
 	highlight?: string;
 	descricao?: string;
@@ -28,7 +29,6 @@ const {
 	headingId,
 	kicker,
 	headline,
-	numeral,
 	highlight,
 	descricao,
 	accent = "gold",
@@ -49,22 +49,6 @@ const rowAlignment = align === "center" ? "justify-center" : "";
 
 <div class={`${alignment} ${className}`} data-reveal={reveal}>
 	<div class={`flex items-center gap-4 ${rowAlignment}`}>
-		{/*
-			Crimson plate. This is the page's numbering system: a solid, squared
-			chip rather than the previous ghost-gold numeral, which disappeared
-			against the band at anything below a 1440px viewport. Text-primary on
-			--color-crimson measures 7.3:1, so the plate is legible even though it
-			is decorative (aria-hidden — the heading already carries the meaning).
-		*/}
-		{numeral && (
-			<span
-				class="inline-flex h-[42px] min-w-[42px] shrink-0 items-center justify-center rounded-plate px-2.5 font-display text-sm font-bold leading-none tracking-[0.06em] tabular-nums text-text-primary"
-				style="background-color: var(--color-crimson);"
-				aria-hidden="true"
-			>
-				{numeral}
-			</span>
-		)}
 		<span
 			class="inline-flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-text-muted"
 		>

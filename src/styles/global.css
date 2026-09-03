@@ -85,9 +85,9 @@
 
 	/* Ritmo vertical — py-28 sm:py-32 / py-32 sm:py-40 / py-24 sm:py-28
 	   derivavam por arquivo. */
-	--spacing-section: clamp(4rem, 2rem + 7vw, 9rem);
-	--spacing-section-tight: clamp(3rem, 1.75rem + 4.5vw, 6rem);
-	--spacing-block: clamp(2rem, 1.25rem + 3vw, 4rem);
+	--spacing-section: clamp(4rem, 2.5rem + 4vw, 7.5rem);
+	--spacing-section-tight: clamp(3rem, 2rem + 3vw, 5.5rem);
+	--spacing-block: clamp(1.5rem, 1rem + 2.5vw, 3rem);
 
 	/* Motion */
 	--ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
@@ -179,12 +179,9 @@ body {
 
 .site-header {
 	border-bottom: 1px solid transparent;
-	/* `backdrop-filter` is deliberately NOT in this list: transitioning it makes
-	   the browser re-blur everything behind a full-width fixed bar on every
-	   frame of the 160ms. The blur snaps; the colour still fades. */
-	transition:
-		background-color var(--duration-hover) ease,
-		border-color var(--duration-hover) ease;
+	/* Header chrome changes state, but never becomes a second authored
+	   movement in the reading flow. */
+	transition: none;
 }
 
 .site-header.is-solid {
@@ -193,27 +190,15 @@ body {
 	backdrop-filter: blur(14px) saturate(130%);
 }
 
-/* One primary CTA per view: the header action stays hidden while the header
-   floats over the hero, otherwise two gold primaries share the first fold.
-   Gated on `.js` so a scripting failure leaves it visible rather than lost. */
-.js .site-header [data-header-cta] {
-	visibility: hidden;
-	opacity: 0;
-	transition:
-		opacity var(--duration-hover) ease,
-		visibility var(--duration-hover) ease;
-}
-
-.js .site-header.is-solid [data-header-cta] {
-	visibility: visible;
-	opacity: 1;
-}
-
 /* Space for the conversion bar, reserved from first paint — never injected on
    scroll, which would shift layout (CLS). The bar is no longer mobile-only, so
    the reservation is unconditional. */
 body {
-	padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+	--sticky-cta-reserve: 4.5rem;
+	padding-bottom: calc(
+		var(--sticky-cta-reserve) +
+		env(safe-area-inset-bottom, 0px)
+	);
 }
 
 /* Hidden state gated on `.js`: with scripting off the bar simply stays put
@@ -222,9 +207,7 @@ body {
 .js .sticky-cta {
 	visibility: hidden;
 	transform: translateY(100%);
-	transition:
-		transform var(--duration-reveal) var(--ease-editorial),
-		visibility var(--duration-reveal) var(--ease-editorial);
+	transition: none;
 }
 
 .js .sticky-cta.is-visible {
@@ -579,34 +562,6 @@ body {
 	}
 }
 
-/* ===== Text Shimmer ===== */
-
-@keyframes shimmer {
-	0% {
-		background-position: -200% center;
-	}
-	100% {
-		background-position: 200% center;
-	}
-}
-
-@utility text-shimmer {
-	background: linear-gradient(
-		90deg,
-		var(--color-gold) 0%,
-		var(--color-gold-light) 50%,
-		var(--color-gold) 100%
-	);
-	background-size: 200% auto;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
-	/* Finite on purpose. This utility sits on the hero H1 — the text LCP
-	   candidate — and `background-clip: text` repaints the glyphs on every
-	   frame. Three passes read as a sweep; forever reads as a battery drain. */
-	animation: shimmer 3s linear 3;
-}
-
 /* ===== Gradient Text ===== */
 
 @utility text-gradient-gold {
@@ -618,15 +573,6 @@ body {
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
-}
-
-/* ===== Reduced Motion: Shimmer ===== */
-
-@media (prefers-reduced-motion: reduce) {
-	.text-shimmer {
-		animation: none;
-		-webkit-text-fill-color: var(--color-gold);
-	}
 }
 
 /* ===== Scroll progress ===== */
@@ -857,37 +803,16 @@ html:not(.js) [data-cd-wrap] {
 	position: relative;
 }
 
-.cd-unit + .cd-unit::before {
-	content: ":";
-	position: absolute;
-	left: -0.85rem;
-	bottom: 1.5rem;
-	font-family: var(--font-display);
-	font-weight: 700;
-	line-height: 1;
-	color: color-mix(in srgb, var(--color-gold) 38%, transparent);
-}
-
-/* ===== Live dot (countdown) ===== */
-
-.live-dot::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: 9999px;
-	background-color: var(--color-crimson-bright);
-	animation: otb-ping 2.6s var(--ease-editorial) infinite;
-}
-
-@keyframes otb-ping {
-	0% {
-		transform: scale(0.55);
-		opacity: 0.9;
-	}
-	70%,
-	100% {
-		transform: scale(2);
-		opacity: 0;
+@media (min-width: 40rem) {
+	.hero-countdown .cd-unit + .cd-unit::before {
+		content: ":";
+		position: absolute;
+		left: -0.85rem;
+		bottom: 1.5rem;
+		font-family: var(--font-display);
+		font-weight: 700;
+		line-height: 1;
+		color: color-mix(in srgb, var(--color-text-secondary) 52%, transparent);
 	}
 }
 
@@ -945,7 +870,7 @@ html:not(.js) [data-cd-wrap] {
 	/* Centred in the space ABOVE the sticky conversion bar, not in the whole
 	   viewport: on a 1366x768 laptop the bar is already up by the time the rail
 	   pins, and plain centring painted the gold progress hairline behind it. */
-	top: calc((100svh - 4.25rem - var(--hpin-h)) / 2);
+	top: calc((100svh - var(--sticky-cta-reserve) - var(--hpin-h)) / 2);
 	height: var(--hpin-h);
 	align-items: center;
 	overflow: hidden;

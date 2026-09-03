@@ -1,7 +1,5 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { whatsappUrlWithText } from "../../lib/whatsapp";
-import Icon from "../icons/Icon.astro";
 
 type ProductData = CollectionEntry<"products">["data"];
 
@@ -10,8 +8,7 @@ export interface Props {
 	whatsappMessage: string;
 }
 
-const { header, whatsappMessage } = Astro.props;
-const ctaHref = whatsappUrlWithText(whatsappMessage);
+const { header } = Astro.props;
 ---
 
 {/*
@@ -77,21 +74,5 @@ const ctaHref = whatsappUrlWithText(whatsappMessage);
 			{header.edicaoChip}
 		</span>
 
-		{/*
-			Only surfaces once the header goes solid. Over the hero it would be a
-			second gold primary next to the hero CTA — one primary per view.
-			`visibility` keeps it out of the tab order while hidden.
-		*/}
-		<button
-			type="button"
-			data-lead-cta="header_desktop"
-			data-whatsapp-url={ctaHref}
-			data-header-cta
-			class="hidden shrink-0 items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-ink-deep transition-transform duration-200 hover:scale-[1.03] focus-visible:scale-[1.03] lg:inline-flex"
-			aria-label={`${header.ctaLabel} no WhatsApp`}
-		>
-			<Icon name="message-circle" size={16} strokeWidth={2.25} />
-			{header.ctaLabel}
-		</button>
 	</div>
 </header>

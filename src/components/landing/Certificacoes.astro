@@ -1,86 +1,30 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import Icon from "../icons/Icon.astro";
 
 export interface Props {
 	certificacoes: NonNullable<
 		CollectionEntry<"products">["data"]["certificacoes"]
 	>;
-	/** Without these the runtime leaves the ribbon a static wrapped row — an
-	 *  auto-scrolling list needs a way to stop it (WCAG 2.2.2). */
+	/** Accepted for caller compatibility; this proof strip is intentionally static. */
 	controles?: CollectionEntry<"products">["data"]["certificacoesControles"];
 }
 
-const { certificacoes, controles } = Astro.props;
+const { certificacoes } = Astro.props;
 ---
 
-{/*
-	Credential ribbon. The one full-crimson surface on the page: it sits
-	immediately under the hero so the two certifications land before the first
-	scroll, and the saturated band doubles as the hardest tonal break in the
-	stack (DESIGN.md § Depth — banding is the separator).
-
-	Crimson-as-background is admissible here precisely because it carries no
-	interactive element: text-primary on --color-crimson measures 7.3:1, while
-	crimson-as-text on ink sits near 2.6:1 — which is why the accent tints
-	rules and plates but never becomes a CTA or a text colour.
-*/}
+{/* Static proof strip: certifications remain visible before the first scroll
+    without a saturated moving band competing with the hero plate. */}
 <section
-	class="relative overflow-hidden"
-	style="background-color: var(--color-crimson);"
+	class="relative border-y border-edge bg-ink-raised py-5 sm:py-6"
 	aria-label="Certificações do programa"
 >
-	<div class="ribbon-hatch absolute inset-0" aria-hidden="true"></div>
-	<div class="ribbon-fade absolute inset-0" aria-hidden="true"></div>
-
-	{/* Infinite ribbon: the runtime duplicates these four items and translates
-	    the track by -50%, so the loop never shows a seam. Without JS — and under
-	    reduced motion — the base rule in global.css keeps it a wrapped row, same
-	    items, no movement. */}
-	<ul
-		class="relative"
-		data-marquee
-		data-marquee-dur="30"
-	>
-		{certificacoes.map((item, idx) => (
-			<li
-				class="flex shrink-0 items-baseline gap-3 text-kicker font-semibold uppercase leading-snug tracking-[0.16em] text-text-primary"
-				data-reveal="up"
-				data-reveal-delay={String(idx + 1)}
-			>
-				<span
-					class="shrink-0 font-display text-kicker font-bold tabular-nums text-text-primary/55"
-					aria-hidden="true"
-				>
-					{String(idx + 1).padStart(2, "0")}
-				</span>
-				{item}
-			</li>
-		))}
-	</ul>
-
-	{/* Pause control for the ribbon. Moving text that runs for more than five
-	    seconds needs a way to stop it, and hover is not one for a keyboard or a
-	    touch reader (WCAG 2.2.2). Rendered here rather than injected so it can
-	    use the project's icon set; `hidden` until the runtime wires it up, since
-	    without JS there is no animation to pause. */}
-	{controles && (
-		<button
-			type="button"
-			class="marquee-toggle"
-			data-marquee-toggle
-			aria-pressed="false"
-			aria-label={controles.pausar}
-			data-label-pause={controles.pausar}
-			data-label-resume={controles.retomar}
-			hidden
-		>
-			<span data-icon-pause class="inline-flex">
-				<Icon name="pause" size={16} strokeWidth={2} />
-			</span>
-			<span data-icon-play class="hidden">
-				<Icon name="play" size={16} strokeWidth={2} />
-			</span>
-		</button>
-	)}
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+			{certificacoes.map((item) => (
+				<li class="border-l-2 border-crimson-mid-45 pl-4 text-kicker font-semibold uppercase leading-snug tracking-[0.16em] text-text-primary">
+					{item}
+				</li>
+			))}
+		</ul>
+	</div>
 </section>

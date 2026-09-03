@@ -6,8 +6,7 @@
  *
  *   1. ONE scroll listener. Every scroll-driven behaviour registers a task and
  *      the single `scroll` handler drains them inside one `requestAnimationFrame`.
- *      Four independent listeners (progress bar, sticky bar, parallax, hero fade)
- *      each with their own rAF token is four layout passes per frame.
+ *      Chrome and decorative behaviours share the same rAF token and task queue.
  *   2. `prefers-reduced-motion: reduce` disables every *decorative* behaviour.
  *      Chrome that carries information — the reading progress bar, the sticky
  *      conversion bar, the countdown — keeps working, because switching it off
@@ -23,7 +22,6 @@
  *   [data-shine]           — injects the sweep span over a CTA
  *   [data-hpin]            — horizontal rail pinned while the section scrolls
  *   [data-cd]/[data-cd-mini]/[data-cd-wrap] — live countdown
- *   [data-hero-fade]       — hero content fades out as the fold leaves
  *   [data-scroll-progress] — reading indicator
  *   [data-sticky-cta]/[data-float-wa] — bottom conversion chrome
  */
@@ -166,9 +164,9 @@ function initBottomChrome(): void {
 const pad = (value: number, size: number): string =>
 	String(Math.max(0, value)).padStart(size, "0");
 
-/** Live countdown to the immersion. Information, not decoration: it runs under
- *  reduced motion too. No `aria-live` — announcing a new value every second is
- *  noise; the `<dl>` carries an `aria-label` and is read on demand. */
+/** Event countdown. It remains information under reduced motion, but a long
+ *  decision cycle updates once per minute and exposes seconds only in the final
+ *  seven days. No `aria-live`: second-by-second announcements would be noise. */
 function initCountdown(): void {
 	const hosts = Array.from(
 		document.querySelectorAll<HTMLElement>("[data-cd-target]"),
@@ -196,6 +194,12 @@ function initCountdown(): void {
 		.filter((unit) => Number.isFinite(unit.target));
 	if (!units.length && !minis.length) return;
 
+	const nearestTarget = Math.min(
+		...units.map(({ target }) => target),
+		...minis.map(({ target }) => target),
+	);
+	const sevenDays = 7 * 86_400_000;
+
 	const split = (target: number) => {
 		const totalSeconds = Math.floor(Math.max(0, target - Date.now()) / 1000);
 		return {
@@ -209,6 +213,7 @@ function initCountdown(): void {
 	const tick = () => {
 		for (const { el, key, target } of units) {
 			const { days, hours, minutes, seconds } = split(target);
+			const showSeconds = target - Date.now() <= sevenDays;
 			const next =
 				key === "d"
 					? pad(days, 3)
@@ -217,7 +222,9 @@ function initCountdown(): void {
 						: key === "m"
 							? pad(minutes, 2)
 							: key === "s"
-								? pad(seconds, 2)
+								? showSeconds
+									? pad(seconds, 2)
+									: "00"
 								: null;
 			if (next !== null && el.textContent !== next) el.textContent = next;
 		}
@@ -229,12 +236,30 @@ function initCountdown(): void {
 		}
 	};
 
+	let timer: number | null = null;
+	const schedule = () => {
+		if (timer !== null) return;
+		const delay = nearestTarget - Date.now() <= sevenDays ? 1000 : 60_000;
+		timer = window.setTimeout(() => {
+			timer = null;
+			tick();
+			schedule();
+		}, delay);
+	};
+
 	tick();
-	const timer = window.setInterval(tick, 1000);
+	schedule();
 	// A page kept alive in the back/forward cache would otherwise go on ticking.
-	window.addEventListener("pagehide", () => window.clearInterval(timer), {
-		once: true,
-	});
+	window.addEventListener(
+		"pagehide",
+		() => {
+			if (timer !== null) window.clearTimeout(timer);
+			timer = null;
+		},
+		{
+			once: true,
+		},
+	);
 }
 
 /* ------------------------------------------------------------------ counts */
@@ -622,24 +647,6 @@ function initShine(): void {
 	});
 }
 
-/* --------------------------------------------------------------- hero fade */
-
-function initHeroFade(): void {
-	const hero = document.querySelector<HTMLElement>("[data-hero-fade]");
-	if (!hero) return;
-
-	onScroll(({ y, vh }) => {
-		const progress = clamp01(y / (vh * 0.9));
-		hero.style.opacity = String(1 - progress * 0.9);
-		hero.style.transform = `translate3d(0, ${(progress * 46).toFixed(1)}px, 0)`;
-	});
-
-	onDecorCleanup(() => {
-		hero.style.removeProperty("opacity");
-		hero.style.removeProperty("transform");
-	});
-}
-
 /* ---------------------------------------------------- horizontal pinned rail */
 
 /** Boston agenda. Above 900px the section is taller than the viewport and its
@@ -849,7 +856,6 @@ function startDecorative(): void {
 		initTilt,
 		initMarquee,
 		initShine,
-		initHeroFade,
 		initHorizontalPin,
 	]) {
 		try {

@@ -59,45 +59,35 @@ const plate = resolveImage(hero.background.image);
 		/>
 	</div>
 
-	{/* Scrim: keeps body copy ≥4.5:1 and headings ≥3:1 over the photograph.
-	    Two layers — a black ramp that never drops below 78% under the ficha
-	    column, and the crimson tail of the approved v2 comp riding on top of
-	    it, so the fold ends on the flag accent instead of on flat black. */}
+	{/* Scrim: ink stays strongest behind the copy, then releases the real
+	    classroom plate on the right. The crimson tail remains the approved
+	    USA accent without turning the photograph into a color field. */}
 	<div
 		class="absolute inset-0 -z-10"
 		aria-hidden="true"
-		style="background: linear-gradient(102deg, transparent 55%, color-mix(in srgb, var(--color-crimson) 24%, transparent) 100%), linear-gradient(102deg, color-mix(in srgb, var(--color-ink-deep) 97%, transparent) 0%, color-mix(in srgb, var(--color-ink-deep) 90%, transparent) 46%, color-mix(in srgb, var(--color-ink-deep) 78%, transparent) 100%);"
+		style="background: linear-gradient(102deg, transparent 54%, color-mix(in srgb, var(--color-crimson) 14%, transparent) 100%), linear-gradient(102deg, color-mix(in srgb, var(--color-ink-deep) 91%, transparent) 0%, color-mix(in srgb, var(--color-ink-deep) 68%, transparent) 43%, color-mix(in srgb, var(--color-ink-deep) 18%, transparent) 100%);"
 	>
 	</div>
 
-	{/* Two accent washes at different parallax speeds. Gold reads as the light
-	    source; the slower crimson pool on the opposite corner is what gives the
-	    fold depth as it scrolls — one flat wash reads as a gradient, two moving
-	    against each other read as space. */}
+	{/* Static washes keep depth in the fold without adding competing scroll
+	    motion to the first paint. */}
 	<div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
 		<div
-			class="absolute -top-40 -left-32 h-[560px] w-[560px] rounded-full opacity-[0.12]"
-			data-parallax
-			data-parallax-slack="70"
-			data-speed="0.06"
+			class="absolute -top-40 -left-32 h-[560px] w-[560px] rounded-full opacity-[0.08]"
 			style="background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);"
 		>
 		</div>
 		<div
-			class="absolute -bottom-48 -right-40 h-[660px] w-[660px] rounded-full opacity-[0.2]"
-			data-parallax
-			data-parallax-slack="110"
-			data-speed="0.1"
+			class="absolute -bottom-48 -right-40 h-[660px] w-[660px] rounded-full opacity-[0.12]"
 			style="background: radial-gradient(circle, var(--color-crimson-bright) 0%, transparent 66%);"
 		>
 		</div>
 	</div>
 
-	{/* The whole fold fades and drifts as it leaves — the transition into
-	    section 01 instead of a hard cut. Written by motion.ts. */}
+	{/* The fold keeps its final layout during scroll; the plate and sections
+	    provide enough movement without fading the LCP content away. */}
 	<div
 		class="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pt-24 pb-10 lg:px-8 lg:pt-28"
-		data-hero-fade
 		data-hero-fold
 	>
 		<div class="w-full min-w-0 max-w-4xl">
@@ -123,7 +113,7 @@ const plate = resolveImage(hero.background.image);
 			>
 				<span class="block text-text-primary">{hero.headline}</span>
 				{hero.highlight && (
-					<span class="mt-1 block text-shimmer">{hero.highlight}</span>
+					<span class="mt-1 block text-text-primary">{hero.highlight}</span>
 				)}
 			</h1>
 
@@ -135,15 +125,14 @@ const plate = resolveImage(hero.background.image);
 			</p>
 
 			<ul
-				class="mt-8 hidden flex-wrap gap-2.5 sm:flex"
+				class="mt-8 hidden flex-wrap gap-2.5 sm:flex lg:flex-nowrap"
 				data-enter="4"
 				aria-label="Diferenciais do programa"
 			>
 				{hero.badges.map((badge) => (
 					<li
-						class="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-gold)_25%,transparent)] bg-ink-soft-70 px-3.5 py-1.5 text-meta font-medium text-text-primary/90"
+						class="inline-flex items-center whitespace-nowrap rounded-full border border-edge bg-ink-soft-70 px-3.5 py-1.5 text-meta font-medium text-text-primary/90"
 					>
-						<span class="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true"></span>
 						{badge}
 					</li>
 				))}
@@ -173,7 +162,6 @@ const plate = resolveImage(hero.background.image);
 								href={hero.cta.checkoutUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								data-shine
 								class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
 							>
 								<span>{hero.cta.checkoutLabel ?? "Garantir vaga"}</span>
@@ -200,8 +188,7 @@ const plate = resolveImage(hero.background.image);
 							type="button"
 							data-lead-cta="hero"
 							data-whatsapp-url={ctaHref}
-							data-shine
-							class="group inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03]"
+							class="group inline-flex min-h-[52px] items-center justify-center gap-3 whitespace-nowrap rounded-full bg-gold px-7 font-semibold text-ink-deep shadow-(--shadow-halo-gold) transition-transform duration-300 hover:scale-[1.03] focus-visible:scale-[1.03] active:scale-[0.98]"
 							aria-label={hero.cta.label}
 						>
 							<Icon name="message-circle" size={20} strokeWidth={2.25} />
@@ -210,7 +197,7 @@ const plate = resolveImage(hero.background.image);
 								name="arrow-right"
 								size={18}
 								strokeWidth={2.25}
-								class="transition-transform duration-300 group-hover:translate-x-1"
+								class="hidden transition-transform duration-300 group-hover:translate-x-1 sm:block"
 							/>
 						</button>
 					)}
@@ -223,17 +210,12 @@ const plate = resolveImage(hero.background.image);
 				{countdown && (
 					<div
 						class="w-full border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] pt-5 sm:w-auto sm:border-t-0 sm:border-l sm:pt-0 sm:pl-8"
-						data-enter="6"
 						data-cd-target={countdown.target}
 						data-cd-wrap
 					>
 						<p
-							class="flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-gold-light"
+							class="flex items-center gap-3 text-kicker font-semibold uppercase tracking-kicker text-text-secondary"
 						>
-							<span
-								class="live-dot relative inline-flex h-2 w-2 shrink-0 rounded-full"
-								style="background-color: var(--color-crimson-bright);"
-								aria-hidden="true"></span>
 							{countdown.heroKicker}
 						</p>
 
@@ -244,27 +226,20 @@ const plate = resolveImage(hero.background.image);
 							swaps in moves the full-bleed plate behind it by ~50px — which is
 							the whole CLS budget for the page.
 
-							Seconds are desktop-only: a digit ticking next to the CTA is
-							noise on a phone, and dropping it buys the row its margin.
+			The fold shows only days, hours and minutes: a long-cycle decision
+			does not need a live seconds display beside the CTA.
 						*/}
 						<dl
-							class="mt-3 flex flex-nowrap items-end gap-2.5 sm:gap-3.5"
+							class="hero-countdown mt-3 grid grid-cols-3 gap-4 sm:flex sm:flex-nowrap sm:items-end sm:gap-3.5"
 							aria-label={countdown.ariaLabel}
 						>
 							{[
 								{ key: "d", rotulo: countdown.unidades.dias, valor: "000", cells: "3.4ch" },
 								{ key: "h", rotulo: countdown.unidades.horas, valor: "00", cells: "2.3ch" },
 								{ key: "m", rotulo: countdown.unidades.minutos, valor: "00", cells: "2.3ch" },
-								{
-									key: "s",
-									rotulo: countdown.unidades.segundos,
-									valor: "00",
-									cells: "2.3ch",
-									apenasDesktop: true,
-								},
 							].map((unidade) => (
 								<div
-									class={`cd-unit flex-col-reverse items-start ${unidade.apenasDesktop ? "hidden sm:flex" : "flex"}`}
+									class="cd-unit flex flex-col-reverse items-start"
 								>
 									<dt
 										class="mt-1 whitespace-nowrap text-kicker font-semibold uppercase tracking-[0.2em] text-text-muted"
@@ -295,7 +270,6 @@ const plate = resolveImage(hero.background.image);
 	{hero.facts && (
 		<div
 			class="relative z-10 border-t border-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-ink-deep)_72%,transparent)] backdrop-blur-sm"
-			data-enter="8"
 		>
 			<dl
 				class="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-[color-mix(in_srgb,var(--color-gold)_14%,transparent)] px-6 lg:grid-cols-4 lg:px-8"
@@ -313,7 +287,7 @@ const plate = resolveImage(hero.background.image);
 								name={fact.icone as IconName}
 								size={18}
 								strokeWidth={1.75}
-								class="shrink-0 text-gold"
+								class="shrink-0 text-text-secondary"
 							/>
 							{fact.rotulo}
 						</dt>

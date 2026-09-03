@@ -61,7 +61,7 @@ const plate = resolveImage(virada.background.image);
 
 	<div class="mx-auto max-w-7xl px-6 lg:px-8">
 		<div
-			class="flex flex-wrap items-start gap-x-[clamp(2.5rem,5vw,5rem)] gap-y-12"
+			class="flex flex-wrap items-start gap-x-[clamp(2.5rem,5vw,5rem)] gap-y-8"
 		>
 			<div class="min-w-0 flex-[1_1_32rem]">
 				<SectionHeader
@@ -73,12 +73,12 @@ const plate = resolveImage(virada.background.image);
 					reveal="mask"
 				/>
 
-				<p class="mt-8 max-w-2xl text-lede font-light text-text-secondary">
+				<p class="mt-6 max-w-2xl text-lede font-light text-text-secondary">
 					{virada.paragrafo}
 				</p>
 
 				<blockquote
-					class="mt-10 max-w-2xl border-l-2 border-gold pl-6 font-display text-h3 font-semibold leading-snug text-text-primary"
+					class="mt-8 max-w-2xl border-l-2 border-gold pl-6 font-display text-h3 font-semibold leading-snug text-text-primary"
 					data-reveal="up"
 					data-reveal-delay="2"
 				>
@@ -89,7 +89,6 @@ const plate = resolveImage(virada.background.image);
 			<div class="min-w-0 flex-[1_1_22rem]">
 				<h3
 					class="text-kicker font-semibold uppercase tracking-kicker text-text-muted"
-					data-reveal="up"
 				>
 					{virada.listaTitulo}
 				</h3>
@@ -103,8 +102,6 @@ const plate = resolveImage(virada.background.image);
 					{virada.lista.map((item, idx) => (
 						<li
 							class="group relative border-b border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
-							data-reveal="up"
-							data-reveal-delay={String(idx + 1)}
 						>
 							<span
 								class="absolute left-0 top-0 h-full w-[2px] origin-top scale-y-0 bg-gold transition-transform duration-300 group-hover:scale-y-100"

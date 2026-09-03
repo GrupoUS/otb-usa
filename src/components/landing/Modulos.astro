@@ -31,13 +31,11 @@ const { modulos } = Astro.props;
 		/>
 
 		<ol
-			class="mt-block grid grid-cols-1 border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] md:grid-cols-2 md:gap-x-12"
+			class="mt-block grid grid-cols-1 border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] md:grid-cols-12 md:gap-x-10"
 		>
 			{modulos.lista.map((m, idx) => (
 				<li
-					class="group relative border-b border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]"
-					data-reveal="up"
-					data-reveal-delay={String(Math.min(idx + 1, 10))}
+					class:list={["group relative border-b border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]", idx === 0 && "md:col-span-7", idx === 1 && "md:col-span-5", idx > 1 && "md:col-span-6"]}
 				>
 					{/* Left rule grows on hover — this section's only micro-interaction. */}
 					<span
