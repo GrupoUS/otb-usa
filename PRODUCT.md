@@ -58,7 +58,7 @@ Três pilares declarados (`otb.json § why.cards`): **formação técnica avanç
 ## Operating Context
 
 - **Decisão em duas telas:** descoberta e leitura no mobile (tráfego pago/indicação), aprofundamento e conversa no desktop ou no app do WhatsApp.
-- **Ticket alto em dólar** (US$ 3.500 no Lote 1) com **lotes escalonados** — o visitante compara preço, parcelamento e prazo antes de falar com a SDR.
+- **Ticket alto em dólar** (US$ 3.800 no Lote 2) com **lotes escalonados** — o visitante compara preço, parcelamento e prazo antes de falar com a SDR.
 - **Compra internacional:** exige viagem, hospedagem e visto US. Dois parceiros operacionais atendem isso fora do escopo do Grupo US (Travel Legacy e assessoria de visto B1/B2), com contato próprio.
 - **Ciclo longo:** a edição ocorre em abril de 2027; a página vende decisão antecipada, não urgência artificial.
 - **Prova disponível:** duas edições anteriores já realizadas em Boston, com acervo fotográfico próprio.
@@ -74,7 +74,7 @@ Três pilares declarados (`otb.json § why.cards`): **formação técnica avanç
 - Rotas: `/` (landing), `/redirecionando` (hand-off do lead, `noindex`) e `/404` (`noindex`), mais o endpoint `/llms.txt` e o redirect `/otb` → `/`. **Não existem** páginas legais próprias (`/termos`, `/politica-de-privacidade`): o consentimento aponta para `https://www.gpus.com.br/politica-de-privacidade`.
 - CTA primário único: **"Falar com Laura no WhatsApp"** (hero e investimento). CTA secundário: "Conhecer o programa".
 - WhatsApp SSOT: `src/lib/whatsapp.ts` (`WHATSAPP_SDR_E164 = 556294705081`); toda mensagem começa com `Olá, Laura!` (validado em runtime).
-- Lotes: Lote 0 US$ 3.000 (encerrado 30 abr 2026) · **Lote 1 US$ 3.500 (ativo, desde 01 mai 2026)** · Lote 2 US$ 4.000 (liberação por volume ou data, ainda não ativado).
+- Lotes: Lote 0 US$ 3.000 (encerrado 30 abr 2026) · Lote 1 US$ 3.500 (encerrado) · **Lote 2 US$ 3.800 (ativo)** · Lote 3 US$ 4.000 (liberação por volume ou data, ainda não ativado).
 - Parcelamento: cartão de crédito (parcelas conforme operadora) e boleto parcelado com taxa de 5% sobre o número de parcelas.
 - Certificações declaradas: MBA em parceria **Instituto IESA / Grupo US**; certificado de prática anatômica **Fresh Specimens pela Anatomy Society of America (ASA)**.
 - Agenda de 3 dias (19–21 abr 2027) descrita em `otb.json § agenda`; visita guiada ao campus tem caráter **descritivo**, sem atividade acadêmica oficial.
@@ -89,7 +89,7 @@ Três pilares declarados (`otb.json § why.cards`): **formação técnica avanç
 
 **Explicitamente indefinido — não fabricar:**
 
-- Data/critério de ativação do Lote 2 ("liberação por volume ou data").
+- Data/critério de ativação do Lote 3 ("liberação por volume ou data").
 - Número de vagas por turma.
 - Página de política de privacidade / termos (não existe rota).
 - Instrumentação de analytics (IDs em env, ainda não conectados).
@@ -172,7 +172,7 @@ tudo depois dela seja lido como resposta e não como pitch.
 **Urgência permitida** — só três dispositivos, nesta ordem de força:
 1. contagem regressiva para a data real da imersão (19 abr 2027, `countdown.target` no JSON);
 2. lote ativo e seu preço, vindos de `lotes[]`;
-3. "Lote 2 liberado por volume ou data" — a regra tal como está no JSON.
+3. "Lote 3 liberado por volume ou data" — a regra tal como está no JSON.
 
 Nunca inventar número de vagas, "últimas unidades" ou prazo que o JSON não confirme.
 

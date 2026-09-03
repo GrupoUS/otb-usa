@@ -129,10 +129,9 @@ export async function buildLandingGraph(
 
 	const loteAtivo = data.lotes?.find((lote) => lote.status === "ativo");
 
-	/* Only the active lote becomes an Offer. Lote 0 is closed and Lote 2 has no
-	   confirmed release ("liberação por volume ou data") — publishing either
-	   would state a price that is not purchasable today. Hence a single Offer
-	   and never an AggregateOffer. */
+	/* Only the active lote becomes an Offer. Closed lots and the unreleased
+	   next lote ("liberação por volume ou data") must not be published as
+	   purchasable prices. Hence a single Offer and never an AggregateOffer. */
 	const offer: JsonLdNode | undefined = loteAtivo
 		? {
 				"@type": "Offer",

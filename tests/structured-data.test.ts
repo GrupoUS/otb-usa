@@ -62,8 +62,8 @@ describe("JSON-LD graph", () => {
 
 	it("publishes the active lote as a machine-readable price", () => {
 		const offer = graph.find((node) => typesOf(node).includes("Offer"));
-		// "3.500" would be read as three dollars fifty.
-		expect(offer?.price).toBe("3500");
+		// "3.800" would be read as three dollars eighty.
+		expect(offer?.price).toBe("3800");
 		expect(offer?.priceCurrency).toBe("USD");
 		// Required by Google's Course info rich result.
 		expect(offer?.category).toBe("Paid");
@@ -177,8 +177,8 @@ describe("llms.txt", () => {
 
 	it("quotes the same active lote the page renders", () => {
 		const offer = graph.find((node) => typesOf(node).includes("Offer"));
-		expect(llms.includes(`US$ 3.500`)).toBe(true);
-		expect(offer?.price).toBe("3500");
+		expect(llms.includes(`US$ 3.800`)).toBe(true);
+		expect(offer?.price).toBe("3800");
 	});
 
 	it("carries the institutional disclaimer verbatim", () => {

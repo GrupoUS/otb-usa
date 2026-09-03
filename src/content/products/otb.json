@@ -105,7 +105,7 @@
 			"Médico, biomédico, dentista, farmacêutico ou fisioterapeuta com prática clínica consolidada em Saúde Estética.",
 			"Profissional que quer ampliar a visão além do consultório — entendendo business, posicionamento e escala.",
 			"Quem busca conexão com padrão internacional de excelência, não apenas atualização técnica.",
-			"Profissional que entende US$ 3.500 como investimento estratégico de carreira — e quer tomar a decisão com consciência.",
+			"Profissional que entende US$ 3.800 como investimento estratégico de carreira — e quer tomar a decisão com consciência.",
 			"Quem deseja ser visto e reconhecido nos maiores palcos da Saúde Estética mundial."
 		],
 		"categorias": [
@@ -328,10 +328,10 @@
 	"investimento": {
 		"headline": "Investimento —",
 		"highlight": "Lotes escalonados, quanto mais cedo melhor",
-		"descricao": "Lote 1 ativo. O OTB segue um modelo de lotes escalonados — MBA Instituto IESA + ASA Fresh Specimens, imersão internacional de 3 dias em Boston e prática anatômica avançada.",
+		"descricao": "Lote 2 ativo. O OTB segue um modelo de lotes escalonados — MBA Instituto IESA + ASA Fresh Specimens, imersão internacional de 3 dias em Boston e prática anatômica avançada.",
 		"moeda": "US$",
-		"preco": "3.500",
-		"escassez": "Lote 1 ativo. Lote 2 (US$ 4.000) liberado por volume ou data — confirmar disponibilidade.",
+		"preco": "3.800",
+		"escassez": "Lote 2 ativo. Lote 3 (US$ 4.000) liberado por volume ou data — confirmar disponibilidade.",
 		"parcelamento": [
 			"Cartão de crédito (parcelas conforme operadora)",
 			"Boleto bancário parcelado — taxa de 5% sobre o número de parcelas"
@@ -350,7 +350,7 @@
 		"tagline": "Aplicação imediata. Posicionamento internacional. Networking de longo alcance.",
 		"cta": {
 			"label": "Falar com Laura no WhatsApp",
-			"whatsappMessage": "Olá, Laura! Quero garantir minha vaga no Lote 1 da 3ª Edição do OTB Estados Unidos.",
+			"whatsappMessage": "Olá, Laura! Quero garantir minha vaga no Lote 2 da 3ª Edição do OTB Estados Unidos.",
 			"checkoutLabel": "Garantir vaga",
 			"checkoutUrl": null
 		}
@@ -392,7 +392,7 @@
 		},
 		{
 			"pergunta": "Como funcionam os lotes de investimento?",
-			"resposta": "O OTB segue lotes escalonados. Lote 0 (US$ 3.000) encerrado em 30 abr 2026. Lote 1 (US$ 3.500) ativo a partir de 01 mai 2026. Lote 2 (US$ 4.000) será liberado por volume de inscritos ou por data — confirmar disponibilidade no momento da inscrição."
+			"resposta": "O OTB segue lotes escalonados. Lote 0 (US$ 3.000) encerrado em 30 abr 2026. Lote 1 (US$ 3.500) encerrado. Lote 2 (US$ 3.800) ativo. Lote 3 (US$ 4.000) será liberado por volume de inscritos ou por data — confirmar disponibilidade no momento da inscrição."
 		},
 		{
 			"pergunta": "Como funciona o parcelamento?",
@@ -429,17 +429,24 @@
 		},
 		{
 			"id": "lote-1",
-			"label": "Lote 1 — Ativo",
+			"label": "Lote 1",
 			"moeda": "US$",
 			"preco": "3.500",
-			"validade": "A partir de 01 mai 2026",
-			"validoDe": "2026-05-01",
-			"status": "ativo",
+			"validade": "Encerrado",
+			"status": "encerrado",
 			"nota": "Migração automática após o Lote 0"
 		},
 		{
 			"id": "lote-2",
-			"label": "Lote 2",
+			"label": "Lote 2 — Ativo",
+			"moeda": "US$",
+			"preco": "3.800",
+			"status": "ativo",
+			"nota": "Migração após o Lote 1"
+		},
+		{
+			"id": "lote-3",
+			"label": "Lote 3",
 			"moeda": "US$",
 			"preco": "4.000",
 			"validade": "Liberação por volume ou data — em breve",
