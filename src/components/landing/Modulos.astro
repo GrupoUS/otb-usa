@@ -31,21 +31,21 @@ const { modulos } = Astro.props;
 		/>
 
 		<ol
-			class="mt-block grid grid-cols-1 border-t border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] md:grid-cols-12 md:gap-x-10"
+			class="mt-block grid grid-cols-1 md:grid-cols-2 md:gap-x-10"
 		>
-			{modulos.lista.map((m, idx) => (
+			{modulos.lista.map((m) => (
 				<li
-					class:list={["group relative border-b border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)]", idx === 0 && "md:col-span-7", idx === 1 && "md:col-span-5", idx > 1 && "md:col-span-6"]}
+					class="group relative border-b border-[color-mix(in_srgb,var(--color-gold)_16%,transparent)] first:border-t md:[&:nth-child(2)]:border-t"
 				>
 					{/* Left rule grows on hover — this section's only micro-interaction. */}
 					<span
 						class="absolute left-0 top-0 h-full w-[2px] origin-top scale-y-0 bg-gold transition-transform duration-300 group-hover:scale-y-100"
 						aria-hidden="true"></span>
 					<div
-						class="flex min-h-[72px] items-baseline gap-5 py-5 pl-4 transition-colors duration-200 group-hover:bg-[color-mix(in_srgb,var(--color-gold)_5%,transparent)]"
+						class="grid h-full min-h-[72px] grid-cols-[2.25rem_minmax(0,1fr)] items-baseline gap-x-5 py-5 pl-4 transition-colors duration-200 group-hover:bg-[color-mix(in_srgb,var(--color-gold)_5%,transparent)]"
 					>
 						<span
-							class="w-9 shrink-0 font-sans text-lg font-bold leading-none tabular-nums text-gold/60 transition-colors duration-200 group-hover:text-gold"
+							class="font-sans text-lg font-bold leading-none tabular-nums text-gold/60 transition-colors duration-200 group-hover:text-gold"
 						>
 							{m.numero}
 						</span>
